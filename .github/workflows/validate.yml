@@ -1,0 +1,47 @@
+name: Validate registry.json
+
+on:
+  pull_request:
+    paths:
+      - registry.json
+  push:
+    branches: [main]
+    paths:
+      - registry.json
+      - schema/plugin.schema.json
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install ajv-cli
+        run: npm install -g ajv-cli@5
+
+      - name: Validate schema
+        run: ajv validate -s schema/plugin.schema.json -d registry.json --spec=draft2020
+
+      - name: Check unique names
+        run: |
+          NAMES=$(node -e "
+            const r = require('./registry.json');
+            const names = r.plugins.map(p => p.name);
+            const dupes = names.filter((n, i) => names.indexOf(n) !== i);
+            if (dupes.length) { console.error('Duplicate names:', dupes); process.exit(1); }
+            console.log('All names unique:', names.join(', '));
+          ")
+          echo "$NAMES"
+
+      - name: Check installUrls reachable
+        run: |
+          node -e "
+            const r = require('./registry.json');
+            const urls = r.plugins.map(p => p.installUrl);
+            console.log('installUrls to verify:', urls.join('\n'));
+          "
