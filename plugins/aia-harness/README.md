@@ -1,71 +1,42 @@
 # aia-harness
 
-A Claude Code **plugin** that scans any project, diagnoses its stack and
-architecture, and scaffolds a complete **harness-engineering** setup — hooks,
-skills, agents, rules, `settings.json`, project-root `.mcp.json`, env in
-`settings.local.json`, worktree config, language-server strategy, and
-`CLAUDE.md` files at the root and per architectural domain.
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
+![Node](https://img.shields.io/badge/Node-%E2%89%A518-339933?logo=node.js&logoColor=white)
+![Claude Code](https://img.shields.io/badge/Claude%20Code-plugin-d97757)
+![Zero build](https://img.shields.io/badge/build-none-success)
 
-It is modeled on the native `claude-automation-recommender` and
-`claude-md-improver` skills, but adds the **write/scaffold phase** those
-read-only tools lack. Every change goes through **diagnose → approve → apply**
-(with diffs) — nothing is written without your consent.
+> **Point it at any repo. Get a complete, stack-aware Claude Code setup in
+> minutes — hooks, agents, skills, rules, and memory, tuned to your codebase.**
 
-## Local Testing (without publishing)
+A good Claude Code setup — the right hooks, rules, agents, permissions, and
+`CLAUDE.md` files — is the difference between an assistant that guesses and one
+that *knows* your project. Building it by hand means learning every Claude Code
+primitive and wiring them together yourself. **aia-harness does it for you.**
 
-Two approaches to test the plugin against any project on your machine.
+It scans your repository, diagnoses the stack, framework, and architecture, then
+scaffolds a complete **harness-engineering** setup: hooks, skills, agents, rules,
+`settings.json`, a project-root `.mcp.json`, env in `settings.local.json`,
+worktree config, a language-server strategy, and `CLAUDE.md` files at the root
+and per architectural domain.
 
-### Option A — `--plugin-dir` (recommended for active development)
+Built on the same ideas as the native `claude-automation-recommender` and
+`claude-md-improver` skills — but with the **write/scaffold phase** those
+read-only tools lack. Every change runs through **diagnose → approve → apply**,
+with diffs. Nothing touches your repo without your consent.
 
-Loads the plugin for one session only. Code changes in `aia_harness/` are picked up on
-the next `claude` launch — no reinstall needed.
+## Why aia-harness
 
-```bash
-# 1. Install deps (once)
-cd /path/to/aia_harness
-npm install
-
-# 2. Open the target project (the one without a harness)
-cd /path/to/target-project
-
-# 3. Start Claude Code with the local plugin loaded
-claude --plugin-dir /path/to/aia_harness
-
-# 4. Inside Claude, run any command:
-# /aia-harness:scan
-# /aia-harness:init
-```
-
-### Option B — local marketplace (persists across sessions)
-
-Install once; the plugin is available every time you open any project.
-
-```bash
-# 1. Install deps (once)
-cd /path/to/aia_harness
-npm install
-
-# 2. Register this repo as a marketplace (once; absolute path required)
-claude plugin marketplace add /path/to/aia_harness
-
-# 3. Install the plugin from that marketplace (once)
-claude plugin install aia-harness@aia-harness
-
-# 4. Open the target project and start Claude normally
-cd /path/to/target-project
-claude
-
-# /aia-harness:scan, /aia-harness:init, etc. are available immediately
-```
-
-After editing plugin source, sync the installed copy:
-
-```bash
-claude plugin update aia-harness
-```
-
-> **Which to use?** `--plugin-dir` is faster for iteration. The marketplace approach is
-> better when you want the plugin always available across multiple projects.
+- **Stack-aware, not boilerplate** — first-class detection for JS/TS, PHP, Java
+  (Spring Boot vs Quarkus), and Go; every artifact adapts to what it finds.
+- **Safe by design** — diagnose → approve → apply, diffs before every overwrite,
+  secrets only as env placeholders. You sign off on each change.
+- **A whole harness, not a snippet** — hooks, agents, skills, rules,
+  least-privilege permissions, MCP servers, worktrees, and layered memory in one
+  pass.
+- **Runs anywhere, zero build** — hooks are pure ESM and resolve a Node runtime
+  even when `node` isn't on `PATH`.
+- **Batteries included** — optional token-economy tools (caveman, ponytail, rtk)
+  and a code-graph flow (graphify), installed project-scoped in one command.
 
 ## Install
 
@@ -109,6 +80,9 @@ claude plugin update aia-harness
 | `/aia-harness:add-tools [path]` | Install project-level token-economy / code-graph tools (caveman, ponytail, rtk, graphify). |
 
 ## What gets generated
+
+One `init` produces a coherent, least-privilege harness — not a pile of
+defaults. Every artifact below is proposed with a diff before it lands:
 
 - **CLAUDE.md** — concise root memory (stack + canonical commands) + lazy-loaded
   per-domain files.
@@ -169,6 +143,15 @@ Other languages (Rust, Python, Kotlin, C#, C++, Dart, Ruby, …) use a structure
 generic fallback plus ECC rules/skills/agents where available — verify the
 canonical commands before relying on them.
 
+## Safety
+
+- Consent gate before any write; diffs before overwrites.
+- No secrets in committed files; `.mcp.json` uses env placeholders; `*.local.*`
+  is gitignored.
+- Guard hooks block with exit code 2; formatters fail open.
+- A `harness-reviewer` agent audits the result for secrets, fail-open hooks, and
+  over-broad permissions.
+
 ## Development
 
 ```bash
@@ -185,14 +168,33 @@ The engine lives in `lib/` (pure, tested), templates in `templates/`, and the
 Claude Code surface in `commands/`, `agents/`, `skills/`, `hooks/`. Design notes
 are in `docs/specs/`.
 
-## Safety
+### Local testing (without the registry)
 
-- Consent gate before any write; diffs before overwrites.
-- No secrets in committed files; `.mcp.json` uses env placeholders; `*.local.*`
-  is gitignored.
-- Guard hooks block with exit code 2; formatters fail open.
-- A `harness-reviewer` agent audits the result for secrets, fail-open hooks, and
-  over-broad permissions.
+Two approaches to load the plugin directly from a local clone.
+
+**Option A — `--plugin-dir`** (fastest for iteration; one session only):
+
+```bash
+cd /path/to/aia_harness && npm install
+cd /path/to/target-project
+claude --plugin-dir /path/to/aia_harness
+# /aia-harness:scan, /aia-harness:init, etc. are available immediately
+```
+
+**Option B — local marketplace** (persists across sessions):
+
+```bash
+cd /path/to/aia_harness && npm install
+claude plugin marketplace add /path/to/aia_harness
+claude plugin install aia-harness@aia-harness
+cd /path/to/target-project && claude
+```
+
+After editing plugin source, sync the installed copy:
+
+```bash
+claude plugin update aia-harness
+```
 
 ## Credits
 
