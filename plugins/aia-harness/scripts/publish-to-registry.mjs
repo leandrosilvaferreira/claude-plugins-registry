@@ -40,11 +40,14 @@ function git(args, cwd = PLUGIN_DIR) {
 
 /**
  * @param {string} question
+ * @param {string} [envOverride] - env var that bypasses the prompt (e.g. 'yes'/'no')
  * @returns {Promise<string>}
  */
-function ask(question) {
+function ask(question, envOverride = '') {
+  if (envOverride) { process.stdout.write(`${question}${envOverride}\n`); return Promise.resolve(envOverride); }
   return new Promise(res => {
     const rl = createInterface({ input: process.stdin, output: process.stdout });
+    rl.on('close', () => res(''));
     rl.question(question, answer => { rl.close(); res(answer.trim()); });
   });
 }
@@ -176,7 +179,7 @@ log(git(['log', '--oneline', '-4'], REGISTRY_DIR));
 // ── step 6: git tag ───────────────────────────────────────────────────────
 
 if (bumpType !== 'skip') {
-  const tagAnswer = await ask(`\nCreate git tag v${newVersion} in plugin repo? [Y/n] `);
+  const tagAnswer = await ask(`\nCreate git tag v${newVersion} in plugin repo? [Y/n] `, process.env.TAG ?? '');
   if (!/^n$/i.test(tagAnswer)) {
     git(['tag', '-a', `v${newVersion}`, '-m', `release v${newVersion}`]);
     log(`✔  Tag created: v${newVersion}`);
@@ -185,7 +188,7 @@ if (bumpType !== 'skip') {
 
 // ── step 7: push ──────────────────────────────────────────────────────────
 
-const shouldPush = await ask('\nPush both repos to GitHub? [Y/n] ');
+const shouldPush = await ask('\nPush both repos to GitHub? [Y/n] ', process.env.PUSH ?? '');
 if (!/^n$/i.test(shouldPush)) {
   log('Pushing plugin repo...');
   git(['push', '--follow-tags']);
