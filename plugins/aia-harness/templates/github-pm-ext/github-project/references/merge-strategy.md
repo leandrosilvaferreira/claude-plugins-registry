@@ -1,0 +1,238 @@
+<!-- vendored from https://github.com/netresearch/github-project-skill/blob/176d9186772916c92d213a2d3292974de7d812cd/skills/github-project/references/merge-strategy.md | license: MIT AND CC-BY-SA-4.0 -->
+
+# Merge Strategy for Signed Commits
+
+This guide explains how to configure GitHub repositories that require both signed commits and clean git history.
+
+## The Problem
+
+GitHub's branch protection offers two relevant settings that conflict:
+
+| Setting | Effect |
+|---------|--------|
+| `required_signatures` | All commits on protected branch must be signed |
+| `required_linear_history` | Only squash or rebase merges allowed (no merge commits) |
+
+**The conflict:** GitHub cannot sign commits during squash or rebase merge operations. When `required_linear_history` is enabled, GitHub rewrites commits server-side, but cannot sign them with your GPG/SSH key.
+
+## The Solution
+
+Use **local rebase + merge commit**:
+
+1. Developers rebase their PR branch locally (signing commits with their key)
+2. Force-push the rebased branch
+3. Merge via merge commit (GitHub signs the merge commit with its key)
+
+This gives you:
+- ✅ Clean, linear history on feature branches
+- ✅ Clear merge points on main branch
+- ✅ All commits verified (developers sign feature commits, GitHub signs merge commits)
+
+## Repository Settings
+
+Configure via API:
+
+```bash
+gh api repos/{owner}/{repo} -X PATCH \
+  -f allow_merge_commit=true \
+  -f allow_rebase_merge=true \
+  -f allow_squash_merge=false
+```
+
+| Setting | Value | Reason |
+|---------|-------|--------|
+| `allow_merge_commit` | `true` | Required for signed commits workflow |
+| `allow_rebase_merge` | `true` | GitHub requires at least one of squash/rebase |
+| `allow_squash_merge` | `false` | Destroys individual commit history and signatures |
+
+**Note:** GitHub requires at least one of `allow_squash_merge` or `allow_rebase_merge` to be true. Keep `allow_rebase_merge` enabled but don't use it for PRs requiring signatures.
+
+## Branch Protection Settings
+
+Configure via API:
+
+```bash
+gh api repos/{owner}/{repo}/branches/main/protection -X PUT \
+  --input - << 'EOF'
+{
+  "required_status_checks": {
+    "strict": true,
+    "contexts": ["ci"]
+  },
+  "enforce_admins": true,
+  "required_pull_request_reviews": {
+    "required_approving_review_count": 1
+  },
+  "restrictions": null,
+  "required_linear_history": false,
+  "required_signatures": true,
+  "required_conversation_resolution": true
+}
+EOF
+```
+
+| Setting | Value | Reason |
+|---------|-------|--------|
+| `required_signatures` | `true` | Enforces signed commits |
+| `required_linear_history` | `false` | **Must be false** - blocks merge commits |
+| `required_conversation_resolution` | `true` | All review threads must be resolved before merge |
+
+## Developer Workflow
+
+### Before Opening PR
+
+```bash
+# Ensure commits are signed
+git config commit.gpgsign true
+```
+
+### Before Merging
+
+```bash
+# 1. Fetch latest main
+git fetch origin
+
+# 2. Rebase on main (re-signs commits)
+git rebase origin/main
+
+# 3. Force-push rebased branch
+git push --force-with-lease
+```
+
+### Merging
+
+```bash
+# Use merge commit strategy
+gh pr merge <number> --merge
+```
+
+## Auto-Merge Configuration
+
+Auto-merge works with signed commits **only when using merge commit strategy**.
+
+| Strategy | Compatible | Reason |
+|----------|------------|--------|
+| Merge commit | ✅ | GitHub signs merge commit with its key |
+| Rebase | ❌ | GitHub cannot sign rewritten commits |
+| Squash | ❌ | GitHub cannot sign squashed commit |
+
+When configuring auto-merge workflows, ensure they use `--merge`:
+
+```yaml
+- name: Enable auto-merge
+  run: gh pr merge --auto --merge "$PR_NUMBER"
+```
+
+## How GitHub Signing Works
+
+When you merge via the GitHub UI or API with merge commit:
+
+1. **Feature branch commits**: Retain original GPG/SSH signatures from developers
+2. **Merge commit**: Signed by GitHub's web-flow key (`noreply@github.com`)
+
+Both are marked as "Verified" in the GitHub UI:
+- Developer commits show the developer's GPG key
+- Merge commits show "Verified" with GitHub as the signer
+
+## Troubleshooting
+
+### "Merge commits are not allowed on this repository"
+
+**Cause:** `allow_merge_commit` is false in repository settings.
+
+**Fix:**
+```bash
+gh api repos/{owner}/{repo} -X PATCH -f allow_merge_commit=true
+```
+
+### "Base branch requires signed commits. Rebase merges cannot be automatically signed"
+
+**Cause:** `required_linear_history` is true, forcing rebase merge which GitHub cannot sign.
+
+**Fix:**
+```bash
+gh api repos/{owner}/{repo}/branches/main/protection -X PUT \
+  --input - << 'EOF'
+{
+  ...existing settings...,
+  "required_linear_history": false
+}
+EOF
+```
+
+### Auto-merge fails with signature error
+
+**Cause:** Auto-merge configured with rebase or squash strategy.
+
+**Fix:** Update auto-merge workflow to use `--merge` flag instead of `--rebase` or `--squash`.
+
+### Rulesets cannot block merge on a pending review
+
+Neither branch protection nor rulesets support "block merge while any requested reviewer hasn't submitted yet". The options available are adjacent but not equivalent:
+
+| Setting | What it does | Not what you want |
+|---|---|---|
+| `required_approving_review_count: 1` | Needs **one approval** | Doesn't wait for other requested reviewers |
+| `required_review_thread_resolution: true` | Blocks on **unresolved threads** | Doesn't block before any thread is created |
+
+If you need to hold merge until Copilot (or any other requested reviewer) has actually posted its review, the workaround is a custom GitHub Actions status check that queries pending reviewers and fails if any are outstanding — then require that check in branch protection.
+
+```bash
+# Example: fail the check if any reviewer — user or team — is still requested.
+pending=$(gh api "repos/$REPO/pulls/$PR" \
+  --jq '((.requested_reviewers // []) | length) + ((.requested_teams // []) | length)')
+if [[ "$pending" -gt 0 ]]; then
+  echo "::error::Still waiting on $pending review request(s) (user/team)"
+  exit 1
+fi
+```
+
+### Renaming a CI job orphans its required status check → PR stuck "Expected"
+
+Required status checks are matched by **exact context name**. Renaming a job — including changing a **matrix value** that appears in the job name (e.g. `PHPStan (8.2, ^14.0)` → `PHPStan (8.2, ^14.3)`) — produces a *new* context name. The old required context no longer reports, so it sits "Expected — Waiting for status to be reported" forever and the PR is `BLOCKED`, even though every job is green.
+
+This is a silent trap: the CI change looks self-contained, but the required-checks list in branch protection / the ruleset still names the old job. Treat the required-checks list as a declared value that must be swept whenever a job name changes.
+
+```bash
+# After renaming any matrixed/required job, update the ruleset's contexts.
+# Rulesets (PUT the full ruleset; required_status_checks is nested under rules):
+gh api "repos/$REPO/rulesets/$ID" > /tmp/rs.json    # back up first
+# edit the .rules[] required_status_checks[].context entries, then:
+gh api -X PUT "repos/$REPO/rulesets/$ID" --input /tmp/rs.json
+
+# Classic branch protection: this endpoint REPLACES the entire contexts list,
+# so you must send ALL required contexts (renamed + unchanged), or you silently
+# drop the others. Read the current list, swap the renamed entries, send it back.
+gh api "repos/$REPO/branches/main/protection/required_status_checks" \
+  --jq '{strict: .strict, contexts: .contexts}' \
+  | jq '.contexts |= map(sub("\\^14\\.0"; "^14.3"))' > /tmp/rsc.json
+gh api -X PATCH "repos/$REPO/branches/main/protection/required_status_checks" --input /tmp/rsc.json
+```
+
+Verify the contexts match the jobs the workflow now emits. The context string is the **check-run name** from `repos/$REPO/commits/$SHA/check-runs[].name`, which for reusable-/multi-job workflows includes the `workflow / job (matrix)` prefix (e.g. `ci / PHPStan (8.2, ^14.3)`) — not the bare job name. (This is the same source `init-branch-protection.sh` uses; the `/actions/runs/{id}/jobs` endpoint returns the bare job name and is wrong for context matching.)
+
+### Merge queue silently fails to enqueue a green PR
+
+On a repo with a `merge_queue` ruleset rule, an all-green PR with auto-merge armed (`mergeStateStatus: CLEAN`) sometimes never enters the queue — no queue entry, no `merge_group` build, it just sits OPEN. Confirm it is genuinely stuck before acting:
+
+```bash
+gh api graphql -f query='query($owner:String!,$repo:String!,$branch:String!){
+  repository(owner:$owner,name:$repo){
+    mergeQueue(branch:$branch){entries(first:10){nodes{pullRequest{number} state position}}}
+  }
+}' -f owner=OWNER -f repo=REPO -f branch=main \
+  --jq '.data.repository.mergeQueue?.entries?.nodes[]? // empty'
+gh run list --repo OWNER/REPO --event merge_group -L 5   # any build for this PR?
+```
+
+If there is no entry and no `merge_group` run after the required checks have passed, admin-merge with the queue's configured method (preserves signatures with `--merge`):
+
+```bash
+gh pr merge <PR> --repo OWNER/REPO --merge --admin
+```
+
+## References
+
+- [GitHub Branch Protection](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches)
+- [Signing Commits](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits)
+- [About Merge Methods](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/about-merge-methods-on-github)

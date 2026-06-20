@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# aia-harness launcher: resolves a Node.js runtime (even when not on PATH, e.g.
+# nvm-managed) and runs the CLI. Added to $PATH automatically when the plugin
+# is enabled. Usage: aia-harness <scan|plan|apply|help> [args...]
+set -euo pipefail
+
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ENTRY="${HERE}/harness.mjs"
+
+find_node() {
+  if [ -n "${CLAUDE_NODE:-}" ] && [ -x "${CLAUDE_NODE}" ]; then printf '%s\n' "$CLAUDE_NODE"; return 0; fi
+  if command -v node >/dev/null 2>&1; then command -v node; return 0; fi
+  if [ -d "${HOME}/.nvm/versions/node" ]; then
+    local newest
+    newest="$(ls -d "${HOME}"/.nvm/versions/node/*/bin/node 2>/dev/null | sort -V | tail -n1)"
+    if [ -n "$newest" ] && [ -x "$newest" ]; then printf '%s\n' "$newest"; return 0; fi
+  fi
+  if command -v bun >/dev/null 2>&1; then command -v bun; return 0; fi
+  return 1
+}
+
+NODE_BIN="$(find_node || true)"
+if [ -z "$NODE_BIN" ]; then
+  echo "aia-harness: no Node.js runtime found. Install Node 18+ or set CLAUDE_NODE." >&2
+  exit 1
+fi
+
+exec "$NODE_BIN" "$ENTRY" "$@"

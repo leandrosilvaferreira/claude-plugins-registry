@@ -1,0 +1,22 @@
+{
+  "rawBase": "https://raw.githubusercontent.com",
+  "apiBase": "https://api.github.com",
+  "tools": {
+    "caveman": {
+      "repo": "JuliusBrussee/caveman",
+      "ref": "main",
+      "commit": "25d22f864ad68cc447a4cb93aefde918aa4aec9f",
+      "skillsPath": "skills",
+      "hooksPath": "src/hooks",
+      "license": "MIT"
+    },
+    "ponytail": {
+      "repo": "DietrichGebert/ponytail",
+      "ref": "main",
+      "commit": "45f7d2f83fb430a65fd512a98ad7b14d79e06636",
+      "skillsPath": "skills",
+      "hooksPath": "hooks",
+      "license": "MIT"
+    }
+  }
+}

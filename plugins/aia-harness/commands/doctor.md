@@ -1,0 +1,124 @@
+---
+description: Audit an existing Claude Code harness (CLAUDE.md quality, settings safety, hook hygiene) and propose targeted fixes.
+argument-hint: "[path]"
+allowed-tools:
+  - Bash
+  - Read
+  - Edit
+  - AskUserQuestion
+---
+
+# Audit the existing harness
+
+Target directory: `$1` if provided, else `$CLAUDE_PROJECT_DIR`.
+
+1. Re-scan to see what exists:
+
+   ```bash
+   "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" scan "${1:-$CLAUDE_PROJECT_DIR}" --json
+   ```
+
+2. **Completeness — what the current plugin version expects but is missing.**
+   The rest of this audit grades *quality*; this step finds *drift*. Get the full
+   expected artifact set for the detected stack and this plugin version:
+
+   ```bash
+   "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" plan "${1:-$CLAUDE_PROJECT_DIR}" --json
+   ```
+
+   Every artifact in the plan carries `exists` (already present in the project)
+   and `defaultSelected`. Classify them (report in Portuguese):
+   - **Faltando (drift):** `exists:false && defaultSelected:true` — should be here
+     by default but isn't. Typically new agents / hooks / skills / rules / commands
+     shipped by a newer plugin version (or items skipped at init). Group by
+     `category` and list each `title`. **This is the "detect what's missing after a
+     plugin upgrade and add it" path.**
+   - **Opcionais disponíveis:** `exists:false && defaultSelected:false` (e.g.
+     `.lsp.json`, ag-kit scripts, the reference install script) — mention as
+     optionally available; do **not** flag as drift.
+   - Caveat: "missing" is relative to the **currently detected stack**. If detection
+     changed, the expected set changes — sanity-check surprising entries against the
+     scan report before offering them.
+
+   If there are missing default artifacts, use `AskUserQuestion` (multi-select,
+   grouped by category) to let the user pick which to add. Add them **additively** —
+   pass only the chosen `id`s and **never `--force`**, so `apply` creates only the
+   missing targets and leaves everything that already exists untouched:
+
+   ```bash
+   "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" --yes --only=<chosen ids>
+   ```
+
+   Report the engine's `created` list back. If any newly-created file is a
+   `claude-md` artifact (e.g. a new nested domain), run the enrichment pass from
+   `/aia-harness:init` step 5.5 on just those new files so they don't ship as
+   generic stubs. For artifacts that **exist but differ** from the current version
+   (a changed `settings.json`, an updated hook), this additive step leaves them
+   alone — point the user to `/aia-harness:patch` to force-overwrite those by
+   category.
+
+3. Audit each existing artifact and grade it (report in Portuguese):
+   - **Unit tests:** reporte `profile.testing` — se `configured` for `false`, sinalize o gap e
+     recomende `/setup-testing` (framework sugerido: `testing.recommended`).
+   - **CLAUDE.md files:** flag any over ~200 lines or full of generic boilerplate
+     ("bloated memory gets ignored"). Critical rules should be near the top.
+     Suggest moving domain detail into nested CLAUDE.md / `.claude/rules/`.
+   - **Un-enriched stubs:** grep every `CLAUDE.md` for leftover
+     `<!-- AI-ENRICH:` markers and flag them — they mean enrichment was skipped.
+     Also flag **nested domain `CLAUDE.md` files that are identical generic stubs**
+     (same `## Responsibility` / `## Local conventions` boilerplate across domains);
+     offer to enrich each from the real files in its directory (distinct per domain).
+     Compare only `## Responsibility` / `## Local conventions` — the
+     `aia-harness:fixed` `## Rules` block is identical across domains **by design**,
+     so do not treat it as stub duplication.
+   - **Fixed rules intact:** grep every `CLAUDE.md` for the `aia-harness:fixed`
+     marker. The root file must keep its `## Engineering rules` section and each
+     domain file its `## Rules` section, both with the full baseline lines verbatim.
+     If a prior enrichment stripped or edited them (marker missing, or rules
+     reworded/removed), flag it as a regression and offer to restore the exact
+     baseline from the generator (`ROOT_FIXED_RULES` / `DOMAIN_FIXED_RULES`).
+   - **settings.json:** permissions should be least-privilege; deny reads of
+     `.env`/secrets; no `bypassPermissions`; hooks wired correctly.
+   - **Hooks:** confirm guards use exit code 2 to block, formatters are
+     non-blocking, and JS hooks go through the node-resolver wrapper.
+   - **Large-file guard (mandatory):** confirm `large-file-warning.mjs` is present
+     **and wired** in `settings.json` — under `Stop` (block mode: agent refactors
+     files over 350 lines before finishing) or `PostToolUse` matcher
+     `Edit|Write|MultiEdit` (advisory: suggest + confirm, never auto-block). If it
+     is **missing from the wiring** (or `settings.json` predates this guard), it is
+     **not configured** — surface it and offer to set it up with `AskUserQuestion`:
+     ask `block` vs `advisory`, recommending the scan's `largeFiles.recommended`
+     (`block` for a clean repo, `advisory` when there are pre-existing oversized
+     files — `largeFiles.count > 0`). On approval, rewire (force, settings + the
+     hook file only):
+
+     ```bash
+     "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" \
+       --yes --force --only=settings,hook:large-file-warning.mjs --large-files=<mode>
+     ```
+
+   - **.mcp.json:** only `${ENV}` placeholders, never literal secrets.
+   - **.gitignore:** must ignore `.claude/*.local.*`.
+
+   - **GitHub PM:** If `profile.githubPM.detected`:
+     - Check: `.claude/skills/github-pm/SKILL.md` exists
+     - Check: `.claude/commands/pm/` directory has 10 command files
+     - Check: `.github/ISSUE_TEMPLATE/` has bug.yml, feature.yml, task.yml
+     - Check: `.github/workflows/` has issue-to-project.yml, commit-to-progress.yml,
+       pr-to-review.yml, auto-close-issue.yml
+     - Check: `.claude/pm-config.json` exists (warn if still has REPLACE_ME placeholders)
+     - Check: `.claude/skills/github-issues/` exists (vendored)
+     - Check: `.claude/skills/github-project/` exists (vendored)
+
+     If any check fails → report as missing with `apply --only=github-pm` as fix suggestion.
+     If `profile.githubPM.detected` is false → skip section silently.
+
+4. Present a prioritized findings list. For each accepted fix, show a diff and
+   apply with `Edit` only after the user approves. Do not rewrite files wholesale.
+
+Re-run the relevant lint/test command after edits and report the real output.
+
+Finally, invoke the **`claude-automation-recommender`** skill on the project for a
+second opinion — let Claude surface further automation gaps beyond this audit.
+Present its suggestions and offer to act on the new ones. If it is not installed,
+note it ships in the `claude-code-setup` plugin and skip gracefully.

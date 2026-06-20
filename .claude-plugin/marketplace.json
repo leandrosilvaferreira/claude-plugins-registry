@@ -16,12 +16,12 @@
       "category": "tooling",
       "source": {
         "source": "git-subdir",
-        "url": "https://github.com/leandrosilvaferreira/aia_harness.git",
-        "path": ".",
+        "url": "https://github.com/leandrosilvaferreira/claude-plugins-registry.git",
+        "path": "plugins/aia-harness",
         "ref": "main",
-        "sha": "e76a55cfb3b314d95e0ef3ce871c706ffd130688"
+        "sha": "PLACEHOLDER"
       },
-      "homepage": "https://github.com/leandrosilvaferreira/aia_harness"
+      "homepage": "https://github.com/leandrosilvaferreira/claude-plugins-registry/tree/main/plugins/aia-harness"
     }
   ]
 }

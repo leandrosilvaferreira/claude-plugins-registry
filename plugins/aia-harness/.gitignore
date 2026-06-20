@@ -1,0 +1,14 @@
+node_modules/
+*.local.json
+*.local.md
+.claude/*.local.md
+.claude/*.local.json
+.DS_Store
+*.log
+coverage/
+.tsbuildinfo
+
+# Root .mcp.json is plugin-level — committing it would impose its MCP servers on
+# every project that enables aia-harness. MCPs are suggested per-target on apply.
+# Keep a local copy for dogfooding, but never ship it.
+/.mcp.json

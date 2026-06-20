@@ -1,0 +1,496 @@
+# Example checkpoints.yaml for github-project skill
+# Copy this to your skill repo root as checkpoints.yaml
+
+version: 1
+skill_id: github-project
+
+mechanical:
+  # === FILE EXISTENCE CHECKS ===
+  - id: GH-01
+    type: file_exists
+    target: README.md
+    severity: error
+    desc: "README.md must exist"
+
+  # Brace expansion covers SPDX-style split-license filenames common in
+  # multi-licence skill repos plus the GNU COPYING convention. Single line
+  # because the runner's YAML parser doesn't unfold `>-` folded scalars
+  # for `target:` fields (it's bash regex, not a real YAML parser).
+  - id: GH-02
+    type: file_exists
+    target: "{LICENSE,LICENSE.md,LICENSE.txt,COPYING,COPYING.md,COPYING.txt,LICENSE-MIT,LICENSE-APACHE,LICENSE-APACHE-2.0,LICENSE-BSD,LICENSE-BSD-2-Clause,LICENSE-BSD-3-Clause,LICENSE-CC-BY-SA-4.0,LICENSE-CC0-1.0,LICENSE-GPL,LICENSE-GPL-2.0,LICENSE-GPL-3.0,LICENSE-LGPL,LICENSE-LGPL-3.0,LICENSE-AGPL,LICENSE-AGPL-3.0,LICENSE-MPL,LICENSE-MPL-2.0}"
+    severity: error
+    desc: >-
+      LICENSE file must exist. Accepts split-license naming (LICENSE-MIT,
+      LICENSE-CC-BY-SA-4.0, etc.) and the GNU COPYING convention.
+
+  - id: GH-03
+    type: file_exists
+    target: "{SECURITY.md,.github/SECURITY.md,docs/SECURITY.md}"
+    org_provides: SECURITY.md
+    severity: info
+    desc: "SECURITY.md should exist for vulnerability reporting. Satisfied org-wide via {owner}/.github/SECURITY.md when present."
+
+  - id: GH-04
+    type: file_exists
+    target: "{CONTRIBUTING.md,.github/CONTRIBUTING.md,docs/CONTRIBUTING.md}"
+    org_provides: CONTRIBUTING.md
+    severity: info
+    desc: "CONTRIBUTING.md should exist. Satisfied org-wide via {owner}/.github/CONTRIBUTING.md when present."
+
+  - id: GH-05
+    type: file_exists
+    target: "{.github/CODEOWNERS,CODEOWNERS,docs/CODEOWNERS}"
+    severity: warning
+    desc: >-
+      CODEOWNERS must exist in the repository itself for GitHub to assign
+      reviewers (only `.github/`, root, or `docs/` on the default branch are
+      recognised). Org-wide `.github` does NOT satisfy CODEOWNERS — that
+      mechanism only provides templates and community-health files, not
+      review-routing rules.
+
+  - id: GH-06
+    type: file_exists
+    target: "{.github/dependabot.yml,.github/dependabot.yaml,renovate.json,renovate.json5,.github/renovate.json,.github/renovate.json5,.renovaterc.json,.renovaterc.json5,.renovaterc}"
+    severity: warning
+    desc: >-
+      Dependency update automation should be configured (Dependabot or
+      Renovate). Accepts both .yml/.yaml for Dependabot and .json/.json5
+      for Renovate.
+
+  - id: GH-07
+    type: file_exists
+    target: "{.github/PULL_REQUEST_TEMPLATE.md,.github/pull_request_template.md,PULL_REQUEST_TEMPLATE.md,pull_request_template.md,docs/PULL_REQUEST_TEMPLATE.md,docs/pull_request_template.md}"
+    org_provides: "{PULL_REQUEST_TEMPLATE.md,pull_request_template.md}"
+    severity: info
+    desc: "PR template should exist (also accepted in docs/). Satisfied org-wide via {owner}/.github/PULL_REQUEST_TEMPLATE.md or pull_request_template.md when present."
+
+  # Issue templates: prefer the modern `.yml` form templates (structured
+  # fields, validation, required inputs) over legacy `.md` files. Accept
+  # either, but `.yml` is the recommended Netresearch standard.
+  - id: GH-08
+    type: file_exists
+    target: "{.github/ISSUE_TEMPLATE/bug_report.yml,.github/ISSUE_TEMPLATE/bug_report.md}"
+    org_provides: "{ISSUE_TEMPLATE/bug_report.yml,ISSUE_TEMPLATE/bug_report.md}"
+    severity: info
+    desc: "Bug report template should exist (prefer .yml form template). Satisfied org-wide via {owner}/.github/ISSUE_TEMPLATE/bug_report.yml or .md when present."
+
+  - id: GH-09
+    type: file_exists
+    target: "{.github/ISSUE_TEMPLATE/feature_request.yml,.github/ISSUE_TEMPLATE/feature_request.md}"
+    org_provides: "{ISSUE_TEMPLATE/feature_request.yml,ISSUE_TEMPLATE/feature_request.md}"
+    severity: info
+    desc: "Feature request template should exist (prefer .yml form template). Satisfied org-wide via {owner}/.github/ISSUE_TEMPLATE/feature_request.yml or .md when present."
+
+  # === CONTENT CHECKS ===
+  - id: GH-10
+    type: contains
+    target: README.md
+    pattern: "codecov.io"
+    severity: warning
+    desc: "README should have Codecov badge"
+
+  - id: GH-11
+    type: regex
+    target: README.md
+    pattern: "github.com/.*/actions/workflows"
+    severity: error
+    desc: "README should have CI status badge"
+
+  - id: GH-12
+    type: regex
+    target: README.md
+    pattern: "img.shields.io.*license"
+    severity: warning
+    desc: "README should have license badge"
+
+  # === DEPENDABOT CHECKS ===
+  - id: GH-13
+    type: regex
+    target: "{.github/dependabot.yml,.github/dependabot.yaml}"
+    pattern: 'package-ecosystem:\s*"?(composer|gomod|npm|pip)"?'
+    severity: warning
+    desc: "Dependabot should monitor language-specific dependencies (composer, gomod, npm, pip)"
+
+  - id: GH-14
+    type: regex
+    target: "{.github/dependabot.yml,.github/dependabot.yaml}"
+    pattern: 'package-ecosystem:\s*"?github-actions"?'
+    severity: warning
+    desc: "Dependabot should monitor GitHub Actions"
+
+  # === GITIGNORE ===
+  - id: GH-17
+    type: file_exists
+    target: .gitignore
+    severity: error
+    desc: ".gitignore must exist"
+
+  # === RENOVATE (alternative to Dependabot) ===
+  - id: GH-18
+    type: file_exists
+    target: renovate.json
+    severity: info
+    desc: "Renovate config may exist as alternative to Dependabot"
+
+  # === SECURITY CONFIG ===
+  # CodeQL / Scorecard can be a dedicated workflow file OR a job in another
+  # workflow that delegates to the netresearch reusable workflow. Same
+  # pattern as ER-19/20 in enterprise-readiness-skill PR #55.
+  - id: GH-19
+    type: regex
+    target: ".github/workflows/*.{yml,yaml}"
+    pattern: 'uses:[[:space:]]*github/codeql-action|uses:[[:space:]]*netresearch/[.]github/[.]github/workflows/codeql[.]yml'
+    follow_uses: true
+    severity: warning
+    desc: >-
+      CodeQL must be wired up. Satisfied by either a local workflow that uses
+      github/codeql-action directly, or a job that delegates to a reusable
+      workflow (e.g. netresearch/.github/.github/workflows/codeql.yml) whose
+      upstream body uses github/codeql-action. follow_uses: true expands the
+      search to fetch the reusable workflow contents one hop via gh api.
+
+  - id: GH-20
+    type: regex
+    target: ".github/workflows/*.{yml,yaml}"
+    pattern: 'uses:[[:space:]]*ossf/scorecard-action|uses:[[:space:]]*netresearch/[.]github/[.]github/workflows/scorecard[.]yml'
+    follow_uses: true
+    severity: info
+    desc: >-
+      OpenSSF Scorecard must be wired up. Satisfied by a local workflow using
+      ossf/scorecard-action directly, or a job that delegates to a reusable
+      workflow (e.g. netresearch/.github/.github/workflows/scorecard.yml) whose
+      upstream body uses ossf/scorecard-action. follow_uses: true expands the
+      search to fetch the reusable workflow contents one hop via gh api.
+
+  # === SLSA PROVENANCE ===
+  # regex_not with follow_uses: the legacy slsa-github-generator pattern must
+  # not appear in either the local workflow OR any one-hop reusable workflow
+  # body — otherwise a repo could "hide" the deprecated generator inside a
+  # delegated workflow and silently pass.
+  - id: GH-21
+    type: regex_not
+    target: ".github/workflows/*.{yml,yaml}"
+    pattern: 'slsa-framework/slsa-github-generator'
+    follow_uses: true
+    severity: warning
+    desc: "Should migrate from slsa-github-generator to actions/attest-build-provenance (cannot be SHA-pinned)"
+
+  # === AUTO-MERGE WORKFLOW CHECKS ===
+  - id: GH-23
+    type: file_exists
+    target: "{.github/workflows/auto-merge-deps.yml,.github/workflows/auto-merge.yml}"
+    severity: warning
+    desc: "Auto-merge workflow should exist for Dependabot/Renovate PRs"
+
+  # Auto-merge workflows can either:
+  #   (a) delegate to the netresearch org reusable workflow
+  #       (netresearch/.github/.github/workflows/auto-merge-deps.yml), which
+  #       encapsulates the trigger, bot-gating, --auto merging, and dynamic
+  #       merge-strategy detection; or
+  #   (b) inline the full implementation with pull_request_target: + the
+  #       same bot-gating and --auto patterns.
+  # GH-24..27 accept either path.
+
+  # Patterns allow optional quoting after `uses:` (YAML accepts uses: foo,
+  # uses: 'foo', uses: "foo"). Glob target accepts either auto-merge-deps.yml
+  # or auto-merge.yml (GH-23 already treats both as valid filenames).
+
+  # The netresearch reusable-workflow path is unique enough to match without
+  # caring about uses:-line quoting (uses: foo, uses: 'foo', uses: "foo" all
+  # contain the netresearch/... substring identically).
+  - id: GH-24
+    type: regex
+    target: ".github/workflows/auto-merge*.{yml,yaml}"
+    pattern: 'netresearch/\.github/\.github/workflows/auto-merge-deps\.yml|on:[[:space:]]*\n[[:space:]]*pull_request_target:'
+    severity: error
+    desc: "Auto-merge workflow must delegate to netresearch reusable workflow OR use pull_request_target trigger for bot PR write permissions"
+
+  - id: GH-25
+    type: regex
+    target: ".github/workflows/auto-merge*.{yml,yaml}"
+    pattern: 'netresearch/\.github/\.github/workflows/auto-merge-deps\.yml|github\.event\.pull_request\.user\.login'
+    severity: warning
+    desc: "Auto-merge should delegate to reusable workflow OR check github.event.pull_request.user.login (not github.actor which changes on reruns)"
+
+  - id: GH-26
+    type: regex
+    target: ".github/workflows/auto-merge*.{yml,yaml}"
+    pattern: 'netresearch/\.github/\.github/workflows/auto-merge-deps\.yml|--auto'
+    severity: warning
+    desc: "Auto-merge should delegate to reusable workflow OR use gh pr merge --auto to respect branch protection and merge queues"
+
+  - id: GH-27
+    type: regex
+    target: ".github/workflows/auto-merge*.{yml,yaml}"
+    pattern: 'netresearch/\.github/\.github/workflows/auto-merge-deps\.yml|gh api.*repos/\$'
+    severity: info
+    desc: "Auto-merge should delegate to reusable workflow OR dynamically detect merge strategy from repo settings"
+
+  # === COMPOSITE-ACTION SHA PINNING INSIDE WORKFLOWS ===
+  # Reusable-workflow refs like `uses: org/repo/.github/workflows/foo.yml@main`
+  # are exempt (see references/reusable-workflow-security.md — internal `@main`
+  # is allowed for full reusable workflows). Composite-action refs like
+  # `uses: org/repo/.github/actions/foo@main` are NOT exempt: they are resolved
+  # at the *consumer's* runner under the consumer's allow-list policy. A
+  # consumer that enforces "all actions must be SHA-pinned" will reject a
+  # reusable workflow that internally references a composite action by branch
+  # or tag, even though the workflow file itself is unchanged. SHA-pin
+  # composite-action refs to avoid breaking SHA-pinned consumers.
+  # PCRE negative lookahead matches refs that are NOT a 40-char hex SHA.
+  # The lookahead requires the 40 hex chars to be followed by quote/comment/
+  # whitespace/EOL — without that terminator, refs like `@<40hex>-tag` would
+  # spuriously pass because `\b` matches between hex and `-`.
+  - id: GH-34
+    type: regex_not
+    target: ".github/workflows/*.{yml,yaml}"
+    pattern: 'uses:\s+["'']?[A-Za-z0-9._-]+/[A-Za-z0-9._-]+/\.github/actions/[^@]+@(?![0-9a-f]{40}(?:["''#\s]|$))'
+    severity: error
+    desc: >-
+      Composite action references inside .github/workflows/*.yml must be
+      SHA-pinned (40-char hex). Branch/tag refs (@main, @v1) break consumers
+      that enforce SHA pinning when this workflow is called as a reusable
+      workflow. See references/reusable-workflow-pitfalls.md.
+
+  # === HARDEN-RUNNER FIRST-STEP CHECK ===
+  # Mechanical YAML-AST check via python yaml.safe_load (a regex-only check
+  # cannot reliably reason about "first step of each job" across multi-line
+  # YAML). Skipped if PyYAML is unavailable. Jobs that are pure
+  # reusable-workflow callers (job-level `uses:` instead of `steps:`) are
+  # exempt — they have no runner steps to harden.
+  - id: GH-35
+    type: command
+    target: |
+      command -v python3 >/dev/null 2>&1 || exit 0
+      python3 - <<'PY'
+      try:
+          import yaml
+      except ImportError:
+          import sys; sys.exit(0)
+      import glob, sys
+      bad = []
+      for f in sorted(glob.glob('.github/workflows/*.yml')
+                      + glob.glob('.github/workflows/*.yaml')):
+          try:
+              with open(f) as fh:
+                  wf = yaml.safe_load(fh)
+          except Exception:
+              continue
+          if not isinstance(wf, dict):
+              continue
+          for jname, job in (wf.get('jobs') or {}).items():
+              if not isinstance(job, dict):
+                  continue
+              # Skip reusable-workflow callers (no steps array).
+              if 'uses' in job and 'steps' not in job:
+                  continue
+              steps = job.get('steps')
+              if not isinstance(steps, list) or not steps:
+                  continue
+              first = steps[0] if isinstance(steps[0], dict) else {}
+              uses = first.get('uses', '') or ''
+              if not uses.startswith('step-security/harden-runner'):
+                  bad.append(f"{f}::{jname}")
+      if bad:
+          sys.stderr.write("Jobs missing harden-runner as first step: "
+                           + ", ".join(bad) + "\n")
+          sys.exit(1)
+      sys.exit(0)
+      PY
+    severity: warning
+    desc: >-
+      Every workflow job with `steps:` should start with
+      `step-security/harden-runner` (audit egress). Jobs that are pure
+      reusable-workflow callers (job-level `uses:`) are exempt.
+
+  # === AUTO-APPROVE (pr-quality.yml) COPILOT RACE CONDITION ===
+  - id: GH-33
+    type: command
+    target: |
+      # If pr-quality.yml exists, verify it triggers on pull_request_review as
+      # well as pull_request_target. Without pull_request_review, the approval
+      # job races with Copilot and leaves PRs BLOCKED with empty reviewDecision.
+      # See references/auto-merge-guide.md → "Auto-Approve Race Condition
+      # with Copilot Reviewer".
+      WF=.github/workflows/pr-quality.yml
+      test -f "$WF" || exit 0   # not applicable if workflow doesn't exist
+      grep -qE '^[[:space:]]*pull_request_review[[:space:]]*:' "$WF"
+    severity: warning
+    desc: >-
+      pr-quality.yml should also trigger on pull_request_review to avoid the
+      Copilot auto-approve race condition (PR stuck BLOCKED with empty
+      reviewDecision)
+
+  # === BRANCH PROTECTION AUDIT ===
+  # GH-30 / GH-31 require GitHub API access (gh CLI + auth) which is outside
+  # the assessment runner's command allowlist. Declared as type: gh_api so the
+  # runner skips them with a clear evidence string instead of rejecting them.
+  # The semantically equivalent LLM-driven audit lives in GH-32 (llm_reviews).
+  - id: GH-30
+    type: gh_api
+    endpoint: "repos/{owner}/{repo}/branches/{default_branch}/protection"
+    json_path: ".enforce_admins.enabled"
+    severity: info
+    desc: >-
+      enforce_admins recommended on default branch so admins are also bound
+      by required status checks and review requirements. Severity is info
+      (not error) because netresearch's org default leaves this off — admins
+      retain bypass for emergency response. Tighten to true if your org
+      requires admin-bind policy.
+
+  - id: GH-31
+    type: gh_api
+    endpoint: "repos/{owner}/{repo}/branches/{default_branch}/protection"
+    json_path: ".required_conversation_resolution.enabled"
+    severity: error
+    desc: >-
+      required_conversation_resolution must be enabled. Without it, PR
+      merges may silently include unresolved bot-reviewer feedback —
+      including security issues like token leakage in build logs (see
+      netresearch/snipe-it-docker-compose-stack#17 where this gap let a
+      HIGH-severity Copilot/gemini-code-assist finding ship to main).
+      Apply via skills/github-project/scripts/init-branch-protection.sh
+      OWNER/REPO right after `gh repo create` + initial push, before
+      opening the first PR (script requires the default branch ref to
+      exist; exits 4 on empty repos). Combined with enforce_admins,
+      also ensures unresolved threads block ALL merges including admins
+      (audited by GH-32 llm_review; runner skips because gh API access
+      requires auth).
+
+llm_reviews:
+  # === BRANCH PROTECTION + MERGE QUEUE COMPATIBILITY ===
+  - id: GH-22
+    domain: security
+    prompt: |
+      Check repository ruleset for merge queue + branch protection compatibility:
+      1. If merge_queue is enabled, require_last_push_approval MUST be false
+         (merge queue commits dismiss approvals, causing permanent blocks)
+      2. If require_code_owner_review is true, verify CODEOWNERS file exists
+         on the default branch (enabling without the file blocks all PRs)
+      3. For solo-maintainer repos: required_approving_review_count should be 1
+         (not 0) paired with an auto-approve workflow
+
+      Check via: gh api repos/OWNER/REPO/rulesets --jq '.[].rules[]'
+    severity: error
+    desc: "Verify branch protection rules are compatible with merge queue configuration"
+
+  # === AUTO-MERGE CORRECTNESS ===
+  - id: GH-28
+    domain: ci
+    prompt: |
+      Verify auto-merge workflow end-to-end correctness:
+      1. Trigger must be pull_request_target (not pull_request) — bot PRs
+         need write permissions from the base branch context
+      2. Bot detection must use github.event.pull_request.user.login
+         (not github.actor — actor changes on manual reruns)
+      3. Merge command must use --auto flag (respects branch protection,
+         merge queues, and required checks)
+      4. Merge strategy should be dynamically detected from repo settings
+         via gh api, not hardcoded (repos may enable different strategies)
+      5. If repo has branch protection requiring reviews, the workflow must
+         also approve the PR (gh pr review --approve) before enabling auto-merge
+      6. Check for step-security/harden-runner presence
+      Report specific issues found.
+    severity: warning
+    desc: "Verify auto-merge workflow uses correct trigger, bot detection, merge flags, and strategy detection"
+
+  - id: GH-29
+    domain: ci
+    prompt: |
+      Check if pr-quality.yml or auto-approve workflow correctly handles bot accounts:
+      1. Bot accounts (dependabot[bot], renovate[bot]) have author_association
+         of NONE or CONTRIBUTOR — they are NOT org members/collaborators
+      2. If auto-approve checks author_association for OWNER/MEMBER/COLLABORATOR,
+         it will NEVER approve bot PRs — this is a common misconfiguration
+      3. Correct patterns: check user.login explicitly for known bots,
+         OR use gh api collaborators permission check (which works for apps
+         with collaborator access)
+      4. If branch protection requires approving reviews, bot PRs will be
+         permanently BLOCKED without a working auto-approve mechanism
+      Report if bot approval flow has this misconfiguration.
+    severity: error
+    desc: "Verify auto-approve workflow correctly handles bot accounts (author_association is NONE for bots)"
+
+  # === BRANCH PROTECTION ENFORCEMENT AUDIT ===
+  - id: GH-32
+    domain: security
+    prompt: |
+      Audit branch protection enforcement on the default branch:
+      1. Run: gh api repos/OWNER/REPO/branches/BRANCH/protection --jq '.enforce_admins.enabled'
+         Recommended (informational only — see GH-30). When false, repository
+         admins can bypass branch protection rules. Netresearch's org default
+         leaves this off so admins retain bypass for emergency response;
+         tighten to true only if your org requires admin-bind policy. Do NOT
+         report this as an error on its own — flag it as info/advisory.
+      2. Run: gh api repos/OWNER/REPO/branches/BRANCH/protection --jq '.required_conversation_resolution.enabled'
+         Must be true. Without this, unresolved review threads do not block merges.
+         This is the primary error-level enforcement check (paired with GH-31).
+      3. Note the interaction: enforce_admins=false means admins COULD bypass
+         required_conversation_resolution. Surface this as an advisory trade-off,
+         not a blocking failure, since it matches the documented org default.
+      4. If using rulesets instead of branch protection, check the equivalent:
+         gh api repos/OWNER/REPO/rulesets --jq '.[].rules[] | select(.type=="pull_request") | .parameters'
+         Look for required_review_thread_resolution: true and bypass_actors being empty.
+      Report required_conversation_resolution gaps as errors; report
+      enforce_admins gaps as info (advisory).
+    severity: error
+    desc: "Verify required_conversation_resolution is enabled (error); enforce_admins is advisory only (see GH-30)."
+
+  # === PR REVIEW COMPLETENESS PROCESS CHECK ===
+  - id: GH-36
+    domain: pr-process
+    prompt: |
+      When a PR's review feedback is being addressed, before declaring it
+      "ready to merge" or "all comments addressed":
+
+      1. Query unresolved review threads via GraphQL (first:100 is the
+         GraphQL maximum; for PRs at the cap, paginate with
+         pageInfo.hasNextPage / endCursor + after:):
+         gh api graphql -f query='query($owner:String!,$repo:String!,$pr:Int!){
+           repository(owner:$owner,name:$repo){pullRequest(number:$pr){
+             reviewThreads(first:100){
+               pageInfo{hasNextPage endCursor}
+               nodes{id isResolved comments(first:1){nodes{body path line}}}
+             }
+           }}
+         }' -f owner=OWNER -f repo=REPO -F pr=NUMBER \
+            --jq '.data.repository.pullRequest.reviewThreads.nodes
+                  | map(select(.isResolved == false))'
+
+      2. The count of unresolved threads must be exactly zero. If
+         pageInfo.hasNextPage is true, paginate before concluding.
+      3. If non-zero, list each thread with the first comment's body
+         (truncated to ~100 chars) plus path/line so the user can see
+         exactly what's outstanding.
+
+      Common failure mode: addressing only the threads visible at the top
+      of the PR discussion, missing inline-code threads or threads from
+      earlier reviewers. The GraphQL query is the single source of truth —
+      do not rely on the PR conversation tab alone.
+
+      Report: "All threads resolved" OR "N unresolved thread(s): <list>".
+    severity: info
+    desc: >-
+      Before declaring PR review feedback addressed, verify zero unresolved
+      review threads via GraphQL (not just the conversation tab).
+
+  # === SUBJECTIVE CHECKS (require LLM judgment) ===
+  - id: GH-15
+    domain: repo-health
+    rubric: references/llm-rubric.md#badge-order
+    severity: warning
+    desc: "Verify README badges are in the correct order"
+
+  - id: GH-16
+    domain: repo-health
+    prompt: |
+      Verify the README has a clear structure with these sections:
+      - Installation/Setup
+      - Usage/Configuration
+      - Development (tests, linting)
+      - License
+      - Credits/Contributors
+
+      Check the actual section headers in README.md and report if it matches.
+    severity: info
+    desc: "README should have standard structure with key sections"

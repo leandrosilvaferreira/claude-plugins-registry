@@ -1,0 +1,27 @@
+name: Feature Request
+description: Suggest a new feature or enhancement
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Descrição da feature
+      description: O que deve ser possível fazer que não é possível hoje?
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivação
+      description: Por que esta feature é importante? Qual problema resolve?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critérios de aceite
+      placeholder: |
+        - [ ] Usuário consegue fazer X
+        - [ ] Edge case Y tratado corretamente
+    validations:
+      required: true

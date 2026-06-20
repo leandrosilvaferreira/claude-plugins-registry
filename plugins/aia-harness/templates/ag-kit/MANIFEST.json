@@ -1,0 +1,80 @@
+{
+  "source": "vudovn/ag-kit",
+  "ref": "main",
+  "commit": "a909d03c808296b86cc124e09acf5f1c7efa4e49",
+  "attribution": "ag-kit by vudovn — https://github.com/vudovn/ag-kit — MIT License",
+  "vendoredAt": "2026-06-18T07:46:48.797Z",
+  "counts": {
+    "agents": 16,
+    "skills": 26,
+    "commands": 12,
+    "scripts": 2,
+    "other": 1
+  },
+  "assets": {
+    "agents": [
+      "backend-specialist",
+      "code-archaeologist",
+      "database-architect",
+      "devops-engineer",
+      "documentation-writer",
+      "frontend-specialist",
+      "game-developer",
+      "mobile-developer",
+      "orchestrator",
+      "penetration-tester",
+      "performance-optimizer",
+      "product-manager",
+      "product-owner",
+      "project-planner",
+      "qa-automation-engineer",
+      "seo-specialist"
+    ],
+    "skills": [
+      "app-builder",
+      "architecture",
+      "bash-linux",
+      "batch-operations",
+      "behavioral-modes",
+      "clean-code",
+      "code-review-graph",
+      "context-compression",
+      "coordinator-mode",
+      "database-design",
+      "deployment-procedures",
+      "documentation-templates",
+      "game-development",
+      "i18n-localization",
+      "intelligent-routing",
+      "lint-and-validate",
+      "memory-system",
+      "mobile-design",
+      "performance-profiling",
+      "powershell-windows",
+      "red-team-tactics",
+      "server-management",
+      "tailwind-patterns",
+      "testing-patterns",
+      "vulnerability-scanner",
+      "web-design-guidelines"
+    ],
+    "commands": [
+      "brainstorm",
+      "coordinate",
+      "create",
+      "debug",
+      "deploy",
+      "enhance",
+      "orchestrate",
+      "plan",
+      "preview",
+      "remember",
+      "test",
+      "verify"
+    ],
+    "scripts": [
+      "checklist",
+      "verify_all"
+    ]
+  }
+}

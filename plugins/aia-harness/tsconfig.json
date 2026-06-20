@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2023"],
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["node"]
+  },
+  "include": [
+    "lib/**/*.mjs",
+    "bin/**/*.mjs",
+    "scripts/**/*.mjs",
+    "templates/hooks/**/*.mjs",
+    "tests/*.mjs"
+  ],
+  "exclude": ["node_modules", "tests/fixtures", "templates/ecc", "templates/tools"]
+}

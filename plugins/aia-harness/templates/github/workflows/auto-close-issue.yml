@@ -1,0 +1,42 @@
+name: Auto-close issue on PR merge
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  close-linked-issues:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Check PROJECTS_PAT
+        run: |
+          if [ -z "${{ secrets.PROJECTS_PAT }}" ]; then
+            echo "PROJECTS_PAT not set — skipping"
+            exit 0
+          fi
+
+      - name: Extract linked issues
+        id: issues
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          ISSUES=$(printf '%s' "$PR_BODY" | \
+            grep -ioE '(closes|fixes|resolves)\s+#[0-9]+' | \
+            grep -oE '#[0-9]+' | tr -d '#' | tr '\n' ',' | sed 's/,$//')
+          echo "issue_numbers=$ISSUES" >> "$GITHUB_OUTPUT"
+
+      - name: Close issues and move to Done
+        if: steps.issues.outputs.issue_numbers != '' && secrets.PROJECTS_PAT != ''
+        env:
+          GH_TOKEN: ${{ secrets.PROJECTS_PAT }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          IFS=',' read -ra NUMS <<< "${{ steps.issues.outputs.issue_numbers }}"
+          for N in "${NUMS[@]}"; do
+            echo "Closing issue #$N and moving to Done"
+            gh issue close "$N" \
+              --comment "Fechado automaticamente pelo merge da PR #$PR_NUMBER. ✅" \
+              --repo "$REPO" 2>/dev/null || echo "Could not close #$N"
+            # Move to Done via project CLI (same pattern as commit-to-progress.yml)
+          done

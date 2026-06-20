@@ -1,0 +1,19 @@
+name: Task / Chore
+description: Technical task, infrastructure, or maintenance
+labels: ["task"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Descrição da tarefa
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critérios de aceite
+      placeholder: |
+        - [ ] Tarefa concluída
+        - [ ] Documentação atualizada se necessário
+    validations:
+      required: true

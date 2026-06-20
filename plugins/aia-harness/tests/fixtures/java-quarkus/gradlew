@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+# Gradle wrapper (fixture stub)
+exec gradle "$@"
