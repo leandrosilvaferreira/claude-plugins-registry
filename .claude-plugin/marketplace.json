@@ -1,0 +1,27 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "leandro-plugins-registry",
+  "description": "Public registry of Claude Code plugins — discover and install community plugins",
+  "owner": {
+    "name": "Leandro Silva Ferreira",
+    "email": "leandrosilvaferreira@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "aia-harness",
+      "description": "Scan a project and scaffold a complete Claude Code harness: hooks, skills, agents, rules, settings, MCPs, worktree config and per-domain CLAUDE.md. Diagnose, approve, apply.",
+      "author": {
+        "name": "Leandro Silva Ferreira"
+      },
+      "category": "tooling",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/leandrosilvaferreira/aia_harness.git",
+        "path": ".",
+        "ref": "main",
+        "sha": "251e04da82aecc4146e7c9868c1de61d4f995944"
+      },
+      "homepage": "https://github.com/leandrosilvaferreira/aia_harness"
+    }
+  ]
+}
