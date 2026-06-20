@@ -3,6 +3,7 @@
 ## Visualizações rápidas
 
 Listar issues abertas (backlog geral):
+
 ```bash
 gh issue list --repo <owner>/<repo> --state open \
   --json number,title,labels,assignees,milestone \
@@ -10,11 +11,13 @@ gh issue list --repo <owner>/<repo> --state open \
 ```
 
 Filtrar por label:
+
 ```bash
 gh issue list --repo <owner>/<repo> --label "bug" --state open
 ```
 
 Filtrar por assignee (meu trabalho):
+
 ```bash
 gh issue list --repo <owner>/<repo> --assignee "@me" --state open
 ```
@@ -29,6 +32,7 @@ gh project item-list <project_number> --owner <owner> --format json
 ## Priorização
 
 Ao apresentar o backlog ao usuário:
+
 1. Agrupar por status atual (Triage / Backlog / In Progress / In Review)
 2. Destacar Issues "In Progress" sem atividade recente (possível abandono)
 3. Destacar Issues "Triage" sem triagem há mais de 3 dias
