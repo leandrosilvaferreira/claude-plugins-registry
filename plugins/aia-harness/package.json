@@ -22,7 +22,8 @@
     "sync:agkit": "node scripts/sync-agkit.mjs",
     "sync:github-issues": "node scripts/sync-github-issues.mjs",
     "sync:github-project": "node scripts/sync-github-project.mjs",
-    "scan": "node bin/harness.mjs scan"
+    "scan": "node bin/harness.mjs scan",
+    "publish-registry": "node scripts/publish-to-registry.mjs"
   },
   "keywords": [
     "claude-code",

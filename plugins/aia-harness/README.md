@@ -100,7 +100,7 @@ claude plugin update aia-harness
 ## Commands
 
 | Command | What it does |
-|---------|--------------|
+| ------- | ------------ |
 | `/aia-harness:scan [path]` | Read-only diagnosis of stack, commands, architecture, existing harness. |
 | `/aia-harness:init [path]` | Full flow: scan → propose plan → consent (multi-select) → apply with diffs → safety review. |
 | `/aia-harness:doctor [path]` | Audit an existing harness (CLAUDE.md size, settings safety, hook hygiene) and propose targeted fixes. |
@@ -178,6 +178,8 @@ npm run lint        # ESLint flat config
 npm run test:unit   # node --test
 npm test            # all three
 ```
+
+See [PUBLISHING.md](./PUBLISHING.md) for the release and registry-sync workflow.
 
 The engine lives in `lib/` (pure, tested), templates in `templates/`, and the
 Claude Code surface in `commands/`, `agents/`, `skills/`, `hooks/`. Design notes
