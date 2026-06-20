@@ -14,9 +14,16 @@ claude plugin install <plugin-name>
 
 ## Available plugins
 
-| Name | Category | Description |
-|------|----------|-------------|
-| [aia-harness](https://github.com/leandrosilvaferreira/aia_harness) | tooling | Scan any project and scaffold a complete Claude Code harness: hooks, skills, agents, rules, settings, MCPs, worktree config, and per-domain CLAUDE.md. Full diagnose → approve → apply flow. |
+### [aia-harness](https://github.com/leandrosilvaferreira/claude-plugins-registry/tree/main/plugins/aia-harness)
+
+**Category:** tooling
+
+Scan any project and scaffold a complete Claude Code harness: hooks, skills, agents, rules,
+settings, MCPs, worktree config, and per-domain CLAUDE.md. Full diagnose → approve → apply flow.
+
+```bash
+claude plugin install aia-harness
+```
 
 ## How to install a plugin
 
@@ -69,6 +76,7 @@ claude plugin marketplace remove leandro-plugins-registry
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to add your plugin to this registry.
 
 **TL;DR:**
+
 1. Your plugin needs a public GitHub repo with `.claude-plugin/plugin.json`
 2. Fork this repo, add your entry to `.claude-plugin/marketplace.json`
 3. Open a PR — CI validates the manifest automatically
