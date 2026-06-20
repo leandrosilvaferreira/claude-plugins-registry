@@ -1,0 +1,33 @@
+{
+  "$schema": "./schema/plugin.schema.json",
+  "version": "1",
+  "updatedAt": "2026-06-19",
+  "plugins": [
+    {
+      "name": "aia-harness",
+      "version": "0.1.1",
+      "description": "Scan a project and scaffold a complete Claude Code harness: hooks, skills, agents, rules, settings, MCPs, worktree config and per-domain CLAUDE.md. Diagnose, approve, apply.",
+      "author": {
+        "name": "Leandro Silva Ferreira",
+        "email": "leandrosilvaferreira@gmail.com"
+      },
+      "repository": "https://github.com/leandrosilvaferreira/aia_harness",
+      "homepage": "https://github.com/leandrosilvaferreira/aia_harness",
+      "license": "MIT",
+      "category": "tooling",
+      "keywords": [
+        "harness",
+        "scaffold",
+        "bootstrap",
+        "automation",
+        "stack-detection",
+        "claude-md",
+        "hooks",
+        "worktrees",
+        "mcp"
+      ],
+      "installUrl": "https://github.com/leandrosilvaferreira/aia_harness",
+      "publishedAt": "2026-06-19"
+    }
+  ]
+}

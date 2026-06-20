@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/leandrosilvaferreira/claude-plugins-registry/schema/plugin.schema.json",
+  "title": "Claude Plugins Registry",
+  "type": "object",
+  "required": ["version", "plugins"],
+  "properties": {
+    "version": { "type": "string" },
+    "updatedAt": { "type": "string", "format": "date" },
+    "plugins": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Plugin" }
+    }
+  },
+  "$defs": {
+    "Plugin": {
+      "type": "object",
+      "required": ["name", "version", "description", "repository", "license", "category", "installUrl"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "description": "Kebab-case unique plugin name"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Semantic version (MAJOR.MINOR.PATCH)"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "author": {
+          "type": "object",
+          "required": ["name"],
+          "properties": {
+            "name": { "type": "string" },
+            "email": { "type": "string", "format": "email" },
+            "url": { "type": "string", "format": "uri" }
+          }
+        },
+        "repository": {
+          "type": "string",
+          "format": "uri",
+          "description": "GitHub repo URL"
+        },
+        "homepage": {
+          "type": "string",
+          "format": "uri"
+        },
+        "license": {
+          "type": "string",
+          "enum": ["MIT", "Apache-2.0", "GPL-3.0", "BSD-2-Clause", "BSD-3-Clause", "ISC", "MPL-2.0"]
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "tooling",
+            "testing",
+            "deployment",
+            "code-quality",
+            "documentation",
+            "integration",
+            "ai-workflow",
+            "security",
+            "database",
+            "frontend",
+            "backend",
+            "devops",
+            "other"
+          ]
+        },
+        "keywords": {
+          "type": "array",
+          "items": { "type": "string" },
+          "maxItems": 10
+        },
+        "installUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL passed to: claude plugin add <installUrl>"
+        },
+        "minClaudeCodeVersion": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "publishedAt": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    }
+  }
+}
