@@ -69,7 +69,7 @@ export const PROJECT_BY_STACK = {
  * hooks (format-on-edit, verify-on-stop, set-files-changed) are built in
  * plan.mjs because they depend on the profile / strict flag.
  */
-export const PROJECT_HOOK_FILES = ["node-run.sh", "node-run.cmd", "secret-scan.mjs", "large-file-warning.mjs", "guard-main-branch.mjs", "memory-stop.mjs"];
+export const PROJECT_HOOK_FILES = ["node-run.sh", "node-run.cmd", "secret-scan.mjs", "large-file-warning.mjs", "guard-main-branch.mjs", "memory-stop.mjs", "sql-idempotent-review.mjs"];
 
 const HOOK_DIR = "${CLAUDE_PROJECT_DIR}/.claude/hooks";
 

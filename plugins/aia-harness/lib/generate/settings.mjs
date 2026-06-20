@@ -81,6 +81,7 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
         hooks: [
           { type: "command", command: hookCmd("format-on-edit.mjs"), timeout: 60 },
           { type: "command", command: hookCmd("set-files-changed.mjs"), timeout: 30 },
+          { type: "command", command: hookCmd("sql-idempotent-review.mjs"), timeout: 10 },
         ],
       },
     ],
