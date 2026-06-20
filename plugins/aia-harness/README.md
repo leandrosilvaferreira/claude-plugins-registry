@@ -65,7 +65,7 @@ claude
 To update to the latest version:
 
 ```bash
-claude plugin update aia-harness
+claude plugin update aia-harness@leandro-plugins-registry
 ```
 
 ## Commands

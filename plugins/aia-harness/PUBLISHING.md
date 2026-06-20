@@ -74,5 +74,5 @@ node scripts/publish-to-registry.mjs /absolute/path/to/registry
 Users already installed get the update with:
 
 ```bash
-claude plugin update aia-harness
+claude plugin update aia-harness@leandro-plugins-registry
 ```

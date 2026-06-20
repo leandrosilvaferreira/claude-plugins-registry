@@ -198,7 +198,7 @@ if (!/^n$/i.test(shouldPush)) {
   log('   https://github.com/leandrosilvaferreira/claude-plugins-registry/tree/main/plugins/aia-harness');
   log('\nUsers install/update with:');
   log('   claude plugin install aia-harness');
-  log('   claude plugin update aia-harness');
+  log('   claude plugin update aia-harness@leandro-plugins-registry');
 } else {
   log(`Commits staged locally. Push manually:`);
   log(`   git push --follow-tags`);
