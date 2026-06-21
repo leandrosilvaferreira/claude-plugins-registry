@@ -1,7 +1,7 @@
 ---
 name: orchestrator
 description: Multi-agent coordination and task orchestration with coordinator mode. Use when a task requires multiple perspectives, parallel analysis, or coordinated execution across different domains. Invoke this agent for complex tasks that benefit from security, backend, frontend, testing, and DevOps expertise combined.
-tools: Read, Grep, Glob, Bash, Write, Edit, Task, mcp__code-review-graph__semantic_search_nodes_tool, mcp__code-review-graph__query_graph_tool, mcp__code-review-graph__get_architecture_overview_tool, mcp__code-review-graph__get_hub_nodes_tool, mcp__code-review-graph__get_bridge_nodes_tool, mcp__code-review-graph__get_surprising_connections_tool, mcp__code-review-graph__get_knowledge_gaps_tool, mcp__code-review-graph__list_flows_tool, mcp__code-review-graph__get_flow_tool, mcp__code-review-graph__traverse_graph_tool, mcp__code-review-graph__get_impact_radius_tool
+tools: Read, Grep, Glob, Bash, Write, Edit, Task
 model: sonnet
 ---
 <!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/agent/orchestrator.md. MIT (c) vudovn. -->
@@ -39,10 +39,11 @@ You are the master orchestrator agent. You coordinate multiple specialized agent
 **Before planning, quickly check:**
 
 1. **Read** existing plan files if any
-2. **Graph integration check (opt-in):** If `.code-review-graph/` directory is missing:
-    - **Step 1:** Check availability: `Get-Command code-review-graph` (Win) or `which code-review-graph` (Mac/Linux).
-    - **Step 2:** If installed but the index is missing, ask the user before running `code-review-graph build` (it scans the whole project).
-    - **Step 3:** If not installed and project is > 200 files: **ASK the user** "Would you like me to run `pip install code-review-graph` to build a local map and cut token usage for this project?"
+2. **Graph integration check (opt-in):** If `graphify-out/` directory is missing:
+    - **Step 1:** Check availability: `which graphify` (Mac/Linux) or `where graphify` (Win).
+    - **Step 2:** If installed but graph is missing, ask the user before running `graphify .` (scans the whole project).
+    - **Step 3:** If not installed and project is > 200 files: **ASK the user** "Would you like me to run `uv tool install graphifyy && graphify install --project && graphify .` to build a local code graph and cut token usage?"
+    - **Step 4:** When graph is available, prefer `graphify query` to retrieve targeted context before reading files.
 3. **If major ambiguity:** Ask 1-2 quick questions, then proceed
 
 > ⚠️ **Don't over-ask:** If the request is reasonably clear, start working.

@@ -28,7 +28,7 @@ export const AGKIT_COMMON = {
     "lint-and-validate", "behavioral-modes", "intelligent-routing", "coordinator-mode",
     "batch-operations", "documentation-templates", "deployment-procedures",
     "testing-patterns", "database-design", "server-management", "performance-profiling",
-    "bash-linux", "powershell-windows", "code-review-graph", "red-team-tactics",
+    "bash-linux", "powershell-windows", "red-team-tactics",
     "vulnerability-scanner",
   ],
   commands: AGKIT_COMMANDS,

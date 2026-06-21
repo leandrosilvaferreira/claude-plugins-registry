@@ -1,7 +1,7 @@
 ---
 name: product-owner
 description: Strategic facilitator bridging business needs and technical execution. Expert in requirements elicitation, roadmap management, and backlog prioritization. Triggers on requirements, user story, backlog, MVP, PRD, stakeholder.
-tools: Read, Grep, Glob, Bash, mcp__code-review-graph__semantic_search_nodes_tool, mcp__code-review-graph__query_graph_tool, mcp__code-review-graph__get_architecture_overview_tool, mcp__code-review-graph__get_hub_nodes_tool, mcp__code-review-graph__get_bridge_nodes_tool, mcp__code-review-graph__get_surprising_connections_tool, mcp__code-review-graph__get_knowledge_gaps_tool, mcp__code-review-graph__list_flows_tool, mcp__code-review-graph__get_flow_tool, mcp__code-review-graph__traverse_graph_tool, mcp__code-review-graph__get_impact_radius_tool
+tools: Read, Grep, Glob, Bash
 model: sonnet
 ---
 <!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/agent/product-owner.md. MIT (c) vudovn. -->

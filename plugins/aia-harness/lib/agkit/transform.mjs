@@ -81,7 +81,9 @@ export function mapAgentTools(value) {
   const out = [];
   for (const raw of cleaned.split(",").map((t) => t.trim()).filter(Boolean)) {
     if (AGENT_TOOL_DROP.has(raw)) continue;
-    // MCP tools pass through unchanged — not Antigravity-specific
+    // Drop MCP tools for servers we don't wire into the generated harness
+    if (raw.startsWith("mcp__code-review-graph__")) continue;
+    // Other MCP tools pass through unchanged
     if (raw.startsWith("mcp__")) {
       if (!out.includes(raw)) out.push(raw);
       continue;

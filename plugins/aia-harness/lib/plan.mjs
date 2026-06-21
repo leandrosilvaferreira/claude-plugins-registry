@@ -266,7 +266,7 @@ export function buildPlan(profile, ctx) {
     gitignore: [
       ".claude/settings.local.json",
       ".claude/*.local.*",
-      ...(toolIds.includes("graphify") ? ["graphify-out/cost.json"] : []),
+      ...(toolIds.includes("graphify") ? ["graphify-out/cost.json", "graphify-out/cache/"] : []),
     ],
     notes,
     totalContextCost: artifacts.reduce((sum, a) => sum + a.contextCost, 0),

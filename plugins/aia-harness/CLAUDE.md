@@ -98,21 +98,26 @@ and graphify. `plugins-catalog` generates a runnable `scripts/install-plugins.sh
 
   All four are re-exported by the `asset-catalog.mjs` barrel, which is the single import surface for `plan.mjs`. A new stack key goes in `stack-keys.mjs`. Note: `skills/` at the repo root (plugin skills that travel with the plugin, e.g. `harness-engineering`) are NOT distributed and NOT in any catalog.
 - **Safety invariants** (don't regress): consent gate before writes, diffs before overwrite, secrets only as `${ENV}` placeholders, `*.local.*` gitignored, guard hooks exit 2 / formatters fail open. The **strict Stop hook** (`verify-on-stop.mjs`, default on; `--no-strict` opts out) is the one deliberate exception to "Stop never blocks": it blocks on real lint/typecheck failures so the agent self-corrects, but stays **fail-open on infra** (missing runtime/command never blocks) and only runs when the session edited lintable code (gated by `set-files-changed.mjs`). The **large-file guard** (`large-file-warning.mjs`, always installed) is dual-mode, selected at init and threaded via `--large-files=block|advisory` (default = the detector's `profile.largeFiles.recommended`): `block` wires it under `Stop` and returns `decision:"block"` so the agent refactors files over 350 lines before finishing (a second deliberate Stop-block exception; anti-loop via `stop_hook_active`); `advisory` wires it under `PostToolUse` and injects `additionalContext` suggesting a refactor + user confirmation, never blocking. `renderSettings`/`buildPlan` choose the wiring; `/patch` and `/doctor` preserve or offer to configure the mode.
-- **Hook output schema compliance — mandatory**: every hook under `templates/hooks/` distributed to target projects must have unit tests covering **all possible output paths**, and every output must pass the validator from `lib/validate/hook-schema.mjs` matching the hook's event type. All 9 Claude Code hook types are covered:
+- **Hook output schema compliance — mandatory**: every hook under `templates/hooks/` distributed to target projects must have unit tests covering **all possible output paths**, and every output must pass the validator from `lib/validate/hook-schema.mjs` matching the hook's event type. All 14 Claude Code hook types are covered:
 
-  | Hook event | Validator | Exit codes | Special JSON fields |
+  | Hook event | Validator | Exit codes | `hookSpecificOutput` fields |
   | --- | --- | --- | --- |
-  | `PreToolUse` | `validatePreToolUseOutput` | 0 (allow/ask), 2 (block tool) | `hookSpecificOutput.permissionDecision` (`"allow"\|"deny"\|"ask"`), optional `updatedInput` |
-  | `PostToolUse` | `validatePostToolUseOutput` | 0 (success), 2 (stderr to Claude) | standard only |
-  | `Stop` | `validateStopOutput` | 0 (approve), 2 (block stop) | `decision` (`"approve"\|"block"`), `reason` |
+  | `PreToolUse` | `validatePreToolUseOutput` | 0 (allow/ask), 2 (block tool) | `hookEventName:"PreToolUse"`, `permissionDecision` (`"allow"\|"deny"\|"ask"\|"defer"`), `permissionDecisionReason?`, `updatedInput?`, `additionalContext?` |
+  | `PostToolUse` | `validatePostToolUseOutput` | 0 (success), 2 (stderr to Claude) | `hookEventName:"PostToolUse"`, `additionalContext?`, `updatedToolOutput?` |
+  | `PostToolUseFailure` | `validatePostToolUseFailureOutput` | 0 (success), 2 (stderr to Claude) | `hookEventName:"PostToolUseFailure"`, `additionalContext?` |
+  | `Stop` | `validateStopOutput` | 0 (approve), 2 (block stop) | none — top-level `decision` (`"approve"\|"block"`), `reason?` |
   | `SubagentStop` | `validateSubagentStopOutput` | 0 (approve), 2 (block) | same as Stop |
-  | `UserPromptSubmit` | `validateUserPromptSubmitOutput` | 0 (recommended), 2 (block) | `decision` (`"block"` only), `hookSpecificOutput.additionalContext` |
-  | `SessionStart` | `validateSessionStartOutput` | 0 (success), 2 (stderr to user) | standard only |
-  | `SessionEnd` | `validateSessionEndOutput` | 0 (success), 2 (stderr to user) | standard only |
-  | `PreCompact` | `validatePreCompactOutput` | 0 (success), 2 (stderr to user) | standard only |
-  | `Notification` | `validateNotificationOutput` | 0 (success), 2 (stderr to user) | standard only |
+  | `SubagentStart` | `validateSubagentStartOutput` | 0 (success), 2 (stderr to Claude) | `hookEventName:"SubagentStart"`, `additionalContext?` |
+  | `UserPromptSubmit` | `validateUserPromptSubmitOutput` | 0 (allow), 2 (block+erase) | `hookEventName:"UserPromptSubmit"`, `additionalContext?`, `sessionTitle?` — also top-level `decision:"block"` |
+  | `PermissionRequest` | `validatePermissionRequestOutput` | 0 (allow), 2 (deny) | `hookEventName:"PermissionRequest"`, `decision` (required object: `{behavior:"allow"\|"deny",...}`) |
+  | `SessionStart` | `validateSessionStartOutput` | 0 (success), 2 (stderr to user) | `hookEventName:"SessionStart"`, `additionalContext?` |
+  | `SessionEnd` | `validateSessionEndOutput` | 0 (success), 2 (stderr to user) | none (standard only) |
+  | `PreCompact` | `validatePreCompactOutput` | 0 (success), 2 (stderr to user) | none (standard only) |
+  | `Notification` | `validateNotificationOutput` | 0 (success), 2 (stderr to user) | `hookEventName:"Notification"`, `additionalContext?` |
+  | `Setup` *(TS SDK)* | `validateSetupOutput` | 0 (success), 2 (stderr to user) | `hookEventName:"Setup"`, `additionalContext?` |
+  | `PostToolBatch` *(TS SDK)* | `validatePostToolBatchOutput` | 0 (success), 2 (stderr to Claude) | `hookEventName:"PostToolBatch"`, `additionalContext?` |
 
-  Standard JSON fields (all hooks): `{ continue?: boolean, suppressOutput?: boolean, systemMessage?: string }`. Exit codes 0 and 2 are always valid; any other exit code is a bug.
+  Standard JSON fields (all hooks): `{ continue?: boolean, suppressOutput?: boolean, systemMessage?: string }`. Exit codes 0 and 2 are always valid; any other exit code is a bug. `hookSpecificOutput.hookEventName` is the discriminator — include it whenever emitting `hookSpecificOutput` so the runtime routes it correctly.
 
   When you **create or modify** a hook under `templates/hooks/`, you **must** add or update its compliance test in `tests/hook-<name>.test.mjs`, import the matching validator, and assert every branch. Run `npm test` to verify before committing.
 - `templates/` is excluded from lint and typecheck (it's vendored/scaffolded output, not engine code).

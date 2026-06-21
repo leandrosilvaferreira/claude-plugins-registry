@@ -58,7 +58,21 @@ graphify claude install             # make Claude Code always use the graph
 graphify hook install               # auto-rebuild on git commit + graph.json merge driver
 graphify .                          # build the graph
 ```
-Then add `graphify-out/` to git (commit it; `graphify-out/cost.json` is gitignored).
+After building, commit the graph output so teammates share it immediately:
+```bash
+git add graphify-out/
+git commit -m "chore: add graphify code graph"
+```
+**IMPORTANT — what to commit vs ignore:**
+
+- `graphify-out/graph.json` ✅ commit — full graph, team sharing
+- `graphify-out/graph.html` ✅ commit — browser visualization
+- `graphify-out/GRAPH_REPORT.md` ✅ commit — architecture insights
+- `graphify-out/manifest.json` ✅ commit — portable (relative paths), enables incremental updates
+- `graphify-out/cost.json` ❌ already gitignored — local API cost tracker
+- `graphify-out/cache/` ❌ already gitignored — regenerable, keeps repo smaller
+
+Do NOT add a `graphify-out/` entry to `.gitignore` — only the specific files above are ignored.
 
 Never run any installer without the confirmation. After installing, remind the
 user to **restart Claude Code** so new hooks/skills load.

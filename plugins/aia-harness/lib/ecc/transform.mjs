@@ -65,7 +65,11 @@ function provenanceComment(meta) {
 export function cleanAgentMarkdown(content, meta) {
   const { frontmatter, body } = splitFrontmatter(content);
   const normalizedFm = frontmatter.replace(/^(tools:\s*)(.+)$/m, (_, key, val) => {
-    const norm = normalizeToolsValue(val);
+    const norm = normalizeToolsValue(val)
+      .split(",")
+      .map((t) => t.trim())
+      .filter((t) => !t.startsWith("mcp__code-review-graph__"))
+      .join(", ");
     return `${key}${norm}`;
   });
   let cleaned = removeSection(body, /^##\s+Prompt Defense/i);

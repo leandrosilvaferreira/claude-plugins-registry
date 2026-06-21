@@ -60,7 +60,7 @@ if (!onMain && !pushTargetsMain) process.exit(0);
 const verb = isCommit ? "commit" : "push";
 const target = branch || (command.match(/\b(main|master)\b/)?.[0] ?? "main");
 
-const message = [
+const permissionDecisionReason = [
   `guard-main-branch: you are about to ${verb} directly to \`${target}\`.`,
   "Direct commits/pushes to the main branch bypass code review and CI gates.",
   "Consider using a feature branch and opening a pull request instead.",
@@ -68,8 +68,11 @@ const message = [
 
 process.stdout.write(
   JSON.stringify({
-    hookSpecificOutput: { permissionDecision: "ask" },
-    systemMessage: message,
+    hookSpecificOutput: {
+      hookEventName: "PreToolUse",
+      permissionDecision: "ask",
+      permissionDecisionReason,
+    },
   }),
 );
 
