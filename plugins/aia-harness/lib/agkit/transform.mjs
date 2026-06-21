@@ -6,6 +6,7 @@
  * @module agkit/transform
  */
 import { splitFrontmatter } from "../ecc/transform.mjs";
+import { normalizeToolsValue } from "../validate/frontmatter.mjs";
 
 /** Antigravity agent tools that map onto a Claude Code equivalent. */
 const AGENT_TOOL_MAP = /** @type {Record<string,string>} */ ({ FindByName: "Glob", Agent: "Task" });
@@ -74,10 +75,17 @@ export function renderFrontmatter(entries) {
  * @returns {string}
  */
 export function mapAgentTools(value) {
+  // Parse JSON arrays and unquote tokens before processing
+  const cleaned = normalizeToolsValue(value);
   /** @type {string[]} */
   const out = [];
-  for (const raw of value.split(",").map((t) => t.trim()).filter(Boolean)) {
+  for (const raw of cleaned.split(",").map((t) => t.trim()).filter(Boolean)) {
     if (AGENT_TOOL_DROP.has(raw)) continue;
+    // MCP tools pass through unchanged — not Antigravity-specific
+    if (raw.startsWith("mcp__")) {
+      if (!out.includes(raw)) out.push(raw);
+      continue;
+    }
     const mapped = AGENT_TOOL_MAP[raw] ?? raw;
     if (!CLAUDE_AGENT_TOOLS.has(mapped)) continue;
     if (!out.includes(mapped)) out.push(mapped);

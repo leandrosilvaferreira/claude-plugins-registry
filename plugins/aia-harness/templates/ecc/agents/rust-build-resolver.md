@@ -1,7 +1,7 @@
 ---
 name: rust-build-resolver
 description: Rust build, compilation, and dependency error resolution specialist. Fixes cargo build errors, borrow checker issues, and Cargo.toml problems with minimal changes. Use when Rust builds fail.
-tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
+tools: Read, Write, Edit, Bash, Grep, Glob
 model: sonnet
 ---
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: agents/rust-build-resolver.md. MIT (c) Affaan Mustafa. -->

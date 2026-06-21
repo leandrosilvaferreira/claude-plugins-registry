@@ -1,7 +1,7 @@
 ---
 description: Save information to persistent memory for cross-session recall. Stores preferences, conventions, decisions, and context.
 ---
-<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ a909d03c808296b86cc124e09acf5f1c7efa4e49 :: .agents/workflows/remember.md. MIT (c) vudovn. -->
+<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/workflows/remember.md. MIT (c) vudovn. -->
 
 # /remember — Persistent Memory Management
 

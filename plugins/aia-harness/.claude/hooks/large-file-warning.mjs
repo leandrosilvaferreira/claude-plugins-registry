@@ -45,6 +45,7 @@ const IGNORED_DIRS = new Set([
   "generated", "gen", "__generated__", "migrations", "migration",
   "fixtures", "mocks", "__mocks__", "stubs",
   "lang", "i18n", "locales", "assets", "static", "public",
+  "templates",
 ]);
 
 /**

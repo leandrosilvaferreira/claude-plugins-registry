@@ -5,6 +5,8 @@
  * @module ecc/transform
  */
 
+import { normalizeToolsValue } from "../validate/frontmatter.mjs";
+
 const FRONTMATTER_RE = /^(---\n[\s\S]*?\n---\n)/;
 
 /**
@@ -54,17 +56,22 @@ function provenanceComment(meta) {
 /**
  * Clean an ECC agent markdown file for redistribution: drop the shared
  * "Prompt Defense Baseline" block and the dangling "## Related" cross-refs,
- * keep frontmatter, and stamp provenance.
+ * normalize the `tools` frontmatter field to spec-compliant CSV, and stamp
+ * provenance.
  * @param {string} content
  * @param {{ sourcePath: string, commit: string }} meta
  * @returns {string}
  */
 export function cleanAgentMarkdown(content, meta) {
   const { frontmatter, body } = splitFrontmatter(content);
+  const normalizedFm = frontmatter.replace(/^(tools:\s*)(.+)$/m, (_, key, val) => {
+    const norm = normalizeToolsValue(val);
+    return `${key}${norm}`;
+  });
   let cleaned = removeSection(body, /^##\s+Prompt Defense/i);
   cleaned = removeSection(cleaned, /^##\s+Related/i);
   cleaned = cleaned.replace(/\n{3,}/g, "\n\n").trim();
-  return `${frontmatter}${provenanceComment(meta)}\n${cleaned}\n`;
+  return `${normalizedFm}${provenanceComment(meta)}\n${cleaned}\n`;
 }
 
 /**

@@ -3,7 +3,7 @@ name: architecture
 description: Architectural decision-making framework. Requirements analysis, trade-off evaluation, ADR documentation. Use when making architecture decisions or analyzing system design. When making architectural decisions, evaluating trade-offs, writing ADRs, or analyzing system design. NOT for direct code implementation.
 allowed-tools: Read, Glob, Grep
 ---
-<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ a909d03c808296b86cc124e09acf5f1c7efa4e49 :: .agents/skills/architecture/SKILL.md. MIT (c) vudovn. -->
+<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/skills/architecture/SKILL.md. MIT (c) vudovn. -->
 
 # Architecture Decision Framework
 

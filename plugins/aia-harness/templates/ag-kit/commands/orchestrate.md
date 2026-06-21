@@ -1,13 +1,14 @@
 ---
 description: Coordinate multiple agents for complex tasks. Use for multi-perspective analysis, comprehensive reviews, or tasks requiring different domain expertise.
 ---
-<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ a909d03c808296b86cc124e09acf5f1c7efa4e49 :: .agents/workflows/orchestrate.md. MIT (c) vudovn. -->
+<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/workflows/orchestrate.md. MIT (c) vudovn. -->
 
 # Multi-Agent Orchestration
 
 You are now in **ORCHESTRATION MODE**. Your task: coordinate specialized agents to solve this complex problem.
 
 ## Task to Orchestrate
+
 $ARGUMENTS
 
 ---
@@ -15,10 +16,11 @@ $ARGUMENTS
 ## 🔴 CRITICAL: Minimum Agent Requirement
 
 > ⚠️ **ORCHESTRATION = MINIMUM 3 DIFFERENT AGENTS**
-> 
+>
 > If you use fewer than 3 agents, you are NOT orchestrating - you're just delegating.
-> 
+>
 > **Validation before completion:**
+>
 > - Count invoked agents
 > - If `agent_count < 3` → STOP and invoke more agents
 > - Single agent = FAILURE of orchestration
@@ -113,7 +115,9 @@ Do you approve? (Y/N)
 ## Orchestration Protocol
 
 ### Step 1: Analyze Task Domains
+
 Identify ALL domains this task touches:
+
 ```
 □ Security     → security-auditor, penetration-tester
 □ Backend/API  → backend-specialist
@@ -137,6 +141,7 @@ Identify ALL domains this task touches:
 ### Step 3: Execute Based on Phase
 
 **PHASE 1 (Planning):**
+
 ```
 Use the project-planner agent to create {task-slug}.md
 → STOP after plan is created
@@ -144,6 +149,7 @@ Use the project-planner agent to create {task-slug}.md
 ```
 
 **PHASE 2 (Implementation - after approval):**
+
 ```
 Invoke agents in PARALLEL:
 Use the frontend-specialist agent to [task]
@@ -161,6 +167,7 @@ When invoking ANY subagent, you MUST include:
 4. **Current Plan State:** If plan files exist in workspace, include them
 
 **Example with FULL context:**
+
 ```
 Use the project-planner agent to create {task-slug}.md:
 
@@ -175,15 +182,17 @@ Use the project-planner agent to create {task-slug}.md:
 
 > ⚠️ **VIOLATION:** Invoking subagent without full context = subagent will make wrong assumptions!
 
-
 ### Step 4: Verification (MANDATORY)
+
 The LAST agent must run appropriate verification scripts:
+
 ```bash
 python .agents/skills/vulnerability-scanner/scripts/security_scan.py .
 python .agents/skills/lint-and-validate/scripts/lint_runner.py .
 ```
 
 ### Step 5: Synthesize Results
+
 Combine all agent outputs into unified report.
 
 ---
@@ -208,7 +217,7 @@ Combine all agent outputs into unified report.
 
 ### Verification Scripts Executed
 - [x] security_scan.py → Pass/Fail
-- [x] lint_runner.py → Pass/Fail
+- [x] lint_runner.py → Pass/Fail 
 
 ### Key Findings
 1. **[Agent 1]**: Finding

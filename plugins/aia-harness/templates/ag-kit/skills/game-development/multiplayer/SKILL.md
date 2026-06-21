@@ -3,7 +3,7 @@ name: multiplayer
 description: Multiplayer game development principles. Architecture, networking, synchronization.
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
-<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ a909d03c808296b86cc124e09acf5f1c7efa4e49 :: .agents/skills/game-development/multiplayer/SKILL.md. MIT (c) vudovn. -->
+<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/skills/game-development/multiplayer/SKILL.md. MIT (c) vudovn. -->
 
 # Multiplayer Game Development
 

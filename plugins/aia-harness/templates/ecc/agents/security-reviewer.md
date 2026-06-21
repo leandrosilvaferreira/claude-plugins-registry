@@ -1,7 +1,7 @@
 ---
 name: security-reviewer
 description: Security vulnerability detection and remediation specialist. Use PROACTIVELY after writing code that handles user input, authentication, API endpoints, or sensitive data. Flags secrets, SSRF, injection, unsafe crypto, and OWASP Top 10 vulnerabilities.
-tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
+tools: Read, Write, Edit, Bash, Grep, Glob
 model: sonnet
 ---
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: agents/security-reviewer.md. MIT (c) Affaan Mustafa. -->

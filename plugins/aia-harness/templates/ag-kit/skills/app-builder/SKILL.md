@@ -3,7 +3,7 @@ name: app-builder
 description: Main application building orchestrator. Creates full-stack applications from natural language requests. Determines project type, selects tech stack, coordinates agents. When creating a new full-stack application from scratch, selecting tech stack, or scaffolding project structure. Use with /create workflow.
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Agent
 ---
-<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ a909d03c808296b86cc124e09acf5f1c7efa4e49 :: .agents/skills/app-builder/SKILL.md. MIT (c) vudovn. -->
+<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/skills/app-builder/SKILL.md. MIT (c) vudovn. -->
 
 # App Builder - Application Building Orchestrator
 

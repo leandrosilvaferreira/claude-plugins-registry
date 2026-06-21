@@ -3,7 +3,7 @@ name: behavioral-modes
 description: "AI operational modes (brainstorm, implement, debug, review, teach, ship, orchestrate). Use to adapt behavior based on task type. When adapting AI behavior for specific task types: brainstorm, implement, debug, review, teach, ship, or orchestrate modes."
 allowed-tools: Read, Glob, Grep
 ---
-<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ a909d03c808296b86cc124e09acf5f1c7efa4e49 :: .agents/skills/behavioral-modes/SKILL.md. MIT (c) vudovn. -->
+<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/skills/behavioral-modes/SKILL.md. MIT (c) vudovn. -->
 
 # Behavioral Modes - Adaptive AI Operating Modes
 

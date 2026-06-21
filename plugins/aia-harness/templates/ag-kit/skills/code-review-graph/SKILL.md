@@ -4,7 +4,7 @@ description: Token-efficient code review using Tree-sitter AST graphs and MCP. C
 allowed-tools: Read, Grep, Glob, Bash
 effort: medium
 ---
-<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ a909d03c808296b86cc124e09acf5f1c7efa4e49 :: .agents/skills/code-review-graph/SKILL.md. MIT (c) vudovn. -->
+<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/skills/code-review-graph/SKILL.md. MIT (c) vudovn. -->
 
 # Code Review Graph — Token-Efficient Codebase Context via MCP
 

@@ -32,6 +32,7 @@ export const PROJECT_COMMON = {
     "04-code-quality.md",
     "05-testing.md",
     "06-security.md",
+    "07-subagent-dispatch.md",
   ]),
 };
 

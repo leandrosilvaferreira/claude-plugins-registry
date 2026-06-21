@@ -2,7 +2,7 @@
 name: chrome-extension
 description: Chrome Extension template principles. Manifest V3, React, TypeScript.
 ---
-<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ a909d03c808296b86cc124e09acf5f1c7efa4e49 :: .agents/skills/app-builder/templates/chrome-extension/TEMPLATE.md. MIT (c) vudovn. -->
+<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/skills/app-builder/templates/chrome-extension/TEMPLATE.md. MIT (c) vudovn. -->
 
 # Chrome Extension Template
 

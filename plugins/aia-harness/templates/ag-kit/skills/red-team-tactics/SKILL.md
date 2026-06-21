@@ -3,7 +3,7 @@ name: red-team-tactics
 description: Red team tactics principles based on MITRE ATT&CK. Attack phases, detection evasion, reporting. When performing penetration testing, red team exercises, or evaluating attack surfaces using MITRE ATT&CK framework.
 allowed-tools: Read, Glob, Grep
 ---
-<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ a909d03c808296b86cc124e09acf5f1c7efa4e49 :: .agents/skills/red-team-tactics/SKILL.md. MIT (c) vudovn. -->
+<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/skills/red-team-tactics/SKILL.md. MIT (c) vudovn. -->
 
 # Red Team Tactics
 

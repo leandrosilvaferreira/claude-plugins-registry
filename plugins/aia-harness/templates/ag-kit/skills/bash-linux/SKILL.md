@@ -3,7 +3,7 @@ name: bash-linux
 description: Bash/Linux terminal patterns. Critical commands, piping, error handling, scripting. Use when working on macOS or Linux systems. When working on macOS or Linux systems, writing bash scripts, or using terminal commands. NOT for Windows/PowerShell environments.
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
-<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ a909d03c808296b86cc124e09acf5f1c7efa4e49 :: .agents/skills/bash-linux/SKILL.md. MIT (c) vudovn. -->
+<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/skills/bash-linux/SKILL.md. MIT (c) vudovn. -->
 
 # Bash Linux Patterns
 

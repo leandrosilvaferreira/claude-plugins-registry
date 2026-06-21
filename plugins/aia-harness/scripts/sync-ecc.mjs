@@ -16,6 +16,7 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "..");
 const ECC_DIR = path.join(ROOT, "templates", "ecc");
 const SOURCE_PATH = path.join(HERE, "ecc-source.json");
+const PATCHES_DIR = path.join(HERE, "ecc-patches");
 
 /** @type {{ repo: string, ref: string, commit: string|null, rawBase: string, apiBase: string, attribution: string }} */
 const source = JSON.parse(fs.readFileSync(SOURCE_PATH, "utf8"));
@@ -114,7 +115,16 @@ async function main() {
       counts.other += 1;
     }
     const rel = repoPath === "LICENSE" ? "LICENSE" : repoPath;
-    writeFile(path.join(ECC_DIR, rel), content);
+    const outPath = path.join(ECC_DIR, rel);
+    writeFile(outPath, content);
+
+    // Apply harness-specific patch if one exists for this asset.
+    const patchPath = path.join(PATCHES_DIR, repoPath);
+    if (fs.existsSync(patchPath)) {
+      const patch = fs.readFileSync(patchPath, "utf8");
+      fs.appendFileSync(outPath, `\n${patch}`);
+      console.log(`  + patch applied: ${repoPath}`);
+    }
   }
 
   const manifest = {

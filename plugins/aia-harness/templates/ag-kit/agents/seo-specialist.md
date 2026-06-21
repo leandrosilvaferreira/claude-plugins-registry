@@ -4,7 +4,7 @@ description: SEO and GEO (Generative Engine Optimization) expert. Handles SEO au
 tools: Read, Grep, Glob, Bash, Write
 model: sonnet
 ---
-<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ a909d03c808296b86cc124e09acf5f1c7efa4e49 :: .agents/agent/seo-specialist.md. MIT (c) vudovn. -->
+<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/agent/seo-specialist.md. MIT (c) vudovn. -->
 
 # SEO Specialist
 

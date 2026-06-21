@@ -3,7 +3,7 @@ name: performance-profiling
 description: Performance profiling principles. Measurement, analysis, and optimization techniques. When diagnosing performance issues, running Lighthouse audits, analyzing bundle size, or optimizing Core Web Vitals.
 allowed-tools: Read, Glob, Grep, Bash
 ---
-<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ a909d03c808296b86cc124e09acf5f1c7efa4e49 :: .agents/skills/performance-profiling/SKILL.md. MIT (c) vudovn. -->
+<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/skills/performance-profiling/SKILL.md. MIT (c) vudovn. -->
 
 # Performance Profiling
 

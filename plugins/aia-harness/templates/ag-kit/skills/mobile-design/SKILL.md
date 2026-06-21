@@ -3,7 +3,7 @@ name: mobile-design
 description: Mobile-first design thinking and decision-making for iOS and Android apps. Touch interaction, performance patterns, platform conventions. Teaches principles, not fixed values. Use when building React Native, Flutter, or native mobile apps. When designing mobile app interfaces for iOS/Android, React Native, or Flutter. Touch interaction and platform conventions. NOT for web apps.
 allowed-tools: Read, Glob, Grep, Bash
 ---
-<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ a909d03c808296b86cc124e09acf5f1c7efa4e49 :: .agents/skills/mobile-design/SKILL.md. MIT (c) vudovn. -->
+<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/skills/mobile-design/SKILL.md. MIT (c) vudovn. -->
 
 # Mobile Design System
 

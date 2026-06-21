@@ -7,6 +7,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { readText, isDir } from "./util/fs.mjs";
+import { detectAssetType, validateFrontmatter } from "./validate/frontmatter.mjs";
 
 /**
  * @typedef {Object} ApplyResult
@@ -73,6 +74,28 @@ export function applyPlan(plan, root, opts = {}) {
     if (content == null) {
       result.errors.push({ path: a.relPath, error: "no inline content and source file missing" });
       continue;
+    }
+
+    // Normalize frontmatter for distributed .md assets before writing.
+    // Errors are auto-fixed silently; warnings are a dev-time concern already
+    // resolved in templates by scripts/normalize-frontmatter.mjs.
+    if (a.relPath.endsWith(".md")) {
+      // relPath in target project is like .claude/agents/foo.md — extract the
+      // segment that detectAssetType understands (agents/, skills/, etc.)
+      const segMatch = a.relPath.match(/\/(agents|skills|commands|rules)\//);
+      if (segMatch) {
+        const fakeRel = `x/${segMatch[1]}/${path.basename(a.relPath)}`;
+        const type = detectAssetType(fakeRel);
+        if (type) {
+          const { valid, errors: fmErrors, normalized } = validateFrontmatter(content, type);
+          if (!valid) {
+            process.stderr.write(
+              `[apply] frontmatter: ${a.relPath}: auto-fixed: ${fmErrors.join("; ")}\n`
+            );
+            content = normalized;
+          }
+        }
+      }
     }
 
     if (fs.existsSync(target)) {

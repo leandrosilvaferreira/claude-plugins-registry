@@ -2,7 +2,7 @@
 name: nextjs-static
 description: Modern template for Next.js 16, React 19 & Tailwind v4. Optimized for Landing pages and Portfolios.
 ---
-<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ a909d03c808296b86cc124e09acf5f1c7efa4e49 :: .agents/skills/app-builder/templates/nextjs-static/TEMPLATE.md. MIT (c) vudovn. -->
+<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/skills/app-builder/templates/nextjs-static/TEMPLATE.md. MIT (c) vudovn. -->
 
 # Next.js Static Site Template (Modern Edition)
 

@@ -3,7 +3,7 @@ name: deployment-procedures
 description: Production deployment principles and decision-making. Safe deployment workflows, rollback strategies, and verification. Teaches thinking, not scripts. When deploying to production, planning rollback strategies, or setting up CI/CD pipelines. Use with /deploy workflow.
 allowed-tools: Read, Glob, Grep, Bash
 ---
-<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ a909d03c808296b86cc124e09acf5f1c7efa4e49 :: .agents/skills/deployment-procedures/SKILL.md. MIT (c) vudovn. -->
+<!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/skills/deployment-procedures/SKILL.md. MIT (c) vudovn. -->
 
 # Deployment Procedures
 
