@@ -67,11 +67,12 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
         ],
       },
       {
-        // secret-scan ships as a file (PROJECT_HOOK_FILES); wire it so an apparent
-        // secret in an Edit/Write payload is blocked (exit 2) before it lands.
+        // secret-scan blocks secrets before they land; worktree-write-guard asks
+        // for confirmation when the target file is outside the active worktree.
         matcher: "Edit|Write|MultiEdit",
         hooks: [
           { type: "command", command: hookCmd("secret-scan.mjs"), timeout: 10 },
+          { type: "command", command: hookCmd("worktree-write-guard.mjs"), timeout: 10 },
         ],
       },
     ],
@@ -82,6 +83,14 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
           { type: "command", command: hookCmd("format-on-edit.mjs"), timeout: 60 },
           { type: "command", command: hookCmd("set-files-changed.mjs"), timeout: 30 },
           { type: "command", command: hookCmd("sql-idempotent-review.mjs"), timeout: 10 },
+        ],
+      },
+    ],
+    SubagentStart: [
+      {
+        // Inject active worktree path (from event.cwd) into every subagent.
+        hooks: [
+          { type: "command", command: hookCmd("worktree-subagent-ctx.mjs"), timeout: 10 },
         ],
       },
     ],
