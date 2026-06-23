@@ -13,7 +13,16 @@ allowed-tools:
 Target directory: `$1` if provided, else `$CLAUDE_PROJECT_DIR`. Plugins install at
 **user level** (Claude Code has no per-project plugin install).
 
-1. Generate the plan and the runnable installer (writes `scripts/install-plugins.sh`):
+## 0. Verificar dependências do sistema
+
+```bash
+"${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" check "${1:-$CLAUDE_PROJECT_DIR}" --json
+```
+
+Se `status === "block"`: apresentar em português a lista de `missing[]` com `installHint`
+para a plataforma do usuário e encerrar — não executar os passos seguintes.
+
+1. Generate the plan and the runnable installer (writes `scripts/install-plugins.mjs`):
 
    ```bash
    "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" --yes --only=install-plugins
@@ -33,12 +42,12 @@ Target directory: `$1` if provided, else `$CLAUDE_PROJECT_DIR`. Plugins install 
 4. On approval, run the generated installer (idempotent; safe to re-run):
 
    ```bash
-   bash "${1:-$CLAUDE_PROJECT_DIR}/scripts/install-plugins.sh" -y
+   node "${1:-$CLAUDE_PROJECT_DIR}/scripts/install-plugins.mjs" -y
    ```
 
    It runs `claude plugin marketplace add anthropics/claude-plugins-official` then
    `claude plugin install <name>@claude-plugins-official` for each suggested plugin.
-   If the user wants a subset, edit `scripts/install-plugins.sh` first or run the
+   If the user wants a subset, edit `scripts/install-plugins.mjs` first or run the
    specific `claude plugin install` lines.
 
 5. Remind: keep the active set high-signal, and **restart Claude Code** so the new

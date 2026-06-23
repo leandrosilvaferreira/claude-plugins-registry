@@ -27,13 +27,14 @@ export function permPrefix(cmd) {
 }
 
 /**
- * Hook command string invoking the node-resolver wrapper for a script.
+ * Hook command object invoking node directly (exec form — no shell required).
+ * Spread into the hook entry: { type: "command", ...hookCmd(script), timeout }.
  * @param {string} script
- * @returns {string}
+ * @returns {{ command: string, args: string[] }}
  */
 function hookCmd(script) {
   const dir = "${CLAUDE_PROJECT_DIR}/.claude/hooks";
-  return `"${dir}/node-run.sh" "${dir}/${script}"`;
+  return { command: "node", args: [`${dir}/${script}`] };
 }
 
 /**
@@ -63,7 +64,7 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
       {
         matcher: "Bash",
         hooks: [
-          { type: "command", command: hookCmd("guard-main-branch.mjs"), timeout: 10 },
+          { type: "command", ...hookCmd("guard-main-branch.mjs"), timeout: 10 },
         ],
       },
       {
@@ -71,8 +72,8 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
         // for confirmation when the target file is outside the active worktree.
         matcher: "Edit|Write|MultiEdit",
         hooks: [
-          { type: "command", command: hookCmd("secret-scan.mjs"), timeout: 10 },
-          { type: "command", command: hookCmd("worktree-write-guard.mjs"), timeout: 10 },
+          { type: "command", ...hookCmd("secret-scan.mjs"), timeout: 10 },
+          { type: "command", ...hookCmd("worktree-write-guard.mjs"), timeout: 10 },
         ],
       },
     ],
@@ -80,9 +81,9 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
       {
         matcher: "Edit|Write|MultiEdit",
         hooks: [
-          { type: "command", command: hookCmd("format-on-edit.mjs"), timeout: 60 },
-          { type: "command", command: hookCmd("set-files-changed.mjs"), timeout: 30 },
-          { type: "command", command: hookCmd("sql-idempotent-review.mjs"), timeout: 10 },
+          { type: "command", ...hookCmd("format-on-edit.mjs"), timeout: 60 },
+          { type: "command", ...hookCmd("set-files-changed.mjs"), timeout: 30 },
+          { type: "command", ...hookCmd("sql-idempotent-review.mjs"), timeout: 10 },
         ],
       },
     ],
@@ -90,15 +91,15 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
       {
         // Inject active worktree path (from event.cwd) into every subagent.
         hooks: [
-          { type: "command", command: hookCmd("worktree-subagent-ctx.mjs"), timeout: 10 },
+          { type: "command", ...hookCmd("worktree-subagent-ctx.mjs"), timeout: 10 },
         ],
       },
     ],
     Stop: [
       {
         hooks: [
-          { type: "command", command: hookCmd("verify-on-stop.mjs"), timeout: 300 },
-          { type: "command", command: hookCmd("memory-stop.mjs"), timeout: 30 },
+          { type: "command", ...hookCmd("verify-on-stop.mjs"), timeout: 300 },
+          { type: "command", ...hookCmd("memory-stop.mjs"), timeout: 30 },
         ],
       },
     ],
@@ -108,7 +109,7 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
   // it at Stop (refactor before finishing — greenfield born strict); `advisory`
   // (default) runs it on PostToolUse against the just-edited file (suggest +
   // confirm — legacy-safe). The hook branches on hook_event_name accordingly.
-  const lfHook = { type: /** @type {const} */ ("command"), command: hookCmd("large-file-warning.mjs"), timeout: 30 };
+  const lfHook = { type: /** @type {const} */ ("command"), ...hookCmd("large-file-warning.mjs"), timeout: 30 };
   if (opts.largeFiles === "block") {
     hooks.Stop[0].hooks.push(lfHook);
   } else {

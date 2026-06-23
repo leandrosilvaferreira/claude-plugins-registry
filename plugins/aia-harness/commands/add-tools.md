@@ -27,38 +27,58 @@ This copies caveman/ponytail skills → `.claude/skills/`, their hooks →
 rtk `PreToolUse`) into `.claude/settings.json`, and writes `.graphifyignore`.
 To scope which tools: `--tools=caveman,ponytail` or `--no-tools`.
 
-## 2. Detect machine dependencies
-
-Report what each needs and what is present:
+## 2. Verificar dependências do sistema
 
 ```bash
-command -v node; command -v rtk; command -v uv || command -v pipx; command -v graphify
+"${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" check "${1:-$CLAUDE_PROJECT_DIR}" \
+  --tools=rtk,caveman,ponytail,graphify --json
 ```
 
-- **caveman / ponytail** — need only `node` (already vendored + wired). Done.
-- **rtk** — needs the `rtk` binary. The hook is already wired and **no-ops until the
-  binary exists**, so this is optional.
-- **graphify** — needs `uv` (or pipx) + the `graphifyy` package.
+Ler o JSON. Se `status === "block"`: apresentar em português a lista de `missing[]` com
+`installHint` para a plataforma e encerrar sem instalar nada.
+
+Se `status !== "block"`: prosseguir. Para cada dep em `checks[]` com `found: false`:
+informar ao usuário o que está ausente (apenas recommended neste caso) e perguntar se deseja
+instalar no passo 3.
 
 ## 3. One confirmation, then install machine deps
 
 Use a single `AskUserQuestion` to confirm which machine installs to run. Only on
 approval, run the approved commands:
 
-**rtk** (binary):
+**rtk** (binary) — cross-platform via npm (npm resolves correct platform binary automatically):
+
 ```bash
-brew install rtk   # macOS; or: curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh
+npm install -g rtk
+```
+
+macOS alternative (Homebrew):
+
+```bash
+brew install rtk
 ```
 
 **graphify** (project-level), from the target dir:
+
 ```bash
 uv tool install graphifyy
+```
+
+**Windows (without uv):**
+
+```bash
+pip install graphifyy
+```
+
+```bash
 graphify install --project          # skill into .claude/skills/graphify/
 graphify claude install             # make Claude Code always use the graph
 graphify hook install               # auto-rebuild on git commit + graph.json merge driver
 graphify .                          # build the graph
 ```
+
 After building, commit the graph output so teammates share it immediately:
+
 ```bash
 git add graphify-out/
 git commit -m "chore: add graphify code graph"

@@ -18,7 +18,7 @@
  * @property {"SessionStart"|"UserPromptSubmit"|"PreToolUse"|"PostToolUse"|"Stop"} event
  * @property {string} [matcher]  Tool matcher (PreToolUse/PostToolUse).
  * @property {string} [script]   Vendored hook script relative to `.claude/hooks/` (vendor tools).
- * @property {string} [command]  Raw command string (hook-wire tools); overrides script.
+ * @property {string} [command]  Raw command string for hook-wire tools only (legacy shell-form).
  * @property {number} [timeout]
  */
 
@@ -38,16 +38,14 @@
 const HOOK_DIR = "${CLAUDE_PROJECT_DIR}/.claude/hooks";
 
 /**
- * Command that runs a vendored JS hook through the node-resolver wrapper.
+ * Exec-form object for a vendored JS hook (no shell required).
+ * Spread into the hook entry: { type: "command", ...vendorHookCommand(rel), timeout }.
  * @param {string} rel  Path under `.claude/hooks/`, e.g. "caveman/caveman-activate.js".
- * @returns {string}
+ * @returns {{ command: string, args: string[] }}
  */
 export function vendorHookCommand(rel) {
-  return `"${HOOK_DIR}/node-run.sh" "${HOOK_DIR}/${rel}"`;
+  return { command: "node", args: [`${HOOK_DIR}/${rel}`] };
 }
-
-/** rtk PreToolUse rewrite, guarded so a missing binary is a safe no-op. */
-export const RTK_HOOK_COMMAND = "command -v rtk >/dev/null 2>&1 && exec rtk hook claude || true";
 
 /** @type {ToolDef[]} */
 export const TOOLS = [
@@ -83,11 +81,11 @@ export const TOOLS = [
     id: "rtk",
     name: "rtk (Rust Token Killer)",
     category: "token-economy",
-    strategy: "hook-wire",
+    strategy: "vendor",
     license: "Apache-2.0",
     repo: "rtk-ai/rtk",
     deps: ["binary:rtk"],
-    hooks: [{ event: "PreToolUse", matcher: "Bash", command: RTK_HOOK_COMMAND, timeout: 15 }],
+    hooks: [{ event: "PreToolUse", matcher: "Bash", script: "rtk-hook.mjs", timeout: 15 }],
     recommended: () => true,
   },
   {
@@ -135,20 +133,23 @@ export function selectTools(profile) {
  * Build settings.json hook fragments for the given tool ids (vendor + hook-wire
  * tools only; "cli" tools wire themselves).
  * @param {string[]} toolIds
- * @returns {Record<string, { matcher?: string, hooks: { type: "command", command: string, timeout: number }[] }[]>}
+ * @returns {Record<string, { matcher?: string, hooks: { type: "command", command: string, args?: string[], timeout: number }[] }[]>}
  */
 export function toolSettingsHooks(toolIds) {
-  /** @type {Record<string, { matcher?: string, hooks: { type: "command", command: string, timeout: number }[] }[]>} */
+  /** @type {Record<string, { matcher?: string, hooks: { type: "command", command: string, args?: string[], timeout: number }[] }[]>} */
   const out = {};
   for (const id of toolIds) {
     const tool = getTool(id);
     if (!tool || tool.strategy === "cli") continue;
     for (const h of tool.hooks) {
-      const command = h.command ?? (h.script ? vendorHookCommand(h.script) : null);
-      if (!command) continue;
+      const cmdValue = h.command ?? (h.script ? vendorHookCommand(h.script) : null);
+      if (!cmdValue) continue;
+      const hookBase = typeof cmdValue === "string"
+        ? { type: /** @type {const} */ ("command"), command: cmdValue }
+        : { type: /** @type {const} */ ("command"), ...cmdValue };
       const entry = h.matcher
-        ? { matcher: h.matcher, hooks: [{ type: /** @type {const} */ ("command"), command, timeout: h.timeout ?? 30 }] }
-        : { hooks: [{ type: /** @type {const} */ ("command"), command, timeout: h.timeout ?? 30 }] };
+        ? { matcher: h.matcher, hooks: [{ ...hookBase, timeout: h.timeout ?? 30 }] }
+        : { hooks: [{ ...hookBase, timeout: h.timeout ?? 30 }] };
       (out[h.event] ??= []).push(entry);
     }
   }

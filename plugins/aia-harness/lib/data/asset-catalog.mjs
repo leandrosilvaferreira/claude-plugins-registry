@@ -62,7 +62,6 @@ export {
   selectTools,
   toolSettingsHooks,
   vendorHookCommand,
-  RTK_HOOK_COMMAND,
 } from "./tools-catalog.mjs";
 
 // GitHub PM (first-party + vendored) — templates/skills/github-pm/ + templates/github/ + templates/github-pm-ext/

@@ -32,7 +32,7 @@ const cwd = typeof event.cwd === "string" ? event.cwd : "";
 const projectDir = process.env.CLAUDE_PROJECT_DIR ?? process.cwd();
 
 // Only active when cwd is inside a worktree.
-const m = cwd.match(/^(.+?\.claude\/worktrees\/[^/]+)/);
+const m = cwd.match(/^(.+?\.claude[/\\]worktrees[/\\][^/\\]+)/);
 if (!m) process.exit(0);
 
 const wtPath = path.resolve(m[1]);

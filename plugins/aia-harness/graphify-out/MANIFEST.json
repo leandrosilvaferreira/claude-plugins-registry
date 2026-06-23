@@ -1,0 +1,15 @@
+{
+  "built_at": "2026-06-22",
+  "scan_root": "/Users/leandrosilvaferreira/Projetos/consultoria_harness/aia_harness",
+  "outputs": {
+    "graph_json": "graphify-out/graph.json",
+    "report": "graphify-out/GRAPH_REPORT.md",
+    "html": "graphify-out/graph.html",
+    "labels": "graphify-out/.graphify_labels.json"
+  },
+  "stats": {
+    "nodes": 2475,
+    "links": 3668,
+    "communities": 222
+  }
+}

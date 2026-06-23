@@ -12,3 +12,12 @@ coverage/
 # every project that enables aia-harness. MCPs are suggested per-target on apply.
 # Keep a local copy for dogfooding, but never ship it.
 /.mcp.json
+
+# graphify — ignore runtime state and semantic cache; version the shareable outputs
+graphify-out/.graphify_python
+graphify-out/.graphify_root
+graphify-out/.graphify_*.json
+graphify-out/.graphify_*.txt
+graphify-out/.chunks_list_*.txt
+graphify-out/cache/
+# versioned (shared with team): graph.json, GRAPH_REPORT.md, graph.html, MANIFEST.json

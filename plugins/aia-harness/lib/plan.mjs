@@ -76,11 +76,16 @@ export function buildPlan(profile, ctx) {
   const root = profile.root;
   const toolsRoot = path.join(pluginRoot, "templates", "tools");
   const toolIds = ctx.tools ?? selectTools(profile).map((t) => t.id);
-  // Only wire hooks for vendor tools whose files are actually vendored, plus hook-wire tools (rtk).
+  // Wire hooks for:
+  //  - vendor tools with a local hooks dir (caveman, ponytail) OR with script-form hooks
+  //    distributed via PROJECT_HOOK_FILES (rtk-hook.mjs)
+  //  - hook-wire tools (legacy shell-form only, none remain after Task 2)
   const wiredToolIds = toolIds.filter((id) => {
     const t = getTool(id);
     if (!t) return false;
-    if (t.strategy === "vendor") return exists(path.join(toolsRoot, id, "hooks"));
+    if (t.strategy === "vendor") {
+      return exists(path.join(toolsRoot, id, "hooks")) || t.hooks.some((h) => h.script);
+    }
     return t.strategy === "hook-wire";
   });
   // Strict Stop loop: on by default, opt out via ctx.strict === false.
@@ -213,10 +218,10 @@ export function buildPlan(profile, ctx) {
 
   const pluginSuggestions = suggestPlugins(profile);
   if (pluginSuggestions.length > 0) {
-    add({ id: "install-plugins", relPath: "scripts/install-plugins.sh", title: "Plugin installer (runnable)",
+    add({ id: "install-plugins", relPath: "scripts/install-plugins.mjs", title: "Plugin installer (runnable)",
       category: "script",
       rationale: `Runnable installer for ${pluginSuggestions.length} suggested plugin(s) — idempotent; run with -y.`,
-      contextCost: 0, defaultSelected: true, executable: true,
+      contextCost: 0, defaultSelected: true,
       content: renderPluginsInstallScript(pluginSuggestions) });
   }
 

@@ -10,6 +10,15 @@ allowed-tools:
 
 Run the deterministic scanner and present the result. This command is read-only.
 
+## 0. Verificar dependências do sistema
+
+```bash
+"${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" check "${1:-$CLAUDE_PROJECT_DIR}" --json
+```
+
+Ler o JSON retornado. Se `status === "block"`: apresentar em português a lista de `missing[]`
+com `installHint` para a plataforma do usuário e encerrar — não executar os passos seguintes.
+
 1. Determine the target directory: `$1` if provided, otherwise `$CLAUDE_PROJECT_DIR`.
 2. Run:
 

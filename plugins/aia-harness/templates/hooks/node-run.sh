@@ -24,6 +24,18 @@ find_node() {
     newest="$(ls -d "${HOME}"/.nvm/versions/node/*/bin/node 2>/dev/null | sort -V | tail -n1)"
     if [ -n "$newest" ] && [ -x "$newest" ]; then printf '%s\n' "$newest"; return 0; fi
   fi
+  # fnm (cross-platform, reads .nvmrc — https://github.com/Schniz/fnm)
+  if [ -d "${HOME}/.local/share/fnm/node-versions" ]; then
+    local newest
+    newest="$(ls -d "${HOME}"/.local/share/fnm/node-versions/*/installation/bin/node 2>/dev/null | sort -V | tail -n1)"
+    if [ -n "$newest" ] && [ -x "$newest" ]; then printf '%s\n' "$newest"; return 0; fi
+  fi
+  # fnm on macOS (Homebrew prefix)
+  if [ -d "${HOME}/Library/Application Support/fnm" ]; then
+    local newest
+    newest="$(ls -d "${HOME}/Library/Application Support/fnm/node-versions"/*/installation/bin/node 2>/dev/null | sort -V | tail -n1)"
+    if [ -n "$newest" ] && [ -x "$newest" ]; then printf '%s\n' "$newest"; return 0; fi
+  fi
   if command -v bun >/dev/null 2>&1; then
     command -v bun; return 0
   fi

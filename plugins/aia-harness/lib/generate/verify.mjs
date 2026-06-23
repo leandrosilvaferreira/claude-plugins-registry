@@ -71,7 +71,8 @@ try { changed = fs.readFileSync(flag, "utf8"); } catch (e) { approve(); }
 const hasLintable = changed.split("\\n").some(function (p) { return LINTABLE.test(p.trim()); });
 if (!hasLintable) { clearFlag(); approve(); }
 
-// Ensure the active node's dir (npm/pnpm under nvm) is on PATH for the run.
+// Ensure the active node's dir (nvm/fnm/system node) is on PATH for the run.
+// process.execPath is always the actual running binary — works with any node manager.
 const binDir = path.dirname(process.execPath);
 const env = Object.assign({}, process.env, { PATH: binDir + path.delimiter + (process.env.PATH || "") });
 

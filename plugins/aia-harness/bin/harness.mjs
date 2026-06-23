@@ -11,6 +11,7 @@ import { scanProject } from "../lib/detect/index.mjs";
 import { buildPlan } from "../lib/plan.mjs";
 import { renderReport, renderPlanSummary } from "../lib/render.mjs";
 import { applyPlan } from "../lib/apply.mjs";
+import { checkSystemDeps, resolveDepsFromProfile } from '../lib/detect/system-deps.mjs';
 
 const PLUGIN_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const VERSION = "0.1.1";
@@ -53,6 +54,8 @@ Usage:
                                                  (refactor before finishing) or
                                                  advisory (suggest + confirm).
                                                  Default: detector recommendation
+  aia-harness check [dir] [--json]      Check required system dependencies.
+                    [--tools=a,b]       Also check deps for specific tools.
   aia-harness help | version
 
 Apply is a dry run unless --yes is given. Existing differing files are left
@@ -76,6 +79,38 @@ function printApply(res, dryRun) {
 }
 
 /**
+ * Render a DepsReport as human-readable text for CLI output.
+ * @param {import('../lib/profile.mjs').DepsReport} report
+ * @param {string} platform
+ * @returns {string}
+ */
+function formatDepsReport(report, platform) {
+  const plat = /** @type {'win32'|'darwin'|'linux'} */ (
+    platform === 'win32' ? 'win32' : platform === 'darwin' ? 'darwin' : 'linux'
+  );
+  const lines = [];
+  for (const c of report.checks) {
+    if (c.found) {
+      lines.push(`✓ ${c.name.padEnd(12)} v${c.version ?? '?'}   ${c.resolvedPath}`);
+    } else {
+      lines.push(`✗ ${c.name.padEnd(12)} não encontrado  [${c.level}]`);
+      const hint = c.installHint[plat];
+      if (hint) lines.push(`  → ${plat}: ${hint}`);
+    }
+  }
+  lines.push('');
+  if (report.status === 'block') {
+    lines.push('BLOQUEADO: instale as dependências acima antes de continuar.');
+  } else if (report.status === 'warn') {
+    const n = report.checks.filter(c => !c.found).length;
+    lines.push(`STATUS: ok  (${n} recommended ausente${n !== 1 ? 's' : ''}, nenhum required faltando)`);
+  } else {
+    lines.push('STATUS: ok  todas as dependências encontradas.');
+  }
+  return lines.join('\n');
+}
+
+/**
  * @returns {number}
  */
 function main() {
@@ -94,6 +129,21 @@ function main() {
     const profile = scanProject(dir);
     console.log(flags.has("json") ? JSON.stringify(profile, null, 2) : renderReport(profile));
     return 0;
+  }
+
+  if (cmd === 'check') {
+    const toolList = opts.tools
+      ? opts.tools.split(',').map((s) => s.trim()).filter(Boolean)
+      : [];
+    const profile = scanProject(dir);
+    const deps = resolveDepsFromProfile(profile, toolList);
+    const report = checkSystemDeps(deps, process.platform);
+    if (flags.has('json')) {
+      console.log(JSON.stringify(report, null, 2));
+    } else {
+      console.log(formatDepsReport(report, process.platform));
+    }
+    return report.status === 'block' ? 1 : 0;
   }
 
   const toolsOpt = flags.has("no-tools")

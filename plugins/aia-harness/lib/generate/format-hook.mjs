@@ -113,9 +113,12 @@ const PHP_BLOCK = {
 /** @type {{ condition: string, body: string }} */
 const PYTHON_BLOCK = {
   condition: "[\".py\",\".pyi\"].includes(ext)",
-  body: "    var venvBin = path.join(projectDir, \".venv\", \"bin\");\n" +
-    "    var ruff = fs.existsSync(path.join(venvBin, \"ruff\")) ? path.join(venvBin, \"ruff\") : \"ruff\";\n" +
-    "    var black = fs.existsSync(path.join(venvBin, \"black\")) ? path.join(venvBin, \"black\") : \"black\";\n" +
+  body: "    var venvDir = process.platform === \"win32\" ? \"Scripts\" : \"bin\";\n" +
+    "    var venvBin = path.join(projectDir, \".venv\", venvDir);\n" +
+    "    var ruffExe = process.platform === \"win32\" ? \"ruff.exe\" : \"ruff\";\n" +
+    "    var blackExe = process.platform === \"win32\" ? \"black.exe\" : \"black\";\n" +
+    "    var ruff = fs.existsSync(path.join(venvBin, ruffExe)) ? path.join(venvBin, ruffExe) : \"ruff\";\n" +
+    "    var black = fs.existsSync(path.join(venvBin, blackExe)) ? path.join(venvBin, blackExe) : \"black\";\n" +
     "    try { execFileSync(ruff, [\"format\", \"--quiet\", file], { stdio: \"ignore\" }); }\n" +
     "    catch { try { execFileSync(black, [\"--quiet\", file], { stdio: \"ignore\" }); } catch { /* none */ } }",
 };

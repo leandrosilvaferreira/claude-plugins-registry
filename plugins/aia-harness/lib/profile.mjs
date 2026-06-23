@@ -121,6 +121,30 @@
  */
 
 /**
+ * @typedef {{ name: string, level: 'required'|'recommended' }} DepEntry
+ */
+
+/**
+ * @typedef {Object} DepCheck
+ * @property {string} name           Binary name, e.g. "node", "python3".
+ * @property {boolean} found
+ * @property {string|null} version   Parsed version string, or null if not found.
+ * @property {string} resolvedPath   Absolute path to binary, or '' if not found.
+ * @property {'required'|'recommended'} level
+ * @property {Record<'win32'|'darwin'|'linux', string>} installHint
+ */
+
+/**
+ * @typedef {Object} DepsReport
+ * @property {'ok'|'warn'|'block'} status
+ *   ok    = all required found.
+ *   warn  = some recommended missing, no required missing.
+ *   block = at least one required missing — engine exits 1.
+ * @property {DepCheck[]} checks
+ * @property {string[]} missing   Names of required deps not found.
+ */
+
+/**
  * @typedef {Object} ProjectProfile
  * @property {string} root                  Absolute project root.
  * @property {LanguageInfo[]} languages     Sorted by bytes desc.

@@ -70,17 +70,18 @@ export const PROJECT_BY_STACK = {
  * hooks (format-on-edit, verify-on-stop, set-files-changed) are built in
  * plan.mjs because they depend on the profile / strict flag.
  */
-export const PROJECT_HOOK_FILES = ["node-run.sh", "node-run.cmd", "secret-scan.mjs", "large-file-warning.mjs", "guard-main-branch.mjs", "memory-stop.mjs", "sql-idempotent-review.mjs", "worktree-subagent-ctx.mjs", "worktree-write-guard.mjs"];
+export const PROJECT_HOOK_FILES = ["secret-scan.mjs", "rtk-hook.mjs", "large-file-warning.mjs", "guard-main-branch.mjs", "memory-stop.mjs", "sql-idempotent-review.mjs", "worktree-subagent-ctx.mjs", "worktree-write-guard.mjs"];
 
 const HOOK_DIR = "${CLAUDE_PROJECT_DIR}/.claude/hooks";
 
 /**
- * Command that runs a first-party JS hook through the node-resolver wrapper.
+ * Exec-form object for a first-party JS hook (no shell required).
+ * Spread into the hook entry: { type: "command", ...projectHookCommand(file), timeout }.
  * @param {string} file  Hook file under .claude/hooks/, e.g. "phpstan-on-edit.mjs".
- * @returns {string}
+ * @returns {{ command: string, args: string[] }}
  */
 function projectHookCommand(file) {
-  return `"${HOOK_DIR}/node-run.sh" "${HOOK_DIR}/${file}"`;
+  return { command: "node", args: [`${HOOK_DIR}/${file}`] };
 }
 
 /**
@@ -113,7 +114,7 @@ export const PROJECT_HOOK_BY_STACK = {
  * .claude/hooks/ and the settings.json wiring (event → entries), deduped by file.
  * The settings shape matches toolSettingsHooks so plan.mjs can merge both.
  * @param {import('../profile.mjs').ProjectProfile} profile
- * @returns {{ files: string[], settings: Record<string, { matcher?: string, hooks: { type: "command", command: string, timeout: number }[] }[]> }}
+ * @returns {{ files: string[], settings: Record<string, { matcher?: string, hooks: { type: "command", command: string, args?: string[], timeout: number }[] }[]> }}
  */
 export function selectProjectHooks(profile) {
   /** @type {Map<string, ProjectHookDef>} */
@@ -123,10 +124,10 @@ export function selectProjectHooks(profile) {
       if (!byFile.has(def.file)) byFile.set(def.file, def);
     }
   }
-  /** @type {Record<string, { matcher?: string, hooks: { type: "command", command: string, timeout: number }[] }[]>} */
+  /** @type {Record<string, { matcher?: string, hooks: { type: "command", command: string, args?: string[], timeout: number }[] }[]>} */
   const settings = {};
   for (const d of byFile.values()) {
-    const hook = { type: /** @type {const} */ ("command"), command: projectHookCommand(d.file), timeout: d.timeout ?? 30 };
+    const hook = { type: /** @type {const} */ ("command"), ...projectHookCommand(d.file), timeout: d.timeout ?? 30 };
     const entry = d.matcher ? { matcher: d.matcher, hooks: [hook] } : { hooks: [hook] };
     (settings[d.event] ??= []).push(entry);
   }

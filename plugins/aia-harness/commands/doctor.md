@@ -12,6 +12,15 @@ allowed-tools:
 
 Target directory: `$1` if provided, else `$CLAUDE_PROJECT_DIR`.
 
+## 0. Verificar dependências do sistema
+
+```bash
+"${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" check "${1:-$CLAUDE_PROJECT_DIR}" --json
+```
+
+Se `status === "block"`: apresentar em português a lista de `missing[]` com `installHint`
+para a plataforma do usuário e encerrar — não executar os passos seguintes.
+
 1. Re-scan to see what exists:
 
    ```bash
