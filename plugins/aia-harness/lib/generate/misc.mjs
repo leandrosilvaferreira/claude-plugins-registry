@@ -132,7 +132,7 @@ const plugins = ${pluginList};
 if (!process.argv.includes("-y")) {
   const iface = rl.createInterface({ input: process.stdin, output: process.stdout });
   const ans = await iface.question(
-    "About to add " + marketplaces.length + " marketplace(s) and install " + plugins.length + " plugin(s):\\n${listing}\\nProceed? [y/N] "
+    \`About to add \${marketplaces.length} marketplace(s) and install \${plugins.length} plugin(s):\n${listing}\nProceed? [y/N] \`
   );
   iface.close();
   if (!ans.match(/^y$/i)) { console.log("Aborted."); process.exit(0); }
