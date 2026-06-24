@@ -186,6 +186,31 @@ export function addToolArtifacts(add, toolsRoot, toolIds, profile) {
         defaultSelected: true,
         content: renderGraphifyignore(profile),
       });
+      if (profile.vcs?.isGit) {
+        const gitHooksDir = path.join(toolsRoot, "graphify", "git-hooks");
+        add({
+          id: "graphify-git-hook:post-commit",
+          relPath: ".git/hooks/post-commit",
+          title: "Graphify git hook: post-commit",
+          category: "git-hooks",
+          rationale: "Auto-rebuilds knowledge graph after each commit (cross-platform, uv-aware).",
+          contextCost: 0,
+          defaultSelected: true,
+          executable: true,
+          copyFrom: path.join(gitHooksDir, "post-commit"),
+        });
+        add({
+          id: "graphify-git-hook:post-checkout",
+          relPath: ".git/hooks/post-checkout",
+          title: "Graphify git hook: post-checkout",
+          category: "git-hooks",
+          rationale: "Auto-rebuilds knowledge graph on branch switch (cross-platform, uv-aware).",
+          contextCost: 0,
+          defaultSelected: true,
+          executable: true,
+          copyFrom: path.join(gitHooksDir, "post-checkout"),
+        });
+      }
     }
   }
 }

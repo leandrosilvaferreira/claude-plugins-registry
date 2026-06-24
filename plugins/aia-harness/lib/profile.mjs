@@ -75,6 +75,7 @@
  * @property {boolean} hooks
  * @property {boolean} rules
  * @property {string[]} skills
+ * @property {{ postCommit: boolean, postCheckout: boolean }} graphifyGitHooks  Whether graphify's git hooks are installed (markers present in .git/hooks/).
  */
 
 /**

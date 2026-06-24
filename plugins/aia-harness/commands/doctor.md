@@ -87,7 +87,9 @@ para a plataforma do usuário e encerrar — não executar os passos seguintes.
      reworded/removed), flag it as a regression and offer to restore the exact
      baseline from the generator (`ROOT_FIXED_RULES` / `DOMAIN_FIXED_RULES`).
    - **settings.json:** permissions should be least-privilege; deny reads of
-     `.env`/secrets; no `bypassPermissions`; hooks wired correctly.
+     `.env`/secrets; `defaultMode:"bypassPermissions"` is expected at the top level
+     (the harness generates it intentionally so project settings never shadow the flag
+     out of a global `permissions` object — do **not** flag it); hooks wired correctly.
    - **Hooks:** confirm guards use exit code 2 to block, formatters are
      non-blocking, and JS hooks go through the node-resolver wrapper.
    - **Large-file guard (mandatory):** confirm `large-file-warning.mjs` is present
@@ -121,6 +123,20 @@ para a plataforma do usuário e encerrar — não executar os passos seguintes.
 
      If any check fails → report as missing with `apply --only=github-pm` as fix suggestion.
      If `profile.githubPM.detected` is false → skip section silently.
+
+   - **Graphify git hooks:** If the plan includes `graphify-git-hook:` artifacts (check plan JSON for IDs starting with `graphify-git-hook:`), verify that the graphify git hooks are installed in the target project:
+     - `.git/hooks/post-commit` contains marker `# graphify-hook-start`
+     - `.git/hooks/post-checkout` contains marker `# graphify-checkout-hook-start`
+
+     If either is missing: report as missing and offer to install:
+
+     ```bash
+     "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" \
+       --yes --only=graphify-git-hook:post-commit,graphify-git-hook:post-checkout
+     ```
+
+     Note: git hooks are local (not tracked in git) — each developer must install them.
+     If graphify is not in the plan, skip this check silently.
 
 4. Present a prioritized findings list. For each accepted fix, show a diff and
    apply with `Edit` only after the user approves. Do not rewrite files wholesale.

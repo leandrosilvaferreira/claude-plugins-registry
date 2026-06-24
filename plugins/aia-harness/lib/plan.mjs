@@ -37,7 +37,7 @@ import { addEccArtifacts, addAgkitArtifacts, addToolArtifacts } from "./plan/ven
  * @property {string} id
  * @property {string} relPath
  * @property {string} title
- * @property {"claude-md"|"rules"|"settings"|"mcp"|"hooks"|"skills"|"agents"|"commands"|"tools"|"worktree"|"lsp"|"docs"|"script"|"github-pm"} category
+ * @property {"claude-md"|"rules"|"settings"|"mcp"|"git-hooks"|"hooks"|"skills"|"agents"|"commands"|"tools"|"worktree"|"lsp"|"docs"|"script"|"github-pm"} category
  * @property {string} rationale
  * @property {number} contextCost  Estimated tokens added to every session (0 = lazy/not loaded).
  * @property {boolean} defaultSelected
@@ -271,7 +271,7 @@ export function buildPlan(profile, ctx) {
     gitignore: [
       ".claude/settings.local.json",
       ".claude/*.local.*",
-      ...(toolIds.includes("graphify") ? ["graphify-out/cost.json", "graphify-out/cache/"] : []),
+      ...(toolIds.includes("graphify") ? ["graphify-out/", "graphify-out/cost.json", "graphify-out/cache/"] : []),
     ],
     notes,
     totalContextCost: artifacts.reduce((sum, a) => sum + a.contextCost, 0),

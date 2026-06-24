@@ -35,7 +35,17 @@ com `installHint` para a plataforma do usuário e encerrar — não executar os 
    - Workflows: present / absent
    - pm-config.json: configured / not configured
    - Suggest `/add-github-pm` if not yet installed.
-5. Do **not** write any files. If the user wants to scaffold the harness,
+
+5. **Graphify git hooks:** If `profile.vcs.isGit` is true **and** a `graphify-out/` directory exists in the target project (indicating graphify has been initialized):
+   - `profile.existingHarness.graphifyGitHooks.postCommit: true` → ✅ post-commit hook instalado
+   - `profile.existingHarness.graphifyGitHooks.postCommit: false` → ⚠ post-commit hook não instalado
+   - `profile.existingHarness.graphifyGitHooks.postCheckout: true` → ✅ post-checkout hook instalado
+   - `profile.existingHarness.graphifyGitHooks.postCheckout: false` → ⚠ post-checkout hook não instalado
+
+   If either hook is missing, suggest: "Execute `/aia-harness:doctor` para instalar os hooks do graphify."
+   If `graphify-out/` does not exist (graphify não inicializado) or not a git repo, omit this section silently.
+
+6. Do **not** write any files. If the user wants to scaffold the harness,
    point them to `/aia-harness:init`.
 
 If the scanner cannot find Node.js, tell the user to install Node 18+ or set
