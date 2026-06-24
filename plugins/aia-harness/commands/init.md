@@ -11,9 +11,9 @@ allowed-tools:
 
 # Initialize the project's Claude Code harness
 
-Use the **harness-engineering** skill. Run the deterministic core, then gate
-every write behind explicit user approval. Never overwrite a file without
-showing a diff first.
+Use the **harness-engineering** skill (`Skill` tool, `skill: "aia-harness:harness-engineering"`).
+Run the deterministic core, then gate every write behind explicit user approval.
+Never overwrite a file without showing a diff first.
 
 Target directory: `$1` if provided, else `$CLAUDE_PROJECT_DIR`.
 
@@ -159,9 +159,10 @@ para a plataforma do usuário e encerrar — não executar os passos seguintes.
    _"Este projeto não tem testes unitários. Configurar agora? Recomendado: `<testing.recommended>`."_
    — opções: **"Sim, configurar"** / **"Sim, mas escolher outro framework"** / **"Não, por ora"**.
 
-   - **"Sim"** → invoque a skill **`setup-testing`** (ela instala o framework com confirmação,
-     escreve a config + 1 teste real num módulo existente, fia o script `test` e roda até verde).
-   - **"Sim, mas escolher outro"** → pergunte qual framework e passe a escolha à skill.
+   - **"Sim"** → invoque a skill **`setup-testing`** via `Skill` tool com `skill: "setup-testing"`
+     (ela instala o framework com confirmação, escreve a config + 1 teste real num módulo existente,
+     fia o script `test` e roda até verde).
+   - **"Sim, mas escolher outro"** → pergunte qual framework e passe a escolha à skill (mesmo `Skill` tool).
    - **"Não"** → siga sem configurar; a skill fica instalada para `/setup-testing` depois.
 
    Se `testing.configured === true`, pule este passo silenciosamente.
@@ -215,6 +216,11 @@ para a plataforma do usuário e encerrar — não executar os passos seguintes.
    reviews the result and suggests further automations (hooks / subagents / skills
    / plugins / MCP). Present its findings grouped by category and note which overlap
    what aia-harness already installed.
+
+   **How to invoke:** use the `Skill` tool with `skill: "claude-code-setup:claude-automation-recommender"`.
+   Do **not** use the `Agent` tool — this is a skill, not an agent type.
+   Check the available-skills list first: if `claude-code-setup:claude-automation-recommender` is not listed,
+   the plugin is not installed — skip to the "not installed" path below.
 
    Then **make them actionable** — never end by only printing the suggestions:
 

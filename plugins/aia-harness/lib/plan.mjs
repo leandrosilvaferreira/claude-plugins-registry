@@ -271,6 +271,7 @@ export function buildPlan(profile, ctx) {
     gitignore: [
       ".claude/settings.local.json",
       ".claude/*.local.*",
+      ...(profile.githubPM?.detected ? [".claude/pm-config.json"] : []),
       ...(toolIds.includes("graphify") ? ["graphify-out/", "graphify-out/cost.json", "graphify-out/cache/"] : []),
     ],
     notes,

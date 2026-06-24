@@ -145,5 +145,10 @@ Re-run the relevant lint/test command after edits and report the real output.
 
 Finally, invoke the **`claude-automation-recommender`** skill on the project for a
 second opinion — let Claude surface further automation gaps beyond this audit.
-Present its suggestions and offer to act on the new ones. If it is not installed,
-note it ships in the `claude-code-setup` plugin and skip gracefully.
+Present its suggestions and offer to act on the new ones.
+
+**How to invoke:** use the `Skill` tool with `skill: "claude-code-setup:claude-automation-recommender"`.
+Do **not** use the `Agent` tool — this is a skill, not an agent type.
+Check the available-skills list first: if `claude-code-setup:claude-automation-recommender` is not
+listed, the plugin is not installed — note it ships in the `claude-code-setup` plugin
+(`claude plugin install claude-code-setup@anthropics/claude-plugins-official`) and skip gracefully.

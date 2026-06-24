@@ -24,6 +24,7 @@ const REGISTRY_DIR = resolve(
 );
 const PLUGIN_DEST   = `${REGISTRY_DIR}/plugins/aia-harness`;
 const MARKETPLACE_JSON = `${REGISTRY_DIR}/.claude-plugin/marketplace.json`;
+const REGISTRY_JSON  = `${REGISTRY_DIR}/registry.json`;
 const PLUGIN_JSON   = `${PLUGIN_DIR}/.claude-plugin/plugin.json`;
 const PACKAGE_JSON  = `${PLUGIN_DIR}/package.json`;
 
@@ -170,7 +171,23 @@ for (const plugin of marketplace.plugins) {
   }
 }
 writeFileSync(MARKETPLACE_JSON, JSON.stringify(marketplace, null, 2) + '\n');
-git(['add', '.claude-plugin/marketplace.json'], REGISTRY_DIR);
+
+if (existsSync(REGISTRY_JSON)) {
+  log('Updating registry.json...');
+  const today = new Date().toISOString().slice(0, 10);
+  const registryIndex = JSON.parse(readFileSync(REGISTRY_JSON, 'utf8'));
+  registryIndex.updatedAt = today;
+  for (const plugin of registryIndex.plugins) {
+    if (plugin.name === 'aia-harness') {
+      plugin.version = newVersion;
+      plugin.publishedAt = today;
+    }
+  }
+  writeFileSync(REGISTRY_JSON, JSON.stringify(registryIndex, null, 2) + '\n');
+  git(['add', '.claude-plugin/marketplace.json', 'registry.json'], REGISTRY_DIR);
+} else {
+  git(['add', '.claude-plugin/marketplace.json'], REGISTRY_DIR);
+}
 git(['commit', '-m', `chore: release aia-harness@${newVersion} — sha ${syncSha.slice(0, 8)}`], REGISTRY_DIR);
 
 log('✔  Registry updated. Recent commits:');
