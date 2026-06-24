@@ -24,10 +24,22 @@
 export { stackKeys } from "./stack-keys.mjs";
 
 // ECC (MIT © Affaan Mustafa) — templates/ecc/
-export { ECC_COMMON, ECC_BY_STACK, ECC_AGENT_WHEN_TO_USE, selectEccAssets, allEccAssets } from "./ecc-catalog.mjs";
+export {
+  ECC_COMMON,
+  ECC_BY_STACK,
+  ECC_AGENT_WHEN_TO_USE,
+  selectEccAssets,
+  allEccAssets,
+} from "./ecc-catalog.mjs";
 
 // ag-kit (MIT © vudovn) — templates/ag-kit/
-export { AGKIT_COMMON, AGKIT_BY_STACK, AGKIT_AGENT_WHEN_TO_USE, selectAgkitAssets, allAgkitAssets } from "./agkit-catalog.mjs";
+export {
+  AGKIT_COMMON,
+  AGKIT_BY_STACK,
+  AGKIT_AGENT_WHEN_TO_USE,
+  selectAgkitAssets,
+  allAgkitAssets,
+} from "./agkit-catalog.mjs";
 
 import { ECC_AGENT_WHEN_TO_USE } from "./ecc-catalog.mjs";
 import { AGKIT_AGENT_WHEN_TO_USE } from "./agkit-catalog.mjs";

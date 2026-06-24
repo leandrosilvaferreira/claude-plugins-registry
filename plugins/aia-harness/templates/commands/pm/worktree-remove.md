@@ -16,7 +16,7 @@ Argumento: `$ARGUMENTS` (branch, número de issue, path, ou vazio para worktree 
 **Passo 1 — Gate de segurança**
 
 ```bash
-bash .claude/skills/github-pm/scripts/worktree-safety-check.sh \
+node .claude/skills/github-pm/scripts/worktree-safety-check.mjs \
   "$ARGUMENTS" "<OWNER>/<REPO>"
 ```
 

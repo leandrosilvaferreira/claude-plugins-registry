@@ -24,11 +24,11 @@ A guard that uses `exit 1` silently does nothing. Guards must `exit 2`.
 
 Hard allow/deny belongs in the **permission system**, not a Bash-parsing hook.
 
-## JavaScript hooks: the node-resolver wrapper
+## JavaScript hooks: exec-form invocation
 
-`node` is often not on PATH (nvm-managed). Never call `node` directly in a hook
-command. Invoke the shipped wrapper, which resolves
-`$CLAUDE_NODE → node → newest nvm node → bun`:
+Use exec-form — `command: "node"` with `args` — instead of a shell string. Claude
+Code spawns hooks using the user's login shell, so nvm (or any other version manager)
+has already placed `node` on `PATH`:
 
 ```json
 {
@@ -38,7 +38,8 @@ command. Invoke the shipped wrapper, which resolves
       "hooks": [
         {
           "type": "command",
-          "command": "\"${CLAUDE_PROJECT_DIR}/.claude/hooks/node-run.sh\" \"${CLAUDE_PROJECT_DIR}/.claude/hooks/format-on-edit.mjs\"",
+          "command": "node",
+          "args": ["${CLAUDE_PROJECT_DIR}/.claude/hooks/format-on-edit.mjs"],
           "timeout": 60
         }
       ]

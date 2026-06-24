@@ -88,14 +88,21 @@ export function renderToolsInstallSection(tools) {
     lines.push(`#   vendored into .claude/ (no machine install needed): ${vendored.join(", ")}`);
   }
   if (ids.has("rtk")) {
-    lines.push("#   rtk (token proxy) — PreToolUse hook already wired (guarded). Install the binary:");
-    lines.push("#     brew install rtk   # or: curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh");
+    lines.push(
+      "#   rtk (token proxy) — PreToolUse hook already wired (guarded). Install the binary:",
+    );
+    lines.push(
+      "#     brew install rtk   # or: curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh",
+    );
   }
   if (ids.has("graphify")) {
     lines.push("#   graphify (code graph) — project-level:");
-    lines.push("#     uv tool install graphifyy");
-    lines.push("#     graphify install --project && graphify claude install && graphify hook install");
-    lines.push("#     graphify .   # build the graph, then: git add graphify-out/");
+    lines.push("#     uv tool install graphifyy        # instala o binário graphify");
+    lines.push(
+      "#     graphify install --project       # registra a skill no .claude/skills/graphify/",
+    );
+    lines.push("#     graphify .                       # constrói o grafo inicial");
+    lines.push("#     git add graphify-out/ && git commit -m 'chore: add graphify code graph'");
   }
   return lines.length > 0 ? lines.join("\n") : "#   (none)";
 }
@@ -109,8 +116,16 @@ export function renderToolsInstallSection(tools) {
  */
 export function renderPluginsInstallScript(plugins) {
   const names = [...new Set(plugins.map((p) => p.marketplace))];
-  const mpList = JSON.stringify(names.map((n) => [n, marketplaceRepo(n)]), null, 2);
-  const pluginList = JSON.stringify(plugins.map((p) => ({ name: p.name, marketplace: p.marketplace })), null, 2);
+  const mpList = JSON.stringify(
+    names.map((n) => [n, marketplaceRepo(n)]),
+    null,
+    2,
+  );
+  const pluginList = JSON.stringify(
+    plugins.map((p) => ({ name: p.name, marketplace: p.marketplace })),
+    null,
+    2,
+  );
   const listing = plugins.map((p) => `  - ${p.name} [${p.purpose}] ${p.description}`).join("\n");
 
   return `#!/usr/bin/env node
@@ -202,7 +217,8 @@ export function renderGraphifyignore(profile) {
  * @returns {string}
  */
 export function renderInstallScript(mcpNames, tools = []) {
-  const mcpComment = mcpNames.length > 0 ? mcpNames.map((n) => `#   - ${n}`).join("\n") : "#   (none recommended)";
+  const mcpComment =
+    mcpNames.length > 0 ? mcpNames.map((n) => `#   - ${n}`).join("\n") : "#   (none recommended)";
   const toolLines = renderToolsInstallSection(tools);
 
   return `#!/usr/bin/env bash

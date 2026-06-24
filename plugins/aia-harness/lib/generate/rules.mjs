@@ -37,9 +37,15 @@ export function renderRules(profile) {
       `# Verification before completion
 
 Before claiming a task is done:
-${[c.typecheck && `- Typecheck: \`${c.typecheck}\``, c.lint && `- Lint: \`${c.lint}\``, c.test && `- Test: \`${c.test}\``]
-  .filter(Boolean)
-  .join("\n") || "- Run the project's lint and test commands."}
+${
+  [
+    c.typecheck && `- Typecheck: \`${c.typecheck}\``,
+    c.lint && `- Lint: \`${c.lint}\``,
+    c.test && `- Test: \`${c.test}\``,
+  ]
+    .filter(Boolean)
+    .join("\n") || "- Run the project's lint and test commands."
+}
 
 Report the actual command output. Do not assert success without running them.
 `,

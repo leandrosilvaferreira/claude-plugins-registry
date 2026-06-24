@@ -144,7 +144,9 @@ async function main() {
     fs.writeFileSync(SOURCE_PATH, JSON.stringify(source, null, 2) + "\n");
   }
 
-  console.log(`Vendored: ${counts.agents} agents, ${counts.rules} rule files, ${counts.skills} skills (+${counts.other} support files).`);
+  console.log(
+    `Vendored: ${counts.agents} agents, ${counts.rules} rule files, ${counts.skills} skills (+${counts.other} support files).`,
+  );
   console.log(`-> ${path.relative(ROOT, ECC_DIR)}`);
 }
 

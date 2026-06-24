@@ -63,9 +63,7 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
     PreToolUse: [
       {
         matcher: "Bash",
-        hooks: [
-          { type: "command", ...hookCmd("guard-main-branch.mjs"), timeout: 10 },
-        ],
+        hooks: [{ type: "command", ...hookCmd("guard-main-branch.mjs"), timeout: 10 }],
       },
       {
         // secret-scan blocks secrets before they land; worktree-write-guard asks
@@ -90,17 +88,23 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
     SessionStart: [
       {
         // Check system deps at session start; injects additionalContext when missing.
+        // Also inject active worktree path (from event.cwd) into the main session.
         hooks: [
           { type: "command", ...hookCmd("check-deps-on-start.mjs"), timeout: 30 },
+          { type: "command", ...hookCmd("worktree-session-ctx.mjs"), timeout: 10 },
         ],
+      },
+    ],
+    UserPromptSubmit: [
+      {
+        // Reinject compact worktree reminder on every prompt (post-compaction recovery).
+        hooks: [{ type: "command", ...hookCmd("worktree-prompt-ctx.mjs"), timeout: 10 }],
       },
     ],
     SubagentStart: [
       {
         // Inject active worktree path (from event.cwd) into every subagent.
-        hooks: [
-          { type: "command", ...hookCmd("worktree-subagent-ctx.mjs"), timeout: 10 },
-        ],
+        hooks: [{ type: "command", ...hookCmd("worktree-subagent-ctx.mjs"), timeout: 10 }],
       },
     ],
     Stop: [
@@ -117,7 +121,11 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
   // it at Stop (refactor before finishing — greenfield born strict); `advisory`
   // (default) runs it on PostToolUse against the just-edited file (suggest +
   // confirm — legacy-safe). The hook branches on hook_event_name accordingly.
-  const lfHook = { type: /** @type {const} */ ("command"), ...hookCmd("large-file-warning.mjs"), timeout: 30 };
+  const lfHook = {
+    type: /** @type {const} */ ("command"),
+    ...hookCmd("large-file-warning.mjs"),
+    timeout: 30,
+  };
   if (opts.largeFiles === "block") {
     hooks.Stop[0].hooks.push(lfHook);
   } else {
@@ -145,7 +153,13 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
     skipDangerousModePermissionPrompt: true,
     permissions: {
       allow: [...allow].sort(),
-      deny: ["Read(./.env)", "Read(./.env.*)", "Read(./**/.env)", "Read(./**/.env.*)", "Read(./secrets/**)"],
+      deny: [
+        "Read(./.env)",
+        "Read(./.env.*)",
+        "Read(./**/.env)",
+        "Read(./**/.env.*)",
+        "Read(./secrets/**)",
+      ],
     },
     hooks,
   };
@@ -161,7 +175,8 @@ export function renderSettingsLocal(envPlaceholders) {
   const env = {};
   for (const key of envPlaceholders) env[key] = "";
   const local = {
-    $comment: "Personal, gitignored. MCP-server credentials (env vars referenced by .mcp.json) — project secrets belong in .env/.env.local. Do not commit secrets.",
+    $comment:
+      "Personal, gitignored. MCP-server credentials (env vars referenced by .mcp.json) — project secrets belong in .env/.env.local. Do not commit secrets.",
     env,
   };
   return JSON.stringify(local, null, 2) + "\n";

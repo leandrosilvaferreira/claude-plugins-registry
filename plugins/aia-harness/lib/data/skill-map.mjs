@@ -62,7 +62,8 @@ export function skillsForProfile(profile) {
     add("Quarkus", "quarkus-patterns", "extensions, CDI, REST endpoints");
     add("Quarkus verify", "quarkus-verification", "validação de configuração e build nativo");
   }
-  if (fw.has("Spring Boot")) add("Java/Spring", "java-coding-standards", "padrões de código Java no projeto");
+  if (fw.has("Spring Boot"))
+    add("Java/Spring", "java-coding-standards", "padrões de código Java no projeto");
   if (fw.has("Laravel")) add("UI/UX", "ui-ux-pro-max", "design de componentes, acessibilidade, UX");
   if (fw.has("Adianti")) add("Adianti", "adianti-framework", "padrões MVC do framework Adianti");
   if (fw.has("shadcn/ui")) add("shadcn/ui", "vercel:shadcn", "componentes, temas, customização");
@@ -92,7 +93,11 @@ export function skillsForProfile(profile) {
     seen.has("vercel:react-best-practices") ||
     seen.has("ui-ux-pro-max");
   const hasFrontendFramework = profile.frameworks.some((f) => f.category === "frontend");
-  if (!hasFrontendSkill && hasFrontendFramework && (lang === "TypeScript" || lang === "JavaScript")) {
+  if (
+    !hasFrontendSkill &&
+    hasFrontendFramework &&
+    (lang === "TypeScript" || lang === "JavaScript")
+  ) {
     add("UI/UX", "ui-ux-pro-max", "design de componentes, acessibilidade, UX");
   }
 

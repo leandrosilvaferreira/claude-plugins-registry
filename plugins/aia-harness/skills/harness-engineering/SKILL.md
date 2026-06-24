@@ -46,10 +46,8 @@ loop and tailor the generated prose.
   `.claude/rules/ecc/<stack>/`. Vendored from ECC (MIT, Affaan Mustafa); the
   stack→asset map is `lib/data/ecc-catalog.mjs`. Mention the attribution.
 - **Project-level tools** (see `/aia-harness:add-tools` and `lib/data/tools-catalog.mjs`):
-  caveman + ponytail vendored into `.claude/` and wired (token economy), a guarded
-  rtk `PreToolUse` hook (no-ops if the binary is absent), and the graphify code-graph
-  flow. File tools install offline+automatically; binary/pkg tools (rtk, graphify)
-  install after one confirmation. Everything stays project-level — never `~/.claude`.
+  caveman + ponytail install as global Claude Code plugins (strategy "plugin" — not vendored, not wired per-project); a guarded rtk `PreToolUse` hook (no-ops if binary absent) and claude-code-worktrees skill are project-level (vendored); and the graphify code-graph
+  flow. Binary/pkg tools (rtk, graphify) and plugins (caveman, ponytail) install after one confirmation. rtk hook + worktrees stay project-level — never `~/.claude`.
 
 ## Non-negotiable safety rules
 

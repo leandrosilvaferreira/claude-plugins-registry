@@ -113,7 +113,9 @@ export function detectArchitecture(root, monorepo) {
   if (monorepo.isMonorepo) {
     style = "monorepo";
     signals.push(`monorepo (${monorepo.tool})`);
-  } else if (domains.some((d) => d.kind === "module" || d.kind === "feature" || d.kind === "service")) {
+  } else if (
+    domains.some((d) => d.kind === "module" || d.kind === "feature" || d.kind === "service")
+  ) {
     style = "modular";
   } else if (layeredCount >= 2) {
     style = "layered";

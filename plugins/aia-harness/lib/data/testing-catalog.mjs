@@ -70,7 +70,10 @@ export function recommendTesting(profile) {
         return {
           framework: "Vitest",
           installNeeded: true,
-          installCmd: jsInstall(profile, "vitest @testing-library/react @testing-library/jest-dom jsdom"),
+          installCmd: jsInstall(
+            profile,
+            "vitest @testing-library/react @testing-library/jest-dom jsdom",
+          ),
           configFile: "vitest.config.ts",
           evidence: "React stack — Vitest + Testing Library is the community standard",
         };
@@ -108,7 +111,8 @@ export function recommendTesting(profile) {
         return {
           framework: "Pest",
           installNeeded: true,
-          installCmd: "composer require pestphp/pest --dev --with-all-dependencies && ./vendor/bin/pest --init",
+          installCmd:
+            "composer require pestphp/pest --dev --with-all-dependencies && ./vendor/bin/pest --init",
           configFile: "phpunit.xml",
           evidence: "Laravel — Pest is the community-preferred testing framework",
         };
@@ -176,7 +180,8 @@ export function recommendTesting(profile) {
           installNeeded: false,
           installCmd: null,
           configFile: null,
-          evidence: "Quarkus — quarkus-junit5 is included in the quarkus-test starter; verify pom.xml/build.gradle",
+          evidence:
+            "Quarkus — quarkus-junit5 is included in the quarkus-test starter; verify pom.xml/build.gradle",
         };
       }
       if (has("Spring Boot")) {
@@ -185,7 +190,8 @@ export function recommendTesting(profile) {
           installNeeded: false,
           installCmd: null,
           configFile: null,
-          evidence: "Spring Boot — spring-boot-starter-test bundles JUnit 5; verify pom.xml/build.gradle",
+          evidence:
+            "Spring Boot — spring-boot-starter-test bundles JUnit 5; verify pom.xml/build.gradle",
         };
       }
       return {
@@ -201,7 +207,8 @@ export function recommendTesting(profile) {
       return {
         framework: "xUnit",
         installNeeded: true,
-        installCmd: "dotnet add package xunit && dotnet add package xunit.runner.visualstudio && dotnet add package Microsoft.NET.Test.Sdk",
+        installCmd:
+          "dotnet add package xunit && dotnet add package xunit.runner.visualstudio && dotnet add package Microsoft.NET.Test.Sdk",
         configFile: null,
         evidence: "C# — xUnit is the most adopted .NET testing framework",
       };

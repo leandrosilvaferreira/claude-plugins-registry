@@ -118,13 +118,15 @@ claude-code-setup + LSP por linguagem). Gera o instalador idempotente
 
 ### `/aia-harness:add-tools [caminho]`
 
-**O que faz:** vendoriza e fia ferramentas project-level de economia de token /
-code-graph: **caveman** e **ponytail** (skills + hooks, offline), o hook guardado
-do **rtk**, e **graphify**. Vendor + wiring são automáticos; instalações de
-binário/pacote (rtk, graphify) rodam só após **uma confirmação**.
+**O que faz:** instala ferramentas de economia de token / code-graph: **caveman** e
+**ponytail** instalam como plugins Claude Code globais (user-level, ativam em todos os
+projetos); o hook guardado do **rtk** e a skill **claude-code-worktrees** são
+project-level (vendorados em `.claude/`). **graphify** é project-level via CLI.
+Vendor + wiring do rtk/worktrees são automáticos; instalações de plugin/binário/pacote
+(caveman, ponytail, rtk, graphify) rodam só após **uma confirmação**.
 **Quando usar:** quer reduzir consumo de token ou ter um grafo de código.
-**Escreve arquivos?** Sim — skills em `.claude/skills/`, hooks em `.claude/hooks/<tool>/`, wiring no `settings.json`, `.graphifyignore`. **Tudo project-level**, nunca em `~/.claude`.
-**Parâmetros:** `caminho` (opcional). Escopo: `--tools=caveman,ponytail` ou `--no-tools`.
+**Escreve arquivos?** Sim — apenas rtk hook em `.claude/hooks/` e claude-code-worktrees em `.claude/skills/`, wiring no `settings.json`, `.graphifyignore`. Caveman e ponytail instalam como plugins user-level — **não** escrevem em `.claude/`.
+**Parâmetros:** `caminho` (opcional). Escopo: `--no-tools`.
 
 ---
 

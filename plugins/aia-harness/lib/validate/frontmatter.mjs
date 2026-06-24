@@ -211,8 +211,7 @@ export function validateFrontmatter(content, type) {
     }
   }
 
-  const normalized =
-    errors.length > 0 ? rebuild(fields, modified, body) : content;
+  const normalized = errors.length > 0 ? rebuild(fields, modified, body) : content;
 
   return { valid: errors.length === 0, errors, warnings, normalized };
 }

@@ -16,7 +16,11 @@
  */
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { detectAssetType, validateFrontmatter, normalizeToolsValue } from "../../lib/validate/frontmatter.mjs";
+import {
+  detectAssetType,
+  validateFrontmatter,
+  normalizeToolsValue,
+} from "../../lib/validate/frontmatter.mjs";
 
 /**
  * Normalize tool field lines in a fragment that has no frontmatter delimiters.
@@ -30,18 +34,20 @@ function normalizeFragmentLines(fragment) {
   const lines = fragment.split("\n");
   /** @type {string[]} */
   const errors = [];
-  const normalized = lines.map((line) => {
-    const m = line.match(TOOL_FIELD_RE);
-    if (!m) return line;
-    const field = m[1];
-    const raw = m[2];
-    const norm = normalizeToolsValue(raw);
-    if (norm !== raw.trim()) {
-      errors.push(`${field}: format non-compliant — normalized to "${norm}"`);
-      return `${field}: ${norm}`;
-    }
-    return line;
-  }).join("\n");
+  const normalized = lines
+    .map((line) => {
+      const m = line.match(TOOL_FIELD_RE);
+      if (!m) return line;
+      const field = m[1];
+      const raw = m[2];
+      const norm = normalizeToolsValue(raw);
+      if (norm !== raw.trim()) {
+        errors.push(`${field}: format non-compliant — normalized to "${norm}"`);
+        return `${field}: ${norm}`;
+      }
+      return line;
+    })
+    .join("\n");
   return { normalized, errors };
 }
 
@@ -130,8 +136,9 @@ if (!valid) {
 
 if (warnings.length > 0) {
   const advisory = warnings.map((w) => `  • ${w}`).join("\n");
-  output.systemMessage = (output.systemMessage ? output.systemMessage + "\n" : "")
-    + `[frontmatter] advisory for ${path.basename(filePath)}:\n${advisory}`;
+  output.systemMessage =
+    (output.systemMessage ? output.systemMessage + "\n" : "") +
+    `[frontmatter] advisory for ${path.basename(filePath)}:\n${advisory}`;
 }
 
 exit(output);

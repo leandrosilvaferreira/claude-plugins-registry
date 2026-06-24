@@ -44,7 +44,7 @@ Depois aguardar CI: `gh pr checks $PR_NUMBER --watch`
 **Passo 3 — Gate autoritativo (SEMPRE executar, NUNCA pular)**
 
 ```bash
-bash .claude/skills/github-pm/scripts/check-pr-status.sh $PR_NUMBER <OWNER>/<REPO>
+node .claude/skills/github-pm/scripts/check-pr-status.mjs $PR_NUMBER <OWNER>/<REPO>
 ```
 
 - Exit 0 → prosseguir

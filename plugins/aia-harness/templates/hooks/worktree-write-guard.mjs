@@ -21,12 +21,20 @@ import path from "node:path";
 
 /** @returns {string} */
 function readStdin() {
-  try { return fs.readFileSync(0, "utf8"); } catch { return ""; }
+  try {
+    return fs.readFileSync(0, "utf8");
+  } catch {
+    return "";
+  }
 }
 
 /** @type {any} */
 let event = {};
-try { event = JSON.parse(readStdin() || "{}"); } catch { process.exit(0); }
+try {
+  event = JSON.parse(readStdin() || "{}");
+} catch {
+  process.exit(0);
+}
 
 const cwd = typeof event.cwd === "string" ? event.cwd : "";
 const projectDir = process.env.CLAUDE_PROJECT_DIR ?? process.cwd();
@@ -38,9 +46,8 @@ if (!m) process.exit(0);
 const wtPath = path.resolve(m[1]);
 
 const ti = event.tool_input ?? {};
-const targetPath = typeof ti.file_path === "string" ? ti.file_path
-  : typeof ti.path === "string" ? ti.path
-  : "";
+const targetPath =
+  typeof ti.file_path === "string" ? ti.file_path : typeof ti.path === "string" ? ti.path : "";
 
 if (!targetPath) process.exit(0);
 
@@ -58,12 +65,14 @@ const reason = [
   `Intended? If you meant to edit the worktree copy, use the path inside "${wtPath}".`,
 ].join("\n");
 
-process.stdout.write(JSON.stringify({
-  hookSpecificOutput: {
-    hookEventName: "PreToolUse",
-    permissionDecision: "ask",
-    permissionDecisionReason: reason,
-  },
-}));
+process.stdout.write(
+  JSON.stringify({
+    hookSpecificOutput: {
+      hookEventName: "PreToolUse",
+      permissionDecision: "ask",
+      permissionDecisionReason: reason,
+    },
+  }),
+);
 
 process.exit(0);

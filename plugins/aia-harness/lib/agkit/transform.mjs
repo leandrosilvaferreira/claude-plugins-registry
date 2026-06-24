@@ -14,8 +14,17 @@ const AGENT_TOOL_MAP = /** @type {Record<string,string>} */ ({ FindByName: "Glob
 const AGENT_TOOL_DROP = new Set(["ViewCodeItem"]);
 /** Tools a Claude Code subagent may declare. Unknown tools are dropped. */
 const CLAUDE_AGENT_TOOLS = new Set([
-  "Read", "Write", "Edit", "Grep", "Glob", "Bash",
-  "WebFetch", "WebSearch", "TodoWrite", "NotebookEdit", "Task",
+  "Read",
+  "Write",
+  "Edit",
+  "Grep",
+  "Glob",
+  "Bash",
+  "WebFetch",
+  "WebSearch",
+  "TodoWrite",
+  "NotebookEdit",
+  "Task",
 ]);
 
 /** @param {string} sourcePath @param {string} commit @returns {string} */
@@ -79,7 +88,10 @@ export function mapAgentTools(value) {
   const cleaned = normalizeToolsValue(value);
   /** @type {string[]} */
   const out = [];
-  for (const raw of cleaned.split(",").map((t) => t.trim()).filter(Boolean)) {
+  for (const raw of cleaned
+    .split(",")
+    .map((t) => t.trim())
+    .filter(Boolean)) {
     if (AGENT_TOOL_DROP.has(raw)) continue;
     // Drop MCP tools for servers we don't wire into the generated harness
     if (raw.startsWith("mcp__code-review-graph__")) continue;
@@ -104,7 +116,9 @@ export function mapAgentTools(value) {
  */
 export function cleanAgentMarkdown(content, meta) {
   const { frontmatter, body } = splitFrontmatter(content);
-  const entries = parseFrontmatter(frontmatter).filter((e) => e.key !== "skills" && e.key !== "model");
+  const entries = parseFrontmatter(frontmatter).filter(
+    (e) => e.key !== "skills" && e.key !== "model",
+  );
   for (const e of entries) {
     if (e.key === "tools") e.value = mapAgentTools(e.value);
   }

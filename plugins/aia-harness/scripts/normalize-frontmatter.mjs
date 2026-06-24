@@ -73,8 +73,7 @@ for (const absPath of walkMd(targetDir)) {
       warnBuckets["skills without `allowed-tools` (unrestricted tool access)"].push(relPath);
     if (w.includes("model"))
       warnBuckets["agents without `model` (inherits from caller)"].push(relPath);
-    if (w.includes("paths"))
-      warnBuckets["rules without `paths` (applied globally)"].push(relPath);
+    if (w.includes("paths")) warnBuckets["rules without `paths` (applied globally)"].push(relPath);
   }
 }
 
@@ -124,7 +123,7 @@ if (interactive && hasWarnings) {
     for (const relPath of files) {
       const absPath = path.join(TEMPLATES, relPath);
       const answer = await rl.question(
-        `  ${relPath}\n  Add missing field? [enter value or ENTER to skip]: `
+        `  ${relPath}\n  Add missing field? [enter value or ENTER to skip]: `,
       );
       if (!answer.trim()) {
         console.log("  → skipped");
@@ -141,7 +140,8 @@ if (interactive && hasWarnings) {
 
       const content = fs.readFileSync(absPath, "utf8");
       const fmEnd = content.indexOf("\n---\n", 4) + 5;
-      const newFm = content.slice(0, fmEnd - 5) + `\n${field}: ${answer.trim()}` + content.slice(fmEnd - 5);
+      const newFm =
+        content.slice(0, fmEnd - 5) + `\n${field}: ${answer.trim()}` + content.slice(fmEnd - 5);
       fs.writeFileSync(absPath, newFm);
       console.log(`  → ${field}: ${answer.trim()} added`);
     }
@@ -152,7 +152,9 @@ if (interactive && hasWarnings) {
 
 // --- Summary ---
 const totalWarnings = Object.values(warnBuckets).flat().length;
-console.log(`\nSummary: ${fixed.length} format error(s)${dryRun ? " [not written — dry-run]" : " fixed"}, ${totalWarnings} warning(s) to review`);
+console.log(
+  `\nSummary: ${fixed.length} format error(s)${dryRun ? " [not written — dry-run]" : " fixed"}, ${totalWarnings} warning(s) to review`,
+);
 if (dryRun && fixed.length > 0) {
   console.log("Run with --fix-format to apply format fixes.");
 }

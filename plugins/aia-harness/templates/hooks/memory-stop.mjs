@@ -53,17 +53,42 @@ const allOps = raw.split("\n").filter((l) => l.trim().length > 0);
 
 // Extensions that carry real code knowledge (things a future session cares about).
 const SOURCE_EXTS = new Set([
-  ".mjs", ".js", ".cjs", ".ts", ".tsx", ".jsx",
-  ".py", ".go", ".java", ".kt", ".groovy",
-  ".php", ".rs", ".cs", ".c", ".cpp", ".h", ".hpp",
-  ".rb", ".swift", ".dart", ".scala", ".ex", ".exs",
+  ".mjs",
+  ".js",
+  ".cjs",
+  ".ts",
+  ".tsx",
+  ".jsx",
+  ".py",
+  ".go",
+  ".java",
+  ".kt",
+  ".groovy",
+  ".php",
+  ".rs",
+  ".cs",
+  ".c",
+  ".cpp",
+  ".h",
+  ".hpp",
+  ".rb",
+  ".swift",
+  ".dart",
+  ".scala",
+  ".ex",
+  ".exs",
   ".sql",
 ]);
 
 // File name suffixes that are never source knowledge even if extension matches.
 const SKIP_SUFFIXES = [
-  "package-lock.json", "yarn.lock", "pnpm-lock.yaml", "go.sum",
-  ".lock", ".sum", ".snap",
+  "package-lock.json",
+  "yarn.lock",
+  "pnpm-lock.yaml",
+  "go.sum",
+  ".lock",
+  ".sum",
+  ".snap",
 ];
 
 /**

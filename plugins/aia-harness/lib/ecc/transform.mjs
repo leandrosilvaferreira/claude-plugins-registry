@@ -33,7 +33,8 @@ export function removeSection(body, headingRe) {
   let skipping = false;
   for (const line of lines) {
     if (skipping) {
-      if (/^##?\s/.test(line)) skipping = false; // reached next H1/H2
+      if (/^##?\s/.test(line))
+        skipping = false; // reached next H1/H2
       else continue;
     }
     if (headingRe.test(line)) {

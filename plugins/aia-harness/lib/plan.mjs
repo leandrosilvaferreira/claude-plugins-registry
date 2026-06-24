@@ -30,7 +30,11 @@ import {
 } from "./data/asset-catalog.mjs";
 import { suggestPlugins } from "./data/plugins-catalog.mjs";
 import { addHookArtifacts } from "./plan/hook-artifacts.mjs";
-import { addEccArtifacts, addAgkitArtifacts, addToolArtifacts } from "./plan/vendored-artifacts.mjs";
+import {
+  addEccArtifacts,
+  addAgkitArtifacts,
+  addToolArtifacts,
+} from "./plan/vendored-artifacts.mjs";
 
 /**
  * @typedef {Object} Artifact
@@ -77,8 +81,8 @@ export function buildPlan(profile, ctx) {
   const toolsRoot = path.join(pluginRoot, "templates", "tools");
   const toolIds = ctx.tools ?? selectTools(profile).map((t) => t.id);
   // Wire hooks for:
-  //  - vendor tools with a local hooks dir (caveman, ponytail) OR with script-form hooks
-  //    distributed via PROJECT_HOOK_FILES (rtk-hook.mjs)
+  //  - vendor tools with a local hooks dir OR with script-form hooks
+  //    distributed via PROJECT_HOOK_FILES (rtk-hook.mjs; caveman/ponytail are plugins, not vendored)
   //  - hook-wire tools (legacy shell-form only, none remain after Task 2)
   const wiredToolIds = toolIds.filter((id) => {
     const t = getTool(id);
@@ -127,33 +131,70 @@ export function buildPlan(profile, ctx) {
 
   // --- CLAUDE.md + memory ---
   const rootMd = renderRootClaudeMd(profile, agentMetas);
-  add({ id: "claude-md-root", relPath: "CLAUDE.md", title: "Root CLAUDE.md", category: "claude-md",
+  add({
+    id: "claude-md-root",
+    relPath: "CLAUDE.md",
+    title: "Root CLAUDE.md",
+    category: "claude-md",
     rationale: "Project memory: stack + canonical commands, loaded every session.",
-    contextCost: estTokens(rootMd), defaultSelected: true, content: rootMd });
+    contextCost: estTokens(rootMd),
+    defaultSelected: true,
+    content: rootMd,
+  });
 
   const memInstructions = renderMemoryInstructions();
-  add({ id: "claude-md:memory-instructions", relPath: ".claude/memory/INSTRUCTIONS.md", title: "Memory instructions",
-    category: "claude-md", rationale: "Auto-loaded via @ import in CLAUDE.md — drives autonomous session-learning capture.",
-    contextCost: estTokens(memInstructions), defaultSelected: true, content: memInstructions });
+  add({
+    id: "claude-md:memory-instructions",
+    relPath: ".claude/memory/INSTRUCTIONS.md",
+    title: "Memory instructions",
+    category: "claude-md",
+    rationale:
+      "Auto-loaded via @ import in CLAUDE.md — drives autonomous session-learning capture.",
+    contextCost: estTokens(memInstructions),
+    defaultSelected: true,
+    content: memInstructions,
+  });
 
   // memory-index uses a non-prefixed ID intentionally: it is user-owned data (grows each session)
   // and must NOT be matched by /patch --force (which would erase accumulated project learnings).
   // doctor still detects it as missing via artifact.exists check.
-  add({ id: "memory-index", relPath: ".claude/memory/MEMORY.md", title: "Memory index (MEMORY.md)",
-    category: "claude-md", rationale: "Auto-loaded via @ import in CLAUDE.md — index of project learnings (created empty, grows over time).",
-    contextCost: 0, defaultSelected: true, content: "# Memory index\n\n" });
+  add({
+    id: "memory-index",
+    relPath: ".claude/memory/MEMORY.md",
+    title: "Memory index (MEMORY.md)",
+    category: "claude-md",
+    rationale:
+      "Auto-loaded via @ import in CLAUDE.md — index of project learnings (created empty, grows over time).",
+    contextCost: 0,
+    defaultSelected: true,
+    content: "# Memory index\n\n",
+  });
 
   for (const d of profile.architecture.domains.slice(0, DOMAIN_LIMIT)) {
-    add({ id: `claude-md:${d.path}`, relPath: `${d.path}/CLAUDE.md`, title: `CLAUDE.md — ${d.path}`,
-      category: "claude-md", rationale: `Domain guidance for ${d.path} (lazy-loaded).`,
-      contextCost: 0, defaultSelected: true, content: renderDomainClaudeMd(profile, d) });
+    add({
+      id: `claude-md:${d.path}`,
+      relPath: `${d.path}/CLAUDE.md`,
+      title: `CLAUDE.md — ${d.path}`,
+      category: "claude-md",
+      rationale: `Domain guidance for ${d.path} (lazy-loaded).`,
+      contextCost: 0,
+      defaultSelected: true,
+      content: renderDomainClaudeMd(profile, d),
+    });
   }
 
   // --- Rules (generated) ---
   for (const r of renderRules(profile)) {
-    add({ id: `rule:${r.relPath}`, relPath: r.relPath, title: `Rule: ${r.title}`, category: "rules",
+    add({
+      id: `rule:${r.relPath}`,
+      relPath: r.relPath,
+      title: `Rule: ${r.title}`,
+      category: "rules",
       rationale: "Path-scoped rule, loaded only when matching files are touched.",
-      contextCost: 0, defaultSelected: true, content: r.content });
+      contextCost: 0,
+      defaultSelected: true,
+      content: r.content,
+    });
   }
 
   // --- Settings + MCP ---
@@ -164,65 +205,140 @@ export function buildPlan(profile, ctx) {
     extraHooks[event] = [...(extraHooks[event] ?? []), ...entries];
   }
 
-  add({ id: "settings", relPath: ".claude/settings.json", title: "settings.json", category: "settings",
+  add({
+    id: "settings",
+    relPath: ".claude/settings.json",
+    title: "settings.json",
+    category: "settings",
     rationale: "Least-privilege permissions + JS hook wiring (committed).",
-    contextCost: 0, defaultSelected: true, content: renderSettings(profile, extraHooks, { strict, largeFiles }) });
+    contextCost: 0,
+    defaultSelected: true,
+    content: renderSettings(profile, extraHooks, { strict, largeFiles }),
+  });
 
   const mcp = renderMcp(profile);
-  add({ id: "mcp", relPath: ".mcp.json", title: ".mcp.json", category: "mcp",
-    rationale: `Strategic MCP servers: ${mcp.names.join(", ") || "none"} (env placeholders only).` +
+  add({
+    id: "mcp",
+    relPath: ".mcp.json",
+    title: ".mcp.json",
+    category: "mcp",
+    rationale:
+      `Strategic MCP servers: ${mcp.names.join(", ") || "none"} (env placeholders only).` +
       (mcp.prereqs.length > 0 ? ` Prereqs — ${mcp.prereqs.join("; ")}.` : ""),
-    contextCost: 0, defaultSelected: true, content: mcp.content });
+    contextCost: 0,
+    defaultSelected: true,
+    content: mcp.content,
+  });
 
-  add({ id: "settings-local", relPath: ".claude/settings.local.json", title: "settings.local.json",
-    category: "settings", rationale: "Personal env values (gitignored).",
-    contextCost: 0, defaultSelected: true, content: renderSettingsLocal(mcp.envPlaceholders) });
+  add({
+    id: "settings-local",
+    relPath: ".claude/settings.local.json",
+    title: "settings.local.json",
+    category: "settings",
+    rationale: "Personal env values (gitignored).",
+    contextCost: 0,
+    defaultSelected: true,
+    content: renderSettingsLocal(mcp.envPlaceholders),
+  });
 
   // --- Hooks (delegated) ---
   addHookArtifacts(add, pluginRoot, profile, { strict, verifyOnStopSrc, stackHooks });
 
   // --- Skills + first-party rules ---
   for (const s of selectProjectAssets(profile).skills) {
-    add({ id: `skill:${s}`, relPath: `.claude/skills/${s}`, title: `Skill: ${s}`, category: "skills",
+    add({
+      id: `skill:${s}`,
+      relPath: `.claude/skills/${s}`,
+      title: `Skill: ${s}`,
+      category: "skills",
       rationale: "Predefined operational skill installed into the project.",
-      contextCost: 0, defaultSelected: true, copyFrom: path.join(pluginRoot, "templates", "skills", s) });
+      contextCost: 0,
+      defaultSelected: true,
+      copyFrom: path.join(pluginRoot, "templates", "skills", s),
+    });
   }
   for (const r of selectProjectAssets(profile).rules) {
-    add({ id: `rule:project:${r}`, relPath: `.claude/rules/${r}`, title: `Rule: ${r}`, category: "rules",
+    add({
+      id: `rule:project:${r}`,
+      relPath: `.claude/rules/${r}`,
+      title: `Rule: ${r}`,
+      category: "rules",
       rationale: "First-party rule distributed by aia-harness.",
-      contextCost: 0, defaultSelected: true, copyFrom: path.join(pluginRoot, "templates", "rules", r) });
+      contextCost: 0,
+      defaultSelected: true,
+      copyFrom: path.join(pluginRoot, "templates", "rules", r),
+    });
   }
 
   // --- Docs, LSP, worktree, scripts ---
-  add({ id: "strategies", relPath: "docs/harness/strategies.md", title: "Harness strategies doc",
-    category: "docs", rationale: "Lint / compile / language-server / test strategy reference.",
-    contextCost: 0, defaultSelected: true, content: renderStrategies(profile) });
+  add({
+    id: "strategies",
+    relPath: "docs/harness/strategies.md",
+    title: "Harness strategies doc",
+    category: "docs",
+    rationale: "Lint / compile / language-server / test strategy reference.",
+    contextCost: 0,
+    defaultSelected: true,
+    content: renderStrategies(profile),
+  });
 
   const lsp = renderLspJson(profile);
   if (lsp) {
-    add({ id: "lsp", relPath: ".lsp.json", title: ".lsp.json (language server)", category: "lsp",
+    add({
+      id: "lsp",
+      relPath: ".lsp.json",
+      title: ".lsp.json (language server)",
+      category: "lsp",
       rationale: "Language server config (best-effort; opt-in).",
-      contextCost: 0, defaultSelected: false, content: lsp });
+      contextCost: 0,
+      defaultSelected: false,
+      content: lsp,
+    });
   }
 
   if (profile.vcs.isGit) {
-    add({ id: "worktree", relPath: ".worktreeinclude", title: ".worktreeinclude", category: "worktree",
+    add({
+      id: "worktree",
+      relPath: ".worktreeinclude",
+      title: ".worktreeinclude",
+      category: "worktree",
       rationale: "Copy local settings/env into new git worktrees.",
-      contextCost: 0, defaultSelected: true, content: renderWorktreeInclude() });
+      contextCost: 0,
+      defaultSelected: true,
+      content: renderWorktreeInclude(),
+    });
   }
 
-  add({ id: "install-script", relPath: "scripts/harness-install.sh", title: "Tools + MCP reference script",
-    category: "script", rationale: "Manual reference for project tools + MCP servers. Never auto-run.",
-    contextCost: 0, defaultSelected: false, executable: true,
-    content: renderInstallScript(mcp.names, toolIds.flatMap((id) => { const t = getTool(id); return t ? [t] : []; })) });
+  add({
+    id: "install-script",
+    relPath: "scripts/harness-install.sh",
+    title: "Tools + MCP reference script",
+    category: "script",
+    rationale: "Manual reference for project tools + MCP servers. Never auto-run.",
+    contextCost: 0,
+    defaultSelected: false,
+    executable: true,
+    content: renderInstallScript(
+      mcp.names,
+      toolIds.flatMap((id) => {
+        const t = getTool(id);
+        return t ? [t] : [];
+      }),
+    ),
+  });
 
   const pluginSuggestions = suggestPlugins(profile);
   if (pluginSuggestions.length > 0) {
-    add({ id: "install-plugins", relPath: "scripts/install-plugins.mjs", title: "Plugin installer (runnable)",
+    add({
+      id: "install-plugins",
+      relPath: "scripts/install-plugins.mjs",
+      title: "Plugin installer (runnable)",
       category: "script",
       rationale: `Runnable installer for ${pluginSuggestions.length} suggested plugin(s) — idempotent; run with -y.`,
-      contextCost: 0, defaultSelected: true,
-      content: renderPluginsInstallScript(pluginSuggestions) });
+      contextCost: 0,
+      defaultSelected: true,
+      content: renderPluginsInstallScript(pluginSuggestions),
+    });
   }
 
   // --- Vendored assets (ECC, ag-kit, tools) — delegated ---
@@ -250,8 +366,13 @@ export function buildPlan(profile, ctx) {
   if (profile.existingHarness.claudeMd) {
     notes.push("Existing CLAUDE.md found — a diff is shown instead of overwriting.");
   }
-  if (profile.primaryLanguage && !["JavaScript", "TypeScript", "PHP"].includes(profile.primaryLanguage)) {
-    notes.push(`Primary language ${profile.primaryLanguage} uses the generic fallback (v1 deep support: JS/TS, PHP).`);
+  if (
+    profile.primaryLanguage &&
+    !["JavaScript", "TypeScript", "PHP"].includes(profile.primaryLanguage)
+  ) {
+    notes.push(
+      `Primary language ${profile.primaryLanguage} uses the generic fallback (v1 deep support: JS/TS, PHP).`,
+    );
   }
   if (!profile.testing.configured && profile.testing.recommended) {
     notes.push(
@@ -272,7 +393,9 @@ export function buildPlan(profile, ctx) {
       ".claude/settings.local.json",
       ".claude/*.local.*",
       ...(profile.githubPM?.detected ? [".claude/pm-config.json"] : []),
-      ...(toolIds.includes("graphify") ? ["graphify-out/", "graphify-out/cost.json", "graphify-out/cache/"] : []),
+      ...(toolIds.includes("graphify")
+        ? ["graphify-out/", "graphify-out/cost.json", "graphify-out/cache/"]
+        : []),
     ],
     notes,
     totalContextCost: artifacts.reduce((sum, a) => sum + a.contextCost, 0),

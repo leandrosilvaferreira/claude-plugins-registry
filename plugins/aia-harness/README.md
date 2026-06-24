@@ -112,9 +112,10 @@ defaults. Every artifact below is proposed with a diff before it lands:
 ## JavaScript hooks anywhere
 
 Hook scripts are plain ESM `.mjs` — no build step — so they work identically in
-`.js`-only and TypeScript projects. They run through `node-run.sh` / `node-run.cmd`,
-which resolve a Node.js runtime even when `node` is not on `PATH`
-(`$CLAUDE_NODE` → `node` → newest nvm install → `bun`).
+`.js`-only and TypeScript projects. They are invoked via exec-form (`command: "node"`,
+`args: ["path/to/hook.mjs"]`), which lets Claude Code spawn them using the login
+shell environment where nvm (or any other node version manager) has already placed
+`node` on `PATH`.
 
 ## The engine (CLI)
 
@@ -205,7 +206,7 @@ Mustafa. The upstream license is kept at `templates/ecc/LICENSE`, and provenance
 (source commit + path) is stamped in each vendored file and `templates/ecc/MANIFEST.json`.
 
 Project-level tools installable via `/aia-harness:add-tools` (all keep their
-upstream license; caveman/ponytail are vendored under `templates/tools/<id>/`):
+upstream license; caveman/ponytail install as global Claude Code plugins — not vendored):
 
 - **caveman** — [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) (MIT)
 - **ponytail** — [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) (MIT)
@@ -216,7 +217,7 @@ To refresh vendored content from upstream:
 
 ```bash
 npm run sync:ecc     # ECC assets, pinned in scripts/ecc-source.json
-npm run sync:tools   # caveman + ponytail, pinned in scripts/tools-source.json
+npm run sync:tools   # re-vendors tool assets (tools-source.json; caveman/ponytail are plugins, not vendored here)
 ```
 
 Catalogs: `lib/data/ecc-catalog.mjs` (stack → ECC assets) and

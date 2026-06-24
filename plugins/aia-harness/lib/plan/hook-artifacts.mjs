@@ -25,7 +25,12 @@ import { PROJECT_HOOK_FILES } from "../data/asset-catalog.mjs";
  * @param {ProjectProfile} profile
  * @param {{ strict: boolean, verifyOnStopSrc: string|null, stackHooks: StackHooks }} opts
  */
-export function addHookArtifacts(add, pluginRoot, profile, { strict, verifyOnStopSrc, stackHooks }) {
+export function addHookArtifacts(
+  add,
+  pluginRoot,
+  profile,
+  { strict, verifyOnStopSrc, stackHooks },
+) {
   const hooksDir = path.join(pluginRoot, "templates", "hooks");
 
   for (const f of PROJECT_HOOK_FILES) {
@@ -72,7 +77,8 @@ export function addHookArtifacts(add, pluginRoot, profile, { strict, verifyOnSto
       relPath: ".claude/hooks/verify-on-stop.mjs",
       title: "Hook: verify-on-stop.mjs (strict)",
       category: "hooks",
-      rationale: "Strict Stop hook: runs lint + typecheck, blocks until they pass so Claude self-corrects.",
+      rationale:
+        "Strict Stop hook: runs lint + typecheck, blocks until they pass so Claude self-corrects.",
       contextCost: 0,
       defaultSelected: true,
       content: verifyOnStopSrc,
@@ -95,7 +101,8 @@ export function addHookArtifacts(add, pluginRoot, profile, { strict, verifyOnSto
     relPath: ".claude/hooks/set-files-changed.mjs",
     title: "Hook: set-files-changed.mjs",
     category: "hooks",
-    rationale: "Records session-edited files for Stop hooks (verify-on-stop, large-file-warning, memory-stop).",
+    rationale:
+      "Records session-edited files for Stop hooks (verify-on-stop, large-file-warning, memory-stop).",
     contextCost: 0,
     defaultSelected: true,
     copyFrom: path.join(hooksDir, "set-files-changed.mjs"),

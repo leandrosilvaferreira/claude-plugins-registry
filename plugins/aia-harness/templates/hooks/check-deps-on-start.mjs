@@ -12,17 +12,6 @@ import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import path from "node:path";
 
-const event = JSON.parse(await new Promise((res) => {
-  let buf = "";
-  process.stdin.setEncoding("utf8");
-  process.stdin.on("data", (c) => { buf += c; });
-  process.stdin.on("end", () => res(buf || "{}"));
-}));
-
-const cwd = event.cwd ?? process.cwd();
-const pluginRoot = process.env.CLAUDE_PLUGIN_ROOT ?? "";
-const harnessBin = pluginRoot ? path.join(pluginRoot, "bin", "harness.mjs") : "";
-
 /**
  * Silent success — never blocks the session.
  * @returns {never}
@@ -31,6 +20,27 @@ function passThrough() {
   process.stdout.write("");
   process.exit(0);
 }
+
+/** @type {{ cwd?: string }} */
+let event = {};
+try {
+  event = JSON.parse(
+    await new Promise((res) => {
+      let buf = "";
+      process.stdin.setEncoding("utf8");
+      process.stdin.on("data", (c) => {
+        buf += c;
+      });
+      process.stdin.on("end", () => res(buf || "{}"));
+    }),
+  );
+} catch {
+  passThrough();
+}
+
+const cwd = event.cwd ?? process.cwd();
+const pluginRoot = process.env.CLAUDE_PLUGIN_ROOT ?? "";
+const harnessBin = pluginRoot ? path.join(pluginRoot, "bin", "harness.mjs") : "";
 
 if (!harnessBin || !existsSync(harnessBin)) {
   passThrough();
@@ -67,24 +77,26 @@ const lines = [];
 
 if (report.status === "warn") {
   const missingChecks = report.checks.filter((/** @type {any} */ c) => !c.found);
-  lines.push("⚠️  Dependências recomendadas ausentes:");
+  lines.push("⚠️  Recommended dependencies missing:");
   for (const c of missingChecks) {
-    lines.push(`  • ${c.name}  → ${c.installHint?.[platform] ?? "ver documentação"}`);
+    lines.push(`  • ${c.name}  → ${c.installHint?.[platform] ?? "see docs"}`);
   }
-  lines.push("O harness funciona, mas algumas ferramentas opcionais estão faltando.");
+  lines.push("The harness works, but some optional tools are missing.");
 } else {
   // status === "block": required deps missing
-  lines.push("🚫  DEPENDÊNCIAS OBRIGATÓRIAS AUSENTES — operações do harness podem falhar.", "");
-  lines.push("Instale antes de continuar:");
+  lines.push("🚫  REQUIRED DEPENDENCIES MISSING — harness operations may fail.", "");
+  lines.push("Install before continuing:");
   for (const name of report.missing) {
     const check = report.checks.find((/** @type {any} */ c) => c.name === name);
-    const hint = check?.installHint?.[platform] ?? "ver documentação";
+    const hint = check?.installHint?.[platform] ?? "see docs";
     lines.push(`  • ${name}  → ${hint}`);
   }
-  lines.push("", "Execute /check-deps para ver o relatório completo.");
+  lines.push("", "Run /check-deps to see the full report.");
 }
 
-process.stdout.write(JSON.stringify({
-  hookSpecificOutput: { hookEventName: "SessionStart", additionalContext: lines.join("\n") },
-}));
+process.stdout.write(
+  JSON.stringify({
+    hookSpecificOutput: { hookEventName: "SessionStart", additionalContext: lines.join("\n") },
+  }),
+);
 process.exit(0);

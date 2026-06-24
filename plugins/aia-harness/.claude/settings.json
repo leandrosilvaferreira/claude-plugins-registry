@@ -34,7 +34,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/node-run.sh\" \"$CLAUDE_PROJECT_DIR/.claude/hooks/validate-template-frontmatter.mjs\"",
+            "command": "node",
+            "args": ["$CLAUDE_PROJECT_DIR/.claude/hooks/validate-template-frontmatter.mjs"],
             "timeout": 10
           }
         ]
@@ -64,12 +65,14 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/node-run.sh\" \"$CLAUDE_PROJECT_DIR/.claude/hooks/eslint-fix.mjs\"",
+            "command": "node",
+            "args": ["$CLAUDE_PROJECT_DIR/.claude/hooks/eslint-fix.mjs"],
             "timeout": 30
           },
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/node-run.sh\" \"$CLAUDE_PROJECT_DIR/.claude/hooks/typecheck-on-edit.mjs\"",
+            "command": "node",
+            "args": ["$CLAUDE_PROJECT_DIR/.claude/hooks/typecheck-on-edit.mjs"],
             "timeout": 30
           }
         ]
@@ -80,12 +83,14 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/node-run.sh\" \"$CLAUDE_PROJECT_DIR/.claude/hooks/verify-on-stop.mjs\"",
+            "command": "node",
+            "args": ["$CLAUDE_PROJECT_DIR/.claude/hooks/verify-on-stop.mjs"],
             "timeout": 120
           },
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/node-run.sh\" \"$CLAUDE_PROJECT_DIR/.claude/hooks/large-file-warning.mjs\"",
+            "command": "node",
+            "args": ["$CLAUDE_PROJECT_DIR/.claude/hooks/large-file-warning.mjs"],
             "timeout": 10
           }
         ]

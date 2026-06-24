@@ -22,8 +22,16 @@ export const ECC_COMMON = {
 
 /** @type {Record<string, EccAssetSet>} */
 export const ECC_BY_STACK = {
-  go: { agents: ["go-reviewer", "go-build-resolver"], skills: ["golang-patterns", "golang-testing"], rules: ["golang"] },
-  rust: { agents: ["rust-reviewer", "rust-build-resolver"], skills: ["rust-patterns", "rust-testing"], rules: ["rust"] },
+  go: {
+    agents: ["go-reviewer", "go-build-resolver"],
+    skills: ["golang-patterns", "golang-testing"],
+    rules: ["golang"],
+  },
+  rust: {
+    agents: ["rust-reviewer", "rust-build-resolver"],
+    skills: ["rust-patterns", "rust-testing"],
+    rules: ["rust"],
+  },
   typescript: { agents: ["typescript-reviewer"], skills: [], rules: ["typescript"] },
   react: {
     agents: ["react-reviewer", "react-build-resolver"],
@@ -31,10 +39,20 @@ export const ECC_BY_STACK = {
     rules: ["react"],
   },
   vue: { agents: ["vue-reviewer"], skills: ["vue-patterns", "nuxt4-patterns"], rules: ["vue"] },
-  java: { agents: ["java-reviewer", "java-build-resolver"], skills: ["java-coding-standards", "jpa-patterns"], rules: ["java"] },
+  java: {
+    agents: ["java-reviewer", "java-build-resolver"],
+    skills: ["java-coding-standards", "jpa-patterns"],
+    rules: ["java"],
+  },
   "java-spring": {
     agents: ["java-reviewer", "java-build-resolver"],
-    skills: ["springboot-patterns", "springboot-security", "springboot-tdd", "java-coding-standards", "jpa-patterns"],
+    skills: [
+      "springboot-patterns",
+      "springboot-security",
+      "springboot-tdd",
+      "java-coding-standards",
+      "jpa-patterns",
+    ],
     rules: ["java"],
   },
   "java-quarkus": {
@@ -42,7 +60,11 @@ export const ECC_BY_STACK = {
     skills: ["quarkus-patterns", "quarkus-security", "quarkus-tdd", "java-coding-standards"],
     rules: ["java"],
   },
-  kotlin: { agents: ["kotlin-reviewer", "kotlin-build-resolver"], skills: ["kotlin-patterns", "kotlin-testing"], rules: ["kotlin"] },
+  kotlin: {
+    agents: ["kotlin-reviewer", "kotlin-build-resolver"],
+    skills: ["kotlin-patterns", "kotlin-testing"],
+    rules: ["kotlin"],
+  },
   "php-laravel": {
     agents: ["php-reviewer"],
     skills: ["laravel-patterns", "laravel-security", "laravel-tdd"],
@@ -50,44 +72,60 @@ export const ECC_BY_STACK = {
   },
   "php-adianti": { agents: ["php-reviewer"], skills: [], rules: ["php"] },
   php: { agents: ["php-reviewer"], skills: [], rules: ["php"] },
-  python: { agents: ["python-reviewer"], skills: ["python-patterns", "python-testing"], rules: ["python"] },
+  python: {
+    agents: ["python-reviewer"],
+    skills: ["python-patterns", "python-testing"],
+    rules: ["python"],
+  },
   django: {
     agents: ["django-reviewer", "django-build-resolver"],
     skills: ["django-patterns", "django-tdd", "django-security"],
     rules: ["python"],
   },
   fastapi: { agents: ["fastapi-reviewer"], skills: ["fastapi-patterns"], rules: ["python"] },
-  csharp: { agents: ["csharp-reviewer"], skills: ["dotnet-patterns", "csharp-testing"], rules: ["csharp"] },
-  cpp: { agents: ["cpp-reviewer", "cpp-build-resolver"], skills: ["cpp-coding-standards", "cpp-testing"], rules: ["cpp"] },
-  dart: { agents: ["flutter-reviewer", "dart-build-resolver"], skills: ["dart-flutter-patterns"], rules: ["dart"] },
+  csharp: {
+    agents: ["csharp-reviewer"],
+    skills: ["dotnet-patterns", "csharp-testing"],
+    rules: ["csharp"],
+  },
+  cpp: {
+    agents: ["cpp-reviewer", "cpp-build-resolver"],
+    skills: ["cpp-coding-standards", "cpp-testing"],
+    rules: ["cpp"],
+  },
+  dart: {
+    agents: ["flutter-reviewer", "dart-build-resolver"],
+    skills: ["dart-flutter-patterns"],
+    rules: ["dart"],
+  },
 };
 
 /** Short "when to use" labels for the CLAUDE.md Workflow & Agents table (≤8 words each). */
 export const ECC_AGENT_WHEN_TO_USE = /** @type {Record<string,string>} */ ({
-  "code-reviewer":        "revisão após qualquer mudança de código",
-  "security-reviewer":    "revisão de segurança antes de merge",
-  "go-reviewer":          "revisão código Go",
-  "go-build-resolver":    "quando build Go falha",
-  "rust-reviewer":        "revisão código Rust",
-  "rust-build-resolver":  "quando build Rust falha",
-  "typescript-reviewer":  "revisão código TypeScript/JavaScript",
-  "react-reviewer":       "revisão componentes React",
+  "code-reviewer": "revisão após qualquer mudança de código",
+  "security-reviewer": "revisão de segurança antes de merge",
+  "go-reviewer": "revisão código Go",
+  "go-build-resolver": "quando build Go falha",
+  "rust-reviewer": "revisão código Rust",
+  "rust-build-resolver": "quando build Rust falha",
+  "typescript-reviewer": "revisão código TypeScript/JavaScript",
+  "react-reviewer": "revisão componentes React",
   "react-build-resolver": "quando build React falha",
-  "vue-reviewer":         "revisão componentes Vue",
-  "java-reviewer":        "revisão código Java/Spring/Quarkus",
-  "java-build-resolver":  "quando build Java falha",
-  "kotlin-reviewer":      "revisão código Kotlin",
-  "kotlin-build-resolver":"quando build Kotlin falha",
-  "php-reviewer":         "revisão código PHP/Laravel/Adianti",
-  "python-reviewer":      "revisão código Python",
-  "django-reviewer":      "revisão código Django",
-  "django-build-resolver":"quando build Django falha",
-  "fastapi-reviewer":     "revisão código FastAPI",
-  "csharp-reviewer":      "revisão código C#/.NET",
-  "cpp-reviewer":         "revisão código C++",
-  "cpp-build-resolver":   "quando build C++ falha",
-  "flutter-reviewer":     "revisão código Flutter/Dart",
-  "dart-build-resolver":  "quando build Flutter/Dart falha",
+  "vue-reviewer": "revisão componentes Vue",
+  "java-reviewer": "revisão código Java/Spring/Quarkus",
+  "java-build-resolver": "quando build Java falha",
+  "kotlin-reviewer": "revisão código Kotlin",
+  "kotlin-build-resolver": "quando build Kotlin falha",
+  "php-reviewer": "revisão código PHP/Laravel/Adianti",
+  "python-reviewer": "revisão código Python",
+  "django-reviewer": "revisão código Django",
+  "django-build-resolver": "quando build Django falha",
+  "fastapi-reviewer": "revisão código FastAPI",
+  "csharp-reviewer": "revisão código C#/.NET",
+  "cpp-reviewer": "revisão código C++",
+  "cpp-build-resolver": "quando build C++ falha",
+  "flutter-reviewer": "revisão código Flutter/Dart",
+  "dart-build-resolver": "quando build Flutter/Dart falha",
 });
 
 /**

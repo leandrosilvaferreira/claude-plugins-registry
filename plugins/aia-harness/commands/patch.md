@@ -30,9 +30,14 @@ Parse the JSON. Group artifact IDs by prefix into these logical categories
 | `mcp` — .mcp.json | `mcp` (exact) |
 | `skills` — first-party + ECC + ag-kit skills | starts with `skill:`, `ecc-skill:`, `agkit-skill:` |
 | `agents` — ECC + ag-kit agents | starts with `ecc-agent:`, `agkit-agent:` |
-| `tools` — caveman, ponytail, rtk, graphify | starts with `tool-skill:`, `tool-hooks:`, `graphifyignore` (exact) |
+| `tools` — rtk hook, graphify (caveman/ponytail are global plugins, not patched here) | starts with `tool-skill:`, `tool-hooks:`, `graphifyignore` (exact) |
 | `git-hooks` — graphify git hooks (post-commit, post-checkout) | starts with `graphify-git-hook:` |
 | `github-pm` — skill, commands, templates, workflows | starts with `github-pm:` |
+| `docs` — harness strategies doc | `strategies` (exact) |
+| `lsp` — language server config | `lsp` (exact) |
+| `worktree` — .worktreeinclude | `worktree` (exact) |
+| `script` — install reference scripts | `install-script` (exact), `install-plugins` (exact), or starts with `agkit-script:` |
+| `commands` — first-party + ag-kit commands (non-github-pm) | starts with `command:`, `agkit-command:` |
 
 ## 2. Ask the user which categories to patch
 

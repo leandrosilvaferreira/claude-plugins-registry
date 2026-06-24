@@ -188,8 +188,7 @@ para a plataforma do usuário e encerrar — não executar os passos seguintes.
 
       On decline → `/aia-harness:add-plugins` later.
 
-   b. **Project tools (machine deps).** The vendored tools (caveman / ponytail /
-      worktrees) are already wired by apply — nothing to install. The ones that need
+   b. **Project tools (machine deps).** The project-level tools: caveman / ponytail install as global Claude Code plugins (Step 3 of add-tools); worktrees skill is vendored by apply — nothing to install for worktrees. The ones that need
       a machine-level install are **rtk** (token-proxy binary; its hook is wired and
       no-ops until present) and **graphify** (code-graph; needs `uv`). Use **one
       `AskUserQuestion` (multi-select)** listing only the wired ones (check
@@ -198,7 +197,9 @@ para a plataforma do usuário e encerrar — não executar os passos seguintes.
       failure, and report:
       - **rtk:** `command -v brew >/dev/null && brew install rtk || curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh`
       - **graphify** (from the target dir): `uv tool install graphifyy` then
-        `graphify install --project && graphify claude install && graphify hook install && graphify .`
+        `graphify install --project && graphify .`
+
+        _NOTE: git hooks (post-commit, post-checkout) already copied by harness — do not run `graphify hook install`._
 
       This is the same set `/aia-harness:add-tools` step 3 installs — defer there for
       anything more. `scripts/harness-install.sh` stays only as a written reference;

@@ -54,7 +54,8 @@ export function detectMonorepo(root, rootFiles) {
   if (has("pnpm-workspace.yaml")) return mono("pnpm", "pnpm-workspace.yaml", pnpmWorkspaces(root));
 
   const pkg = readJson(path.join(root, "package.json"));
-  if (pkg && pkg.workspaces) return mono("npm-workspaces", "package.json workspaces", npmWorkspaces(root));
+  if (pkg && pkg.workspaces)
+    return mono("npm-workspaces", "package.json workspaces", npmWorkspaces(root));
 
   if (has("go.work")) return mono("go-work", "go.work", []);
 

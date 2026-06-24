@@ -78,17 +78,25 @@ export function detectPackageManagers(root, rootFiles, languages = []) {
   }
 
   if (has("go.mod")) pms.push({ name: "go", ecosystem: "go", version: null, evidence: "go.mod" });
-  if (has("Cargo.toml")) pms.push({ name: "cargo", ecosystem: "rust", version: null, evidence: "Cargo.toml" });
-  if (has("pom.xml")) pms.push({ name: "maven", ecosystem: "jvm", version: null, evidence: "pom.xml" });
+  if (has("Cargo.toml"))
+    pms.push({ name: "cargo", ecosystem: "rust", version: null, evidence: "Cargo.toml" });
+  if (has("pom.xml"))
+    pms.push({ name: "maven", ecosystem: "jvm", version: null, evidence: "pom.xml" });
   if (has("build.gradle") || has("build.gradle.kts"))
     pms.push({ name: "gradle", ecosystem: "jvm", version: null, evidence: "gradle build file" });
-  if (has("Gemfile")) pms.push({ name: "bundler", ecosystem: "ruby", version: null, evidence: "Gemfile" });
+  if (has("Gemfile"))
+    pms.push({ name: "bundler", ecosystem: "ruby", version: null, evidence: "Gemfile" });
 
   // Native PHP: .php sources present but no Composer manifest.
   const hasPhpPm = pms.some((p) => p.ecosystem === "php");
   const hasPhpLang = languages.some((l) => l.name === "PHP" && l.type === "programming");
   if (!hasPhpPm && hasPhpLang) {
-    pms.push({ name: "php", ecosystem: "php", version: null, evidence: "PHP sources, no Composer" });
+    pms.push({
+      name: "php",
+      ecosystem: "php",
+      version: null,
+      evidence: "PHP sources, no Composer",
+    });
   }
 
   return pms;

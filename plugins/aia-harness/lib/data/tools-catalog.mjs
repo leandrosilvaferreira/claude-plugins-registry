@@ -27,7 +27,7 @@
  * @property {string} id
  * @property {string} name
  * @property {"token-economy"|"code-graph"|"workflow"} category
- * @property {"vendor"|"hook-wire"|"cli"} strategy
+ * @property {"vendor"|"hook-wire"|"cli"|"plugin"} strategy
  * @property {string} license
  * @property {string} repo
  * @property {string[]} deps          e.g. "node", "binary:rtk", "uv"
@@ -40,7 +40,7 @@ const HOOK_DIR = "${CLAUDE_PROJECT_DIR}/.claude/hooks";
 /**
  * Exec-form object for a vendored JS hook (no shell required).
  * Spread into the hook entry: { type: "command", ...vendorHookCommand(rel), timeout }.
- * @param {string} rel  Path under `.claude/hooks/`, e.g. "caveman/caveman-activate.js".
+ * @param {string} rel  Path under `.claude/hooks/`, e.g. "rtk-hook.mjs".
  * @returns {{ command: string, args: string[] }}
  */
 export function vendorHookCommand(rel) {
@@ -50,31 +50,14 @@ export function vendorHookCommand(rel) {
 /** @type {ToolDef[]} */
 export const TOOLS = [
   {
-    id: "caveman",
-    name: "Caveman",
-    category: "token-economy",
-    strategy: "vendor",
-    license: "MIT",
-    repo: "JuliusBrussee/caveman",
-    deps: ["node"],
-    hooks: [
-      { event: "SessionStart", script: "caveman/caveman-activate.js", timeout: 10 },
-      { event: "UserPromptSubmit", script: "caveman/caveman-mode-tracker.js", timeout: 10 },
-    ],
-    recommended: () => true,
-  },
-  {
     id: "ponytail",
     name: "Ponytail",
     category: "token-economy",
-    strategy: "vendor",
+    strategy: "plugin",
     license: "MIT",
     repo: "DietrichGebert/ponytail",
-    deps: ["node"],
-    hooks: [
-      { event: "SessionStart", script: "ponytail/ponytail-activate.js", timeout: 10 },
-      { event: "UserPromptSubmit", script: "ponytail/ponytail-mode-tracker.js", timeout: 10 },
-    ],
+    deps: [],
+    hooks: [],
     recommended: () => true,
   },
   {
@@ -140,13 +123,14 @@ export function toolSettingsHooks(toolIds) {
   const out = {};
   for (const id of toolIds) {
     const tool = getTool(id);
-    if (!tool || tool.strategy === "cli") continue;
+    if (!tool || tool.strategy === "cli" || tool.strategy === "plugin") continue;
     for (const h of tool.hooks) {
       const cmdValue = h.command ?? (h.script ? vendorHookCommand(h.script) : null);
       if (!cmdValue) continue;
-      const hookBase = typeof cmdValue === "string"
-        ? { type: /** @type {const} */ ("command"), command: cmdValue }
-        : { type: /** @type {const} */ ("command"), ...cmdValue };
+      const hookBase =
+        typeof cmdValue === "string"
+          ? { type: /** @type {const} */ ("command"), command: cmdValue }
+          : { type: /** @type {const} */ ("command"), ...cmdValue };
       const entry = h.matcher
         ? { matcher: h.matcher, hooks: [{ ...hookBase, timeout: h.timeout ?? 30 }] }
         : { hooks: [{ ...hookBase, timeout: h.timeout ?? 30 }] };

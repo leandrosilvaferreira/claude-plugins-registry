@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 /**
- * Vendor file-based token-economy tools (caveman, ponytail) into templates/tools/.
+ * Vendor project-level tool assets (rtk hook, graphify config) into templates/tools/.
  * One GitHub API call per tool (recursive tree); content via the raw CDN.
  * Run with: npm run sync:tools
+ *
+ * Caveman and ponytail install as global Claude Code plugins — not vendored here.
  *
  * @module scripts/sync-tools
  */
@@ -69,7 +71,12 @@ async function vendorTool(id, cfg) {
   const toolDir = path.join(OUT_DIR, id);
   fs.rmSync(toolDir, { recursive: true, force: true });
 
-  const meta = (/** @type {string} */ sourcePath) => ({ repo: cfg.repo, commit, sourcePath, license: cfg.license });
+  const meta = (/** @type {string} */ sourcePath) => ({
+    repo: cfg.repo,
+    commit,
+    sourcePath,
+    license: cfg.license,
+  });
   let skills = 0;
   let hooks = 0;
 
@@ -78,14 +85,17 @@ async function vendorTool(id, cfg) {
   for (const p of blobs.filter((b) => b.startsWith(skillsPrefix))) {
     const rel = p.slice(skillsPrefix.length);
     const raw = await fetchRaw(cfg.repo, commit, p);
-    const content = p.endsWith("/SKILL.md") || p.endsWith(".md") ? stampMarkdown(raw, meta(p)) : raw;
+    const content =
+      p.endsWith("/SKILL.md") || p.endsWith(".md") ? stampMarkdown(raw, meta(p)) : raw;
     writeFile(path.join(toolDir, "skills", rel), content);
     if (p.endsWith("/SKILL.md")) skills += 1;
   }
 
   // Hooks: vendor flat by basename (activate / mode-tracker / config / runtime).
   const hooksPrefix = `${cfg.hooksPath}/`;
-  for (const p of blobs.filter((b) => b.startsWith(hooksPrefix) && /\.(js|cjs|mjs|json|sh)$/.test(b))) {
+  for (const p of blobs.filter(
+    (b) => b.startsWith(hooksPrefix) && /\.(js|cjs|mjs|json|sh)$/.test(b),
+  )) {
     const base = p.slice(p.lastIndexOf("/") + 1);
     const raw = await fetchRaw(cfg.repo, commit, p);
     const content = /\.(js|cjs|mjs)$/.test(p) ? stampJs(raw, meta(p)) : raw;
@@ -95,7 +105,10 @@ async function vendorTool(id, cfg) {
 
   // Force CommonJS resolution for the vendored hooks (they use require()), so
   // they work even when the target project's package.json is "type":"module".
-  writeFile(path.join(toolDir, "hooks", "package.json"), JSON.stringify({ type: "commonjs" }, null, 2) + "\n");
+  writeFile(
+    path.join(toolDir, "hooks", "package.json"),
+    JSON.stringify({ type: "commonjs" }, null, 2) + "\n",
+  );
 
   if (blobs.includes("LICENSE")) {
     writeFile(path.join(toolDir, "LICENSE"), await fetchRaw(cfg.repo, commit, "LICENSE"));
@@ -103,7 +116,11 @@ async function vendorTool(id, cfg) {
 
   writeFile(
     path.join(toolDir, "MANIFEST.json"),
-    JSON.stringify({ id, repo: cfg.repo, commit, license: cfg.license, counts: { skills, hooks } }, null, 2) + "\n",
+    JSON.stringify(
+      { id, repo: cfg.repo, commit, license: cfg.license, counts: { skills, hooks } },
+      null,
+      2,
+    ) + "\n",
   );
 
   if (!cfg.commit) {

@@ -18,18 +18,26 @@ import path from "node:path";
 
 /** @returns {string} */
 function readStdin() {
-  try { return fs.readFileSync(0, "utf8"); } catch { return ""; }
+  try {
+    return fs.readFileSync(0, "utf8");
+  } catch {
+    return "";
+  }
 }
 
 /** @type {any} */
 let event = {};
-try { event = JSON.parse(readStdin() || "{}"); } catch { process.exit(0); }
+try {
+  event = JSON.parse(readStdin() || "{}");
+} catch {
+  process.exit(0);
+}
 
 const cwd = typeof event.cwd === "string" ? event.cwd : "";
 const projectDir = process.env.CLAUDE_PROJECT_DIR ?? "";
 
 // Detect worktree: cwd must contain .claude/worktrees/<name>
-const m = cwd.match(/^(.+?\.claude\/worktrees\/[^/]+)/);
+const m = cwd.match(/^(.+?\.claude[/\\]worktrees[/\\][^/\\]+)/);
 if (!m) process.exit(0);
 
 const wtPath = m[1];
@@ -38,12 +46,18 @@ const rel = projectDir ? path.relative(projectDir, wtPath) : path.basename(wtPat
 const additionalContext = [
   `WORKTREE ACTIVE: this session is working inside the git worktree at "${wtPath}" (relative: "${rel}").`,
   `All file reads, writes, and edits MUST target paths inside "${wtPath}".`,
-  ...(projectDir ? [`The project root "${projectDir}" is READ-ONLY unless the task explicitly requires editing it.`] : []),
+  ...(projectDir
+    ? [
+        `The project root "${projectDir}" is READ-ONLY unless the task explicitly requires editing it.`,
+      ]
+    : []),
   `When spawning sub-tasks, pass this worktree path so they do not accidentally write to the project root.`,
 ].join("\n");
 
-process.stdout.write(JSON.stringify({
-  hookSpecificOutput: { hookEventName: "SubagentStart", additionalContext },
-}));
+process.stdout.write(
+  JSON.stringify({
+    hookSpecificOutput: { hookEventName: "SubagentStart", additionalContext },
+  }),
+);
 
 process.exit(0);

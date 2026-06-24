@@ -58,7 +58,8 @@ const GITHUB_PM_ARTIFACTS = [
   },
   {
     id: "github-pm:pm-config",
-    description: "pm-config.json template — fill real IDs via /pm:setup-project (never overwritten)",
+    description:
+      "pm-config.json template — fill real IDs via /pm:setup-project (never overwritten)",
     copyFrom: path.join(T, "github", "pm-config.json.template"),
     dest: ".claude/pm-config.json",
   },
@@ -70,7 +71,8 @@ const GITHUB_PM_ARTIFACTS = [
   },
   {
     id: "github-pm:github-project",
-    description: "Vendored skill: github-project (netresearch/github-project-skill, MIT AND CC-BY-SA-4.0)",
+    description:
+      "Vendored skill: github-project (netresearch/github-project-skill, MIT AND CC-BY-SA-4.0)",
     copyFrom: path.join(T, "github-pm-ext", "github-project"),
     dest: ".claude/skills/github-project",
   },

@@ -16,7 +16,10 @@ const projectDir = process.env.CLAUDE_PROJECT_DIR ?? process.cwd();
 /** @returns {boolean} */
 function hasChanges() {
   try {
-    const out = execFileSync("git", ["status", "--porcelain"], { cwd: projectDir, encoding: "utf8" });
+    const out = execFileSync("git", ["status", "--porcelain"], {
+      cwd: projectDir,
+      encoding: "utf8",
+    });
     return out.split("\n").some((l) => l.trim().length > 0);
   } catch {
     return false;

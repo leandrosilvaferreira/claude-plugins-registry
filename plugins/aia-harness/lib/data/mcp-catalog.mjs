@@ -47,7 +47,11 @@ export const MCP_CATALOG = [
     name: "sequential-thinking",
     description: "Structured step-by-step reasoning for complex, multi-step problems.",
     docsUrl: "https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking",
-    server: { type: "stdio", command: "npx", args: ["-y", "@modelcontextprotocol/server-sequential-thinking"] },
+    server: {
+      type: "stdio",
+      command: "npx",
+      args: ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+    },
     recommended: () => true,
   },
   {

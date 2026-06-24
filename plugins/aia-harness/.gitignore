@@ -15,3 +15,6 @@ coverage/
 
 # graphify — local artifact, not tracked
 graphify-out/
+
+# SDD progress ledgers and review packages — local only
+.superpowers/

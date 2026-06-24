@@ -56,9 +56,7 @@ export function scanProject(root, opts = {}) {
   // Exclude harness config dirs from stack detection only — they belong to the
   // scaffolded harness, not to the target project's own language/framework.
   const HARNESS_ROOT_DIRS = new Set([".claude", ".agents", ".agent"]);
-  const stackFiles = files.filter(
-    (f) => !HARNESS_ROOT_DIRS.has(f.rel.split("/")[0]),
-  );
+  const stackFiles = files.filter((f) => !HARNESS_ROOT_DIRS.has(f.rel.split("/")[0]));
   const stackRelSet = new Set(stackFiles.map((f) => f.rel));
 
   const { languages, primaryLanguage } = detectLanguages(stackFiles);

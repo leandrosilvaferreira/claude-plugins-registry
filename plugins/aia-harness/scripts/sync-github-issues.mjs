@@ -106,7 +106,13 @@ async function main() {
   } catch {
     // file may not exist yet
   }
-  manifest["github-issues"] = { repo, commit, license, path: srcPath, vendoredAt: new Date().toISOString() };
+  manifest["github-issues"] = {
+    repo,
+    commit,
+    license,
+    path: srcPath,
+    vendoredAt: new Date().toISOString(),
+  };
   fs.mkdirSync(path.dirname(MANIFEST_FILE), { recursive: true });
   fs.writeFileSync(MANIFEST_FILE, JSON.stringify(manifest, null, 2) + "\n", "utf8");
 

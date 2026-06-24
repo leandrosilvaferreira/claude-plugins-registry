@@ -53,17 +53,28 @@ export function validatePreToolUseOutput(stdout, exitCode) {
 
   if ("hookSpecificOutput" in obj) {
     const hso = obj.hookSpecificOutput;
-    errors.push(...checkHookSpecificOutput(hso, "PreToolUse", ["permissionDecisionReason", "additionalContext"]));
+    errors.push(
+      ...checkHookSpecificOutput(hso, "PreToolUse", [
+        "permissionDecisionReason",
+        "additionalContext",
+      ]),
+    );
     if (typeof hso === "object" && !Array.isArray(hso) && hso !== null) {
       if (!("permissionDecision" in hso)) {
-        errors.push("hookSpecificOutput.permissionDecision is required when hookSpecificOutput is present");
+        errors.push(
+          "hookSpecificOutput.permissionDecision is required when hookSpecificOutput is present",
+        );
       } else if (!PERMISSION_DECISIONS.has(hso.permissionDecision)) {
         errors.push(
           `hookSpecificOutput.permissionDecision must be "allow", "deny", "ask", or "defer", got "${hso.permissionDecision}"`,
         );
       }
       if ("updatedInput" in hso) {
-        if (typeof hso.updatedInput !== "object" || Array.isArray(hso.updatedInput) || hso.updatedInput === null) {
+        if (
+          typeof hso.updatedInput !== "object" ||
+          Array.isArray(hso.updatedInput) ||
+          hso.updatedInput === null
+        ) {
           errors.push("hookSpecificOutput.updatedInput must be a non-null object");
         }
       }
@@ -148,7 +159,11 @@ export function validateUserPromptSubmitOutput(stdout, exitCode) {
   if (!trimmed) return { valid: true, errors: [] };
 
   let parsed;
-  try { parsed = JSON.parse(trimmed); } catch { return { valid: true, errors: [] }; }
+  try {
+    parsed = JSON.parse(trimmed);
+  } catch {
+    return { valid: true, errors: [] };
+  }
 
   const objErr = requireObject(parsed);
   if (objErr) return { valid: false, errors: [objErr] };
@@ -164,7 +179,12 @@ export function validateUserPromptSubmitOutput(stdout, exitCode) {
     errors.push(`reason must be a string, got ${typeof obj.reason}`);
   }
   if ("hookSpecificOutput" in obj) {
-    errors.push(...checkHookSpecificOutput(obj.hookSpecificOutput, "UserPromptSubmit", ["additionalContext", "sessionTitle"]));
+    errors.push(
+      ...checkHookSpecificOutput(obj.hookSpecificOutput, "UserPromptSubmit", [
+        "additionalContext",
+        "sessionTitle",
+      ]),
+    );
   }
   errors.push(...validateCommonFields(obj));
   return { valid: errors.length === 0, errors };
@@ -194,7 +214,11 @@ export function validatePermissionRequestOutput(stdout, exitCode) {
     if (baseErrs.length === 0 && typeof hso === "object" && !Array.isArray(hso) && hso !== null) {
       if (!("decision" in hso)) {
         errors.push("hookSpecificOutput.decision is required for PermissionRequest");
-      } else if (typeof hso.decision !== "object" || Array.isArray(hso.decision) || hso.decision === null) {
+      } else if (
+        typeof hso.decision !== "object" ||
+        Array.isArray(hso.decision) ||
+        hso.decision === null
+      ) {
         errors.push("hookSpecificOutput.decision must be a non-null object");
       }
     }

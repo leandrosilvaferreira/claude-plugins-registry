@@ -40,9 +40,15 @@ function collectDeps(root) {
     ingest(composer["require-dev"]);
   }
 
-  const py = readText(path.join(root, "pyproject.toml")) ?? readText(path.join(root, "requirements.txt")) ?? "";
+  const py =
+    readText(path.join(root, "pyproject.toml")) ??
+    readText(path.join(root, "requirements.txt")) ??
+    "";
   for (const line of py.split(/\r?\n/)) {
-    const m = line.trim().toLowerCase().match(/^["']?([a-z0-9_.-]+)/);
+    const m = line
+      .trim()
+      .toLowerCase()
+      .match(/^["']?([a-z0-9_.-]+)/);
     if (m) deps.add(m[1]);
   }
 
@@ -51,7 +57,9 @@ function collectDeps(root) {
     readText(path.join(root, "build.gradle")) ??
     readText(path.join(root, "build.gradle.kts")) ??
     "";
-  for (const m of jvm.matchAll(/(org\.springframework\.boot|io\.quarkus|io\.micronaut|spring-boot-starter[\w-]*)/g)) {
+  for (const m of jvm.matchAll(
+    /(org\.springframework\.boot|io\.quarkus|io\.micronaut|spring-boot-starter[\w-]*)/g,
+  )) {
     deps.add(m[1]);
   }
 

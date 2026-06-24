@@ -34,8 +34,7 @@ function jsRunner(pm) {
 function jsCommands(root, pm, rootFiles) {
   const pkg = readJson(path.join(root, "package.json")) ?? {};
   /** @type {Record<string, string>} */
-  const scripts =
-    pkg.scripts && typeof pkg.scripts === "object" ? pkg.scripts : {};
+  const scripts = pkg.scripts && typeof pkg.scripts === "object" ? pkg.scripts : {};
   const run = jsRunner(pm?.name);
 
   /** @param {...string} names */
@@ -79,19 +78,12 @@ function jsCommands(root, pm, rootFiles) {
 
   return {
     install: installCmd,
-    lint:
-      pick("lint") ??
-      (biome ? "npx @biomejs/biome lint ." : eslint ? "npx eslint ." : null),
+    lint: pick("lint") ?? (biome ? "npx @biomejs/biome lint ." : eslint ? "npx eslint ." : null),
     format:
       pick("format", "fmt") ??
-      (biome
-        ? "npx @biomejs/biome format --write ."
-        : prettier
-          ? "npx prettier --write ."
-          : null),
+      (biome ? "npx @biomejs/biome format --write ." : prettier ? "npx prettier --write ." : null),
     typecheck:
-      pick("typecheck", "type-check", "tsc", "check-types") ??
-      (hasTs ? "npx tsc --noEmit" : null),
+      pick("typecheck", "type-check", "tsc", "check-types") ?? (hasTs ? "npx tsc --noEmit" : null),
     test: pick("test"),
     build: pick("build"),
     run: pick("dev", "start", "serve"),
@@ -109,8 +101,7 @@ function phpCommands(root, rootFiles) {
   const hasComposer = rootFiles.has("composer.json");
   const composer = hasComposer ? (readJson(path.join(root, "composer.json")) ?? {}) : {};
   /** @type {Record<string, string>} */
-  const scripts =
-    composer.scripts && typeof composer.scripts === "object" ? composer.scripts : {};
+  const scripts = composer.scripts && typeof composer.scripts === "object" ? composer.scripts : {};
   /** @type {Record<string, unknown>} */
   const req = { ...(composer.require ?? {}), ...(composer["require-dev"] ?? {}) };
   const dep = (/** @type {string} */ n) => n in req;
@@ -146,11 +137,7 @@ function phpCommands(root, rootFiles) {
   return {
     install: hasComposer ? "composer install" : null,
     lint: staticAnalysis,
-    format: hasPint
-      ? "./vendor/bin/pint"
-      : hasCsFixer
-        ? "./vendor/bin/php-cs-fixer fix"
-        : null,
+    format: hasPint ? "./vendor/bin/pint" : hasCsFixer ? "./vendor/bin/php-cs-fixer fix" : null,
     typecheck: staticAnalysis,
     test,
     build: isLaravel ? "php artisan optimize" : null,
@@ -241,7 +228,8 @@ function javaCommands(root, rootFiles, frameworks) {
   const isSpring = names.includes("Spring Boot");
 
   let run = null;
-  if (maven) run = isQuarkus ? "mvn quarkus:dev" : isSpring ? "mvn spring-boot:run" : "mvn exec:java";
+  if (maven)
+    run = isQuarkus ? "mvn quarkus:dev" : isSpring ? "mvn spring-boot:run" : "mvn exec:java";
   else if (gradle) run = isQuarkus ? `${gw} quarkusDev` : isSpring ? `${gw} bootRun` : `${gw} run`;
 
   const fw = isQuarkus ? ", quarkus" : isSpring ? ", spring" : "";
@@ -265,7 +253,9 @@ function javaCommands(root, rootFiles, frameworks) {
  * @returns {CommandSet}
  */
 function goCommands(_root, rootFiles) {
-  const golangci = [".golangci.yml", ".golangci.yaml", ".golangci.toml"].some((f) => rootFiles.has(f));
+  const golangci = [".golangci.yml", ".golangci.yaml", ".golangci.toml"].some((f) =>
+    rootFiles.has(f),
+  );
   return {
     install: "go mod download",
     lint: golangci ? "golangci-lint run" : "go vet ./...",

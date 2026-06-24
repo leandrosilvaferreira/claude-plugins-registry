@@ -93,10 +93,10 @@ export function commandsBlock(commands) {
     ["Build", commands.build],
     ["Run/Dev", commands.run],
   ];
-  const lines = rows
-    .filter(([, v]) => v)
-    .map(([k, v]) => `- **${k}:** \`${v}\``);
-  return lines.length > 0 ? lines.join("\n") : "- _No canonical commands detected — fill these in._";
+  const lines = rows.filter(([, v]) => v).map(([k, v]) => `- **${k}:** \`${v}\``);
+  return lines.length > 0
+    ? lines.join("\n")
+    : "- _No canonical commands detected — fill these in._";
 }
 
 /**
@@ -116,21 +116,49 @@ export function skillsBlock(profile) {
 /** Priority order for the agents table — most-used roles first. */
 const AGENT_ORDER = [
   "orchestrator",
-  "code-reviewer", "security-reviewer",
-  "go-reviewer", "rust-reviewer", "typescript-reviewer",
-  "react-reviewer", "vue-reviewer",
-  "java-reviewer", "kotlin-reviewer",
-  "php-reviewer", "python-reviewer", "django-reviewer", "fastapi-reviewer",
-  "csharp-reviewer", "cpp-reviewer", "flutter-reviewer",
-  "go-build-resolver", "rust-build-resolver", "react-build-resolver",
-  "java-build-resolver", "kotlin-build-resolver", "django-build-resolver",
-  "dart-build-resolver", "cpp-build-resolver",
-  "qa-automation-engineer", "test-engineer", "database-architect", "devops-engineer",
-  "backend-specialist", "frontend-specialist", "seo-specialist",
-  "mobile-developer", "game-developer", "performance-optimizer",
-  "product-manager", "product-owner",
-  "project-planner", "code-archaeologist", "debugger", "explorer-agent",
-  "documentation-writer", "penetration-tester", "security-auditor",
+  "code-reviewer",
+  "security-reviewer",
+  "go-reviewer",
+  "rust-reviewer",
+  "typescript-reviewer",
+  "react-reviewer",
+  "vue-reviewer",
+  "java-reviewer",
+  "kotlin-reviewer",
+  "php-reviewer",
+  "python-reviewer",
+  "django-reviewer",
+  "fastapi-reviewer",
+  "csharp-reviewer",
+  "cpp-reviewer",
+  "flutter-reviewer",
+  "go-build-resolver",
+  "rust-build-resolver",
+  "react-build-resolver",
+  "java-build-resolver",
+  "kotlin-build-resolver",
+  "django-build-resolver",
+  "dart-build-resolver",
+  "cpp-build-resolver",
+  "qa-automation-engineer",
+  "test-engineer",
+  "database-architect",
+  "devops-engineer",
+  "backend-specialist",
+  "frontend-specialist",
+  "seo-specialist",
+  "mobile-developer",
+  "game-developer",
+  "performance-optimizer",
+  "product-manager",
+  "product-owner",
+  "project-planner",
+  "code-archaeologist",
+  "debugger",
+  "explorer-agent",
+  "documentation-writer",
+  "penetration-tester",
+  "security-auditor",
 ];
 
 /**

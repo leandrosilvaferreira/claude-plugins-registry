@@ -65,12 +65,12 @@ completo — não invente um fluxo alternativo.
 2. Confirmar com o usuário antes de criar ou fechar issues.
 3. Status reflete estado real. Nunca deixar In Progress se o trabalho parou.
 4. NUNCA operar em `main` — sempre em branch de feature ou worktree.
-5. NUNCA fazer merge sem gate `check-pr-status.sh` com exit 0 (ou exit 4 + confirmação).
+5. NUNCA fazer merge sem gate `check-pr-status.mjs` com exit 0 (ou exit 4 + confirmação).
 6. NUNCA usar `--admin` bypass sem pedido explícito e confirmação dupla.
 
 ## Anti-padrões
 
 - Não fechar issue sem validar critérios de aceite no body da issue.
 - Não criar worktree de `main` sem `-b <branch>`.
-- Não fazer merge sem CI verde (scripts/check-pr-status.sh).
-- Não remover worktree com código não commitado (scripts/worktree-safety-check.sh).
+- Não fazer merge sem CI verde (scripts/check-pr-status.mjs).
+- Não remover worktree com código não commitado (scripts/worktree-safety-check.mjs).

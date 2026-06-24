@@ -90,7 +90,7 @@ export function applyPlan(plan, root, opts = {}) {
           const { valid, errors: fmErrors, normalized } = validateFrontmatter(content, type);
           if (!valid) {
             process.stderr.write(
-              `[apply] frontmatter: ${a.relPath}: auto-fixed: ${fmErrors.join("; ")}\n`
+              `[apply] frontmatter: ${a.relPath}: auto-fixed: ${fmErrors.join("; ")}\n`,
             );
             content = normalized;
           }

@@ -11,7 +11,7 @@ import { scanProject } from "../lib/detect/index.mjs";
 import { buildPlan } from "../lib/plan.mjs";
 import { renderReport, renderPlanSummary } from "../lib/render.mjs";
 import { applyPlan } from "../lib/apply.mjs";
-import { checkSystemDeps, resolveDepsFromProfile } from '../lib/detect/system-deps.mjs';
+import { checkSystemDeps, resolveDepsFromProfile } from "../lib/detect/system-deps.mjs";
 
 const PLUGIN_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const VERSION = "0.1.1";
@@ -70,7 +70,8 @@ function printApply(res, dryRun) {
   const prefix = dryRun ? "[dry-run] would create" : "created";
   console.log(`${dryRun ? "DRY RUN (pass --yes to write)\n" : ""}`);
   for (const p of res.created) console.log(`  ${prefix}: ${p}`);
-  for (const p of res.updated) console.log(`  ${dryRun ? "[dry-run] would update" : "updated"}: ${p}`);
+  for (const p of res.updated)
+    console.log(`  ${dryRun ? "[dry-run] would update" : "updated"}: ${p}`);
   for (const p of res.skipped) console.log(`  skipped: ${p}`);
   for (const e of res.errors) console.log(`  ERROR: ${e.path} — ${e.error}`);
   console.log(
@@ -86,28 +87,30 @@ function printApply(res, dryRun) {
  */
 function formatDepsReport(report, platform) {
   const plat = /** @type {'win32'|'darwin'|'linux'} */ (
-    platform === 'win32' ? 'win32' : platform === 'darwin' ? 'darwin' : 'linux'
+    platform === "win32" ? "win32" : platform === "darwin" ? "darwin" : "linux"
   );
   const lines = [];
   for (const c of report.checks) {
     if (c.found) {
-      lines.push(`✓ ${c.name.padEnd(12)} v${c.version ?? '?'}   ${c.resolvedPath}`);
+      lines.push(`✓ ${c.name.padEnd(12)} v${c.version ?? "?"}   ${c.resolvedPath}`);
     } else {
       lines.push(`✗ ${c.name.padEnd(12)} não encontrado  [${c.level}]`);
       const hint = c.installHint[plat];
       if (hint) lines.push(`  → ${plat}: ${hint}`);
     }
   }
-  lines.push('');
-  if (report.status === 'block') {
-    lines.push('BLOQUEADO: instale as dependências acima antes de continuar.');
-  } else if (report.status === 'warn') {
-    const n = report.checks.filter(c => !c.found).length;
-    lines.push(`STATUS: ok  (${n} recommended ausente${n !== 1 ? 's' : ''}, nenhum required faltando)`);
+  lines.push("");
+  if (report.status === "block") {
+    lines.push("BLOQUEADO: instale as dependências acima antes de continuar.");
+  } else if (report.status === "warn") {
+    const n = report.checks.filter((c) => !c.found).length;
+    lines.push(
+      `STATUS: ok  (${n} recommended ausente${n !== 1 ? "s" : ""}, nenhum required faltando)`,
+    );
   } else {
-    lines.push('STATUS: ok  todas as dependências encontradas.');
+    lines.push("STATUS: ok  todas as dependências encontradas.");
   }
-  return lines.join('\n');
+  return lines.join("\n");
 }
 
 /**
@@ -131,19 +134,22 @@ function main() {
     return 0;
   }
 
-  if (cmd === 'check') {
+  if (cmd === "check") {
     const toolList = opts.tools
-      ? opts.tools.split(',').map((s) => s.trim()).filter(Boolean)
+      ? opts.tools
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
       : [];
     const profile = scanProject(dir);
     const deps = resolveDepsFromProfile(profile, toolList);
     const report = checkSystemDeps(deps, process.platform);
-    if (flags.has('json')) {
+    if (flags.has("json")) {
       console.log(JSON.stringify(report, null, 2));
     } else {
       console.log(formatDepsReport(report, process.platform));
     }
-    return report.status === 'block' ? 1 : 0;
+    return report.status === "block" ? 1 : 0;
   }
 
   const toolsOpt = flags.has("no-tools")
@@ -160,14 +166,24 @@ function main() {
 
   if (cmd === "plan") {
     const profile = scanProject(dir);
-    const plan = buildPlan(profile, { pluginRoot: PLUGIN_ROOT, tools: toolsOpt, strict, largeFiles });
+    const plan = buildPlan(profile, {
+      pluginRoot: PLUGIN_ROOT,
+      tools: toolsOpt,
+      strict,
+      largeFiles,
+    });
     console.log(flags.has("json") ? JSON.stringify(plan, null, 2) : renderPlanSummary(plan));
     return 0;
   }
 
   if (cmd === "apply") {
     const profile = scanProject(dir);
-    const plan = buildPlan(profile, { pluginRoot: PLUGIN_ROOT, tools: toolsOpt, strict, largeFiles });
+    const plan = buildPlan(profile, {
+      pluginRoot: PLUGIN_ROOT,
+      tools: toolsOpt,
+      strict,
+      largeFiles,
+    });
     const selected = opts.only ? new Set(opts.only.split(",").map((s) => s.trim())) : undefined;
     const dryRun = !flags.has("yes");
     const res = applyPlan(plan, profile.root, { selected, dryRun, force: flags.has("force") });

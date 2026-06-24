@@ -68,7 +68,10 @@ export function validateCommonFields(obj) {
  */
 export function parseStdout(stdout, exitCode) {
   if (exitCode !== 0 && exitCode !== 2) {
-    return { ok: false, result: { valid: false, errors: [`exit code must be 0 or 2, got ${exitCode}`] } };
+    return {
+      ok: false,
+      result: { valid: false, errors: [`exit code must be 0 or 2, got ${exitCode}`] },
+    };
   }
   if (exitCode === 2) return { ok: false, result: { valid: true, errors: [] } };
   const { parsed, parseError } = parseOutput(stdout);
@@ -92,7 +95,9 @@ export function makeContextValidator(eventName) {
     /** @type {string[]} */
     const errors = [];
     if ("hookSpecificOutput" in r.obj) {
-      errors.push(...checkHookSpecificOutput(r.obj.hookSpecificOutput, eventName, ["additionalContext"]));
+      errors.push(
+        ...checkHookSpecificOutput(r.obj.hookSpecificOutput, eventName, ["additionalContext"]),
+      );
     }
     errors.push(...validateCommonFields(r.obj));
     return { valid: errors.length === 0, errors };
@@ -119,7 +124,9 @@ export function checkHookSpecificOutput(hso, eventName, stringFields) {
   /** @type {string[]} */
   const errs = [];
   if ("hookEventName" in hso && hso.hookEventName !== eventName) {
-    errs.push(`hookSpecificOutput.hookEventName must be "${eventName}", got "${hso.hookEventName}"`);
+    errs.push(
+      `hookSpecificOutput.hookEventName must be "${eventName}", got "${hso.hookEventName}"`,
+    );
   }
   for (const field of stringFields) {
     if (field in hso && typeof hso[field] !== "string") {

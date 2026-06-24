@@ -47,7 +47,7 @@ node bin/harness.mjs apply [dir] [--yes]     # write plan; dry-run unless --yes
 (audit existing harness) · `patch` (selective force-overwrite of artifact categories in
 an already-configured project — prompts user to pick categories, then runs
 `apply --yes --force --only=…`) · `add-mcp` · `add-plugins` (runs
-`scripts/install-plugins.sh`) · `add-tools` (vendor+wire caveman/ponytail/rtk, graphify)
+`scripts/install-plugins.sh`) · `add-tools` (install caveman/ponytail as global Claude Code plugins; vendor rtk hook + graphify)
 · `help` (full command reference + "I want to…" decision guide). `init`/`doctor` close
 by invoking the `claude-automation-recommender` skill for a second opinion.
 
@@ -63,7 +63,7 @@ Data flows through three stages, each a pure-ish boundary:
    - `ecc-catalog.mjs` — ECC assets (MIT © Affaan Mustafa), `templates/ecc/`, mapped by stack.
    - `agkit-catalog.mjs` — ag-kit assets (MIT © vudovn), `templates/ag-kit/`, mapped by stack.
    - `project-catalog.mjs` — **first-party** skills + hooks we own (`templates/skills/`, `templates/hooks/`).
-   - `tools-catalog.mjs` — vendored third-party tools (caveman/ponytail/rtk/graphify), `templates/tools/`; structurally different (`ToolDef` + machine deps + settings-hook wiring).
+   - `tools-catalog.mjs` — caveman/ponytail (global Claude Code plugins, strategy "plugin"); rtk hook + graphify (project-level, strategy "vendor"/"cli"); `templates/tools/`; structurally different (`ToolDef` + machine deps + settings-hook wiring).
    - `stack-keys.mjs` — pure `profile → stack-key` resolver shared by the stack-specific catalogs.
 
 3. **`lib/apply.mjs` `applyPlan(plan, root, opts)`.** Writes artifacts. **Safe by default**: dry-run unless `dryRun:false`; never overwrites an existing *differing* file unless `force`; `.gitignore` updated idempotently under an `# aia-harness` header. Handles both file and directory (`copyFrom` a dir) artifacts.
@@ -80,9 +80,8 @@ frontmatter conversion: drop the agent `skills:` field, force `model: sonnet`, m
 Antigravity tools, fold skill `when_to_use` into `description`). `lib/data/agkit-catalog.mjs`
 decides what applies by detected stack. ag-kit content is MIT © vudovn — keep attribution.
 
-`lib/data/tools-catalog.mjs` adds project-level tools: caveman/ponytail vendored as
-skills+hooks (wired in generated `settings.json`), a guarded rtk `PreToolUse` hook,
-and graphify. `plugins-catalog` generates a runnable `scripts/install-plugins.sh`
+`lib/data/tools-catalog.mjs` adds project-level tools: caveman/ponytail installed as global Claude Code plugins (strategy "plugin"; not vendored, not wired in settings.json), a guarded rtk `PreToolUse` hook,
+and graphify. `plugins-catalog` generates a runnable `scripts/install-plugins.mjs`
 (marketplace add via repo, install via registered name). github MCP is default on git repos.
 
 ## Conventions

@@ -14,10 +14,8 @@ import { E2E_FRAMEWORKS, recommendTesting } from "../data/testing-catalog.mjs";
 const TEST_FILE_MATCHERS = {
   js: (/** @type {FileEntry} */ f) =>
     /\.(test|spec)\.(js|ts|mjs|cjs|jsx|tsx)$/.test(f.rel) || f.rel.includes("__tests__/"),
-  php: (/** @type {FileEntry} */ f) =>
-    /Test\.php$/.test(f.base) || /^tests[\\/]/.test(f.rel),
-  python: (/** @type {FileEntry} */ f) =>
-    /^test_/.test(f.base) || /_test\.py$/.test(f.base),
+  php: (/** @type {FileEntry} */ f) => /Test\.php$/.test(f.base) || /^tests[\\/]/.test(f.rel),
+  python: (/** @type {FileEntry} */ f) => /^test_/.test(f.base) || /_test\.py$/.test(f.base),
   go: (/** @type {FileEntry} */ f) => /_test\.go$/.test(f.base),
   rust: (/** @type {FileEntry} */ f) => f.rel.startsWith("tests/") && f.base.endsWith(".rs"),
   jvm: (/** @type {FileEntry} */ f) =>

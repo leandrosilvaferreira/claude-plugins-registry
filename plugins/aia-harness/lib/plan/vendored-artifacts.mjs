@@ -137,7 +137,7 @@ export function addAgkitArtifacts(add, agkitRoot, agkit) {
 }
 
 /**
- * Add vendored project-level tools (caveman, ponytail, rtk, graphify) to the plan.
+ * Add vendored project-level tools (rtk, graphify, claude-code-worktrees) to the plan.
  * @param {AddFn} add
  * @param {string} toolsRoot
  * @param {string[]} toolIds
@@ -147,6 +147,8 @@ export function addToolArtifacts(add, toolsRoot, toolIds, profile) {
   for (const id of toolIds) {
     const tool = getTool(id);
     if (!tool) continue;
+    // Plugin-strategy tools are installed globally by the marketplace; skip all file copies.
+    if (tool.strategy === "plugin") continue;
     if (tool.strategy === "vendor") {
       const skillsDir = path.join(toolsRoot, id, "skills");
       for (const skill of listDirs(skillsDir)) {

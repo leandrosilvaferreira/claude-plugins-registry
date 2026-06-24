@@ -1,5 +1,7 @@
 import js from "@eslint/js";
 import globals from "globals";
+import prettier from "eslint-plugin-prettier";
+import prettierConfig from "eslint-config-prettier";
 
 export default [
   {
@@ -14,8 +16,10 @@ export default [
     ],
   },
   js.configs.recommended,
+  prettierConfig,
   {
     files: ["**/*.mjs"],
+    plugins: { prettier },
     languageOptions: {
       ecmaVersion: 2023,
       sourceType: "module",
@@ -27,6 +31,7 @@ export default [
       eqeqeq: ["error", "smart"],
       "prefer-const": "error",
       "no-var": "error",
+      "prettier/prettier": "error",
     },
   },
 ];

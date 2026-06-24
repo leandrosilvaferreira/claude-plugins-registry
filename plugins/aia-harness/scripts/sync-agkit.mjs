@@ -52,7 +52,10 @@ async function resolveCommit() {
 async function fetchTree(commit) {
   const res = await get(`${source.apiBase}/repos/${source.repo}/git/trees/${commit}?recursive=1`);
   const json = /** @type {any} */ (await res.json());
-  if (json.truncated) throw new Error("ag-kit git tree is truncated; narrow the catalog entries in agkit-catalog.mjs.");
+  if (json.truncated)
+    throw new Error(
+      "ag-kit git tree is truncated; narrow the catalog entries in agkit-catalog.mjs.",
+    );
   return json.tree;
 }
 
@@ -81,9 +84,15 @@ async function main() {
   // Agents.
   for (const name of want.agents) {
     const repoPath = `${AG}/agent/${name}.md`;
-    if (!blobPaths.has(repoPath)) { console.warn(`  ! missing agent: ${repoPath}`); continue; }
+    if (!blobPaths.has(repoPath)) {
+      console.warn(`  ! missing agent: ${repoPath}`);
+      continue;
+    }
     const raw = await fetchRaw(commit, repoPath);
-    writeFile(path.join(OUT_DIR, "agents", `${name}.md`), cleanAgentMarkdown(raw, { sourcePath: repoPath, commit }));
+    writeFile(
+      path.join(OUT_DIR, "agents", `${name}.md`),
+      cleanAgentMarkdown(raw, { sourcePath: repoPath, commit }),
+    );
     counts.agents += 1;
   }
 
@@ -91,7 +100,10 @@ async function main() {
   for (const name of want.skills) {
     const prefix = `${AG}/skills/${name}/`;
     const files = [...blobPaths].filter((p) => p.startsWith(prefix));
-    if (files.length === 0) { console.warn(`  ! missing skill: ${name}`); continue; }
+    if (files.length === 0) {
+      console.warn(`  ! missing skill: ${name}`);
+      continue;
+    }
     for (const repoPath of files) {
       const raw = await fetchRaw(commit, repoPath);
       const rel = repoPath.slice(`${AG}/skills/`.length); // <name>/...
@@ -114,18 +126,30 @@ async function main() {
   // Commands (ag-kit workflows).
   for (const name of want.commands) {
     const repoPath = `${AG}/workflows/${name}.md`;
-    if (!blobPaths.has(repoPath)) { console.warn(`  ! missing command: ${repoPath}`); continue; }
+    if (!blobPaths.has(repoPath)) {
+      console.warn(`  ! missing command: ${repoPath}`);
+      continue;
+    }
     const raw = await fetchRaw(commit, repoPath);
-    writeFile(path.join(OUT_DIR, "commands", `${name}.md`), cleanCommandMarkdown(raw, { sourcePath: repoPath, commit }));
+    writeFile(
+      path.join(OUT_DIR, "commands", `${name}.md`),
+      cleanCommandMarkdown(raw, { sourcePath: repoPath, commit }),
+    );
     counts.commands += 1;
   }
 
   // Scripts.
   for (const name of want.scripts) {
     const repoPath = `${AG}/scripts/${name}.py`;
-    if (!blobPaths.has(repoPath)) { console.warn(`  ! missing script: ${repoPath}`); continue; }
+    if (!blobPaths.has(repoPath)) {
+      console.warn(`  ! missing script: ${repoPath}`);
+      continue;
+    }
     const raw = await fetchRaw(commit, repoPath);
-    writeFile(path.join(OUT_DIR, "scripts", `${name}.py`), cleanScript(raw, { sourcePath: repoPath, commit }));
+    writeFile(
+      path.join(OUT_DIR, "scripts", `${name}.py`),
+      cleanScript(raw, { sourcePath: repoPath, commit }),
+    );
     counts.scripts += 1;
   }
 
@@ -151,7 +175,9 @@ async function main() {
     fs.writeFileSync(SOURCE_PATH, JSON.stringify(source, null, 2) + "\n");
   }
 
-  console.log(`Vendored: ${counts.agents} agents, ${counts.skills} skills, ${counts.commands} commands, ${counts.scripts} scripts.`);
+  console.log(
+    `Vendored: ${counts.agents} agents, ${counts.skills} skills, ${counts.commands} commands, ${counts.scripts} scripts.`,
+  );
   console.log(`-> ${path.relative(ROOT, OUT_DIR)}`);
 }
 

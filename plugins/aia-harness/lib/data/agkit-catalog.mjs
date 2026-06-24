@@ -11,24 +11,58 @@ import { stackKeys as baseStackKeys } from "./stack-keys.mjs";
 
 /** Workflows that survive the name-collision rule (only `status` collides). */
 const AGKIT_COMMANDS = [
-  "brainstorm", "coordinate", "create", "debug", "deploy", "enhance",
-  "orchestrate", "plan", "preview", "remember", "test", "verify",
+  "brainstorm",
+  "coordinate",
+  "create",
+  "debug",
+  "deploy",
+  "enhance",
+  "orchestrate",
+  "plan",
+  "preview",
+  "remember",
+  "test",
+  "verify",
 ];
 
 /** Installed for every project. */
 export const AGKIT_COMMON = {
   agents: [
-    "orchestrator", "project-planner", "code-archaeologist", "documentation-writer",
-    "devops-engineer", "database-architect", "performance-optimizer",
-    "qa-automation-engineer", "test-engineer", "penetration-tester", "security-auditor",
-    "product-manager", "product-owner", "debugger", "explorer-agent",
+    "orchestrator",
+    "project-planner",
+    "code-archaeologist",
+    "documentation-writer",
+    "devops-engineer",
+    "database-architect",
+    "performance-optimizer",
+    "qa-automation-engineer",
+    "test-engineer",
+    "penetration-tester",
+    "security-auditor",
+    "product-manager",
+    "product-owner",
+    "debugger",
+    "explorer-agent",
   ],
   skills: [
-    "architecture", "clean-code", "context-compression", "memory-system",
-    "lint-and-validate", "behavioral-modes", "intelligent-routing", "coordinator-mode",
-    "batch-operations", "documentation-templates", "deployment-procedures",
-    "testing-patterns", "database-design", "server-management", "performance-profiling",
-    "bash-linux", "powershell-windows", "red-team-tactics",
+    "architecture",
+    "clean-code",
+    "context-compression",
+    "memory-system",
+    "lint-and-validate",
+    "behavioral-modes",
+    "intelligent-routing",
+    "coordinator-mode",
+    "batch-operations",
+    "documentation-templates",
+    "deployment-procedures",
+    "testing-patterns",
+    "database-design",
+    "server-management",
+    "performance-profiling",
+    "bash-linux",
+    "powershell-windows",
+    "red-team-tactics",
     "vulnerability-scanner",
   ],
   commands: AGKIT_COMMANDS,
@@ -48,7 +82,12 @@ const MOBILE = {
   commands: [],
   scripts: [],
 };
-const GAMES = { agents: ["game-developer", "backend-specialist"], skills: ["game-development"], commands: [], scripts: [] };
+const GAMES = {
+  agents: ["game-developer", "backend-specialist"],
+  skills: ["game-development"],
+  commands: [],
+  scripts: [],
+};
 
 /** @type {Record<string, AgkitAssetSet>} */
 export const AGKIT_BY_STACK = {
@@ -123,26 +162,27 @@ function commonSets() {
 
 /** Short "when to use" labels for the CLAUDE.md Workflow & Agents table (≤8 words each). */
 export const AGKIT_AGENT_WHEN_TO_USE = /** @type {Record<string,string>} */ ({
-  "orchestrator":           "tarefas multi-agente ou cross-domain — despache ESTE para subdelegar; nunca despache agentes genéricos diretamente",
-  "project-planner":        "planejamento de features, decomposição de tarefas",
-  "code-archaeologist":     "entender código legado, refatoração",
-  "database-architect":     "schema, migrations, queries, modelagem de dados",
-  "devops-engineer":        "deploy, CI/CD, infra, produção",
-  "documentation-writer":   "apenas quando documentação explicitamente solicitada",
-  "performance-optimizer":  "otimização de performance, profiling",
-  "penetration-tester":     "pentest, vulnerabilidades, segurança ofensiva",
-  "product-manager":        "decisões de produto, priorização, roadmap",
-  "product-owner":          "refinamento de backlog, critérios de aceite",
+  orchestrator:
+    "tarefas multi-agente ou cross-domain — despache ESTE para subdelegar; nunca despache agentes genéricos diretamente",
+  "project-planner": "planejamento de features, decomposição de tarefas",
+  "code-archaeologist": "entender código legado, refatoração",
+  "database-architect": "schema, migrations, queries, modelagem de dados",
+  "devops-engineer": "deploy, CI/CD, infra, produção",
+  "documentation-writer": "apenas quando documentação explicitamente solicitada",
+  "performance-optimizer": "otimização de performance, profiling",
+  "penetration-tester": "pentest, vulnerabilidades, segurança ofensiva",
+  "product-manager": "decisões de produto, priorização, roadmap",
+  "product-owner": "refinamento de backlog, critérios de aceite",
   "qa-automation-engineer": "E2E, automação de QA, Playwright/Cypress",
-  "test-engineer":          "unit tests, integração, cobertura de código",
-  "security-auditor":       "auditoria de segurança, SAST, revisão defensiva",
-  "debugger":               "depuração de bugs complexos, root cause analysis",
-  "explorer-agent":         "exploração de codebase desconhecida, mapeamento",
-  "backend-specialist":     "API, lógica server-side, integração com banco",
-  "frontend-specialist":    "componentes UI, styling, performance frontend",
-  "seo-specialist":         "SEO, meta tags, visibilidade em buscadores",
-  "mobile-developer":       "React Native, Flutter, features mobile",
-  "game-developer":         "Unity, Godot, mecânicas e engines de jogo",
+  "test-engineer": "unit tests, integração, cobertura de código",
+  "security-auditor": "auditoria de segurança, SAST, revisão defensiva",
+  debugger: "depuração de bugs complexos, root cause analysis",
+  "explorer-agent": "exploração de codebase desconhecida, mapeamento",
+  "backend-specialist": "API, lógica server-side, integração com banco",
+  "frontend-specialist": "componentes UI, styling, performance frontend",
+  "seo-specialist": "SEO, meta tags, visibilidade em buscadores",
+  "mobile-developer": "React Native, Flutter, features mobile",
+  "game-developer": "Unity, Godot, mecânicas e engines de jogo",
 });
 
 /**

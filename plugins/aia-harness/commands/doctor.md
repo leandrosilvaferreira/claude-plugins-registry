@@ -112,6 +112,37 @@ para a plataforma do usuário e encerrar — não executar os passos seguintes.
    - **.mcp.json:** only `${ENV}` placeholders, never literal secrets.
    - **.gitignore:** must ignore `.claude/*.local.*`.
 
+   - **docs/harness/strategies.md:** If the `strategies` artifact exists, verify it
+     was generated for the current detected stack (grep the first 10 lines for the
+     project's primary language). If it looks like a placeholder or was generated for
+     a different stack, flag it and offer to regenerate with:
+     ```bash
+     "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" \
+       --yes --force --only=strategies
+     ```
+
+   - **.lsp.json:** If the `lsp` artifact exists, confirm it is valid JSON and
+     contains language server entries (`languageServerCommand` or similar keys).
+     If malformed, flag it. If missing but the plan would generate it
+     (`defaultSelected:false` for lsp), note it as optionally available.
+
+   - **.worktreeinclude:** If the `worktree` artifact exists, check it contains
+     `.claude/settings.json` (the key file to copy into worktrees). If missing from
+     a git repo, note it as available via `apply --only=worktree`.
+
+   - **Install scripts:** If `scripts/harness-install.sh` or `scripts/install-plugins.mjs`
+     exist, note they are reference scripts — they should not be auto-run but may be
+     useful for onboarding. If `install-plugins.mjs` exists, mention it can be run
+     with `node scripts/install-plugins.mjs -y` to install suggested plugins.
+
+   - **Commands (ag-kit):** If the plan includes `agkit-command:` artifacts (ag-kit workflow
+     commands under `.claude/commands/`), verify each command file exists on disk. If any are
+     missing, offer to add them:
+     ```bash
+     "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" \
+       --yes --only=<agkit-command:ids>
+     ```
+
    - **GitHub PM:** If `profile.githubPM.detected`:
      - Check: `.claude/skills/github-pm/SKILL.md` exists
      - Check: `.claude/commands/pm/` directory has 10 command files

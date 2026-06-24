@@ -20,15 +20,19 @@ export function renderReport(profile) {
       .join("\n") || "- none detected";
 
   const fws =
-    profile.frameworks.map((f) => `- ${f.name} (${f.category})${f.version ? ` ${f.version}` : ""} — ${f.evidence}`).join("\n") ||
-    "- none detected";
+    profile.frameworks
+      .map((f) => `- ${f.name} (${f.category})${f.version ? ` ${f.version}` : ""} — ${f.evidence}`)
+      .join("\n") || "- none detected";
 
   const pms =
-    profile.packageManagers.map((p) => `- ${p.name} [${p.ecosystem}]${p.version ? ` ${p.version}` : ""} — ${p.evidence}`).join("\n") ||
-    "- none detected";
+    profile.packageManagers
+      .map((p) => `- ${p.name} [${p.ecosystem}]${p.version ? ` ${p.version}` : ""} — ${p.evidence}`)
+      .join("\n") || "- none detected";
 
   const domains =
-    profile.architecture.domains.map((d) => `- \`${d.path}/\` (${d.kind}) — ${d.role}`).join("\n") || "- none detected";
+    profile.architecture.domains
+      .map((d) => `- \`${d.path}/\` (${d.kind}) — ${d.role}`)
+      .join("\n") || "- none detected";
 
   const eh = profile.existingHarness;
   const existing = [

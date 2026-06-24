@@ -4,6 +4,27 @@
  * changes, surface a system message nudging a lint/test run. Never blocks.
  */
 import { execFileSync } from "node:child_process";
+import fs from "node:fs";
+
+/** @returns {string} */
+function readStdin() {
+  try {
+    return fs.readFileSync(0, "utf8");
+  } catch {
+    return "";
+  }
+}
+
+/** @type {any} */
+let event = {};
+try {
+  event = JSON.parse(readStdin() || "{}");
+} catch {
+  // ignore
+}
+
+// Anti-loop guard: skip when already inside a stop-hook chain.
+if (event?.stop_hook_active) process.exit(0);
 
 const projectDir = process.env.CLAUDE_PROJECT_DIR ?? process.cwd();
 

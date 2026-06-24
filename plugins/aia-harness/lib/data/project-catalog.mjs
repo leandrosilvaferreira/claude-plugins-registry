@@ -43,25 +43,29 @@ export const PROJECT_COMMON = {
  * @type {Record<string, AssetSet>}
  */
 export const PROJECT_BY_STACK = {
-  "typescript":   { agents: [], skills: [],                    rules: ["typescript/coding-standards.md"] },
-  "react":        { agents: [], skills: [],                    rules: ["react/coding-standards.md"] },
-  "next":         { agents: [], skills: [],                    rules: ["next/coding-standards.md"] },
-  "vue":          { agents: [], skills: [],                    rules: ["vue/coding-standards.md"] },
-  "go":           { agents: [], skills: [],                    rules: ["go/coding-standards.md"] },
-  "rust":         { agents: [], skills: [],                    rules: ["rust/coding-standards.md"] },
-  "java":         { agents: [], skills: [],                    rules: ["java/coding-standards.md"] },
-  "java-spring":  { agents: [], skills: [],                    rules: ["java-spring/coding-standards.md"] },
-  "java-quarkus": { agents: [], skills: [],                    rules: ["java-quarkus/coding-standards.md"] },
-  "kotlin":       { agents: [], skills: [],                    rules: ["kotlin/coding-standards.md"] },
-  "python":       { agents: [], skills: [],                    rules: ["python/coding-standards.md"] },
-  "django":       { agents: [], skills: [],                    rules: ["django/coding-standards.md"] },
-  "fastapi":      { agents: [], skills: [],                    rules: ["fastapi/coding-standards.md"] },
-  "php":          { agents: [], skills: [],                    rules: ["php/coding-standards.md"] },
-  "php-laravel":  { agents: [], skills: [],                    rules: ["php-laravel/coding-standards.md"] },
-  "php-adianti":  { agents: [], skills: ["adianti-framework", "novo-modulo-adianti"], rules: ["php-adianti/coding-standards.md"] },
-  "csharp":       { agents: [], skills: [],                    rules: ["csharp/coding-standards.md"] },
-  "cpp":          { agents: [], skills: [],                    rules: ["cpp/coding-standards.md"] },
-  "dart":         { agents: [], skills: [],                    rules: ["dart/coding-standards.md"] },
+  typescript: { agents: [], skills: [], rules: ["typescript/coding-standards.md"] },
+  react: { agents: [], skills: [], rules: ["react/coding-standards.md"] },
+  next: { agents: [], skills: [], rules: ["next/coding-standards.md"] },
+  vue: { agents: [], skills: [], rules: ["vue/coding-standards.md"] },
+  go: { agents: [], skills: [], rules: ["go/coding-standards.md"] },
+  rust: { agents: [], skills: [], rules: ["rust/coding-standards.md"] },
+  java: { agents: [], skills: [], rules: ["java/coding-standards.md"] },
+  "java-spring": { agents: [], skills: [], rules: ["java-spring/coding-standards.md"] },
+  "java-quarkus": { agents: [], skills: [], rules: ["java-quarkus/coding-standards.md"] },
+  kotlin: { agents: [], skills: [], rules: ["kotlin/coding-standards.md"] },
+  python: { agents: [], skills: [], rules: ["python/coding-standards.md"] },
+  django: { agents: [], skills: [], rules: ["django/coding-standards.md"] },
+  fastapi: { agents: [], skills: [], rules: ["fastapi/coding-standards.md"] },
+  php: { agents: [], skills: [], rules: ["php/coding-standards.md"] },
+  "php-laravel": { agents: [], skills: [], rules: ["php-laravel/coding-standards.md"] },
+  "php-adianti": {
+    agents: [],
+    skills: ["adianti-framework", "novo-modulo-adianti"],
+    rules: ["php-adianti/coding-standards.md"],
+  },
+  csharp: { agents: [], skills: [], rules: ["csharp/coding-standards.md"] },
+  cpp: { agents: [], skills: [], rules: ["cpp/coding-standards.md"] },
+  dart: { agents: [], skills: [], rules: ["dart/coding-standards.md"] },
 };
 
 /**
@@ -70,7 +74,19 @@ export const PROJECT_BY_STACK = {
  * hooks (format-on-edit, verify-on-stop, set-files-changed) are built in
  * plan.mjs because they depend on the profile / strict flag.
  */
-export const PROJECT_HOOK_FILES = ["secret-scan.mjs", "rtk-hook.mjs", "large-file-warning.mjs", "guard-main-branch.mjs", "memory-stop.mjs", "sql-idempotent-review.mjs", "worktree-subagent-ctx.mjs", "worktree-write-guard.mjs", "check-deps-on-start.mjs"];
+export const PROJECT_HOOK_FILES = [
+  "secret-scan.mjs",
+  "rtk-hook.mjs",
+  "large-file-warning.mjs",
+  "guard-main-branch.mjs",
+  "memory-stop.mjs",
+  "sql-idempotent-review.mjs",
+  "worktree-subagent-ctx.mjs",
+  "worktree-session-ctx.mjs",
+  "worktree-prompt-ctx.mjs",
+  "worktree-write-guard.mjs",
+  "check-deps-on-start.mjs",
+];
 
 const HOOK_DIR = "${CLAUDE_PROJECT_DIR}/.claude/hooks";
 
@@ -94,7 +110,12 @@ function projectHookCommand(file) {
 
 /** PHPStan static analysis after a PHP edit — same wiring across all PHP stacks. */
 const PHP_HOOKS = /** @type {ProjectHookDef[]} */ ([
-  { file: "phpstan-on-edit.mjs", event: "PostToolUse", matcher: "Edit|Write|MultiEdit", timeout: 60 },
+  {
+    file: "phpstan-on-edit.mjs",
+    event: "PostToolUse",
+    matcher: "Edit|Write|MultiEdit",
+    timeout: 60,
+  },
 ]);
 
 /**
@@ -104,7 +125,7 @@ const PHP_HOOKS = /** @type {ProjectHookDef[]} */ ([
  * @type {Record<string, ProjectHookDef[]>}
  */
 export const PROJECT_HOOK_BY_STACK = {
-  "php": PHP_HOOKS,
+  php: PHP_HOOKS,
   "php-laravel": PHP_HOOKS,
   "php-adianti": PHP_HOOKS,
 };
@@ -127,7 +148,11 @@ export function selectProjectHooks(profile) {
   /** @type {Record<string, { matcher?: string, hooks: { type: "command", command: string, args?: string[], timeout: number }[] }[]>} */
   const settings = {};
   for (const d of byFile.values()) {
-    const hook = { type: /** @type {const} */ ("command"), ...projectHookCommand(d.file), timeout: d.timeout ?? 30 };
+    const hook = {
+      type: /** @type {const} */ ("command"),
+      ...projectHookCommand(d.file),
+      timeout: d.timeout ?? 30,
+    };
     const entry = d.matcher ? { matcher: d.matcher, hooks: [hook] } : { hooks: [hook] };
     (settings[d.event] ??= []).push(entry);
   }
