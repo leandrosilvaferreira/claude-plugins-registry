@@ -49,6 +49,24 @@ Garanta que o script de teste está declarado no manifesto do projeto (`package.
 
 Rode o comando de teste. Corrija erros de config, paths e imports até a saída mostrar verde. **Mostre a saída real** (contagem de pass/fail) ao usuário. Se a instalação falhar (rede/permissão), reporte o comando exato para o usuário rodar manualmente e **não** alegue verde.
 
-## 7. Reportar
+## 7. Atualizar CLAUDE.md
+
+Após saída verde confirmada, no `CLAUDE.md` do projeto:
+
+1. **Remova** a linha de aviso gerada pelo harness (e a linha em branco imediatamente após):
+
+   ```markdown
+   > Sem testes unitários ainda — recomendado: **...**. Rode `/setup-testing` para semear.
+   ```
+
+2. **Adicione** imediatamente abaixo do bloco `## Canonical commands` uma nota sobre a stack de testes configurada e a regra de cobertura:
+
+   ```markdown
+   > **Testes:** `{framework}` — rode `{comando-de-teste}`. Escreva testes unitários para **toda** função nova ou módulo adicionado; nunca declare trabalho concluído sem testes passando.
+   ```
+
+   Substitua `{framework}` e `{comando-de-teste}` pelos valores reais do projeto.
+
+## 8. Reportar
 
 Resuma o que foi feito: framework instalado, arquivo de config criado, arquivo de teste criado, saída verde. Lembre o usuário de revisar o teste gerado e expandir a cobertura para casos reais do projeto.

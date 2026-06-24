@@ -67,8 +67,9 @@ para a plataforma do usuário e encerrar — não executar os passos seguintes.
    category.
 
 3. Audit each existing artifact and grade it (report in Portuguese):
-   - **Unit tests:** reporte `profile.testing` — se `configured` for `false`, sinalize o gap e
-     recomende `/setup-testing` (framework sugerido: `testing.recommended`).
+   - **Unit tests:** reporte `profile.testing`:
+     - Se `configured` for `false`: sinalize o gap e recomende `/setup-testing` (framework sugerido: `testing.recommended`).
+     - Se `configured` for `true`: grep o `CLAUDE.md` por `Sem testes unitários ainda`. Se encontrar, a nota está obsoleta — os testes já foram configurados. Ofereça substituir pela nota atualizada (mesmo formato do passo 7 do `/setup-testing`): `> **Testes:** \`{framework}\` — rode \`{comando-de-teste}\`. Escreva testes unitários para **toda** função nova ou módulo adicionado; nunca declare trabalho concluído sem testes passando.` Aplique com `Edit` após aprovação do usuário.
    - **CLAUDE.md files:** flag any over ~200 lines or full of generic boilerplate
      ("bloated memory gets ignored"). Critical rules should be near the top.
      Suggest moving domain detail into nested CLAUDE.md / `.claude/rules/`.
