@@ -12,6 +12,7 @@
  * @property {string[]} [args]
  * @property {string} [url]
  * @property {Record<string, string>} [env]
+ * @property {Record<string, string>} [headers]
  */
 
 /**
@@ -31,7 +32,15 @@ export const MCP_CATALOG = [
     name: "context7",
     description: "Up-to-date, version-accurate documentation for libraries and frameworks.",
     docsUrl: "https://github.com/upstash/context7",
-    server: { type: "stdio", command: "npx", args: ["-y", "@upstash/context7-mcp@latest"] },
+    server: {
+      type: "http",
+      url: "https://mcp.context7.com/mcp",
+      headers: {
+        CONTEXT7_API_KEY: "${CONTEXT7_API_KEY}",
+        Accept: "application/json, text/event-stream",
+      },
+    },
+    envPlaceholders: ["CONTEXT7_API_KEY"],
     recommended: () => true,
   },
   {
