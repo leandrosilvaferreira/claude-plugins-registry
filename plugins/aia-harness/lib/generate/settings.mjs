@@ -87,6 +87,14 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
         ],
       },
     ],
+    SessionStart: [
+      {
+        // Check system deps at session start; injects additionalContext when missing.
+        hooks: [
+          { type: "command", ...hookCmd("check-deps-on-start.mjs"), timeout: 30 },
+        ],
+      },
+    ],
     SubagentStart: [
       {
         // Inject active worktree path (from event.cwd) into every subagent.

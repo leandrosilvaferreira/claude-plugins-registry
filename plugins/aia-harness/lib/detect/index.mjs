@@ -52,11 +52,18 @@ export function scanProject(root, opts = {}) {
   const { files, truncated } = collectFiles(abs, { maxFiles: opts.maxFiles });
 
   const rootFiles = new Set(files.filter((f) => !f.rel.includes("/")).map((f) => f.base));
-  const relSet = new Set(files.map((f) => f.rel));
 
-  const { languages, primaryLanguage } = detectLanguages(files);
+  // Exclude harness config dirs from stack detection only — they belong to the
+  // scaffolded harness, not to the target project's own language/framework.
+  const HARNESS_ROOT_DIRS = new Set([".claude", ".agents", ".agent"]);
+  const stackFiles = files.filter(
+    (f) => !HARNESS_ROOT_DIRS.has(f.rel.split("/")[0]),
+  );
+  const stackRelSet = new Set(stackFiles.map((f) => f.rel));
+
+  const { languages, primaryLanguage } = detectLanguages(stackFiles);
   const packageManagers = detectPackageManagers(abs, rootFiles, languages);
-  const frameworks = detectFrameworks(abs, relSet);
+  const frameworks = detectFrameworks(abs, stackRelSet);
   const monorepo = detectMonorepo(abs, rootFiles);
   const commands = detectCommands(abs, packageManagers, rootFiles, frameworks);
   const architecture = detectArchitecture(abs, monorepo);
