@@ -86,6 +86,7 @@ and graphify. `plugins-catalog` generates a runnable `scripts/install-plugins.mj
 
 ## Conventions
 
+- **All source code must be in English** — this applies to every file in this repository and every file scaffolded into target projects (`templates/`, generated CLAUDE.md content, skills, agents, hooks, rules, comments, identifiers, string literals, log messages, error messages). If any Portuguese text is found in source code, translate it to English immediately before proceeding with any other task.
 - **All source is `.mjs` ESM with JSDoc types** — no TypeScript files, no build step. `tsconfig.json` runs `checkJs` for type safety; add `@typedef`/`@param`/`@returns` JSDoc rather than `.ts`. Hooks shipped into target projects are also plain `.mjs` so they run without compilation.
 - **`lib/` is pure and tested**; IO lives at the edges (`detect` reads, `apply` writes, `bin` orchestrates). Keep generators and catalogs side-effect-free so they stay unit-testable.
 - **Adding an artifact type**: extend the generator/catalog, then `add(...)` it in `buildPlan` with a `category`, `rationale`, `contextCost`, and `defaultSelected`. Prefer `contextCost: 0` (lazy/path-scoped) unless it must load every session.

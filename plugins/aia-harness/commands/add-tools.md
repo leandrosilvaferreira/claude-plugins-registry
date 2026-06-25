@@ -28,19 +28,19 @@ the claude-code-worktrees skill into `.claude/skills/`, and writes `.graphifyign
 Caveman and ponytail are global Claude Code plugins installed in Step 3 — not vendored locally.
 To scope which tools: `--no-tools`.
 
-## 2. Verificar dependências do sistema
+## 2. Check system dependencies
 
 ```bash
 "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" check "${1:-$CLAUDE_PROJECT_DIR}" \
   --tools=rtk,graphify --json
 ```
 
-Ler o JSON. Se `status === "block"`: apresentar em português a lista de `missing[]` com
-`installHint` para a plataforma e encerrar sem instalar nada.
+Read the JSON. If `status === "block"`: present the list of `missing[]` with `installHint`
+for the platform and stop without installing anything.
 
-Se `status !== "block"`: prosseguir. Para cada dep em `checks[]` com `found: false`:
-informar ao usuário o que está ausente (apenas recommended neste caso) e perguntar se deseja
-instalar no passo 3.
+If `status !== "block"`: proceed. For each dep in `checks[]` with `found: false`:
+inform the user what is absent (only recommended deps in this case) and ask whether to
+install it in step 3.
 
 ## 3. One confirmation, then install machine deps
 
@@ -104,16 +104,16 @@ If `not-in-path`, inform the user that `~/.local/bin` must be added to PATH in t
 
 **graphify** (code-graph, project-level):
 
-Para instalar `uv` automaticamente: detectar plataforma com `node -e "console.log(process.platform)"`,
-então executar o instalador correspondente via Bash sem pedir confirmação ao usuário.
+To install `uv` automatically: detect the platform with `node -e "console.log(process.platform)"`,
+then run the matching installer via Bash without prompting the user.
 
-macOS (Homebrew disponível — `command -v brew >/dev/null 2>&1`):
+macOS (Homebrew available — `command -v brew >/dev/null 2>&1`):
 
 ```bash
 brew install uv
 ```
 
-macOS / Linux (sem Homebrew):
+macOS / Linux (no Homebrew):
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -125,7 +125,7 @@ Windows (`win32`):
 winget install astral-sh.uv
 ```
 
-Após garantir `uv` disponível, instalar graphify e configurar:
+Once `uv` is available, install graphify and configure:
 
 ```bash
 uv tool install graphifyy
@@ -139,7 +139,7 @@ graphify install --project
 graphify .
 ```
 
-Commitar o grafo produzido:
+Commit the produced graph:
 
 ```bash
 git add graphify-out/

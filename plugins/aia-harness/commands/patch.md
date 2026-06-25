@@ -48,7 +48,7 @@ Use `AskUserQuestion` with `multiSelect: true`.
 categories, split them across multiple sequential `AskUserQuestion` calls (e.g. "grupo 1/2",
 "grupo 2/2"). Collect all answers before proceeding.
 
-Example prompt text for each group: "Quais categorias deseja forçar a atualização? (grupo N/T)"
+Example prompt text for each group: "Which categories do you want to force-update? (group N/T)"
 
 For each selected category, collect all artifact IDs whose prefix matches.
 Join all selected IDs into a single comma-separated string for `--only`.
@@ -73,9 +73,9 @@ silently flip the mode. Before applying, decide which `--large-files` value to p
    - wired under **`PostToolUse`** → current mode is `advisory`.
    Preserve whichever is found.
 2. **If it isn't wired anywhere (or `settings.json` is absent) the mode is not yet
-   configured** — use `AskUserQuestion` (single-select) to let the user choose, in
-   Portuguese: _"Arquivos >350 linhas — **bloquear e refatorar já** (projeto novo)
-   ou **só sugerir e confirmar** (projeto legado)?"_ → `block` / `advisory`. The hook
+   configured** — use `AskUserQuestion` (single-select) to let the user choose:
+   _"Files >350 lines — **block and refactor now** (new project, start clean)
+   or **suggest and confirm only** (legacy project, no auto-block)?"_ → `block` / `advisory`. The hook
    is mandatory; this only sets its mode.
 
 Always pass the resolved value as `--large-files=<mode>` (it only takes effect when

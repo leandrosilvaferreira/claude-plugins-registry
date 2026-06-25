@@ -13,14 +13,13 @@ allowed-tools:
 Target directory: `$1` if provided, else `$CLAUDE_PROJECT_DIR`. Plugins install at
 **user level** (Claude Code has no per-project plugin install).
 
-## 0. Verificar dependências do sistema
+## 0. Check system dependencies
 
 ```bash
 "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" check "${1:-$CLAUDE_PROJECT_DIR}" --json
 ```
 
-Se `status === "block"`: apresentar em português a lista de `missing[]` com `installHint`
-para a plataforma do usuário e encerrar — não executar os passos seguintes.
+If `status === "block"`: present the list of `missing[]` with `installHint` for the user's platform and stop — do not execute the following steps.
 
 1. Generate the plan and the runnable installer (writes `scripts/install-plugins.mjs`):
 

@@ -4,11 +4,11 @@ allowed-tools:
   - Bash
 ---
 
-# Guia de comandos do aia-harness
+# aia-harness command guide
 
-Apresente este guia ao usuário **em português**, na íntegra e bem formatado.
-Comece pela seção "Por onde começar" e depois detalhe cada comando. Se útil,
-mostre a versão do engine:
+Present this guide to the user in full and well-formatted.
+Start with the "Where to start" section, then detail each command. If useful,
+show the engine version:
 
 ```bash
 "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" version
@@ -16,144 +16,139 @@ mostre a versão do engine:
 
 ---
 
-## 🚀 Por onde começar (guia de decisão)
+## 🚀 Where to start (decision guide)
 
-| Se você quer… | Use |
+| If you want to… | Use |
 | --- | --- |
-| **Só diagnosticar** a stack/arquitetura sem escrever nada | `/aia-harness:scan` |
-| **Configurar o harness do zero** num projeto novo (diagnose → aprovar → aplicar com diffs) | `/aia-harness:init` |
-| **Auditar** um harness já existente e receber correções pontuais | `/aia-harness:doctor` |
-| **Atualizar parte** de um projeto que já tem o harness (ex: só o `settings.json`, só os hooks) | `/aia-harness:patch` |
-| Reaplicar **tudo** sobrescrevendo arquivos existentes | `/aia-harness:patch` e selecione todas as categorias |
-| Adicionar **servidores MCP** estratégicos (`.mcp.json`) | `/aia-harness:add-mcp` |
-| Instalar os **plugins** de mercado recomendados para a stack | `/aia-harness:add-plugins` |
-| Instalar **ferramentas de economia de token / code-graph** (caveman, ponytail, rtk, graphify) | `/aia-harness:add-tools` |
-| Ver esta ajuda | `/aia-harness:help` |
+| **Just diagnose** the stack/architecture without writing anything | `/aia-harness:scan` |
+| **Configure the harness from scratch** on a new project (diagnose → approve → apply with diffs) | `/aia-harness:init` |
+| **Audit** an existing harness and receive targeted fixes | `/aia-harness:doctor` |
+| **Update part** of a project that already has the harness (e.g. only `settings.json`, only hooks) | `/aia-harness:patch` |
+| Re-apply **everything** overwriting existing files | `/aia-harness:patch` and select all categories |
+| Add **strategic MCP servers** (`.mcp.json`) | `/aia-harness:add-mcp` |
+| Install the **recommended marketplace plugins** for the stack | `/aia-harness:add-plugins` |
+| Install **token-economy / code-graph tools** (caveman, ponytail, rtk, graphify) | `/aia-harness:add-tools` |
+| See this help | `/aia-harness:help` |
 
-**Estado do projeto → comando recomendado:**
+**Project state → recommended command:**
 
-- **Projeto sem harness** → `/aia-harness:init`
-- **Projeto com harness desatualizado** (após upgrade do plugin) → `/aia-harness:doctor` detecta e **adiciona o que falta** (novos agentes/hooks/skills/rules) sem tocar no existente; use `/aia-harness:patch` para **sobrescrever** artefatos que mudaram (ex: `settings.json`, hooks)
-- **Projeto com harness, suspeita de problema** (permissões largas, hooks errados, CLAUDE.md inchado) → `/aia-harness:doctor`
-- **Só quero entender o projeto antes de mexer** → `/aia-harness:scan`
+- **Project without harness** → `/aia-harness:init`
+- **Project with outdated harness** (after plugin upgrade) → `/aia-harness:doctor` detects and **adds what is missing** (new agents/hooks/skills/rules) without touching what exists; use `/aia-harness:patch` to **overwrite** artifacts that changed (e.g. `settings.json`, hooks)
+- **Project with harness, suspected problem** (broad permissions, wrong hooks, bloated CLAUDE.md) → `/aia-harness:doctor`
+- **Just want to understand the project before touching it** → `/aia-harness:scan`
 
-> Todo comando aceita um caminho opcional como primeiro argumento. Sem ele, o
-> alvo é `$CLAUDE_PROJECT_DIR` (o projeto atual). Ex: `/aia-harness:doctor /caminho/do/projeto`.
+> Every command accepts an optional path as its first argument. Without it, the
+> target is `$CLAUDE_PROJECT_DIR` (the current project). E.g. `/aia-harness:doctor /path/to/project`.
 
 ---
 
-## Comandos em detalhe
+## Commands in detail
 
-### `/aia-harness:scan [caminho]`
+### `/aia-harness:scan [path]`
 
-**O que faz:** roda o scanner determinístico e imprime o diagnóstico — linguagem
-primária, stack, package manager, frameworks, monorepo, comandos canônicos,
-domínios de arquitetura e artefatos de harness já existentes.
-**Quando usar:** antes de qualquer escrita, ou só para entender um projeto.
-**Escreve arquivos?** Não — 100% read-only.
-**Parâmetros:** `caminho` (opcional) → diretório alvo.
+**What it does:** runs the deterministic scanner and prints the diagnosis — primary
+language, stack, package manager, frameworks, monorepo, canonical commands,
+architecture domains, and existing harness artifacts.
+**When to use:** before any write, or just to understand a project.
+**Writes files?** No — 100% read-only.
+**Parameters:** `path` (optional) → target directory.
 
-### `/aia-harness:init [caminho]`
+### `/aia-harness:init [path]`
 
-**O que faz:** fluxo completo de scaffolding — diagnose → plano → **consentimento
-por categoria** → preview com diffs → aplica → enriquece os `CLAUDE.md` (3 passes
-analisando o código real) → revisa com o agente `harness-reviewer` → oferece
-instalar plugins/tools/MCP interativamente → segunda opinião via
+**What it does:** full scaffolding flow — diagnose → plan → **per-category consent**
+→ preview with diffs → apply → enrich `CLAUDE.md` files (3 passes analyzing real
+code) → review with the `harness-reviewer` agent → offer to install
+plugins/tools/MCP interactively → second opinion via
 `claude-automation-recommender`.
-**Quando usar:** projeto **sem** harness, ou pra reconstruir do zero.
-**Escreve arquivos?** Sim, mas **nunca sem aprovação** e sempre com diff antes de sobrescrever.
-**Pergunta dedicada:** "Stop verification" — se aceitar (recomendado), instala o
-loop estrito que roda lint + typecheck ao terminar e bloqueia até passar.
-**Parâmetros:** `caminho` (opcional).
+**When to use:** project **without** a harness, or to rebuild from scratch.
+**Writes files?** Yes, but **never without approval** and always with a diff before overwriting.
+**Dedicated question:** "Stop verification" — if accepted (recommended), installs the
+strict loop that runs lint + typecheck on finish and blocks until they pass.
+**Parameters:** `path` (optional).
 
-### `/aia-harness:doctor [caminho]`
+### `/aia-harness:doctor [path]`
 
-**O que faz:** audita um harness existente e dá notas — `CLAUDE.md` inchado ou
-genérico, stubs `AI-ENRICH` não preenchidos, regras fixas (`aia-harness:fixed`)
-suprimidas, `settings.json` com permissões largas, hooks mal configurados,
-`.mcp.json` com segredos literais, `.gitignore` sem `*.local.*`, ausência de
-testes unitários. **Detecta também o que falta vs. a versão atual do plugin**
-(novos agentes/hooks/skills/rules) rodando `plan` e comparando o flag `exists` de
-cada artefato — e oferece **adicionar só os faltantes** via apply aditivo (sem
-`--force`, não toca no que já existe). Apresenta findings priorizados e aplica
-cada correção **só após aprovação**, com diff.
-**Quando usar:** projeto **com** harness — validar qualidade, **ou após upgrade do
-plugin para receber os artefatos novos** sem sobrescrever o existente (para
-sobrescrever o que mudou, use `/aia-harness:patch`).
-**Escreve arquivos?** Só correções aprovadas, via `Edit` (nunca reescreve em massa).
-**Parâmetros:** `caminho` (opcional).
+**What it does:** audits an existing harness and grades it — bloated or generic
+`CLAUDE.md`, unfilled `AI-ENRICH` stubs, suppressed fixed rules (`aia-harness:fixed`),
+broad `settings.json` permissions, misconfigured hooks,
+`.mcp.json` with literal secrets, `.gitignore` missing `*.local.*`, absence of
+unit tests. **Also detects what is missing vs. the current plugin version**
+(new agents/hooks/skills/rules) by running `plan` and comparing the `exists` flag of
+each artifact — and offers to **add only the missing ones** via additive apply (no
+`--force`, leaves what already exists untouched). Presents prioritized findings and applies
+each fix **only after approval**, with a diff.
+**When to use:** project **with** a harness — validate quality, **or after a plugin upgrade to receive new artifacts** without overwriting what exists (to overwrite changed artifacts, use `/aia-harness:patch`).
+**Writes files?** Only approved fixes, via `Edit` (never mass-rewrites).
+**Parameters:** `path` (optional).
 
-### `/aia-harness:patch [caminho]`
+### `/aia-harness:patch [path]`
 
-**O que faz:** reaplica **seletivamente** categorias de artefatos num projeto já
-configurado. Lista as categorias disponíveis, você escolhe **uma ou mais**
-(multi-select), e por trás roda `apply --yes --force --only=<ids>` só para o que
-foi escolhido.
-**Quando usar:** projeto **com** harness que precisa receber só uma parte
-atualizada (ex: o `settings.json` mudou no plugin, ou você quer reinstalar os
-hooks sem tocar nos `CLAUDE.md`).
-**Escreve arquivos?** Sim — **sobrescreve com `--force`** apenas as categorias selecionadas; o resto fica intacto.
-**Categorias disponíveis:** `settings`, `hooks`, `claude-md`, `rules`, `mcp`, `skills`, `agents`, `tools` (só aparecem as que existem no plano).
-**Parâmetros:** `caminho` (opcional).
+**What it does:** selectively re-applies artifact categories in an already-configured
+project. Lists available categories, you choose **one or more**
+(multi-select), and behind the scenes runs `apply --yes --force --only=<ids>` only for
+what was chosen.
+**When to use:** project **with** a harness that needs only a part updated (e.g. `settings.json` changed in the plugin, or you want to reinstall hooks without touching `CLAUDE.md` files).
+**Writes files?** Yes — **overwrites with `--force`** only the selected categories; the rest is untouched.
+**Available categories:** `settings`, `hooks`, `claude-md`, `rules`, `mcp`, `skills`, `agents`, `tools` (only those present in the plan appear).
+**Parameters:** `path` (optional).
 
-### `/aia-harness:add-mcp [caminho]`
+### `/aia-harness:add-mcp [path]`
 
-**O que faz:** sugere servidores MCP estratégicos e os mescla no `.mcp.json` da
-raiz do projeto (criando se não existir), sempre com placeholders `${ENV_VAR}` —
-nunca segredo literal. Adiciona as chaves de env vazias em
-`.claude/settings.local.json` (gitignored) para você preencher.
-**Quando usar:** quer dar ao agente acesso a serviços externos (github, context7, etc).
-**Escreve arquivos?** Sim — `.mcp.json` e `settings.local.json`, com merge (não clobber) e diff.
-**Parâmetros:** `caminho` (opcional). Default github em repos git.
+**What it does:** suggests strategic MCP servers and merges them into the project-root
+`.mcp.json` (creating it if absent), always with `${ENV_VAR}` placeholders —
+never a literal secret. Adds the empty env keys to
+`.claude/settings.local.json` (gitignored) for you to fill.
+**When to use:** you want to give the agent access to external services (github, context7, etc).
+**Writes files?** Yes — `.mcp.json` and `settings.local.json`, with merge (no clobber) and diff.
+**Parameters:** `path` (optional). Default github on git repos.
 
-### `/aia-harness:add-plugins [caminho]`
+### `/aia-harness:add-plugins [path]`
 
-**O que faz:** instala os plugins de mercado recomendados para a stack
+**What it does:** installs the recommended marketplace plugins for the stack
 (code-review, hookify, feature-dev, frontend-design, context7, github,
-claude-code-setup + LSP por linguagem). Gera o instalador idempotente
-`scripts/install-plugins.sh` e, após **uma confirmação**, roda.
-**Quando usar:** quer os plugins recomendados sem instalar manualmente.
-**Escreve arquivos?** Gera `scripts/install-plugins.sh`. Plugins instalam a **nível de usuário** (Claude Code não tem install por-projeto).
-**Parâmetros:** `caminho` (opcional). Lembre de **reiniciar o Claude Code** depois.
+claude-code-setup + per-language LSP). Generates the idempotent installer
+`scripts/install-plugins.mjs` and, after **one confirmation**, runs it.
+**When to use:** you want the recommended plugins without installing them manually.
+**Writes files?** Generates `scripts/install-plugins.mjs`. Plugins install at **user level** (Claude Code has no per-project install).
+**Parameters:** `path` (optional). Remember to **restart Claude Code** afterwards.
 
-### `/aia-harness:add-tools [caminho]`
+### `/aia-harness:add-tools [path]`
 
-**O que faz:** instala ferramentas de economia de token / code-graph: **caveman** e
-**ponytail** instalam como plugins Claude Code globais (user-level, ativam em todos os
-projetos); o hook guardado do **rtk** e a skill **claude-code-worktrees** são
-project-level (vendorados em `.claude/`). **graphify** é project-level via CLI.
-Vendor + wiring do rtk/worktrees são automáticos; instalações de plugin/binário/pacote
-(caveman, ponytail, rtk, graphify) rodam só após **uma confirmação**.
-**Quando usar:** quer reduzir consumo de token ou ter um grafo de código.
-**Escreve arquivos?** Sim — apenas rtk hook em `.claude/hooks/` e claude-code-worktrees em `.claude/skills/`, wiring no `settings.json`, `.graphifyignore`. Caveman e ponytail instalam como plugins user-level — **não** escrevem em `.claude/`.
-**Parâmetros:** `caminho` (opcional). Escopo: `--no-tools`.
+**What it does:** installs token-economy / code-graph tools: **caveman** and
+**ponytail** install as global Claude Code plugins (user-level, activate across all
+projects); the guarded **rtk** hook and the **claude-code-worktrees** skill are
+project-level (vendored into `.claude/`). **graphify** is project-level via CLI.
+Vendoring + wiring of rtk/worktrees is automatic; plugin/binary/package installs
+(caveman, ponytail, rtk, graphify) run only after **one confirmation**.
+**When to use:** you want to reduce token consumption or have a code graph.
+**Writes files?** Yes — only the rtk hook in `.claude/hooks/` and claude-code-worktrees in `.claude/skills/`, wiring in `settings.json`, `.graphifyignore`. Caveman and ponytail install as user-level plugins — do **not** write to `.claude/`.
+**Parameters:** `path` (optional). Scope: `--no-tools`.
 
 ---
 
-## ⚙️ Engine CLI por trás dos comandos
+## ⚙️ Engine CLI behind the commands
 
-Os comandos acima são wrappers sobre o binário determinístico
-`bin/aia-harness` (= `bin/harness.mjs`). Para uso direto / debugging:
+The commands above are wrappers over the deterministic binary
+`bin/aia-harness` (= `bin/harness.mjs`). For direct use / debugging:
 
 ```bash
 aia-harness scan  [dir] [--json]     # diagnose → ProjectProfile (read-only)
-aia-harness plan  [dir] [--json]     # ProjectProfile → HarnessPlan (não escreve)
-aia-harness apply [dir] [--yes]      # aplica o plano (dry-run sem --yes)
+aia-harness plan  [dir] [--json]     # ProjectProfile → HarnessPlan (no writes)
+aia-harness apply [dir] [--yes]      # apply the plan (dry-run without --yes)
 aia-harness help | version
 ```
 
-**Flags do `apply`:**
+**`apply` flags:**
 
-| Flag | Efeito |
+| Flag | Effect |
 | --- | --- |
-| `--yes` | Escreve de fato. Sem ela, é **dry-run** (preview). |
-| `--force` | Sobrescreve arquivos existentes que diferem. Sem ela, são **pulados**. |
-| `--only=id,id` | Aplica só os artefatos com esses IDs (base do `/aia-harness:patch`). |
-| `--tools=a,b` | Limita quais tools project-level instalar. |
-| `--no-tools` | Pula todas as tools project-level. |
-| `--no-strict` | Stop hook vira lembrete passivo em vez do loop bloqueante lint + typecheck (o padrão é **strict on**). |
+| `--yes` | Actually writes. Without it, **dry-run** (preview). |
+| `--force` | Overwrites existing files that differ. Without it, they are **skipped**. |
+| `--only=id,id` | Applies only artifacts with those IDs (basis of `/aia-harness:patch`). |
+| `--tools=a,b` | Limits which project-level tools to install. |
+| `--no-tools` | Skips all project-level tools. |
+| `--no-strict` | Stop hook becomes a passive reminder instead of the blocking lint + typecheck loop (default is **strict on**). |
 
-**Segurança (invariantes que nenhum comando quebra):** gate de consentimento
-antes de escrever, diff antes de sobrescrever, segredos só como `${ENV}`,
-`*.local.*` no gitignore, hooks de guarda saem com código 2 / formatadores
-falham aberto.
+**Safety (invariants no command breaks):** consent gate before writing, diff before
+overwriting, secrets only as `${ENV}`, `*.local.*` in gitignore, guard hooks exit
+with code 2 / formatters fail open.

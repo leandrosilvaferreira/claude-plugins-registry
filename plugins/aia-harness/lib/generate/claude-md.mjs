@@ -191,7 +191,7 @@ export function skillsBlock(profile) {
   const entries = skillsForProfile(profile);
   if (entries.length === 0) return "";
   const lines = entries.map((e) => `- **${e.label}** → \`/${e.skill}\` — ${e.description}`);
-  return `## Skills — use para esta stack\n\n> Invoque a skill correspondente antes de trabalhar no domínio dela.\n\n${lines.join("\n")}\n`;
+  return `## Skills — for this stack\n\n> Invoke the matching skill before working in its domain.\n\n${lines.join("\n")}\n`;
 }
 
 /** Priority order for the agents table — most-used roles first. */
@@ -260,8 +260,8 @@ export function agentsWorkflowBlock(agents) {
   const rows = sorted.map((a) => `| \`${a.name}\` | ${a.whenToUse} |`).join("\n");
   return `## Workflow & Agents
 
-Toda implementação não-trivial: invoke \`superpowers:subagent-driven-development\`.
-Ao despachar subagentes, você DEVE usar o agente especialista correspondente da tabela abaixo — nunca o agente genérico quando um especialista estiver listado. Cruze o tipo da tarefa com a coluna "When to use" e passe o nome exato como \`subagent_type\`.
+For every non-trivial implementation: invoke \`superpowers:subagent-driven-development\`.
+When dispatching subagents, you MUST use the matching specialist agent from the table below — never the generic agent when a specialist is listed. Cross-reference the task type with the "When to use" column and pass the exact name as \`subagent_type\`.
 
 | Agent | When to use |
 |---|---|
@@ -311,7 +311,7 @@ export function renderRootClaudeMd(profile, agents = []) {
   const t = profile.testing;
   const testingNote =
     t && !t.configured && t.recommended
-      ? `\n> Sem testes unitários ainda — recomendado: **${t.recommended}**. Rode \`/setup-testing\` para semear.\n`
+      ? `\n> No unit tests yet — recommended: **${t.recommended}**. Run \`/setup-testing\` to seed them.\n`
       : "";
 
   const isPhp =
@@ -320,7 +320,7 @@ export function renderRootClaudeMd(profile, agents = []) {
   const hasPhpstan = isPhp && (profile.commands.typecheck ?? "").includes("phpstan");
   const phpDevToolsNote =
     isPhp && !hasPhpstan
-      ? `\n> **PHP dev tools** usadas pelo agente \`php-reviewer\` e pelo hook \`phpstan-on-edit\` são pacotes Composer (não distribuídos pelo harness). Instale se ausentes:\n> \`composer require --dev phpstan/phpstan laravel/pint phpunit/phpunit\`\n`
+      ? `\n> **PHP dev tools** used by the \`php-reviewer\` agent and \`phpstan-on-edit\` hook are Composer packages (not distributed by the harness). Install if missing:\n> \`composer require --dev phpstan/phpstan laravel/pint phpunit/phpunit\`\n`
       : "";
 
   const engineeringRules = [...ROOT_FIXED_RULES, codeReviewRule(agents)];

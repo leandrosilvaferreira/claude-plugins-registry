@@ -22,7 +22,7 @@ that already has the harness configured. Analogous to `/add-mcp` and `/add-tools
    ```
 
    Parse `profile.githubPM.detected`. If `false`:
-   → "Remote URL is not github.com — GitHub PM is not applicable to this project." Encerrar.
+   → "Remote URL is not github.com — GitHub PM is not applicable to this project." Stop.
 
 2. **Plan** (GitHub PM category only):
 
@@ -45,5 +45,5 @@ that already has the harness configured. Analogous to `/add-mcp` and `/add-tools
    ```
 
 5. **Post-install instructions:**
-   "GitHub PM instalado. Próximo passo: rode `/pm:setup-project` para configurar
-   o Project ID e os status IDs do Projects v2."
+   "GitHub PM installed. Next step: run `/pm:setup-project` to configure
+   the Project ID and status IDs for Projects v2."

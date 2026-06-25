@@ -1,5 +1,5 @@
 ---
-description: Valida/corrige frontmatters de artefatos Claude Code e condensa os .md do harness (.claude/agents, commands, rules, skills) com Opus + gate determinístico.
+description: Validate/fix Claude Code artifact frontmatters and semantically condense harness .md files (.claude/agents, commands, rules, skills) with Opus + deterministic gate.
 argument-hint: "[path]"
 allowed-tools:
   - Bash
@@ -12,97 +12,97 @@ allowed-tools:
 
 Target directory: `$1` if provided, else `$CLAUDE_PROJECT_DIR`.
 
-Executa dois estágios sequenciais nos artefatos `.claude/` do projeto alvo:
+Runs two sequential stages on the target project's `.claude/` artifacts:
 
-**Estágio 1 — Frontmatter validation + auto-fix**
-**Estágio 2 — Condensação semântica** (via skill `condense-harness-prompts`)
-
----
-
-## 1. Determinar escopo
-
-Usar `AskUserQuestion` (header `Escopo`) com as opções abaixo — **a menos** que o usuário já tenha informado o escopo no prompt, nesse caso pular direto.
-
-| Opção | Flags para condense.mjs |
-|-------|-------------------------|
-| Tudo (agents+commands+rules) | `--all` |
-| Uma pasta | 2ª pergunta: agents / commands / rules → `--type <pasta>` |
-| Uma skill | pedir nome da skill → `--type skills --name <nome>` |
-| Um arquivo | pedir path → `--file <path>` |
-
-**Skills: só 1 por execução** — nunca em lote.
-
-Registrar internamente se o usuário solicitou `--skip-dedup` (pula dedup review no estágio 2).
+**Stage 1 — Frontmatter validation + auto-fix**
+**Stage 2 — Semantic condensation** (via skill `condense-harness-prompts`)
 
 ---
 
-## 2. Enumerar arquivos
+## 1. Determine scope
+
+Use `AskUserQuestion` (header `Scope`) with the options below — **unless** the user already provided the scope in the prompt, in which case skip directly.
+
+| Option | Flags for condense.mjs |
+|--------|------------------------|
+| Everything (agents+commands+rules) | `--all` |
+| A folder | 2nd question: agents / commands / rules → `--type <folder>` |
+| A skill | ask for skill name → `--type skills --name <name>` |
+| A file | ask for path → `--file <path>` |
+
+**Skills: only 1 per run** — never in batch.
+
+Record internally whether the user requested `--skip-dedup` (skips dedup review in stage 2).
+
+---
+
+## 2. Enumerate files
 
 ```bash
 node "${CLAUDE_PLUGIN_ROOT}/skills/condense-harness-prompts/lib/condense.mjs" \
-  enumerate --root "${1:-$CLAUDE_PROJECT_DIR}" <flags do escopo>
+  enumerate --root "${1:-$CLAUDE_PROJECT_DIR}" <scope flags>
 ```
 
-Saída: `<bytes>\t<tamanho>\t<path>` por linha, ordenado maior → menor. Se vazio: avisar e parar.
+Output: `<bytes>\t<size>\t<path>` per line, sorted largest → smallest. If empty: warn and stop.
 
-Apresentar ao usuário a lista **maior → menor** com tamanho ao lado.
+Present the list to the user **largest → smallest** with size alongside.
 
 ---
 
-## 3. Estágio 1 — Frontmatter validation + auto-fix
+## 3. Stage 1 — Frontmatter validation + auto-fix
 
-Antes de comprimir, corrigir frontmatters inválidos em todos os arquivos enumerados.
+Before compressing, fix invalid frontmatters in all enumerated files.
 
 ```bash
 node "${CLAUDE_PLUGIN_ROOT}/skills/condense-harness-prompts/lib/condense.mjs" \
   frontmatter <file1> <file2> ...
 ```
 
-O comando detecta o tipo de artefato pelo path (`agent` / `skill` / `command` / `rule`) e valida/corrige automaticamente:
+The command detects the artifact type from the path (`agent` / `skill` / `command` / `rule`) and validates/auto-fixes:
 
-| Tipo | Campos obrigatórios | Correções auto-aplicadas |
-|------|---------------------|--------------------------|
-| `agent` | `name`, `description` | `allowed-tools` → `tools`; normaliza CSV de tools |
-| `skill` | `name`, `description` | `tools` → `allowed-tools`; normaliza CSV |
-| `command` | `description` | `tools` → `allowed-tools`; normaliza CSV |
-| `rule` | — | — (warnings apenas: missing `paths`) |
+| Type | Required fields | Auto-applied fixes |
+|------|-----------------|-------------------|
+| `agent` | `name`, `description` | `allowed-tools` → `tools`; normalize CSV of tools |
+| `skill` | `name`, `description` | `tools` → `allowed-tools`; normalize CSV |
+| `command` | `description` | `tools` → `allowed-tools`; normalize CSV |
+| `rule` | — | — (warnings only: missing `paths`) |
 
-Reportar ao usuário:
-- Quantos arquivos foram corrigidos e quais erros foram encontrados
-- Warnings não bloqueantes (ex: agent sem `model`, agent sem `tools`)
-- Arquivos cujo tipo não foi reconhecido (skipados)
+Report to user:
+- How many files were fixed and which errors were found
+- Non-blocking warnings (e.g. agent without `model`, agent without `tools`)
+- Files whose type was not recognized (skipped)
 
-Após o relatório do estágio 1, prosseguir para o estágio 2.
-
----
-
-## 4. Estágio 2 — Condensação semântica
-
-Invocar a skill `condense-harness-prompts` para condensar os mesmos arquivos enumerados no passo 2. O escopo já foi determinado — **pular a pergunta de escopo** da skill e passar direto para o step 3 (todo list) e 4 (dispatch de subagents).
-
-Seguir o workflow da skill exatamente:
-
-1. `TodoWrite` um item por arquivo (se 2+ arquivos)
-2. Dispatch paralelo de subagents Opus (1 por arquivo, todos no mesmo turno)
-3. `commit` via condense.mjs após todos retornarem
-4. Fix-loop opcional para bloqueados (máx 1-2 voltas)
-5. Global Dedup Review (step 5c da skill) — exceto se `--skip-dedup` foi solicitado
+After stage 1 report, proceed to stage 2.
 
 ---
 
-## 5. Relatório final
+## 4. Stage 2 — Semantic condensation
 
-Apresentar tabela consolidada:
+Invoke the `condense-harness-prompts` skill to condense the same files enumerated in step 2. The scope is already determined — **skip the scope question** in the skill and go directly to step 3 (todo list) and 4 (subagent dispatch).
+
+Follow the skill workflow exactly:
+
+1. `TodoWrite` one item per file (if 2+ files)
+2. Parallel dispatch of Opus subagents (1 per file, all in the same turn)
+3. `commit` via condense.mjs after all return
+4. Optional fix-loop for blocked files (max 1-2 rounds)
+5. Global Dedup Review (skill step 5c) — unless `--skip-dedup` was requested
+
+---
+
+## 5. Final report
+
+Present consolidated table:
 
 ```
-Estágio 1 — Frontmatter
-  N corrigido(s) · N ok · N com avisos
+Stage 1 — Frontmatter
+  N fixed · N ok · N with warnings
 
-Estágio 2 — Condensação
-  N escrito(s) · N bloqueado(s) · Xb economizados
+Stage 2 — Condensation
+  N written · N blocked · Xb saved
 
-Bloqueados (inspecionar .tmp):
-  <lista de paths .condensed.tmp>
+Blocked (inspect .tmp):
+  <list of .condensed.tmp paths>
 ```
 
-Se dedup review executada: incluir resumo de substituições aplicadas e bytes economizados.
+If dedup review ran: include summary of substitutions applied and bytes saved.

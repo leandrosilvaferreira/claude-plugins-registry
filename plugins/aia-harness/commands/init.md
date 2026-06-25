@@ -19,16 +19,16 @@ Target directory: `$1` if provided, else `$CLAUDE_PROJECT_DIR`.
 
 ## Flow
 
-## 0. Verificar dependências do sistema
+## 0. Check system dependencies
 
 ```bash
 "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" check "${1:-$CLAUDE_PROJECT_DIR}" --json
 ```
 
-Se `status === "block"`: apresentar em português a lista de `missing[]` com `installHint`
-para a plataforma do usuário e encerrar — não executar os passos seguintes.
+If `status === "block"`: present the list of `missing[]` with `installHint`
+for the user's platform and stop — do not execute the following steps.
 
-1. **Diagnose.** Run and present the report (in Portuguese):
+1. **Diagnose.** Run and present the report:
 
    ```bash
    "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" scan "${1:-$CLAUDE_PROJECT_DIR}"
@@ -71,22 +71,20 @@ para a plataforma do usuário e encerrar — não executar os passos seguintes.
    **Also ask one dedicated single-select question: "Large-file guard".** The
    `large-file-warning.mjs` hook is **mandatory** (always installed) — this question
    only picks its _mode_, never whether to install it. Phrase it plainly, e.g.
-   _"Quando um arquivo-fonte passar de 350 linhas, o agente deve **bloquear e
-   refatorar antes de encerrar** (projeto novo nasce limpo) ou **só sugerir e
-   confirmar com você** (projeto legado, não mexe sem aprovação)?"_ — two options:
-   **"Bloquear e refatorar já"** (→ `--large-files=block`) and **"Só sugerir, sem
-   bloquear"** (→ `--large-files=advisory`). **Order them so the option matching the
+   _"When a source file exceeds 350 lines, should the agent **block and refactor before finishing** (new project, start clean) or **only suggest and confirm** (legacy project, no auto-block)?"_ — two options:
+   **"Block and refactor now"** (→ `--large-files=block`) and **"Only suggest, no block"**
+   (→ `--large-files=advisory`). **Order them so the option matching the
    scan's "Large source files → recommended guard" comes first, labelled
-   "(recomendado)"** — the scan recommends `block` for a clean repo and `advisory`
+   "(recommended)"** — the scan recommends `block` for a clean repo and `advisory`
    for one with pre-existing oversized files. Do **not** mention the CLI flag.
    Remember the choice for apply.
 
    **If `profile.githubPM.detected` is true**, also offer a dedicated single-select
    question: "GitHub PM (issues, Projects v2, workflows)".
-   Phrase: _"O projeto usa GitHub. Instalar o pillar GitHub PM? (skill /pm:*, issue templates,
+   Phrase: _"The project uses GitHub. Install the GitHub PM pillar? (skill /pm:*, issue templates,
    4 GitHub Actions workflows, pm-config template)"_
-   Options: **"Sim, instalar"** (→ include `github-pm` category) first, **"Não"** second.
-   Mention: "Requer configuração via `/pm:setup-project` após a instalação."
+   Options: **"Yes, install"** (→ include `github-pm` category) first, **"No"** second.
+   Mention: "Requires configuration via `/pm:setup-project` after installation."
    `defaultSelected: false` — always opt-in.
 
 4. **Preview & diffs.** Run a dry run to preview, and for any artifact whose
@@ -153,19 +151,19 @@ para a plataforma do usuário e encerrar — não executar os passos seguintes.
    4. Remove every `<!-- AI-ENRICH: ... -->` comment from the files you touched (root + domains), but **keep every `aia-harness:fixed` marker** so the protected rules stay flagged for future audits.
    5. Show a combined diff (root + domain files) versus the skeletons. Wait for explicit user approval before writing with `Edit`.
 
-5.7. **Seed unit tests (se faltar).** Leia `profile.testing` do JSON retornado pelo scan/plan.
-   **Se `testing.configured === false` e `testing.recommended` não for nulo**, ofereça
-   configurar agora com `AskUserQuestion` (single-select), em português:
-   _"Este projeto não tem testes unitários. Configurar agora? Recomendado: `<testing.recommended>`."_
-   — opções: **"Sim, configurar"** / **"Sim, mas escolher outro framework"** / **"Não, por ora"**.
+5.7. **Seed unit tests (if missing).** Read `profile.testing` from the JSON returned by scan/plan.
+   **If `testing.configured === false` and `testing.recommended` is not null**, offer
+   to configure now with `AskUserQuestion` (single-select):
+   _"This project has no unit tests. Configure now? Recommended: `<testing.recommended>`."_
+   — options: **"Yes, configure"** / **"Yes, but choose another framework"** / **"No, for now"**.
 
-   - **"Sim"** → invoque a skill **`setup-testing`** via `Skill` tool com `skill: "setup-testing"`
-     (ela instala o framework com confirmação, escreve a config + 1 teste real num módulo existente,
-     fia o script `test` e roda até verde).
-   - **"Sim, mas escolher outro"** → pergunte qual framework e passe a escolha à skill (mesmo `Skill` tool).
-   - **"Não"** → siga sem configurar; a skill fica instalada para `/setup-testing` depois.
+   - **"Yes"** → invoke the **`setup-testing`** skill via `Skill` tool with `skill: "setup-testing"`
+     (it installs the framework with confirmation, writes the config + 1 real test in an existing
+     module, wires the `test` script and runs until green).
+   - **"Yes, but choose another"** → ask which framework and pass the choice to the skill (same `Skill` tool).
+   - **"No"** → proceed without configuring; the skill is installed for `/setup-testing` later.
 
-   Se `testing.configured === true`, pule este passo silenciosamente.
+   If `testing.configured === true`, skip this step silently.
 
 6. **Review.** Launch the `harness-reviewer` agent to audit the written files for
    secrets, fail-open hooks, and over-broad permissions. Apply its fixes — but

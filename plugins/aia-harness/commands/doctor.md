@@ -12,14 +12,14 @@ allowed-tools:
 
 Target directory: `$1` if provided, else `$CLAUDE_PROJECT_DIR`.
 
-## 0. Verificar dependências do sistema
+## 0. Check system dependencies
 
 ```bash
 "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" check "${1:-$CLAUDE_PROJECT_DIR}" --json
 ```
 
-Se `status === "block"`: apresentar em português a lista de `missing[]` com `installHint`
-para a plataforma do usuário e encerrar — não executar os passos seguintes.
+If `status === "block"`: present the list of `missing[]` with `installHint`
+for the user's platform and stop — do not execute the following steps.
 
 1. Re-scan to see what exists:
 
@@ -36,13 +36,13 @@ para a plataforma do usuário e encerrar — não executar os passos seguintes.
    ```
 
    Every artifact in the plan carries `exists` (already present in the project)
-   and `defaultSelected`. Classify them (report in Portuguese):
-   - **Faltando (drift):** `exists:false && defaultSelected:true` — should be here
+   and `defaultSelected`. Classify them:
+   - **Missing (drift):** `exists:false && defaultSelected:true` — should be here
      by default but isn't. Typically new agents / hooks / skills / rules / commands
      shipped by a newer plugin version (or items skipped at init). Group by
      `category` and list each `title`. **This is the "detect what's missing after a
      plugin upgrade and add it" path.**
-   - **Opcionais disponíveis:** `exists:false && defaultSelected:false` (e.g.
+   - **Optionally available:** `exists:false && defaultSelected:false` (e.g.
      `.lsp.json`, ag-kit scripts) — mention as optionally available; do **not**
      flag as drift.
    - Caveat: "missing" is relative to the **currently detected stack**. If detection
@@ -66,10 +66,10 @@ para a plataforma do usuário e encerrar — não executar os passos seguintes.
    alone — point the user to `/aia-harness:patch` to force-overwrite those by
    category.
 
-3. Audit each existing artifact and grade it (report in Portuguese):
-   - **Unit tests:** reporte `profile.testing`:
-     - Se `configured` for `false`: sinalize o gap e recomende `/setup-testing` (framework sugerido: `testing.recommended`).
-     - Se `configured` for `true`: grep o `CLAUDE.md` por `Sem testes unitários ainda`. Se encontrar, a nota está obsoleta — os testes já foram configurados. Ofereça substituir pela nota atualizada (mesmo formato do passo 7 do `/setup-testing`): `> **Testes:** \`{framework}\` — rode \`{comando-de-teste}\`. Escreva testes unitários para **toda** função nova ou módulo adicionado; nunca declare trabalho concluído sem testes passando.` Aplique com `Edit` após aprovação do usuário.
+3. Audit each existing artifact and grade it:
+   - **Unit tests:** report `profile.testing`:
+     - If `configured` is `false`: flag the gap and recommend `/setup-testing` (suggested framework: `testing.recommended`).
+     - If `configured` is `true`: grep `CLAUDE.md` for `No unit tests yet`. If found, the note is stale — tests are already configured. Offer to replace it with the updated note (same format as `/setup-testing` step 7): `> **Tests:** \`{framework}\` — run \`{test-command}\`. Write unit tests for **every** new function or module added; never declare work complete without passing tests.` Apply with `Edit` after user approval.
    - **CLAUDE.md files:** flag any over ~200 lines or full of generic boilerplate
      ("bloated memory gets ignored"). Critical rules should be near the top.
      Suggest moving domain detail into nested CLAUDE.md / `.claude/rules/`.
