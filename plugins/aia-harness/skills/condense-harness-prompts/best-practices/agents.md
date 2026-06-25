@@ -4,70 +4,70 @@
 
 ## Frontmatter fields
 
-| Field | Required | Compressão: regra |
+| Field | Required | Compression: rule |
 |-------|----------|-------------------|
-| `name` | **SIM** | Preservar exato — é o identificador único; hooks recebem via `agent_type` |
-| `description` | **SIM** | Comprimir prosa MAS preservar todos os triggers de delegação (ver abaixo) |
-| `tools` | não | Preservar exato — define allowlist de ferramentas; omitir = herda tudo |
-| `disallowedTools` | não | Preservar exato — é denylist de segurança |
-| `model` | não | Preservar exato — `sonnet`/`opus`/`haiku`/`fable`/full-id/`inherit` |
-| `permissionMode` | não | Preservar exato — `default`/`acceptEdits`/`auto`/`dontAsk`/`bypassPermissions`/`plan` |
-| `maxTurns` | não | Preservar exato — limite de turns agentic |
-| `skills` | não | Preservar exato — skills pré-carregadas no contexto do subagent |
-| `mcpServers` | não | Preservar exato — MCP servers disponíveis ao subagent |
-| `hooks` | não | Preservar exato — hooks scoped ao subagent |
-| `memory` | não | Preservar exato — `user`/`project`/`local` |
-| `background` | não | Preservar exato |
-| `effort` | não | Preservar exato — `low`/`medium`/`high`/`xhigh`/`max` |
-| `isolation` | não | Preservar exato — `worktree` para cópia git isolada |
-| `color` | não | Preservar exato |
+| `name` | **YES** | Preserve exact — it is the unique identifier; hooks receive it via `agent_type` |
+| `description` | **YES** | Compress prose BUT preserve all delegation triggers (see below) |
+| `tools` | no | Preserve exact — defines the tool allowlist; omitting it = inherits everything |
+| `disallowedTools` | no | Preserve exact — it is a security denylist |
+| `model` | no | Preserve exact — `sonnet`/`opus`/`haiku`/`fable`/full-id/`inherit` |
+| `permissionMode` | no | Preserve exact — `default`/`acceptEdits`/`auto`/`dontAsk`/`bypassPermissions`/`plan` |
+| `maxTurns` | no | Preserve exact — agentic turn limit |
+| `skills` | no | Preserve exact — skills preloaded into the subagent context |
+| `mcpServers` | no | Preserve exact — MCP servers available to the subagent |
+| `hooks` | no | Preserve exact — hooks scoped to the subagent |
+| `memory` | no | Preserve exact — `user`/`project`/`local` |
+| `background` | no | Preserve exact |
+| `effort` | no | Preserve exact — `low`/`medium`/`high`/`xhigh`/`max` |
+| `isolation` | no | Preserve exact — `worktree` for an isolated git copy |
+| `color` | no | Preserve exact |
 
-**Regra de ouro para frontmatter de agents:** Todos os campos são semânticos (controlam comportamento real). Nunca comprimir ou remover campos existentes — apenas o valor do campo `description` admite condensação de prosa.
+**Golden rule for agent frontmatter:** All fields are semantic (they control real behavior). Never compress or remove existing fields — only the value of the `description` field admits prose condensation.
 
-## Comprimindo `description`
+## Compressing `description`
 
-`description` é o campo mais crítico: Claude usa-o para decidir quando delegar. Comprimir prosa mas **preservar obrigatoriamente**:
+`description` is the most critical field: Claude uses it to decide when to delegate. Compress prose but **mandatory to preserve**:
 
-- Padrões "Use when..." / "Use proactively after..." / "Triggers on..." — são os gatilhos de delegação
-- Menções a ferramentas específicas, comandos, workflows
-- Nomes de arquivos, extensões, eventos mencionados como contexto de ativação
-- Exemplos concretos de quando invocar
+- "Use when..." / "Use proactively after..." / "Triggers on..." patterns — these are the delegation triggers
+- Mentions of specific tools, commands, workflows
+- File names, extensions, events mentioned as activation context
+- Concrete examples of when to invoke
 
-**Comprimir:** redundâncias, artigos, hedging, explicações óbvias do que o agente faz (não do quando)
+**Compress:** redundancies, articles, hedging, obvious explanations of what the agent does (not when)
 
 ```yaml
-# RUIM (muito verboso):
+# BAD (too verbose):
 description: This is a specialized agent that reviews code for quality issues, best practices, security vulnerabilities, and maintainability concerns. Use it when you need to review code or check the quality of any source file.
 
-# BOM (triggers preservados, prosa condensada):
+# GOOD (triggers preserved, prose condensed):
 description: Reviews code for quality, security, maintainability. Use when reviewing code, checking PRs, or analyzing source files after changes.
 ```
 
-## Comprimindo o body (system prompt)
+## Compressing the body (system prompt)
 
-O body do agent é seu system prompt — é o ÚNICO contexto que o subagent recebe (não herda o system prompt do Claude Code).
+The agent body is its system prompt — it is the ONLY context the subagent receives (it does not inherit Claude Code's system prompt).
 
-**Comprimir agressivamente:**
-- Prosa introdutória/explicativa
-- Repetições de regras já ditas
+**Compress aggressively:**
+- Introductory/explanatory prose
+- Repetition of rules already stated
 - Hedging, pleasantries, fillers
 
-**Preservar obrigatoriamente:**
-- Toda regra, restrição ou comportamento específico
-- Exemplos concretos de input/output
-- Nomes de tools, comandos bash, paths específicos
-- Thresholds numéricos e condições booleanas
-- Proibições explícitas ("NEVER X", "ALWAYS Y")
+**Mandatory to preserve:**
+- Every rule, restriction, or specific behavior
+- Concrete input/output examples
+- Tool names, bash commands, specific paths
+- Numeric thresholds and boolean conditions
+- Explicit prohibitions ("NEVER X", "ALWAYS Y")
 
-## Padrão de qualidade do body
+## Body quality standard
 
-O body ideal é conciso e imperativo:
+The ideal body is concise and imperative:
 
 ```markdown
-# RUIM (prolixo):
+# BAD (verbose):
 You are a code reviewer. Your job is to analyze code that is provided to you and give feedback about the quality. When you receive code, you should look at it carefully and think about potential issues...
 
-# BOM (imperativo):
+# GOOD (imperative):
 Review code for:
 1. Correctness: logic errors, edge cases, null handling
 2. Security: injection, auth bypass, data exposure
@@ -75,10 +75,10 @@ Review code for:
 Return: numbered findings with file:line references.
 ```
 
-## Invariantes — nunca violar ao comprimir
+## Invariants — never violate when compressing
 
-- `name` deve permanecer lowercase com hyphens (sem spaces, uppercase, underscores)
-- `tools` e `disallowedTools` não podem ter tools removidas da lista
-- Se `isolation: worktree` existe, preservar — remove isolamento se deletado
-- `model` específico não deve ser removido (mudaria qual modelo executa a tarefa)
-- Qualquer `permissionMode` diferente de `default` é intencional — preservar
+- `name` must stay lowercase with hyphens (no spaces, uppercase, underscores)
+- `tools` and `disallowedTools` must not have tools removed from the list
+- If `isolation: worktree` exists, preserve it — deleting it removes isolation
+- A specific `model` must not be removed (it would change which model runs the task)
+- Any `permissionMode` other than `default` is intentional — preserve it

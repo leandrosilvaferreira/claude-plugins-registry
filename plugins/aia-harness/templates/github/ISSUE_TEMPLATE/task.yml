@@ -5,15 +5,15 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: Descrição da tarefa
+      label: Task description
     validations:
       required: true
   - type: textarea
     id: acceptance
     attributes:
-      label: Critérios de aceite
+      label: Acceptance criteria
       placeholder: |
-        - [ ] Tarefa concluída
-        - [ ] Documentação atualizada se necessário
+        - [ ] Task completed
+        - [ ] Documentation updated if needed
     validations:
       required: true

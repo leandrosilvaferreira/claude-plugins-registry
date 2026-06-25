@@ -98,21 +98,19 @@ function formatDepsReport(report, platform) {
     if (c.found) {
       lines.push(`✓ ${c.name.padEnd(12)} v${c.version ?? "?"}   ${c.resolvedPath}`);
     } else {
-      lines.push(`✗ ${c.name.padEnd(12)} não encontrado  [${c.level}]`);
+      lines.push(`✗ ${c.name.padEnd(12)} not found  [${c.level}]`);
       const hint = c.installHint[plat];
       if (hint) lines.push(`  → ${plat}: ${hint}`);
     }
   }
   lines.push("");
   if (report.status === "block") {
-    lines.push("BLOQUEADO: instale as dependências acima antes de continuar.");
+    lines.push("BLOCKED: install the dependencies above before continuing.");
   } else if (report.status === "warn") {
     const n = report.checks.filter((c) => !c.found).length;
-    lines.push(
-      `STATUS: ok  (${n} recommended ausente${n !== 1 ? "s" : ""}, nenhum required faltando)`,
-    );
+    lines.push(`STATUS: ok  (${n} recommended missing, no required deps missing)`);
   } else {
-    lines.push("STATUS: ok  todas as dependências encontradas.");
+    lines.push("STATUS: ok  all dependencies found.");
   }
   return lines.join("\n");
 }

@@ -1,6 +1,6 @@
 ---
 name: claude-code-worktrees
-description: This skill should be used when the user asks about "worktree", "worktrees", "sessões paralelas com worktree", "--worktree flag", "EnterWorktree", "ExitWorktree", ".worktreeinclude", "WorktreeCreate hook", "WorktreeRemove hook", "worktree.baseRef", "isolate subagents", "isolation worktree", "sessões isoladas no Claude Code", "rodar Claude em paralelo com worktrees", or any question about running parallel Claude Code sessions in isolated git worktrees.
+description: This skill should be used when the user asks about "worktree", "worktrees", "parallel sessions with worktree", "--worktree flag", "EnterWorktree", "ExitWorktree", ".worktreeinclude", "WorktreeCreate hook", "WorktreeRemove hook", "worktree.baseRef", "isolate subagents", "isolation worktree", "isolated sessions in Claude Code", "run Claude in parallel with worktrees", or any question about running parallel Claude Code sessions in isolated git worktrees.
 version: 0.1.0
 ---
 

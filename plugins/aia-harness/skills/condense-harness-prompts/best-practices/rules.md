@@ -1,58 +1,58 @@
 # Best Practices — Rules (`.claude/rules/<name>.md`)
 
-> Reference for compressing rule files. Rules são instruções que carregam condicionalmente (com `paths:`) ou incondicionalmente (sem `paths:`). O custo de contexto de regras globais é pago EM TODA sessão — comprimir é crítico aqui.
+> Reference for compressing rule files. Rules are instructions that load conditionally (with `paths:`) or unconditionally (without `paths:`). The context cost of global rules is paid IN EVERY session — compression is critical here.
 
 ## Frontmatter fields
 
-| Field | Required | Compressão: regra |
+| Field | Required | Compression: rule |
 |-------|----------|-------------------|
-| `paths` | não | **PRESERVAR EXATO** — governa escopo; remover transforma regra scoped em global (carga em toda sessão) |
-| `description` | não | Comprimir se presente — não é campo de descoberta como em skills/agents |
+| `paths` | no | **PRESERVE EXACT** — governs scope; removing it turns a scoped rule into a global one (loaded every session) |
+| `description` | no | Compress if present — it is not a discovery field like in skills/agents |
 
-**Regras sem `paths`:** carregam incondicionalmente para toda sessão. Alto custo — comprimir body agressivamente.
-**Regras com `paths`:** carregam só quando Claude trabalha com arquivos matching os globs. Comprimir body mas NUNCA tocar `paths`.
+**Rules without `paths`:** load unconditionally for every session. High cost — compress the body aggressively.
+**Rules with `paths`:** load only when Claude works with files matching the globs. Compress the body but NEVER touch `paths`.
 
-## Estrutura válida de `paths`
+## Valid `paths` structure
 
 ```yaml
-# Lista YAML (correto):
+# YAML list (correct):
 ---
 paths:
   - "src/api/**/*.ts"
   - "**/*.test.ts"
 ---
 
-# String CSV (também válido):
+# CSV string (also valid):
 ---
 paths: "src/api/**/*.ts", "**/*.test.ts"
 ---
 ```
 
-Preservar o formato original (lista ou string) ao comprimir.
+Preserve the original format (list or string) when compressing.
 
-## Comprimindo o body
+## Compressing the body
 
-Rules são o tipo com maior retorno de compressão — toda token economizada é repetida em cada sessão que as carrega.
+Rules are the type with the highest compression payoff — every token saved is repeated in every session that loads them.
 
-**Comprimir agressivamente:**
-- Prosa introdutória/contextual
-- Explicações do porquê das regras (relevante para CLAUDE.md, não para rules)
-- Repetições entre itens de uma lista
+**Compress aggressively:**
+- Introductory/contextual prose
+- Explanations of why the rules exist (relevant for CLAUDE.md, not for rules)
+- Repetition across items in a list
 - Hedging ("It is recommended that you...", "Please make sure to...")
-- Qualquer texto que não seja a regra em si
+- Any text that is not the rule itself
 
-**Preservar obrigatoriamente:**
-- Os imperativos concretos: "Always X", "Never Y", "When Z do W"
-- Thresholds numéricos: "máx 350 linhas", "≥ 2 revisores"
-- Nomes de ferramentas, comandos, padrões de arquivo específicos
-- Exemplos concretos que definem o comportamento correto vs errado
-- Qualquer negação explícita ("NEVER", "must not", "proibido")
-- Enumerações de valores válidos/inválidos
-- Code blocks com padrões obrigatórios
+**Mandatory to preserve:**
+- The concrete imperatives: "Always X", "Never Y", "When Z do W"
+- Numeric thresholds: "max 350 lines", "≥ 2 reviewers"
+- Specific tool names, commands, file patterns
+- Concrete examples that define correct vs wrong behavior
+- Any explicit negation ("NEVER", "must not", "forbidden")
+- Enumerations of valid/invalid values
+- Code blocks with mandatory patterns
 
-## Padrão de estrutura ótima
+## Optimal structure pattern
 
-Rules devem ser curtas e imperativas. O ideal é uma lista de bullets diretos:
+Rules should be short and imperative. The ideal is a list of direct bullets:
 
 ```markdown
 ---
@@ -69,7 +69,7 @@ paths:
 - Rate limit all public endpoints (max 100 req/min)
 ```
 
-**RUIM (prolixo):**
+**BAD (verbose):**
 ```markdown
 When you are working on API files, please make sure that you validate all inputs
 that come into the endpoints. This is important for security. You should also use
@@ -77,34 +77,34 @@ our standard error format which we have defined to ensure consistency across the
 API surface...
 ```
 
-**BOM (imperativo):**
+**GOOD (imperative):**
 ```markdown
 - Validate all endpoint inputs
 - Standard error format: `{ error: string, code: string }`
 ```
 
-## Escopo correto: rule vs CLAUDE.md vs skill
+## Correct scope: rule vs CLAUDE.md vs skill
 
-| Conteúdo | Onde colocar |
+| Content | Where to put it |
 |----------|--------------|
-| Convenção específica a tipo de arquivo | `rules/*.md` com `paths:` |
-| Convenção cross-cutting sem scope | `rules/*.md` sem `paths:` |
-| Procedimento/workflow reutilizável | skill |
-| Fato sobre o projeto/arquitetura | `CLAUDE.md` |
-| Instrução longa com muitos detalhes | skill (lazy-load) |
+| Convention specific to a file type | `rules/*.md` with `paths:` |
+| Cross-cutting convention with no scope | `rules/*.md` without `paths:` |
+| Reusable procedure/workflow | skill |
+| Fact about the project/architecture | `CLAUDE.md` |
+| Long instruction with many details | skill (lazy-load) |
 
-Ao comprimir: se o body de uma rule é grande demais (>50 linhas), identificar ao usuário que pode ser melhor como skill (lazy-load) em vez de rule (carga incondicional).
+When compressing: if a rule body is too large (>50 lines), point out to the user that it may be better as a skill (lazy-load) instead of a rule (unconditional load).
 
-## Invariantes — nunca violar ao comprimir
+## Invariants — never violate when compressing
 
-- `paths:` com qualquer valor — remover transforma regra em global; preservar exato
-- Negações explícitas (NEVER/never/must not/proibido) — preservar completo
-- Thresholds numéricos — comprimir a prosa ao redor mas manter o número e unidade
-- Code blocks — preservar byte a byte
-- Nomes de ferramentas/comandos/arquivos específicos referenciados como padrão obrigatório
+- `paths:` with any value — removing it turns the rule global; preserve exact
+- Explicit negations (NEVER/never/must not/forbidden) — preserve in full
+- Numeric thresholds — compress the surrounding prose but keep the number and unit
+- Code blocks — preserve byte for byte
+- Specific tool/command/file names referenced as a mandatory pattern
 
-## Alerta de custo de contexto
+## Context cost alert
 
-Rules globais (sem `paths`) são carregadas em TODA sessão do projeto. Uma rule de 500 tokens custa 500 tokens × N sessões por dia × M desenvolvedores. Comprimir rules globais é o maior ROI de toda a condensação.
+Global rules (no `paths`) are loaded in EVERY project session. A 500-token rule costs 500 tokens × N sessions per day × M developers. Compressing global rules is the highest ROI of the entire condensation.
 
-Ao condensar: priorizar agressividade máxima em rules globais; aceitar pequenas perdas de prosa narrativa se o imperativo for preservado.
+When condensing: prioritize maximum aggressiveness on global rules; accept small losses of narrative prose as long as the imperative is preserved.

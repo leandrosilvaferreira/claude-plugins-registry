@@ -36,7 +36,7 @@ jobs:
           for N in "${NUMS[@]}"; do
             echo "Closing issue #$N and moving to Done"
             gh issue close "$N" \
-              --comment "Fechado automaticamente pelo merge da PR #$PR_NUMBER. ✅" \
+              --comment "Automatically closed by merge of PR #$PR_NUMBER. ✅" \
               --repo "$REPO" 2>/dev/null || echo "Could not close #$N"
             # Move to Done via project CLI (same pattern as commit-to-progress.yml)
           done

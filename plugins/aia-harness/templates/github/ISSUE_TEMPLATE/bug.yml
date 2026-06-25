@@ -4,36 +4,36 @@ labels: ["bug", "needs-triage"]
 body:
   - type: markdown
     attributes:
-      value: "**Obrigado por reportar!** Preencha os campos abaixo."
+      value: "**Thanks for reporting!** Fill in the fields below."
   - type: textarea
     id: description
     attributes:
-      label: Descrição do problema
-      description: O que aconteceu? O que era esperado?
+      label: Problem description
+      description: What happened? What was expected?
     validations:
       required: true
   - type: textarea
     id: steps
     attributes:
-      label: Passos para reproduzir
+      label: Steps to reproduce
       placeholder: |
-        1. Faça X
-        2. Clique em Y
-        3. Veja o erro
+        1. Do X
+        2. Click on Y
+        3. See the error
     validations:
       required: true
   - type: textarea
     id: acceptance
     attributes:
-      label: Critérios de aceite
-      description: Como saberemos que o bug foi corrigido?
+      label: Acceptance criteria
+      description: How will we know the bug is fixed?
       placeholder: |
-        - [ ] Comportamento esperado funcionando
-        - [ ] Sem regressão em casos de uso adjacentes
+        - [ ] Expected behavior working
+        - [ ] No regression in adjacent use cases
     validations:
       required: true
   - type: textarea
     id: context
     attributes:
-      label: Contexto adicional
-      description: Versão, ambiente, logs, screenshots
+      label: Additional context
+      description: Version, environment, logs, screenshots

@@ -60,7 +60,7 @@ export const PROJECT_BY_STACK = {
   "php-laravel": { agents: [], skills: [], rules: ["php-laravel/coding-standards.md"] },
   "php-adianti": {
     agents: [],
-    skills: ["adianti-framework", "novo-modulo-adianti"],
+    skills: ["adianti-framework", "new-module-adianti"],
     rules: ["php-adianti/coding-standards.md"],
   },
   csharp: { agents: [], skills: [], rules: ["csharp/coding-standards.md"] },

@@ -71,8 +71,8 @@ const FENCE_OPEN_RE = /^(\s{0,3})(`{3,}|~{3,})(.*)$/;
 const BULLET_RE = /^\s*[-*+]\s+/gm;
 // Same shape as validate.py PATH_REGEX: needs a path prefix (./ ../ / drive:\)
 // or an internal slash/backslash. Path drift is a WARNING, never a block.
-// Unicode-aware (\p{L}\p{N} + u flag) to match Python 3's unicode \w — this
-// codebase is PT-BR, so accented path segments (botões/, sessão/) must match.
+// Unicode-aware (\p{L}\p{N} + u flag) to match Python 3's unicode \w — so
+// accented path segments (e.g. café/, naïve/) still match defensively.
 const PATH_RE =
   /(?:\.\/|\.\.\/|\/|[A-Za-z]:\\)[\p{L}\p{N}_\-/\\.]+|[\p{L}\p{N}_\-.]+[/\\][\p{L}\p{N}_\-/\\.]+/gu;
 
@@ -323,16 +323,16 @@ function cmdEnumerate(args) {
   const skipped = [];
   for (const f of files) {
     if (isSensitivePath(f)) {
-      skipped.push([f, "sensível (heurística secret/PII)"]);
+      skipped.push([f, "sensitive (secret/PII heuristic)"]);
       continue;
     }
     const size = statSync(f).size;
     if (size === 0) {
-      skipped.push([f, "vazio"]);
+      skipped.push([f, "empty"]);
       continue;
     }
     if (size > MAX_FILE_SIZE) {
-      skipped.push([f, `grande demais (${size}b > ${MAX_FILE_SIZE}b)`]);
+      skipped.push([f, `too large (${size}b > ${MAX_FILE_SIZE}b)`]);
       continue;
     }
     rows.push({ path: f, size });
@@ -405,9 +405,9 @@ function cmdCommit(args) {
         `✅ ${r.file}\n   ${r.before}b → ${r.after}b  (-${r.saved}b, ${r.pct}%)${w}\n`,
       );
     } else if (r.status === "BLOCKED") {
-      process.stdout.write(`⛔ ${r.file}\n   BLOCKED: ${r.reason}\n   .tmp mantido: ${r.tmp}\n`);
+      process.stdout.write(`⛔ ${r.file}\n   BLOCKED: ${r.reason}\n   .tmp kept: ${r.tmp}\n`);
     } else if (r.status === "NOOP") {
-      process.stdout.write(`➖ ${r.file}\n   ${r.reason} (sem alteração)\n`);
+      process.stdout.write(`➖ ${r.file}\n   ${r.reason} (no change)\n`);
     } else {
       process.stdout.write(`⚠️  ${r.file}\n   ${r.status}: ${r.reason}\n`);
     }
@@ -416,7 +416,7 @@ function cmdCommit(args) {
   const blocked = report.filter((r) => r.status === "BLOCKED").length;
   const totalSaved = report.filter((r) => r.status === "OK").reduce((s, r) => s + r.saved, 0);
   process.stdout.write(
-    `${line}\n  ${ok} escrito(s) · ${blocked} bloqueado(s) · ${totalSaved}b economizados\n${line}\n`,
+    `${line}\n  ${ok} written · ${blocked} blocked · ${totalSaved}b saved\n${line}\n`,
   );
 
   // Machine summary (last line, JSON) for the skill to parse if needed.
@@ -446,7 +446,7 @@ async function cmdFrontmatter(args) {
 
     const type = detectAssetType(f);
     if (!type) {
-      report.push({ file: f, status: "SKIP", reason: "tipo de artefato não reconhecido" });
+      report.push({ file: f, status: "SKIP", reason: "unrecognized artifact type" });
       continue;
     }
 
@@ -483,7 +483,7 @@ async function cmdFrontmatter(args) {
   const ok = report.filter((r) => r.status === "OK").length;
   const warnCount = report.filter((r) => r.status === "OK_WARNINGS").length;
   process.stdout.write(
-    `${line}\n  ${fixed} corrigido(s) · ${ok} ok · ${warnCount} com avisos\n${line}\n`,
+    `${line}\n  ${fixed} fixed · ${ok} ok · ${warnCount} with warnings\n${line}\n`,
   );
 
   // Machine summary (last line, JSON) for the command to parse if needed.

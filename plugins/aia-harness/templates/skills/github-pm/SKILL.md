@@ -51,9 +51,9 @@ For reading pm-config.json: local reference `references/pm-config-schema.md`.
 
 | Trigger | Reference |
 | ------- | ---------- |
-| "create ticket", "new bug", "new feature", "new task" | `references/01-criar-issue.md` |
-| "work on #N", "pick up #N", "create worktree for #N" | `references/02-trabalhar-issue.md` |
-| "close #N", "complete", "mark as done" | `references/03-fechar-issue.md` |
+| "create ticket", "new bug", "new feature", "new task" | `references/01-create-issue.md` |
+| "work on #N", "pick up #N", "create worktree for #N" | `references/02-work-issue.md` |
+| "close #N", "complete", "mark as done" | `references/03-close-issue.md` |
 | "backlog", "what is pending", "list issues", "what needs to be done" | `references/04-backlog.md` |
 
 Load the relevant reference before responding. Each reference has the complete

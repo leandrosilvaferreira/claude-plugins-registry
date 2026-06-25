@@ -1,6 +1,6 @@
 ---
-name: novo-modulo-adianti
-description: This skill should be used to scaffold a complete new CRUD module in a PHP Adianti Framework project — Active Record model (TRecord) + list controller + form controller + menu.xml entry — by mirroring an existing module already in the codebase. Use when the user asks "criar novo módulo", "novo módulo Adianti", "scaffold a module", "criar CRUD", "novo cadastro", "create model + list + form", "add a new domain/entity", or names a new entity to register (e.g. "criar módulo de Fornecedores"). Mirror the project's own conventions first; fall back to the adianti-framework skill references only when no existing module exists.
+name: new-module-adianti
+description: This skill should be used to scaffold a complete new CRUD module in a PHP Adianti Framework project — Active Record model (TRecord) + list controller + form controller + menu.xml entry — by mirroring an existing module already in the codebase. Use when the user asks "create new module", "new Adianti module", "scaffold a module", "create CRUD", "new entity/registration", "create model + list + form", "add a new domain/entity", or names a new entity to register (e.g. "create a Fornecedores module"). Mirror the project's own conventions first; fall back to the adianti-framework skill references only when no existing module exists.
 version: 1.2.0
 ---
 

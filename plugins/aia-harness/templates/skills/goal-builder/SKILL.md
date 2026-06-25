@@ -1,6 +1,6 @@
 ---
 name: goal-builder
-description: Use when asked to generate, build, prepare, optimize or assemble a /goal command for autonomous or overnight execution — triggers: "montar goal", "gerar goal autônomo", "preparar task overnight", "goal para sessão autônoma", "otimizar goal", "goal builder".
+description: Use when asked to generate, build, prepare, optimize or assemble a /goal command for autonomous or overnight execution — triggers: "assemble goal", "generate autonomous goal", "prepare overnight task", "goal for autonomous session", "optimize goal", "goal builder".
 allowed-tools: Read, Glob, Grep, AskUserQuestion, Write
 model: opus
 ---

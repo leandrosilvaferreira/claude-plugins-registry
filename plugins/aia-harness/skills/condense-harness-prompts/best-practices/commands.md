@@ -1,66 +1,66 @@
 # Best Practices — Commands (`.claude/commands/<name>.md`)
 
-> Reference for compressing command files. Commands são markdown simples (não diretório), invocados via `/name`. Usam `allowed-tools` (NÃO `tools`). O body é o prompt enviado ao Claude quando o comando é invocado.
+> Reference for compressing command files. Commands are plain markdown (not a directory), invoked via `/name`. They use `allowed-tools` (NOT `tools`). The body is the prompt sent to Claude when the command is invoked.
 
 ## Frontmatter fields
 
-| Field | Required | Compressão: regra |
+| Field | Required | Compression: rule |
 |-------|----------|-------------------|
-| `description` | **SIM** | Comprimir prosa MAS preservar o que descreve o propósito — aparece no autocomplete |
-| `allowed-tools` | não | Preservar exato — allowlist de tools para execução do comando |
-| `argument-hint` | não | Preservar exato — hint de tab-completion, ex: `[path]`, `<branch>` |
-| `model` | não | Preservar exato — override de modelo para este comando |
-| `disable-model-invocation` | não | Preservar exato — `true` = só usuário pode invocar |
+| `description` | **YES** | Compress prose BUT preserve what describes the purpose — it shows up in autocomplete |
+| `allowed-tools` | no | Preserve exact — allowlist of tools for command execution |
+| `argument-hint` | no | Preserve exact — tab-completion hint, e.g. `[path]`, `<branch>` |
+| `model` | no | Preserve exact — model override for this command |
+| `disable-model-invocation` | no | Preserve exact — `true` = only the user can invoke |
 
-**Atenção:** Commands usam `allowed-tools`, não `tools`. Se o arquivo usa `tools`, é erro de frontmatter (corrigido pelo validador antes da compressão).
+**Note:** Commands use `allowed-tools`, not `tools`. If the file uses `tools`, it is a frontmatter error (fixed by the validator before compression).
 
-## Diferença crítica: command vs skill
+## Critical difference: command vs skill
 
-- **Command** (`.claude/commands/name.md`): arquivo único, sem estrutura de diretório
-- **Skill** (`.claude/skills/name/SKILL.md`): diretório com SKILL.md + arquivos auxiliares opcionais
+- **Command** (`.claude/commands/name.md`): single file, no directory structure
+- **Skill** (`.claude/skills/name/SKILL.md`): directory with SKILL.md + optional auxiliary files
 
-Ambos criam `/name` — mas commands são mais simples e adequados para fluxos lineares sem necessidade de arquivos auxiliares.
+Both create `/name` — but commands are simpler and suited to linear flows that need no auxiliary files.
 
-## Comprimindo `description`
+## Compressing `description`
 
-`description` aparece no autocomplete e na lista de comandos disponíveis. É mais curta que descrição de skill — foca no O QUÊ, não no QUANDO.
+`description` appears in autocomplete and in the list of available commands. It is shorter than a skill description — it focuses on WHAT, not WHEN.
 
 ```yaml
-# RUIM:
+# BAD:
 description: This command helps you create a git commit with a well-formatted commit message by analyzing the current staged changes and generating an appropriate message.
 
-# BOM:
+# GOOD:
 description: Create a git commit with an appropriate message based on staged changes.
 ```
 
-## Comprimindo o body
+## Compressing the body
 
-O body é o prompt completo enviado ao Claude quando `/name` é invocado. É uma instrução de tarefa.
+The body is the full prompt sent to Claude when `/name` is invoked. It is a task instruction.
 
-**Preservar obrigatoriamente:**
-- Blocos bash com comandos exatos e flags (`"${CLAUDE_PLUGIN_ROOT}/bin/..."`  etc.)
-- Variáveis de contexto: `$1`, `$ARGUMENTS`, `${CLAUDE_PROJECT_DIR}`, `${CLAUDE_PLUGIN_ROOT}`
-- Sintaxe de dynamic context: `!`` `git status` ``` — injeta saída de comando no prompt
-- Seções numeradas de workflow com passos obrigatórios
-- Tabelas de mapeamento (ex: categoria → IDs de artefatos)
-- Lógica condicional ("se X então Y, caso contrário Z")
-- Exemplos de output esperado
-- Chamadas a `AskUserQuestion` com opções definidas
-- Código bash inline com heredoc (ex: passagem de commit message)
-- Paths absolutos e padrões de glob
+**Mandatory to preserve:**
+- Bash blocks with exact commands and flags (`"${CLAUDE_PLUGIN_ROOT}/bin/..."`  etc.)
+- Context variables: `$1`, `$ARGUMENTS`, `${CLAUDE_PROJECT_DIR}`, `${CLAUDE_PLUGIN_ROOT}`
+- Dynamic context syntax: `!`` `git status` ``` — injects command output into the prompt
+- Numbered workflow sections with mandatory steps
+- Mapping tables (e.g. category → artifact IDs)
+- Conditional logic ("if X then Y, otherwise Z")
+- Examples of expected output
+- Calls to `AskUserQuestion` with defined options
+- Inline bash code with heredoc (e.g. passing a commit message)
+- Absolute paths and glob patterns
 
-**Comprimir agressivamente:**
-- Prosa de apresentação/contextualização ("This command runs...")
-- Explicações óbvias de passos triviais
-- Repetições entre seções
-- Hedging e fillers
+**Compress aggressively:**
+- Introductory/contextualizing prose ("This command runs...")
+- Obvious explanations of trivial steps
+- Repetition across sections
+- Hedging and fillers
 
-## Padrão de estrutura ótima
+## Optimal structure pattern
 
 ```markdown
 ---
-description: <o que faz, curto>
-argument-hint: [argumento opcional]
+description: <what it does, short>
+argument-hint: [optional argument]
 allowed-tools: Tool1, Tool2
 ---
 
@@ -68,22 +68,22 @@ allowed-tools: Tool1, Tool2
 
 Target: `$1` if provided, else `$CLAUDE_PROJECT_DIR`.
 
-## 1. <Passo inicial>
+## 1. <Initial step>
 
-[instrução imperativa + bash se necessário]
+[imperative instruction + bash if needed]
 
-## 2. <Próximo passo>
+## 2. <Next step>
 
 ```bash
-<comando exato>
+<exact command>
 ```
 
-[o que fazer com o output]
+[what to do with the output]
 ```
 
 ## Dynamic context injection
 
-O padrão `!`` `` é processado quando o comando é carregado — o resultado entra no prompt. Preservar exato:
+The `!`` `` pattern is processed when the command is loaded — the result goes into the prompt. Preserve exact:
 
 ```markdown
 ## Current state
@@ -92,11 +92,11 @@ O padrão `!`` `` é processado quando o comando é carregado — o resultado en
 - Diff: !`git diff HEAD`
 ```
 
-## Invariantes — nunca violar ao comprimir
+## Invariants — never violate when compressing
 
-- `$1`, `$ARGUMENTS`, `${CLAUDE_PROJECT_DIR}`, `${CLAUDE_PLUGIN_ROOT}` — variáveis de substituição; preservar exatas
-- `!`` `command` `` ` — dynamic context; preservar exatos (o backtick triplo e o comando dentro)
-- Caminhos com `"${CLAUDE_PLUGIN_ROOT}/..."` — aspas duplas e interpolação são necessárias para paths com espaços
-- Opções de `AskUserQuestion` — cada opção define um caminho de fluxo; remoção quebra o comando
-- `allowed-tools: Bash(pattern)` — pattern restringe quais comandos bash são permitidos; não simplificar para `Bash`
-- Qualquer markdown table com mapeamento de IDs/categorias — são lookups estruturais do comando
+- `$1`, `$ARGUMENTS`, `${CLAUDE_PROJECT_DIR}`, `${CLAUDE_PLUGIN_ROOT}` — substitution variables; preserve exact
+- `!`` `command` `` ` — dynamic context; preserve exact (the triple backtick and the command inside)
+- Paths with `"${CLAUDE_PLUGIN_ROOT}/..."` — double quotes and interpolation are required for paths with spaces
+- `AskUserQuestion` options — each option defines a flow path; removing one breaks the command
+- `allowed-tools: Bash(pattern)` — the pattern restricts which bash commands are allowed; do not simplify to `Bash`
+- Any markdown table mapping IDs/categories — these are structural lookups for the command
