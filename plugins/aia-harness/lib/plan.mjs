@@ -49,6 +49,7 @@ import {
  * @property {string|null} content   Inline content, or null when copyFrom is set.
  * @property {string|null} copyFrom  Absolute source path to copy, or null.
  * @property {boolean} exists        Whether the target already exists.
+ * @property {'merge-hooks'} [mergeStrategy]  When set, merge hook arrays into existing file instead of skip/replace.
  */
 
 /**
@@ -213,6 +214,7 @@ export function buildPlan(profile, ctx) {
     rationale: "Least-privilege permissions + JS hook wiring (committed).",
     contextCost: 0,
     defaultSelected: true,
+    mergeStrategy: "merge-hooks",
     content: renderSettings(profile, extraHooks, { strict, largeFiles }),
   });
 

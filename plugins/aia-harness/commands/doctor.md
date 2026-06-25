@@ -87,6 +87,20 @@ para a plataforma do usuário e encerrar — não executar os passos seguintes.
      If a prior enrichment stripped or edited them (marker missing, or rules
      reworded/removed), flag it as a regression and offer to restore the exact
      baseline from the generator (`ROOT_FIXED_RULES` / `DOMAIN_FIXED_RULES`).
+   - **Behavioral guidelines intact:** grep the root `CLAUDE.md` for the
+     `aia-harness:behavioral` marker. This block (`## Behavioral guidelines`) is
+     non-negotiable and must survive enrichment. If missing (enrichment stripped it
+     or the project predates this block), flag it as a regression and offer to
+     restore it by force-regenerating the root file:
+
+     ```bash
+     "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" \
+       --yes --force --only=claude-md-root
+     ```
+
+     Warn the user that `--force` will overwrite the root `CLAUDE.md` — their
+     enriched `## Conventions` and `## Architecture map` sections will need to be
+     re-enriched (run the enrichment pass from `/aia-harness:init` step 5.5 after).
    - **settings.json:** permissions should be least-privilege; deny reads of
      `.env`/secrets; `defaultMode:"bypassPermissions"` is expected at the top level
      (the harness generates it intentionally so project settings never shadow the flag

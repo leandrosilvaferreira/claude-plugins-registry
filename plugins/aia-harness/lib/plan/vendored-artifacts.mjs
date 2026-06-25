@@ -4,7 +4,7 @@
  * @module plan/vendored-artifacts
  */
 import path from "node:path";
-import { exists, listDirs } from "../util/fs.mjs";
+import { exists, listDirs, readText } from "../util/fs.mjs";
 import { getTool } from "../data/asset-catalog.mjs";
 import { renderGraphifyignore } from "../generate/misc.mjs";
 
@@ -178,15 +178,18 @@ export function addToolArtifacts(add, toolsRoot, toolIds, profile) {
       }
     }
     if (id === "graphify") {
+      const rawGitignore = readText(path.join(profile.root, ".gitignore"));
+      const gitignoreLines = rawGitignore ? rawGitignore.replace(/\n$/, "").split("\n") : [];
       add({
         id: "graphifyignore",
         relPath: ".graphifyignore",
         title: ".graphifyignore",
         category: "tools",
-        rationale: "Graphify ignore patterns seeded from the detected stack.",
+        rationale:
+          "Graphify ignore patterns seeded from project .gitignore + stack heuristics + graphify filters.",
         contextCost: 0,
         defaultSelected: true,
-        content: renderGraphifyignore(profile),
+        content: renderGraphifyignore(profile, gitignoreLines),
       });
       if (profile.vcs?.isGit) {
         const gitHooksDir = path.join(toolsRoot, "graphify", "git-hooks");

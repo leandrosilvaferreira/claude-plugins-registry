@@ -18,6 +18,79 @@ import { detectAssetType, validateFrontmatter } from "./validate/frontmatter.mjs
  * @property {boolean} dryRun
  */
 
+/**
+ * Merge incoming settings.json hook arrays into existing settings.json content.
+ * Pure function — no IO. All other fields from existing are preserved as-is.
+ *
+ * For each hook event key in incoming.hooks:
+ *   - If absent in existing → added wholesale.
+ *   - If present → matcher groups are unioned by matcher string; within each
+ *     group, hooks[] entries are unioned by serialized {command, args} identity
+ *     (other fields such as timeout are intentionally excluded; existing entry wins).
+ *
+ * @param {string} existingJson
+ * @param {string} incomingJson
+ * @returns {string} merged JSON string (2-space indent, trailing newline)
+ */
+export function mergeSettingsHooks(existingJson, incomingJson) {
+  const existing = JSON.parse(existingJson);
+  const incoming = JSON.parse(incomingJson);
+
+  if (!incoming.hooks || typeof incoming.hooks !== "object" || Array.isArray(incoming.hooks)) {
+    return existingJson;
+  }
+
+  const merged = { ...existing };
+  if (!merged.hooks || typeof merged.hooks !== "object" || Array.isArray(merged.hooks)) {
+    merged.hooks = {};
+  }
+
+  /** @param {{ command?: unknown, args?: unknown }} h */
+  const hookKey = (h) => JSON.stringify({ command: h.command, args: h.args });
+
+  for (const [eventKey, incomingGroups] of Object.entries(incoming.hooks)) {
+    if (!Array.isArray(incomingGroups)) continue;
+
+    if (!Array.isArray(merged.hooks[eventKey])) {
+      merged.hooks[eventKey] = incomingGroups;
+      continue;
+    }
+
+    const existingGroups = merged.hooks[eventKey];
+    const result = [...existingGroups];
+
+    for (const inGroup of incomingGroups) {
+      const matcherStr = inGroup.matcher ?? "";
+      const exIdx = result.findIndex((g) => (g.matcher ?? "") === matcherStr);
+
+      if (exIdx === -1) {
+        result.push(inGroup);
+        continue;
+      }
+
+      const exGroup = result[exIdx];
+      const exHooks = Array.isArray(exGroup.hooks) ? exGroup.hooks : [];
+      const inHooks = Array.isArray(inGroup.hooks) ? inGroup.hooks : [];
+
+      const seen = new Set(exHooks.map(hookKey));
+      const unioned = [...exHooks];
+      for (const h of inHooks) {
+        const key = hookKey(h);
+        if (!seen.has(key)) {
+          seen.add(key);
+          unioned.push(h);
+        }
+      }
+
+      result[exIdx] = { ...exGroup, hooks: unioned };
+    }
+
+    merged.hooks[eventKey] = result;
+  }
+
+  return JSON.stringify(merged, null, 2) + "\n";
+}
+
 const GITIGNORE_HEADER = "# aia-harness";
 
 /**
@@ -105,8 +178,32 @@ export function applyPlan(plan, root, opts = {}) {
         continue;
       }
       if (!force) {
-        result.skipped.push(`${a.relPath} (exists, differs — left unchanged)`);
-        continue;
+        if (a.mergeStrategy === "merge-hooks") {
+          if (cur == null) {
+            result.errors.push({
+              path: a.relPath,
+              error: "could not read existing file for merge",
+            });
+            continue;
+          }
+          try {
+            content = mergeSettingsHooks(cur, content);
+          } catch (e) {
+            result.errors.push({
+              path: a.relPath,
+              error: `mergeSettingsHooks failed: ${e instanceof Error ? e.message : String(e)}`,
+            });
+            continue;
+          }
+          if (content === cur) {
+            result.skipped.push(`${a.relPath} (identical after merge)`);
+            continue;
+          }
+          // fall through to write
+        } else {
+          result.skipped.push(`${a.relPath} (exists, differs — left unchanged)`);
+          continue;
+        }
       }
       if (!dryRun) writeFile(target, content, a.executable);
       result.updated.push(a.relPath);

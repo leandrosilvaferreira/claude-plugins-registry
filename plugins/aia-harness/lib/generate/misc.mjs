@@ -163,13 +163,53 @@ console.log("Done. Restart Claude Code to load the new plugins.");
 `;
 }
 
+const GRAPHIFY_MEDIA_BLOCK = `# graphify extraction filters
+# Skip binary/media files from semantic extraction
+# (AST still processes code files normally)
+
+# Images — rendered separately, not needed for semantic
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.webp
+*.ico
+
+# PDFs — low signal-to-noise in semantic extraction
+*.pdf
+
+# Videos/audio — transcribed but usually verbose; filter at source if needed
+*.mp4
+*.mov
+*.mp3
+*.wav
+*.flac
+
+.claude/
+docs/
+.agents/
+.code-review-graph/
+.superpowers/
+
+*.md`;
+
 /**
  * @param {ProjectProfile} profile
+ * @param {string[]} [gitignoreLines]  Lines from the project .gitignore (empty if none).
  * @returns {string}
  */
-export function renderGraphifyignore(profile) {
-  const base = [
-    "# .graphifyignore — gitignore syntax, merged with .gitignore (! negations win last).",
+export function renderGraphifyignore(profile, gitignoreLines = []) {
+  /** @type {string[]} */
+  const sections = [
+    "# .graphifyignore — gitignore syntax; seeded from project .gitignore + graphify extraction filters.",
+  ];
+
+  if (gitignoreLines.length > 0) {
+    sections.push(...gitignoreLines, "");
+  }
+
+  const stackBase = [
     "node_modules/",
     "dist/",
     "build/",
@@ -182,28 +222,30 @@ export function renderGraphifyignore(profile) {
     "*.generated.*",
   ];
   /** @type {string[]} */
-  const extra = [];
+  const stackExtra = [];
   switch (profile.primaryLanguage) {
     case "Rust":
-      extra.push("target/");
+      stackExtra.push("target/");
       break;
     case "Java":
     case "Kotlin":
-      extra.push("target/", ".gradle/");
+      stackExtra.push("target/", ".gradle/");
       break;
     case "PHP":
-      extra.push("vendor/");
+      stackExtra.push("vendor/");
       break;
     case "Go":
-      extra.push("vendor/", "bin/");
+      stackExtra.push("vendor/", "bin/");
       break;
     case "Python":
-      extra.push("__pycache__/", ".venv/", "venv/", ".mypy_cache/");
+      stackExtra.push("__pycache__/", ".venv/", "venv/", ".mypy_cache/");
       break;
     default:
       break;
   }
-  return [...base, ...extra].join("\n") + "\n";
+  sections.push(...stackBase, ...stackExtra, "", GRAPHIFY_MEDIA_BLOCK);
+
+  return sections.join("\n") + "\n";
 }
 
 /**

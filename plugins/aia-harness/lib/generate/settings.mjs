@@ -55,8 +55,25 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
     const p = permPrefix(cmd);
     if (p) allow.add(p);
   }
-  allow.add("Bash(git status:*)");
-  allow.add("Bash(git diff:*)");
+  for (const g of [
+    "git status",
+    "git diff",
+    "git add",
+    "git commit",
+    "git push",
+    "git pull",
+    "git fetch",
+    "git checkout",
+    "git switch",
+    "git branch",
+    "git log",
+    "git stash",
+    "git reset",
+    "git merge",
+    "git rebase",
+    "git tag",
+  ])
+    allow.add(`Bash(${g}:*)`);
 
   /** @type {Record<string, any[]>} */
   const hooks = {
