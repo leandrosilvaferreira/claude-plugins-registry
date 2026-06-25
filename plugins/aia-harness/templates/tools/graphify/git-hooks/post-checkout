@@ -38,15 +38,17 @@ fi
 # Probe 2: graphify-out/.graphify_python (written by the graphify skill or CLI)
 # FIX: tr strips only newlines/tabs — NOT spaces — so paths like
 #      "/Library/Application Support/uv/tools/graphify/bin/python" survive intact.
-#      Allowlist uses [!-...] (hyphen first) to avoid range ambiguity, and
-#      explicitly allows space (\ ) and backslash (\\) for macOS/Windows paths.
+#      Path is validated via tr -d (portable across sh/dash/bash); allows alphanum,
+#      /_.@:-\\ and space for macOS/Windows paths.
 if [ -z "$GRAPHIFY_PYTHON" ]; then
     _GFY_PYTHON_FILE="graphify-out/.graphify_python"
     if [ -f "$_GFY_PYTHON_FILE" ]; then
         _FROM_FILE=$(cat "$_GFY_PYTHON_FILE" 2>/dev/null | tr -d '\n\r\t')
-        case "$_FROM_FILE" in
-            *[!-a-zA-Z0-9/_.@:\\ ]*) _FROM_FILE="" ;;
-        esac
+        # Validate: tr -d removes safe chars; non-empty remainder means unsafe input.
+        # Portable across sh/dash/bash — avoids [!...\\...] bracket-expression ambiguity.
+        _gfy_unsafe=$(printf '%s' "$_FROM_FILE" | tr -d '[:alnum:]/_.@:\\ -')
+        [ -n "$_gfy_unsafe" ] && _FROM_FILE=""
+        unset _gfy_unsafe
         if [ -n "$_FROM_FILE" ] && [ -x "$_FROM_FILE" ] && "$_FROM_FILE" -c "import graphify" 2>/dev/null; then
             GRAPHIFY_PYTHON="$_FROM_FILE"
         fi
@@ -83,9 +85,9 @@ if [ -z "$GRAPHIFY_PYTHON" ]; then
             /*)       _SHEBANG_PY="$_FIRST" ;;
             *)        _SHEBANG_PY="" ;;
         esac
-        case "$_SHEBANG_PY" in
-            *[!-a-zA-Z0-9/_.@:\\ ]*) _SHEBANG_PY="" ;;
-        esac
+        _gfy_unsafe=$(printf '%s' "$_SHEBANG_PY" | tr -d '[:alnum:]/_.@:\\ -')
+        [ -n "$_gfy_unsafe" ] && _SHEBANG_PY=""
+        unset _gfy_unsafe
         if [ -n "$_SHEBANG_PY" ] && [ -x "$_SHEBANG_PY" ] && "$_SHEBANG_PY" -c "import graphify" 2>/dev/null; then
             GRAPHIFY_PYTHON="$_SHEBANG_PY"
         fi
