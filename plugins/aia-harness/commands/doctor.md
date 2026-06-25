@@ -43,8 +43,8 @@ para a plataforma do usuário e encerrar — não executar os passos seguintes.
      `category` and list each `title`. **This is the "detect what's missing after a
      plugin upgrade and add it" path.**
    - **Opcionais disponíveis:** `exists:false && defaultSelected:false` (e.g.
-     `.lsp.json`, ag-kit scripts, the reference install script) — mention as
-     optionally available; do **not** flag as drift.
+     `.lsp.json`, ag-kit scripts) — mention as optionally available; do **not**
+     flag as drift.
    - Caveat: "missing" is relative to the **currently detected stack**. If detection
      changed, the expected set changes — sanity-check surprising entries against the
      scan report before offering them.
@@ -144,9 +144,7 @@ para a plataforma do usuário e encerrar — não executar os passos seguintes.
      `.claude/settings.json` (the key file to copy into worktrees). If missing from
      a git repo, note it as available via `apply --only=worktree`.
 
-   - **Install scripts:** If `scripts/harness-install.sh` or `scripts/install-plugins.mjs`
-     exist, note they are reference scripts — they should not be auto-run but may be
-     useful for onboarding. If `install-plugins.mjs` exists, mention it can be run
+   - **Install scripts:** If `scripts/install-plugins.mjs` exists, note it can be run
      with `node scripts/install-plugins.mjs -y` to install suggested plugins.
 
    - **Commands (ag-kit):** If the plan includes `agkit-command:` artifacts (ag-kit workflow

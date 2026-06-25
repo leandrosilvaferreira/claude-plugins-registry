@@ -36,7 +36,7 @@ Parse the JSON. Group artifact IDs by prefix into these logical categories
 | `docs` — harness strategies doc | `strategies` (exact) |
 | `lsp` — language server config | `lsp` (exact) |
 | `worktree` — .worktreeinclude | `worktree` (exact) |
-| `script` — install reference scripts | `install-script` (exact), `install-plugins` (exact), or starts with `agkit-script:` |
+| `script` — install reference scripts | `install-plugins` (exact), or starts with `agkit-script:` |
 | `commands` — first-party + ag-kit commands (non-github-pm) | starts with `command:`, `agkit-command:` |
 
 ## 2. Ask the user which categories to patch

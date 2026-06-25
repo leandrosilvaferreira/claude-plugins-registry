@@ -13,7 +13,6 @@ import {
   renderStrategies,
   renderLspJson,
   renderWorktreeInclude,
-  renderInstallScript,
   renderPluginsInstallScript,
 } from "./generate/misc.mjs";
 import { exists } from "./util/fs.mjs";
@@ -310,24 +309,6 @@ export function buildPlan(profile, ctx) {
       content: renderWorktreeInclude(),
     });
   }
-
-  add({
-    id: "install-script",
-    relPath: "scripts/harness-install.sh",
-    title: "Tools + MCP reference script",
-    category: "script",
-    rationale: "Manual reference for project tools + MCP servers. Never auto-run.",
-    contextCost: 0,
-    defaultSelected: false,
-    executable: true,
-    content: renderInstallScript(
-      mcp.names,
-      toolIds.flatMap((id) => {
-        const t = getTool(id);
-        return t ? [t] : [];
-      }),
-    ),
-  });
 
   const pluginSuggestions = suggestPlugins(profile);
   if (pluginSuggestions.length > 0) {

@@ -202,8 +202,7 @@ para a plataforma do usuário e encerrar — não executar os passos seguintes.
         _NOTE: git hooks (post-commit, post-checkout) already copied by harness — do not run `graphify hook install`._
 
       This is the same set `/aia-harness:add-tools` step 3 installs — defer there for
-      anything more. `scripts/harness-install.sh` stays only as a written reference;
-      these interactive offers mean the user never has to remember to run it.
+      anything more.
 
    c. **MCP secrets.** The `.mcp.json` servers are written but inert until their env
       keys are filled in `.claude/settings.local.json` (gitignored). List exactly
