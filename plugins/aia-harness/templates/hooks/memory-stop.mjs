@@ -121,7 +121,7 @@ try {
   if (indexLines >= 130) {
     sanitationNote =
       " ⚠️  MEMORY.md has ≥ 130 entries — run sanitation before saving:" +
-      " archive low-value memories, rewrite the index to ≤ 100 lines.";
+      " archive low-value memories, rewrite the index to ≤ 130 lines.";
   }
 } catch {
   // Index doesn't exist yet; fine — first session writes it.

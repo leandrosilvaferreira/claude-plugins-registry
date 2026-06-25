@@ -99,13 +99,10 @@ for (const f of failures) {
 const excerpt = lines.slice(0, 80).join("\\n");
 const truncated = lines.length > 80 ? "\\n...(" + (lines.length - 80) + " more lines)" : "";
 
+// Stop schema: top-level decision + reason only (no hookSpecificOutput channel).
 process.stdout.write(JSON.stringify({
   decision: "block",
-  reason: "Fix all lint/type errors below before finishing.\\n\\n" + excerpt + truncated,
-  hookSpecificOutput: {
-    hookEventName: "Stop",
-    additionalContext: "Failed verification: " + failures.map(function (f) { return f.cmd; }).join(", ")
-  }
+  reason: "Fix all lint/type errors below before finishing.\\n\\n" + excerpt + truncated
 }));
 process.exit(0);
 `;

@@ -17,7 +17,6 @@ import path from "node:path";
  * @returns {never}
  */
 function passThrough() {
-  process.stdout.write("");
   process.exit(0);
 }
 
