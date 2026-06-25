@@ -363,11 +363,11 @@ ${fixedRulesBlock("Engineering rules", engineeringRules)}
 }
 
 /**
- * @param {ProjectProfile} profile
+ * @param {ProjectProfile} _profile
  * @param {DomainInfo} domain
  * @returns {string}
  */
-export function renderDomainClaudeMd(profile, domain) {
+export function renderDomainClaudeMd(_profile, domain) {
   return `# ${domain.path}
 
 Scope: ${domain.role} (${domain.kind}).
