@@ -11,7 +11,11 @@ import { scanProject } from "../lib/detect/index.mjs";
 import { buildPlan } from "../lib/plan.mjs";
 import { renderReport, renderPlanSummary } from "../lib/render.mjs";
 import { applyPlan } from "../lib/apply.mjs";
-import { checkSystemDeps, resolveDepsFromProfile } from "../lib/detect/system-deps.mjs";
+import {
+  checkSystemDeps,
+  resolveDepsFromProfile,
+  detectInstalledTools,
+} from "../lib/detect/system-deps.mjs";
 
 const PLUGIN_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const VERSION = "0.1.1";
@@ -140,7 +144,7 @@ function main() {
           .split(",")
           .map((s) => s.trim())
           .filter(Boolean)
-      : [];
+      : detectInstalledTools(dir);
     const profile = scanProject(dir);
     const deps = resolveDepsFromProfile(profile, toolList);
     const report = checkSystemDeps(deps, process.platform);

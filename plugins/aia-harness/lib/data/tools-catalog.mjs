@@ -33,6 +33,11 @@
  * @property {string[]} deps          e.g. "node", "binary:rtk", "uv"
  * @property {ToolHook[]} hooks       Settings-hook entries to wire.
  * @property {(p: ProjectProfile) => boolean} recommended
+ * @property {string} [detectIn]      Relative path from project root whose existence
+ *                                    signals this tool is installed. Required for
+ *                                    cli-strategy tools so detectInstalledTools() can
+ *                                    auto-detect them. Vendor tools are auto-detected
+ *                                    via their hook scripts; this field is unused for them.
  */
 
 const HOOK_DIR = "${CLAUDE_PROJECT_DIR}/.claude/hooks";
@@ -80,6 +85,7 @@ export const TOOLS = [
     repo: "safishamsi/graphify",
     deps: ["uv"],
     hooks: [],
+    detectIn: "graphify-out",
     recommended: (p) => p.primaryLanguage != null,
   },
   {

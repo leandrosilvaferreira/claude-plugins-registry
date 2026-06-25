@@ -11,6 +11,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { ENGINE_DEPS, STACK_DEPS, TOOL_DEPS, INSTALL_HINTS } from "../data/deps-catalog.mjs";
+import { TOOLS } from "../data/tools-catalog.mjs";
 
 /** @typedef {import('../profile.mjs').DepEntry} DepEntry */
 /** @typedef {import('../profile.mjs').DepCheck} DepCheck */
@@ -242,4 +243,34 @@ export function resolveDepsFromProfile(profile, installedTools = []) {
   }
 
   return [...seen.values()];
+}
+
+/**
+ * Detect which tools from the TOOLS catalog are installed in a project directory.
+ *
+ * - Vendor tools: detected by presence of a hook script in `<dir>/.claude/hooks/`.
+ * - CLI tools: detected by presence of `tool.detectIn` path relative to `<dir>`.
+ * - Plugin / empty-deps tools: skipped — no project artifact to probe.
+ *
+ * @param {string} dir  Project root to probe.
+ * @returns {string[]}  Installed tool IDs (subset of TOOLS[].id).
+ */
+export function detectInstalledTools(dir) {
+  /** @type {string[]} */
+  const installed = [];
+  for (const tool of TOOLS) {
+    if (tool.deps.length === 0) continue;
+
+    if (tool.strategy === "vendor") {
+      const script = tool.hooks.find((h) => h.script)?.script;
+      if (script && fs.existsSync(path.join(dir, ".claude", "hooks", script))) {
+        installed.push(tool.id);
+      }
+    } else if (tool.strategy === "cli" && tool.detectIn) {
+      if (fs.existsSync(path.join(dir, tool.detectIn))) {
+        installed.push(tool.id);
+      }
+    }
+  }
+  return installed;
 }
