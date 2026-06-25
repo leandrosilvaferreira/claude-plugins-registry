@@ -8,8 +8,8 @@
 
 <br/>
 
-[![CI](https://img.shields.io/github/actions/workflow/status/leandrosilvaferreira/aia_harness/ci.yml?branch=main&style=for-the-badge&label=CI&logo=githubactions&logoColor=white)](https://github.com/leandrosilvaferreira/aia_harness/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/github/package-json/v/leandrosilvaferreira/aia_harness?style=for-the-badge&color=orange&label=version)](https://github.com/leandrosilvaferreira/aia_harness/releases)
+[![Tests](https://img.shields.io/badge/tests-passing-brightgreen?style=for-the-badge&logo=checkmarx&logoColor=white)](#-development--contributing)
+[![Version](https://img.shields.io/github/package-json/v/leandrosilvaferreira/claude-plugins-registry?filename=plugins%2Faia-harness%2Fpackage.json&style=for-the-badge&color=orange&label=version)](https://github.com/leandrosilvaferreira/claude-plugins-registry/tree/main/plugins/aia-harness)
 [![Node](https://img.shields.io/badge/node-%E2%89%A518-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
 [![Claude Code](https://img.shields.io/badge/Claude_Code-plugin-d97757?style=for-the-badge)](https://claude.ai/code)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](#-license)
