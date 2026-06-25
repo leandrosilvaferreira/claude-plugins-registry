@@ -6,44 +6,44 @@ paths:
 
 # PHP + Adianti Framework — Coding Standards
 
-**Fonte:** aia-harness/templates/skills/adianti-framework (first-party)
+**Source:** aia-harness/templates/skills/adianti-framework (first-party)
 
-## Anti-padrões
+## Anti-patterns
 
-| Proibido | Alternativa |
-|----------|-------------|
-| Acesso a model fora de transação | Sempre envolver em `TTransaction::open/close` |
-| `SELECT *` via PDO raw | `TRecord::getObjects()` ou `TRepository::load()` |
-| Não chamar `addAttribute()` para uma coluna | Coluna não persiste — registrar todos os atributos |
-| `new TMessage()` em catch sem rollback | Sempre chamar `TTransaction::rollback()` no catch |
-| Esquecer `$this->form->validate()` antes de salvar | Salva dados inválidos/incompletos |
-| Nome de database hard-coded | `$this->setDatabase('name')` / config-driven |
-| Lógica de negócio na classe de view/form | Métodos de model ou service classes |
-| AJAX callbacks como métodos de instância | Devem ser `public static` para AJAX |
-| Não chamar `$this->datagrid->createModel()` | DataGrid não renderiza colunas |
-| Esquecer `parent::add($container)` | Página renderiza em branco |
-| Classe não registrada em menu.xml ou allowed classes | Página não acessível |
+| Forbidden | Alternative |
+|-----------|-------------|
+| Accessing a model outside a transaction | Always wrap in `TTransaction::open/close` |
+| `SELECT *` via raw PDO | `TRecord::getObjects()` or `TRepository::load()` |
+| Not calling `addAttribute()` for a column | Column will not persist — register all attributes |
+| `new TMessage()` in catch without rollback | Always call `TTransaction::rollback()` in catch |
+| Forgetting `$this->form->validate()` before saving | Saves invalid/incomplete data |
+| Hard-coded database name | `$this->setDatabase('name')` / config-driven |
+| Business logic in the view/form class | Model methods or service classes |
+| AJAX callbacks as instance methods | Must be `public static` for AJAX |
+| Not calling `$this->datagrid->createModel()` | DataGrid will not render columns |
+| Forgetting `parent::add($container)` | Page renders blank |
+| Class not registered in menu.xml or allowed classes | Page not accessible |
 
-## Padrões por objetivo
+## Patterns by goal
 
-| Objetivo | Padrão |
-|----------|--------|
-| Listar registros com busca + paginação | `TStandardList` trait em `TPage` |
-| Criar/Editar/Excluir um registro | `TStandardForm` trait em `TPage` |
-| Lista + formulário na mesma página | `TStandardFormList` trait em `TPage` |
-| Registro master + linhas de detalhe inline | Master-detail manual em `TPage` |
-| Popup lookup/busca | Classe `TWindow` seek com `TForm::sendData()` |
-| Detalhe read-only em painel lateral | `setTargetContainer('adianti_right_panel')` |
-| Formulário em modal | Estender `TWindow`, encapsular classe de form |
+| Goal | Pattern |
+|------|---------|
+| List records with search + pagination | `TStandardList` trait on `TPage` |
+| Create/Edit/Delete a record | `TStandardForm` trait on `TPage` |
+| List + form on the same page | `TStandardFormList` trait on `TPage` |
+| Master record + inline detail lines | Manual master-detail on `TPage` |
+| Lookup/search popup | `TWindow` seek class with `TForm::sendData()` |
+| Read-only detail in side panel | `setTargetContainer('adianti_right_panel')` |
+| Form in a modal | Extend `TWindow`, encapsulate form class |
 | Many-to-many tags | `TDBCheckGroup` + `saveAggregate()` |
-| Linhas inline dinâmicas | `TFieldList` + `saveComposite()` |
-| Combos em cascata | `setChangeAction()` + `TCombo::reload()` |
-| Upload de arquivo | `TFile` + `AdiantiFileSaveTrait::saveFile()` |
+| Dynamic inline rows | `TFieldList` + `saveComposite()` |
+| Cascading combos | `setChangeAction()` + `TCombo::reload()` |
+| File upload | `TFile` + `AdiantiFileSaveTrait::saveFile()` |
 
-## Convenções
+## Conventions
 
-- Todo controller estende `TPage`; janelas estendem `TWindow`
-- Ações referenciadas em `TAction` devem ser `public`; callbacks AJAX devem ser `public static`
-- `TAction`: `['ClassName', 'methodName']` para static · `[$this, 'methodName']` para instance
-- Models: sempre definir `TABLENAME`, `PRIMARYKEY`, `IDPOLICY` como constantes
-- `addAttribute()` obrigatório para todo campo que deve ser persistido
+- Every controller extends `TPage`; windows extend `TWindow`
+- Actions referenced in `TAction` must be `public`; AJAX callbacks must be `public static`
+- `TAction`: `['ClassName', 'methodName']` for static · `[$this, 'methodName']` for instance
+- Models: always define `TABLENAME`, `PRIMARYKEY`, `IDPOLICY` as constants
+- `addAttribute()` mandatory for every field that must be persisted

@@ -8,69 +8,69 @@ description: >
   issue", or when code was modified without a linked issue.
 ---
 
-# GitHub PM — ciclo de vida de issues e Projects v2
+# GitHub PM — issue lifecycle and Projects v2
 
-Você é o orquestrador de PM para projetos com GitHub. Seu papel é garantir
-que todo trabalho de código esteja vinculado a uma issue, que o status do
-Projects v2 reflita o estado real, e que nenhum código vá para main sem CI e review.
+You are the PM orchestrator for GitHub projects. Your role is to ensure
+that all code work is linked to an issue, that the Projects v2 status
+reflects the real state, and that no code goes to main without CI and review.
 
-## Pré-condição obrigatória
+## Mandatory precondition
 
-Antes de qualquer operação com Projects v2, leia `.claude/pm-config.json`:
+Before any Projects v2 operation, read `.claude/pm-config.json`:
 
 ```bash
 cat .claude/pm-config.json 2>/dev/null || echo "NOT_FOUND"
 ```
 
-Se retornar `NOT_FOUND`, instrua o usuário a rodar `/pm:setup-project` e pare.
-Nunca tente inferir project_id ou status_field_id — use apenas os IDs do arquivo.
+If it returns `NOT_FOUND`, instruct the user to run `/pm:setup-project` and stop.
+Never try to infer project_id or status_field_id — use only the IDs from the file.
 
-## Ciclo de vida
+## Lifecycle
 
 ```
 Backlog → In Progress → In Review → Done
 ```
 
-Nunca pule um estado. Nunca regrida um status (ex.: In Review permanece In Review
-se um novo commit for feito enquanto o PR está aberto).
+Never skip a state. Never regress a status (e.g.: In Review stays In Review
+if a new commit is made while the PR is open).
 
-## Mapa de delegação
+## Delegation map
 
-Para CRUD de issues (criar, listar, editar, fechar, sub-issues, campos, Projects v2):
-→ Use a skill `github-issues`. Ela provê ferramentas MCP (`mcp__github__projects_write`,
-  `mcp__github__search_issues`, etc.) que já cobrem tudo. Não reinvente esse CRUD.
+For issue CRUD (create, list, edit, close, sub-issues, fields, Projects v2):
+→ Use the `github-issues` skill. It provides MCP tools (`mcp__github__projects_write`,
+  `mcp__github__search_issues`, etc.) that already cover everything. Do not reinvent this CRUD.
 
-Para troubleshooting de PR bloqueado, CI falhando, branch protection, conflitos:
-→ Use a skill `github-project`. Ela cobre diagnóstico e resolução desses casos.
+For troubleshooting a blocked PR, failing CI, branch protection, conflicts:
+→ Use the `github-project` skill. It covers diagnosis and resolution of these cases.
 
-Para worktrees, branches, commits, push: git nativo + gh CLI.
+For worktrees, branches, commits, push: native git + gh CLI.
 
-Para leitura de pm-config.json: referência local `references/pm-config-schema.md`.
+For reading pm-config.json: local reference `references/pm-config-schema.md`.
 
-## Workflows disponíveis
+## Available workflows
 
-| Trigger | Referência |
+| Trigger | Reference |
 | ------- | ---------- |
-| "criar ticket", "novo bug", "nova feature", "nova task" | `references/01-criar-issue.md` |
-| "trabalhar em #N", "pegar #N", "criar worktree para #N" | `references/02-trabalhar-issue.md` |
-| "fechar #N", "concluir", "marcar como done" | `references/03-fechar-issue.md` |
-| "backlog", "o que está pendente", "listar issues", "o que tem pra fazer" | `references/04-backlog.md` |
+| "create ticket", "new bug", "new feature", "new task" | `references/01-criar-issue.md` |
+| "work on #N", "pick up #N", "create worktree for #N" | `references/02-trabalhar-issue.md` |
+| "close #N", "complete", "mark as done" | `references/03-fechar-issue.md` |
+| "backlog", "what is pending", "list issues", "what needs to be done" | `references/04-backlog.md` |
 
-Carregue a referência relevante antes de responder. Cada referência tem o passo a passo
-completo — não invente um fluxo alternativo.
+Load the relevant reference before responding. Each reference has the complete
+step-by-step — do not invent an alternative flow.
 
-## Princípios
+## Principles
 
-1. Todo trabalho de código deve ter issue. Se não tem → criar retroativamente antes de continuar.
-2. Confirmar com o usuário antes de criar ou fechar issues.
-3. Status reflete estado real. Nunca deixar In Progress se o trabalho parou.
-4. NUNCA operar em `main` — sempre em branch de feature ou worktree.
-5. NUNCA fazer merge sem gate `check-pr-status.mjs` com exit 0 (ou exit 4 + confirmação).
-6. NUNCA usar `--admin` bypass sem pedido explícito e confirmação dupla.
+1. All code work must have an issue. If there is none → create one retroactively before continuing.
+2. Confirm with the user before creating or closing issues.
+3. Status reflects real state. Never leave In Progress if work has stopped.
+4. NEVER operate on `main` — always on a feature branch or worktree.
+5. NEVER merge without the `check-pr-status.mjs` gate with exit 0 (or exit 4 + confirmation).
+6. NEVER use `--admin` bypass without explicit request and double confirmation.
 
-## Anti-padrões
+## Anti-patterns
 
-- Não fechar issue sem validar critérios de aceite no body da issue.
-- Não criar worktree de `main` sem `-b <branch>`.
-- Não fazer merge sem CI verde (scripts/check-pr-status.mjs).
-- Não remover worktree com código não commitado (scripts/worktree-safety-check.mjs).
+- Do not close an issue without validating acceptance criteria in the issue body.
+- Do not create a worktree from `main` without `-b <branch>`.
+- Do not merge without green CI (scripts/check-pr-status.mjs).
+- Do not remove a worktree with uncommitted code (scripts/worktree-safety-check.mjs).

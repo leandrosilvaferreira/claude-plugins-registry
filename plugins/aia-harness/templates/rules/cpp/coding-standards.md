@@ -9,37 +9,37 @@ paths:
 
 # C++ — Coding Standards
 
-**Fontes:** isocpp/CppCoreGuidelines (Stroustrup + Sutter) · Google C++ Style Guide
+**Sources:** isocpp/CppCoreGuidelines (Stroustrup + Sutter) · Google C++ Style Guide
 
-## Anti-padrões
+## Anti-patterns
 
-| Proibido | Alternativa |
-|----------|-------------|
-| `new`/`delete` manual | RAII + `std::unique_ptr` / `std::shared_ptr` |
-| Raw pointers para ownership | `unique_ptr`; raw pointer apenas para observação não-owning |
-| Arrays C-style `T arr[N]` | `std::array<T, N>` (tamanho fixo) ou `std::vector<T>` |
-| `NULL` ou `0` para ponteiro nulo | `nullptr` |
-| `#define` para constantes | `constexpr` |
-| `using namespace std` em headers | Qualificação explícita `std::` |
-| Cast C-style `(int)x` | `static_cast<int>(x)`, `reinterpret_cast`, `const_cast` conforme semântica |
-| Exceção em destrutor | `noexcept` em destructors; capturar exceções internamente |
-| Cópia acidental de objetos grandes | Passar por `const&`; move semantics onde ownership transfere |
-| `std::endl` em performance-sensitive code | `'\n'` — `std::endl` faz flush desnecessário |
+| Forbidden | Alternative |
+| --------- | ----------- |
+| Manual `new`/`delete` | RAII + `std::unique_ptr` / `std::shared_ptr` |
+| Raw pointers for ownership | `unique_ptr`; raw pointer only for non-owning observation |
+| C-style arrays `T arr[N]` | `std::array<T, N>` (fixed size) or `std::vector<T>` |
+| `NULL` or `0` for null pointer | `nullptr` |
+| `#define` for constants | `constexpr` |
+| `using namespace std` in headers | Explicit `std::` qualification |
+| C-style cast `(int)x` | `static_cast<int>(x)`, `reinterpret_cast`, `const_cast` per semantics |
+| Exception in destructor | `noexcept` on destructors; catch exceptions internally |
+| Accidental copy of large objects | Pass by `const&`; move semantics where ownership transfers |
+| `std::endl` in performance-sensitive code | `'\n'` — `std::endl` causes unnecessary flush |
 
-## Convenções
+## Conventions
 
-- Nomeação: `PascalCase` classes · `snake_case` funções/variáveis · `kPascalCase` constantes (Google) ou `UPPER_SNAKE_CASE` (isocpp)
-- Prefer `const` e `constexpr` — imutabilidade por padrão
-- Regra dos zero: se não precisa de destrutor/cópia/move customizados, não declare
-- Regra dos cinco: se precisa de um, declare todos os cinco (`destrutor`, `copy ctor`, `copy assign`, `move ctor`, `move assign`)
-- Headers: include guards com `#pragma once` ou `#ifndef`; nunca definir variáveis em headers
-- Ordenação de includes: próprios · bibliotecas de terceiros · STL (Google style)
-- `[[nodiscard]]` em funções cujo retorno não deve ser ignorado
+- Naming: `PascalCase` classes · `snake_case` functions/variables · `kPascalCase` constants (Google) or `UPPER_SNAKE_CASE` (isocpp)
+- Prefer `const` and `constexpr` — immutability by default
+- Rule of zero: if you don't need a custom destructor/copy/move, don't declare them
+- Rule of five: if you need one, declare all five (`destructor`, `copy ctor`, `copy assign`, `move ctor`, `move assign`)
+- Headers: include guards with `#pragma once` or `#ifndef`; never define variables in headers
+- Include ordering: own headers · third-party libraries · STL (Google style)
+- `[[nodiscard]]` on functions whose return value must not be ignored
 
 ## Tooling
 
-- `clang-format` com configuração de equipe
-- `clang-tidy` para análise estática
-- AddressSanitizer (`-fsanitize=address`) em builds de teste
-- `valgrind` ou `heaptrack` para profiling de memória
-- CMake como build system; nunca commitar arquivos gerados
+- `clang-format` with team configuration
+- `clang-tidy` for static analysis
+- AddressSanitizer (`-fsanitize=address`) in test builds
+- `valgrind` or `heaptrack` for memory profiling
+- CMake as build system; never commit generated files

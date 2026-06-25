@@ -5,17 +5,17 @@ allowed-tools: Bash(gh *), Bash(git *), Bash(bash *), Bash(python3 *)
 ---
 
 Config PM: !`cat .claude/pm-config.json 2>/dev/null || echo "NOT_FOUND"`
-Branch atual: !`git branch --show-current`
+Current branch: !`git branch --show-current`
 
-Use a skill `github-pm` para executar o merge seguro. O argumento `$ARGUMENTS`
-pode ser número de PR ou número de issue.
+Use the `github-pm` skill to execute the safe merge. The `$ARGUMENTS`
+argument can be a PR number or an issue number.
 
-**NUNCA pule os gates abaixo. Esta é a sequência obrigatória:**
+**NEVER skip the gates below. This is the mandatory sequence:**
 
-**Passo 1 — Identificar PR**
+**Step 1 — Identify PR**
 
-- Tentar direto como PR number: `gh pr view $ARGUMENTS --json number`
-- Se falhar: buscar PR com branch `feat/$ARGUMENTS-*` ou body com `Closes #$ARGUMENTS`
+- Try directly as a PR number: `gh pr view $ARGUMENTS --json number`
+- If it fails: look for a PR with branch `feat/$ARGUMENTS-*` or body with `Closes #$ARGUMENTS`
 
   ```bash
   gh pr list --json number,headRefName,body | python3 -c "
@@ -27,60 +27,60 @@ pode ser número de PR ou número de issue.
   "
   ```
 
-**Passo 2 — Verificar draft**
+**Step 2 — Check draft status**
 
 ```bash
 gh pr view $PR_NUMBER --json isDraft --jq '.isDraft'
 ```
 
-Se true → perguntar ao usuário se marca como ready:
+If true → ask the user if it should be marked as ready:
 
 ```bash
 gh pr ready $PR_NUMBER
 ```
 
-Depois aguardar CI: `gh pr checks $PR_NUMBER --watch`
+Then wait for CI: `gh pr checks $PR_NUMBER --watch`
 
-**Passo 3 — Gate autoritativo (SEMPRE executar, NUNCA pular)**
+**Step 3 — Authoritative gate (ALWAYS run, NEVER skip)**
 
 ```bash
 node .claude/skills/github-pm/scripts/check-pr-status.mjs $PR_NUMBER <OWNER>/<REPO>
 ```
 
-- Exit 0 → prosseguir
-- Exit 1 → BLOQUEAR. Listar falhas, não merge.
-- Exit 2 → perguntar se aguarda (`gh pr checks $PR_NUMBER --watch`), re-rodar gate
-- Exit 3 → ENCERRAR (PR inválido)
-- Exit 4 → avisar "CI verde mas sem review aprovado". Perguntar se prossegue mesmo assim.
+- Exit 0 → proceed
+- Exit 1 → BLOCK. List failures, do not merge.
+- Exit 2 → ask if waiting (`gh pr checks $PR_NUMBER --watch`), re-run gate
+- Exit 3 → STOP (invalid PR)
+- Exit 4 → warn "CI green but no approved review". Ask if proceeding anyway.
 
-**Passo 4 — Detectar estratégia de merge**
+**Step 4 — Detect merge strategy**
 
 ```bash
 gh repo view --json squashMergeAllowed,rebaseMergeAllowed,mergeCommitAllowed \
   --jq 'if .squashMergeAllowed then "--squash" elif .rebaseMergeAllowed then "--rebase" else "--merge" end'
 ```
 
-**Passo 5 — Merge**
+**Step 5 — Merge**
 
 ```bash
 gh pr merge $PR_NUMBER $MERGE_FLAG --delete-branch
 ```
 
-Se exit ≠ 0 → reportar erro exato, ENCERRAR sem pós-merge.
+If exit ≠ 0 → report the exact error, STOP without post-merge.
 
-**Passo 6 — Pós-merge (somente se merge com exit 0)**
+**Step 6 — Post-merge (only if merge exit 0)**
 
-- Comentar na issue: "PR #$PR_NUMBER mergeado ✅"
-- Fechar issue: `gh issue close $ISSUE_NUMBER --repo <OWNER>/<REPO>`
-- Mover para Done no Projects v2 (usar pm-config.json)
+- Comment on the issue: "PR #$PR_NUMBER merged ✅"
+- Close the issue: `gh issue close $ISSUE_NUMBER --repo <OWNER>/<REPO>`
+- Move to Done in Projects v2 (use pm-config.json)
 
-**Passo 7 — Cleanup**
+**Step 7 — Cleanup**
 
-- Se em worktree → perguntar: "Deseja remover a worktree? (`/pm:worktree-remove`)"
-- Se no checkout principal: `git checkout main && git pull --ff-only`
+- If in a worktree → ask: "Do you want to remove the worktree? (`/pm:worktree-remove`)"
+- If on the main checkout: `git checkout main && git pull --ff-only`
 
-REGRAS CRÍTICAS (nunca violar):
+CRITICAL RULES (never violate):
 
-- NUNCA `gh pr merge` sem gate do Passo 3 com exit 0 (ou exit 4 + confirmação explícita)
-- NUNCA fechar issue antes de confirmar exit 0 do merge
-- NUNCA `--admin` sem pedido explícito + confirmação dupla
+- NEVER `gh pr merge` without the Step 3 gate with exit 0 (or exit 4 + explicit confirmation)
+- NEVER close the issue before confirming merge exit 0
+- NEVER `--admin` without explicit request + double confirmation

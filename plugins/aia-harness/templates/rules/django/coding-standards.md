@@ -6,35 +6,35 @@ paths:
 
 # Python + Django — Coding Standards
 
-**Fontes:** JetBrains/junie-guidelines · Django official docs
+**Sources:** JetBrains/junie-guidelines · Django official docs
 
-## Anti-padrões
+## Anti-patterns
 
-| Proibido | Alternativa |
-|----------|-------------|
-| Lógica de negócio na View | Model methods ou Service layer separado |
-| Consultas N+1 | `select_related()` para FK · `prefetch_related()` para M2M |
-| `settings.py` único para todos os ambientes | `django-environ` + `settings/base.py`, `settings/local.py`, `settings/prod.py` |
-| SQL raw sem motivo | ORM Django; SQL apenas quando performance é crítica e documentado |
-| `CharField` sem `max_length` | Sempre definir `max_length` |
-| `BooleanField` com `null=True` | `default=False` sem null |
-| Lógica em migrations | Migrations apenas para schema; dados via `RunPython` isolado |
-| `User` importado diretamente | `get_user_model()` para compatibilidade com modelo customizado |
-| Serializer sem validação explícita | `validate_<field>` e `validate()` em todos os serializadores DRF |
-| Views sem permissão | `permission_classes` explícito em toda view DRF |
+| Forbidden | Alternative |
+|-----------|-------------|
+| Business logic in the View | Model methods or separate Service layer |
+| N+1 queries | `select_related()` for FK · `prefetch_related()` for M2M |
+| Single `settings.py` for all environments | `django-environ` + `settings/base.py`, `settings/local.py`, `settings/prod.py` |
+| Raw SQL without reason | Django ORM; SQL only when performance is critical and documented |
+| `CharField` without `max_length` | Always define `max_length` |
+| `BooleanField` with `null=True` | `default=False` without null |
+| Logic in migrations | Migrations for schema only; data via isolated `RunPython` |
+| `User` imported directly | `get_user_model()` for compatibility with custom user model |
+| Serializer without explicit validation | `validate_<field>` and `validate()` on all DRF serializers |
+| Views without permissions | Explicit `permission_classes` on every DRF view |
 
-## Convenções
+## Conventions
 
-- Apps focados: cada app tem uma responsabilidade de domínio clara
-- `models.py` > 200 LOC: dividir em `models/` package
-- Signals apenas para cross-cutting concerns (auditoria, cache invalidation) — não para lógica de negócio
-- `Meta.ordering` em modelos que sempre são listados em ordem específica
-- `__str__` em todo modelo
-- Migrations: nunca editar migration já aplicada em produção; criar nova
+- Focused apps: each app has a clear domain responsibility
+- `models.py` > 200 LOC: split into a `models/` package
+- Signals only for cross-cutting concerns (auditing, cache invalidation) — not for business logic
+- `Meta.ordering` on models that are always listed in a specific order
+- `__str__` on every model
+- Migrations: never edit a migration already applied in production; create a new one
 
 ## Tooling
 
-- `django-debug-toolbar` em desenvolvimento
-- `django-extensions` para shell_plus e outros utilitários de dev
-- `factory_boy` para fixtures de teste
-- `pytest-django` em vez de `unittest` nativo
+- `django-debug-toolbar` in development
+- `django-extensions` for shell_plus and other dev utilities
+- `factory_boy` for test fixtures
+- `pytest-django` instead of native `unittest`

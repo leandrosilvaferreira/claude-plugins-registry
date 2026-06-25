@@ -6,35 +6,35 @@ paths:
 
 # Go — Coding Standards
 
-**Fontes:** uber-go/guide · Google Go Style Guide
+**Sources:** uber-go/guide · Google Go Style Guide
 
-## Anti-padrões
+## Anti-patterns
 
-| Proibido | Alternativa |
-|----------|-------------|
-| `panic` em código de negócio | Retornar `error` |
-| Erros sem contexto (`return err`) | `fmt.Errorf("operation X: %w", err)` |
-| Ponteiro quando valor zero tem semântica útil | Tipo por valor; ponteiro apenas quando nil tem significado |
-| Mutex sem os campos que protege | Agrupar mutex + campos em struct dedicada |
-| Goroutine sem rastreamento de lifecycle | `sync.WaitGroup` ou canal de sinalização |
-| `init()` com lógica complexa ou efeitos colaterais | Injeção de dependência explícita |
-| Nomes abreviados ilegíveis (`rdr`, `mgr`) | Nomes claros; abreviações padrão OK (`buf`, `err`, `id`) |
-| `interface{}` / `any` onde tipo concreto serve | Tipo concreto; `any` só em boundaries genéricos reais |
-| Copiar struct com Mutex | Passar ponteiro para struct com Mutex |
-| Goroutine leak (goroutine sem forma de parar) | Context com cancel; select com done channel |
+| Forbidden | Alternative |
+| --------- | ----------- |
+| `panic` in business code | Return `error` |
+| Errors without context (`return err`) | `fmt.Errorf("operation X: %w", err)` |
+| Pointer when zero value has useful semantics | Value type; pointer only when nil has meaning |
+| Mutex without the fields it protects | Group mutex + fields in a dedicated struct |
+| Goroutine without lifecycle tracking | `sync.WaitGroup` or signaling channel |
+| `init()` with complex logic or side effects | Explicit dependency injection |
+| Unreadable abbreviated names (`rdr`, `mgr`) | Clear names; standard abbreviations OK (`buf`, `err`, `id`) |
+| `interface{}` / `any` where a concrete type works | Concrete type; `any` only at real generic boundaries |
+| Copying a struct with Mutex | Pass pointer to struct with Mutex |
+| Goroutine leak (goroutine with no way to stop) | Context with cancel; select with done channel |
 
-## Convenções
+## Conventions
 
-- Erros: valores sentinela (`var ErrNotFound = errors.New(...)`) para erros esperados; tipos de erro para contexto rico
-- Nomeação: `MixedCaps`; interfaces de um método: sufixo `-er` (`Reader`, `Stringer`)
-- Pacotes: nome curto, singular, sem underscore (`userservice` não `user_service`)
-- Testes em mesmo pacote com sufixo `_test.go`; testes de integração em `_test` package separado
-- `defer` para cleanup de recursos sempre
-- Estrutura de projeto: `cmd/` binários · `internal/` código não-exportável · `pkg/` biblioteca pública
+- Errors: sentinel values (`var ErrNotFound = errors.New(...)`) for expected errors; error types for rich context
+- Naming: `MixedCaps`; single-method interfaces: `-er` suffix (`Reader`, `Stringer`)
+- Packages: short, singular, no underscores (`userservice` not `user_service`)
+- Tests in the same package with `_test.go` suffix; integration tests in a separate `_test` package
+- `defer` for resource cleanup always
+- Project structure: `cmd/` binaries · `internal/` non-exportable code · `pkg/` public library
 
 ## Tooling
 
-- `gofmt` / `goimports` obrigatório (sem exceção)
-- `golangci-lint` com configuração de equipe
-- `go vet` na pipeline
-- `go test -race ./...` para detectar race conditions
+- `gofmt` / `goimports` mandatory (no exceptions)
+- `golangci-lint` with team configuration
+- `go vet` in the pipeline
+- `go test -race ./...` to detect race conditions

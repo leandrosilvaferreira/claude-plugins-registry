@@ -7,163 +7,163 @@ model: opus
 
 # Goal Builder
 
-Gera um `/goal` otimizado para execução autônoma, com pipeline superpowers de 5 fases, checks verificáveis no transcript e cap de segurança obrigatório.
+Generates an optimized `/goal` for autonomous execution, with a 5-phase superpowers pipeline, transcript-verifiable checks, and a mandatory safety cap.
 
-## Invariantes — nunca violar
+## Invariants — never violate
 
-- Avaliador (Haiku) lê **só o transcript**. Check só prova se o agente **escreve o output na conversa**.
-- Toda condição precisa de **check cujo resultado apareça no transcript** (`npm test exit 0`, `git status limpo`, contagem impressa).
-- Máx **4000 chars** na condição.
-- **Pipeline superpowers sempre presente** — 5 fases. Ausência de instrução do usuário = usar pipeline padrão.
-- **Efeito Goodhart:** agente otimiza exato o que mede. Task rica → referenciar spec externo com requisitos de qualidade.
+- The evaluator (Haiku) reads **only the transcript**. A check only proves something if the agent **writes the output in the conversation**.
+- Every condition needs a **check whose result appears in the transcript** (`npm test exit 0`, `git status clean`, printed count).
+- Max **4000 chars** in the condition.
+- **Superpowers pipeline always present** — 5 phases. No user instruction = use default pipeline.
+- **Goodhart Effect:** the agent optimizes exactly what is measured. Rich task → reference an external spec with quality requirements.
 
-## Anatomia do `/goal` (3 + 1)
+## Anatomy of a `/goal` (3 + 1)
 
-| # | Componente | Exemplo |
+| # | Component | Example |
 |---|-----------|---------|
-| 1 | End state mensurável | "todos testes em `test/auth` passam" |
-| 2 | Check verificável no transcript | "`npm test` sai 0" |
-| 3 | Constraints | "sem alterar arquivos de teste existentes" |
-| + | Cap obrigatório | "ou parar após 80 turnos" |
+| 1 | Measurable end state | "all tests in `test/auth` pass" |
+| 2 | Transcript-verifiable check | "`npm test` exits 0" |
+| 3 | Constraints | "without altering existing test files" |
+| + | Mandatory cap | "or stop after 80 turns" |
 
-## Pipeline padrão superpowers (5 fases)
+## Default superpowers pipeline (5 phases)
 
 ```
-FASE 1  superpowers:brainstorming               — design + spec (revisar se spec já existe)
-FASE 2  superpowers:writing-plans               — plano de implementação detalhado
-FASE 3  superpowers:executing-plans             — executar plano task-by-task com checkpoints
-FASE 4  superpowers:verification-before-completion — verificar tudo antes de finalizar
-FASE 5  superpowers:finishing-a-development-branch — integrar: merge, PR ou cleanup
+PHASE 1  superpowers:brainstorming               — design + spec (review if spec already exists)
+PHASE 2  superpowers:writing-plans               — detailed implementation plan
+PHASE 3  superpowers:executing-plans             — execute plan task-by-task with checkpoints
+PHASE 4  superpowers:verification-before-completion — verify everything before finishing
+PHASE 5  superpowers:finishing-a-development-branch — integrate: merge, PR or cleanup
 ```
 
-**Cap padrão: 80 turnos.** Calibrar: task trivial → 40t; task ampla → 120t+. Mínimo ~15t por fase.
+**Default cap: 80 turns.** Calibrate: trivial task → 40t; broad task → 120t+. Minimum ~15t per phase.
 
-**Quando substituir:** usuário lista fases alternativas com commands/skills explícitos → substituir pipeline inteiramente.
+**When to replace:** user lists alternative phases with explicit commands/skills → replace pipeline entirely.
 
-## Workflow OBRIGATÓRIO
+## MANDATORY Workflow
 
-### 1. Coletar demanda
+### 1. Collect requirements
 
-- Doc/spec fornecido → `Read` extrair objetivos, critérios, constraints, paths. Não re-perguntar o que já está claro.
-- Registrar qual pipeline aplicar antes de avançar.
-- Spec existente → FASE 1 = "revisar/validar" (não recriar).
-- Plano existente → FASE 2 = "validar/atualizar" (não recriar).
+- Doc/spec provided → `Read` to extract objectives, criteria, constraints, paths. Do not re-ask what is already clear.
+- Record which pipeline to apply before proceeding.
+- Existing spec → PHASE 1 = "review/validate" (not recreate).
+- Existing plan → PHASE 2 = "validate/update" (not recreate).
 
-### 2. Mapear gaps → AskUserQuestion (máx 4 por chamada)
+### 2. Map gaps → AskUserQuestion (max 4 per call)
 
-| Ponto | Notas |
+| Point | Notes |
 |-------|-------|
-| Objetivo / end state | Coração do goal — sem isso não há condição |
-| Como provar (check) | Output que aparece no transcript |
-| Escopo / paths | Limita onde o agente mexe |
-| Constraints | O que não pode quebrar/mudar |
-| Cap (turnos) | Default 80t. Reduzir se trivial |
-| Qualidade além do check | Requisitos que o check não captura (anti-Goodhart) |
-| FASE 1 skip ou revisar? | Spec já existe → brainstorming em modo revisão |
-| FASE 2 atualizar? | Plano existe → validar existente vs. recriar? |
+| Objective / end state | Heart of the goal — without this there is no condition |
+| How to prove (check) | Output that appears in the transcript |
+| Scope / paths | Limits where the agent operates |
+| Constraints | What must not break/change |
+| Cap (turns) | Default 80t. Reduce if trivial |
+| Quality beyond the check | Requirements the check doesn't capture (anti-Goodhart) |
+| PHASE 1 skip or review? | Spec already exists → brainstorming in review mode |
+| PHASE 2 update? | Plan exists → validate existing vs. recreate? |
 
-Sempre oferecer default recomendado nas opções.
+Always offer a recommended default in the options.
 
-### 3. Decidir formato
+### 3. Decide format
 
-- **Task simples** (1 end state, check óbvio, poucos requisitos) → `/goal` inline com pipeline padrão.
-- **Task complexa** (múltiplos critérios, qualidade subjetiva, multi-domínio, > 4000 chars) → spec + `/goal` que o referencia.
-  - Spec existente apontado → referenciar, não duplicar.
-  - Novo spec → `Write` em `docs/specs/<slug>.md`.
+- **Simple task** (1 end state, obvious check, few requirements) → inline `/goal` with default pipeline.
+- **Complex task** (multiple criteria, subjective quality, multi-domain, > 4000 chars) → spec + `/goal` that references it.
+  - Existing spec pointed to → reference it, do not duplicate.
+  - New spec → `Write` to `docs/specs/<slug>.md`.
 
-### 4. Montar o `/goal`
+### 4. Assemble the `/goal`
 
-Checklist obrigatório:
+Mandatory checklist:
 
-- ✅ End state mensurável
-- ✅ Check verificável no transcript
-- ✅ Constraints explícitos
-- ✅ Cap calibrado ao escopo
-- ✅ Pipeline 5 fases em ordem exata com marcadores `"FASE N OK"`
-- ✅ Proibição de pular fases
-- ✅ `não fazer perguntas, decidir sozinho`
+- ✅ Measurable end state
+- ✅ Transcript-verifiable check
+- ✅ Explicit constraints
+- ✅ Cap calibrated to scope
+- ✅ 5-phase pipeline in exact order with `"PHASE N OK"` markers
+- ✅ Prohibition on skipping phases
+- ✅ `do not ask questions, decide independently`
 
-### 5. Entregar
+### 5. Deliver
 
-- Bloco copiável com `/goal ...`.
-- Se gerou spec: caminho do arquivo confirmado.
-- Checklist "antes de rodar": auto mode ligado, `git status` limpo, spec revisado se existir.
+- Copyable block with `/goal ...`.
+- If a spec was generated: confirmed file path.
+- "Before running" checklist: auto mode on, `git status` clean, spec reviewed if it exists.
 
 ---
 
 ## Templates
 
-### A) Task simples — goal inline
+### A) Simple task — inline goal
 
 ```text
-/goal <end state> provado por <check no transcript>; sem <constraint>.
+/goal <end state> proven by <check in transcript>; without <constraint>.
 
-Executar pipeline superpowers de 5 fases na ordem exata, SEM pular nenhuma:
-FASE 1 superpowers:brainstorming — entender requisitos, design e spec; imprimir "FASE 1 OK".
-FASE 2 superpowers:writing-plans — criar plano de implementação detalhado; imprimir "FASE 2 OK".
-FASE 3 superpowers:executing-plans — executar plano task-by-task com checkpoints; imprimir "FASE 3 OK".
-FASE 4 superpowers:verification-before-completion — verificar tudo antes de finalizar; imprimir "FASE 4 OK".
-FASE 5 superpowers:finishing-a-development-branch — integrar (merge/PR/cleanup); imprimir "FASE 5 OK".
+Execute the 5-phase superpowers pipeline in exact order, WITHOUT skipping any:
+PHASE 1 superpowers:brainstorming — understand requirements, design and spec; print "PHASE 1 OK".
+PHASE 2 superpowers:writing-plans — create detailed implementation plan; print "PHASE 2 OK".
+PHASE 3 superpowers:executing-plans — execute plan task-by-task with checkpoints; print "PHASE 3 OK".
+PHASE 4 superpowers:verification-before-completion — verify everything before finishing; print "PHASE 4 OK".
+PHASE 5 superpowers:finishing-a-development-branch — integrate (merge/PR/cleanup); print "PHASE 5 OK".
 
-End state provado: (1) <gate command> saindo 0; (2) os 5 marcadores "FASE N OK" impressos em ordem.
-Não fazer perguntas, decidir sozinho. Parar após <N> turnos.
+End state proven: (1) <gate command> exiting 0; (2) all 5 "PHASE N OK" markers printed in order.
+Do not ask questions, decide independently. Stop after <N> turns.
 ```
 
-### B) Task complexa — spec + goal
+### B) Complex task — spec + goal
 
 `docs/specs/<slug>.md`:
 
 ```markdown
-# <Título> — Spec de execução autônoma
+# <Title> — Autonomous execution spec
 
-## Objetivo
-<resultado desejado em 1-2 frases>
+## Objective
+<desired result in 1-2 sentences>
 
-## Critérios de aceite (cada um verificável)
-- [ ] <critério 1> — prova: <comando/output>
-- [ ] <critério 2> — prova: <comando/output>
+## Acceptance criteria (each verifiable)
+- [ ] <criterion 1> — proof: <command/output>
+- [ ] <criterion 2> — proof: <command/output>
 
-## Requisitos de qualidade (anti-Goodhart)
-<o que "bom" significa além do check: UX, regras de negócio, edge cases>
+## Quality requirements (anti-Goodhart)
+<what "good" means beyond the check: UX, business rules, edge cases>
 
-## Escopo
-- Mexer em: <paths>
-- NÃO tocar: <paths/constraints>
+## Scope
+- Touch: <paths>
+- DO NOT touch: <paths/constraints>
 
-## Definição de pronto
-<estado final + todos os checks verdes + cap>
+## Definition of done
+<final state + all checks green + cap>
 ```
 
-Linha `/goal`:
+`/goal` line:
 
 ```text
-/goal implementar tudo em docs/specs/<slug>.md até todos critérios de aceite baterem, cada um provado pelo comando indicado.
+/goal implement everything in docs/specs/<slug>.md until all acceptance criteria pass, each proven by the indicated command.
 
-Executar pipeline superpowers de 5 fases na ordem exata, SEM pular nenhuma:
-FASE 1 superpowers:brainstorming — revisar spec em docs/specs/<slug>.md (NÃO recriar); imprimir "FASE 1 OK".
-FASE 2 superpowers:writing-plans — criar/validar plano baseado no spec; imprimir "FASE 2 OK".
-FASE 3 superpowers:executing-plans — executar plano task-by-task; imprimir "FASE 3 OK".
-FASE 4 superpowers:verification-before-completion — rodar <gate command>; verificar cobertura; imprimir "FASE 4 OK".
-FASE 5 superpowers:finishing-a-development-branch — integrar; imprimir "FASE 5 OK".
+Execute the 5-phase superpowers pipeline in exact order, WITHOUT skipping any:
+PHASE 1 superpowers:brainstorming — review spec at docs/specs/<slug>.md (DO NOT recreate); print "PHASE 1 OK".
+PHASE 2 superpowers:writing-plans — create/validate plan based on spec; print "PHASE 2 OK".
+PHASE 3 superpowers:executing-plans — execute plan task-by-task; print "PHASE 3 OK".
+PHASE 4 superpowers:verification-before-completion — run <gate command>; verify coverage; print "PHASE 4 OK".
+PHASE 5 superpowers:finishing-a-development-branch — integrate; print "PHASE 5 OK".
 
-End state provado: (1) <gate command> saindo 0; (2) os 5 marcadores "FASE N OK" impressos em ordem; (3) git status limpo.
+End state proven: (1) <gate command> exiting 0; (2) all 5 "PHASE N OK" markers printed in order; (3) git status clean.
 
-Qualidade (anti-Goodhart): <requisitos que o gate não captura>.
-Constraints: <o que não pode mudar>.
-Não fazer perguntas — decidir sozinho. Parar após <N> turnos.
+Quality (anti-Goodhart): <requirements the gate does not capture>.
+Constraints: <what must not change>.
+Do not ask questions — decide independently. Stop after <N> turns.
 ```
 
 ---
 
 ## Anti-patterns
 
-| ❌ Ruim | ✅ Bom |
+| Bad | Good |
 |---------|--------|
-| Goal sem pipeline | Pipeline superpowers 5 fases sempre presente |
-| Sem cap | `ou parar após N turnos` sempre |
-| Check que o avaliador não vê | Output do check impresso no transcript |
-| Marcadores FASE N OK ausentes | Um marcador por fase — avaliador prova execução |
-| Re-perguntar o que está no doc | Ler doc, extrair, perguntar só o que falta |
-| Cap subdimensionado | 5 fases × ~15t mínimo = 80t default |
-| Pipeline omitido por ser "task simples" | Pipeline é DEFAULT — sempre presente, sempre |
-| Spec novo em `tasks/` | Novo spec vai em `docs/specs/<slug>.md` |
+| Goal without pipeline | 5-phase superpowers pipeline always present |
+| No cap | `or stop after N turns` always |
+| Check the evaluator cannot see | Check output printed in transcript |
+| PHASE N OK markers absent | One marker per phase — evaluator proves execution |
+| Re-asking what is in the doc | Read doc, extract, ask only what is missing |
+| Undersized cap | 5 phases × ~15t minimum = 80t default |
+| Pipeline omitted for "simple task" | Pipeline is DEFAULT — always present, always |
+| New spec in `tasks/` | New spec goes in `docs/specs/<slug>.md` |

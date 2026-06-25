@@ -7,33 +7,33 @@ paths:
 
 # Next.js — Coding Standards
 
-**Fontes:** Vercel/Next.js official docs · nextjs.org
+**Sources:** Vercel/Next.js official docs · nextjs.org
 
-## Anti-padrões
+## Anti-patterns
 
-| Proibido | Alternativa |
-|----------|-------------|
-| `"use client"` desnecessário no topo | Server Components por padrão; client apenas para interatividade |
-| `<img>` HTML nativo | `next/image` para otimização automática |
-| Fontes sem `next/font` | `next/font` elimina layout shift e auto-otimiza |
-| `fetch` sem política de cache | Definir `cache: 'force-cache'`, `'no-store'` ou `revalidate` explicitamente |
-| `useSearchParams` fora de `<Suspense>` | Envolver em `<Suspense fallback={...}>` |
-| Dados buscados em Client Component que poderiam ser Server | Mover fetch para Server Component e passar como prop |
-| Route Handler retornando dados que uma Server Action faria | Server Actions para mutações; Route Handlers para APIs externas |
-| `getServerSideProps` (Pages Router) em código novo | App Router com Server Components |
-| `cookies()`/`headers()` em componente de layout raiz | Dynamic functions apenas onde necessário |
+| Forbidden | Alternative |
+|-----------|-------------|
+| Unnecessary `"use client"` at the top | Server Components by default; client only for interactivity |
+| Native HTML `<img>` | `next/image` for automatic optimization |
+| Fonts without `next/font` | `next/font` eliminates layout shift and auto-optimizes |
+| `fetch` without a cache policy | Explicitly define `cache: 'force-cache'`, `'no-store'` or `revalidate` |
+| `useSearchParams` outside `<Suspense>` | Wrap in `<Suspense fallback={...}>` |
+| Data fetched in a Client Component that could be a Server Component | Move fetch to a Server Component and pass as prop |
+| Route Handler returning data that a Server Action would handle | Server Actions for mutations; Route Handlers for external APIs |
+| `getServerSideProps` (Pages Router) in new code | App Router with Server Components |
+| `cookies()`/`headers()` in the root layout component | Dynamic functions only where necessary |
 
-## Convenções
+## Conventions
 
-- `app/` router (App Router) em projetos novos — não Pages Router
-- Layout: `layout.tsx` compartilhado · `page.tsx` por rota · `loading.tsx` e `error.tsx` por segmento
-- Metadata: `export const metadata` ou `generateMetadata()` em cada `page.tsx`
-- Imagens: sempre definir `width` e `height` no `<Image>` ou usar `fill` com container posicionado
-- Variáveis de ambiente: `NEXT_PUBLIC_` apenas para o que deve ir ao client; demais ficam server-only
-- Middleware em `middleware.ts` na raiz — não em `app/`
+- `app/` router (App Router) in new projects — not Pages Router
+- Layout: shared `layout.tsx` · `page.tsx` per route · `loading.tsx` and `error.tsx` per segment
+- Metadata: `export const metadata` or `generateMetadata()` in each `page.tsx`
+- Images: always define `width` and `height` on `<Image>` or use `fill` with a positioned container
+- Environment variables: `NEXT_PUBLIC_` only for what must reach the client; others remain server-only
+- Middleware in `middleware.ts` at the root — not inside `app/`
 
 ## Tooling
 
-- `next lint` (ESLint config embutida) na pipeline
-- `@next/bundle-analyzer` para inspecionar bundle
-- Vercel Speed Insights + Web Analytics para métricas de produção
+- `next lint` (built-in ESLint config) in the pipeline
+- `@next/bundle-analyzer` to inspect the bundle
+- Vercel Speed Insights + Web Analytics for production metrics

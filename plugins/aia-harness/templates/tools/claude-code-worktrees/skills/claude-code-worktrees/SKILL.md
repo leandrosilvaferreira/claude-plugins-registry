@@ -6,43 +6,43 @@ version: 0.1.0
 
 # Claude Code — Git Worktrees
 
-Skill para **tirar dúvidas** e **executar ações utilitárias** sobre worktrees no Claude Code.
+Skill for **answering questions** and **performing utility actions** about worktrees in Claude Code.
 
-> Para criar workspace isolado antes de implementar features, use `superpowers:using-git-worktrees`.
-> Esta skill cobre as features nativas do Claude Code: flags CLI, ferramentas, hooks, configuração e subagentes.
-
----
-
-## Conceito rápido
-
-Um git worktree é um diretório de trabalho separado com branch própria, compartilhando o mesmo histórico e remote do repo principal. Cada sessão Claude Code em seu próprio worktree evita colisões de edição entre sessões paralelas.
+> To create an isolated workspace before implementing features, use `superpowers:using-git-worktrees`.
+> This skill covers Claude Code's native features: CLI flags, tools, hooks, configuration, and subagents.
 
 ---
 
-## Iniciar Claude em um worktree
+## Quick concept
 
-### Flag `--worktree` / `-w`
+A git worktree is a separate working directory with its own branch, sharing the same history and remote as the main repo. Each Claude Code session in its own worktree avoids edit collisions between parallel sessions.
+
+---
+
+## Starting Claude in a worktree
+
+### `--worktree` / `-w` flag
 
 ```bash
-# Cria worktree em .claude/worktrees/feature-auth/ com branch worktree-feature-auth
+# Creates worktree at .claude/worktrees/feature-auth/ with branch worktree-feature-auth
 claude --worktree feature-auth
 
-# Segunda sessão isolada em paralelo
+# Second isolated session in parallel
 claude --worktree bugfix-123
 
-# Nome gerado automaticamente (ex: bright-running-fox)
+# Auto-generated name (e.g. bright-running-fox)
 claude --worktree
 ```
 
-Adicione `.claude/worktrees/` ao `.gitignore` para não aparecer como untracked no checkout principal.
+Add `.claude/worktrees/` to `.gitignore` so it does not appear as untracked in the main checkout.
 
-### Primeira vez num diretório
+### First time in a directory
 
-Antes de usar `--worktree` num diretório novo, rodar `claude` uma vez para aceitar o workspace trust dialog. Sem isso, `--worktree` termina com erro.
+Before using `--worktree` in a new directory, run `claude` once to accept the workspace trust dialog. Without this, `--worktree` exits with an error.
 
-### Branch base do worktree
+### Worktree base branch
 
-Por padrão, o worktree parte de `origin/HEAD` (remote limpo). Para mudar:
+By default, the worktree starts from `origin/HEAD` (clean remote). To change:
 
 ```json
 {
@@ -52,25 +52,25 @@ Por padrão, o worktree parte de `origin/HEAD` (remote limpo). Para mudar:
 }
 ```
 
-`"head"` → parte do `HEAD` local (inclui commits não pushados). Aceita só `"fresh"` ou `"head"`.
+`"head"` → starts from local `HEAD` (includes unpushed commits). Only accepts `"fresh"` or `"head"`.
 
-### Worktree a partir de um PR
+### Worktree from a PR
 
 ```bash
-# Pelo número do PR
+# By PR number
 claude --worktree "#1234"
 
-# Ou pela URL completa do GitHub PR
+# Or by full GitHub PR URL
 claude --worktree "https://github.com/org/repo/pull/1234"
 ```
 
-Cria worktree em `.claude/worktrees/pr-1234` fazendo fetch de `pull/1234/head`.
+Creates worktree at `.claude/worktrees/pr-1234` by fetching `pull/1234/head`.
 
 ---
 
-## Copiar arquivos gitignored para worktrees
+## Copying gitignored files to worktrees
 
-Worktrees são checkouts limpos — `.env`, `.env.local`, etc. **não estão presentes**. Para copiá-los automaticamente, criar `.worktreeinclude` na raiz do projeto:
+Worktrees are clean checkouts — `.env`, `.env.local`, etc. **are not present**. To copy them automatically, create `.worktreeinclude` at the project root:
 
 ```text
 .env
@@ -78,93 +78,93 @@ Worktrees são checkouts limpos — `.env`, `.env.local`, etc. **não estão pre
 config/secrets.json
 ```
 
-Usa sintaxe `.gitignore`. Só copia arquivos que estejam **também** no `.gitignore` — arquivos rastreados nunca são duplicados.
+Uses `.gitignore` syntax. Only copies files that are **also** in `.gitignore` — tracked files are never duplicated.
 
-Aplica-se a: `--worktree`, worktrees de subagentes, e sessões paralelas no desktop app.
-
----
-
-## Ferramentas nativas (dentro de uma sessão)
-
-Durante uma sessão Claude Code, pedir ao Claude:
-
-- `"work in a worktree"` → Claude usa a tool `EnterWorktree` para criar e entrar num worktree
-- `"exit worktree"` → Claude usa `ExitWorktree`
-
-Subagentes criados com `Agent tool` com `isolation: "worktree"` recebem worktrees temporários automaticamente.
+Applies to: `--worktree`, subagent worktrees, and parallel sessions in the desktop app.
 
 ---
 
-## Isolamento de subagentes
+## Native tools (within a session)
 
-### Ad-hoc (pedindo ao Claude)
+During a Claude Code session, ask Claude:
+
+- `"work in a worktree"` → Claude uses the `EnterWorktree` tool to create and enter a worktree
+- `"exit worktree"` → Claude uses `ExitWorktree`
+
+Subagents created with the `Agent tool` with `isolation: "worktree"` receive temporary worktrees automatically.
+
+---
+
+## Subagent isolation
+
+### Ad-hoc (asking Claude)
 
 > "use worktrees for your agents"
 
-### Permanente em subagente customizado
+### Permanent in a custom subagent
 
-Frontmatter do agente:
+Agent frontmatter:
 
 ```yaml
 isolation: worktree
 ```
 
-Cada subagente recebe worktree temporário removido automaticamente ao terminar **sem alterações**.
+Each subagent receives a temporary worktree removed automatically upon finishing **without changes**.
 
-Worktrees de subagentes partem da mesma `baseRef` configurada para `--worktree`.
+Subagent worktrees start from the same `baseRef` configured for `--worktree`.
 
 ---
 
-## Limpeza e ciclo de vida
+## Cleanup and lifecycle
 
-| Situação ao sair | Comportamento |
-|------------------|---------------|
-| Sem commits, sem changes, sem untracked | Worktree e branch removidos automaticamente |
-| Sessão tem nome (`--name`) + sem changes | Claude pergunta antes de remover |
-| Com commits ou changes | Claude pergunta: manter ou remover |
-| Run não-interativo (`--worktree` + `-p`) | **Não** limpa automaticamente — remover manualmente |
+| State on exit | Behavior |
+|---------------|----------|
+| No commits, no changes, no untracked files | Worktree and branch removed automatically |
+| Session has name (`--name`) + no changes | Claude asks before removing |
+| Has commits or changes | Claude asks: keep or remove |
+| Non-interactive run (`--worktree` + `-p`) | Does **not** clean up automatically — remove manually |
 
-Limpar worktree não-interativo:
+Clean up non-interactive worktree:
 ```bash
-git worktree remove .claude/worktrees/nome-do-worktree
+git worktree remove .claude/worktrees/worktree-name
 ```
 
-Worktrees de subagentes órfãos (crash/interrupção) são removidos no próximo startup se forem mais antigos que `cleanupPeriodDays` e não tiverem changes.
+Orphaned subagent worktrees (crash/interruption) are removed on the next startup if they are older than `cleanupPeriodDays` and have no changes.
 
 ---
 
-## Gerenciamento manual com git
+## Manual management with git
 
 ```bash
-# Criar worktree em nova branch
+# Create worktree on new branch
 git worktree add ../project-feature-a -b feature-a
 
-# Criar worktree de branch existente
+# Create worktree from existing branch
 git worktree add ../project-bugfix bugfix-123
 
-# Iniciar Claude no worktree
+# Start Claude in the worktree
 cd ../project-feature-a && claude
 
-# Listar worktrees
+# List worktrees
 git worktree list
 
-# Remover worktree
+# Remove worktree
 git worktree remove ../project-feature-a
 ```
 
-Cada worktree novo precisa do setup do projeto (deps, env virtual, etc).
+Each new worktree needs project setup (deps, virtual env, etc.).
 
 ---
 
-## Hooks para customização avançada
+## Hooks for advanced customization
 
 ### `WorktreeCreate`
 
-Substitui a lógica padrão de `git worktree add`. Útil para: VCS não-git (SVN, Perforce, Mercurial), posição personalizada, lógica de branch custom.
+Replaces the default `git worktree add` logic. Useful for: non-git VCS (SVN, Perforce, Mercurial), custom placement, custom branch logic.
 
-Recebe JSON via stdin com o campo `name`. Deve imprimir o path do diretório criado no stdout.
+Receives JSON via stdin with the `name` field. Must print the created directory path to stdout.
 
-Exemplo SVN:
+SVN example:
 ```json
 {
   "hooks": {
@@ -184,18 +184,18 @@ Exemplo SVN:
 
 ### `WorktreeRemove`
 
-Parceiro do `WorktreeCreate` — limpa ao final da sessão.
+Partner of `WorktreeCreate` — cleans up at end of session.
 
-> Quando `WorktreeCreate` está configurado, `.worktreeinclude` **não** é processado automaticamente. Copiar configs locais dentro do hook script.
+> When `WorktreeCreate` is configured, `.worktreeinclude` is **not** processed automatically. Copy local configs inside the hook script.
 
 ---
 
 ## Desktop App
 
-O desktop app cria um worktree para **cada nova sessão** automaticamente — sem flag necessária. Ver [desktop parallel sessions](/en/desktop#work-in-parallel-with-sessions).
+The desktop app creates a worktree for **each new session** automatically — no flag needed. See [desktop parallel sessions](/en/desktop#work-in-parallel-with-sessions).
 
 ---
 
-## Referências adicionais
+## Additional references
 
-- **`references/worktree-reference.md`** — tabela completa de cenários, troubleshooting, e comparação com subagents/agent teams
+- **`references/worktree-reference.md`** — full scenario table, troubleshooting, and comparison with subagents/agent teams

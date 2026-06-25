@@ -6,35 +6,35 @@ paths:
 
 # C# / .NET — Coding Standards
 
-**Fonte:** Microsoft .NET Coding Conventions · docs.microsoft.com
+**Source:** Microsoft .NET Coding Conventions · docs.microsoft.com
 
-## Anti-padrões
+## Anti-patterns
 
-| Proibido | Alternativa |
-|----------|-------------|
-| `var` para tipos não-óbvios na inicialização | Tipo explícito para clareza |
-| `catch (Exception e)` genérico | Capturar exceção específica |
-| Campos públicos em classes | Propriedades com getter/setter |
+| Forbidden | Alternative |
+| --------- | ----------- |
+| `var` for non-obvious types at initialization | Explicit type for clarity |
+| Generic `catch (Exception e)` | Catch specific exception |
+| Public fields in classes | Properties with getter/setter |
 | `String.Format("x={0}", x)` | String interpolation `$"x={x}"` |
-| Evento invocado sem verificação null | Operador null-conditional `evento?.Invoke(...)` |
-| `Task` não aguardado (`async void` sem motivo) | `async Task` e sempre `await` |
-| `if (x == null)` para tipos de referência modernos | Pattern matching `if (x is null)` |
-| LINQ com side effects em predicados | Side effects fora do LINQ |
-| `Thread.Sleep()` em async code | `await Task.Delay()` |
-| Dispor objetos `IDisposable` manualmente | `using` statement / `using` declaration |
+| Event invoked without null check | Null-conditional operator `event?.Invoke(...)` |
+| Unawaited `Task` (`async void` without reason) | `async Task` and always `await` |
+| `if (x == null)` for modern reference types | Pattern matching `if (x is null)` |
+| LINQ with side effects in predicates | Side effects outside LINQ |
+| `Thread.Sleep()` in async code | `await Task.Delay()` |
+| Manually disposing `IDisposable` objects | `using` statement / `using` declaration |
 
-## Convenções
+## Conventions
 
-- Nomenclatura: `PascalCase` classes/métodos/propriedades · `camelCase` variáveis locais/parâmetros · `_camelCase` campos privados · `I<Nome>` interfaces
-- `readonly` para campos que não mudam após construção
-- `record` para data classes imutáveis (C# 9+)
-- Nullable reference types habilitado (`<Nullable>enable</Nullable>`)
-- `async`/`await` até a raiz — nunca `.Result` ou `.Wait()` em código async (deadlock)
-- LINQ: preferencialmente syntax de método; query syntax para joins complexos
+- Naming: `PascalCase` classes/methods/properties · `camelCase` local variables/parameters · `_camelCase` private fields · `I<Name>` interfaces
+- `readonly` for fields that do not change after construction
+- `record` for immutable data classes (C# 9+)
+- Nullable reference types enabled (`<Nullable>enable</Nullable>`)
+- `async`/`await` all the way to the root — never `.Result` or `.Wait()` in async code (deadlock)
+- LINQ: prefer method syntax; query syntax for complex joins
 
 ## Tooling
 
-- Roslyn Analyzers na pipeline (`<TreatWarningsAsErrors>true</TreatWarningsAsErrors>`)
-- StyleCop.Analyzers para estilo
-- `dotnet format` para formatação
-- `dotnet test` com cobertura via `coverlet`
+- Roslyn Analyzers in the pipeline (`<TreatWarningsAsErrors>true</TreatWarningsAsErrors>`)
+- StyleCop.Analyzers for style
+- `dotnet format` for formatting
+- `dotnet test` with coverage via `coverlet`

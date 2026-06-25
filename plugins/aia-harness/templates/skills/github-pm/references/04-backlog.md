@@ -1,8 +1,8 @@
-# Workflow 4: Ver backlog e issues pendentes
+# Workflow 4: View backlog and pending issues
 
-## Visualizações rápidas
+## Quick views
 
-Listar issues abertas (backlog geral):
+List open issues (general backlog):
 
 ```bash
 gh issue list --repo <owner>/<repo> --state open \
@@ -10,31 +10,31 @@ gh issue list --repo <owner>/<repo> --state open \
   --limit 30
 ```
 
-Filtrar por label:
+Filter by label:
 
 ```bash
 gh issue list --repo <owner>/<repo> --label "bug" --state open
 ```
 
-Filtrar por assignee (meu trabalho):
+Filter by assignee (my work):
 
 ```bash
 gh issue list --repo <owner>/<repo> --assignee "@me" --state open
 ```
 
-## Ver projetos v2
+## View Projects v2
 
 ```bash
 gh project list --owner <owner> --format json
 gh project item-list <project_number> --owner <owner> --format json
 ```
 
-## Priorização
+## Prioritization
 
-Ao apresentar o backlog ao usuário:
+When presenting the backlog to the user:
 
-1. Agrupar por status atual (Triage / Backlog / In Progress / In Review)
-2. Destacar Issues "In Progress" sem atividade recente (possível abandono)
-3. Destacar Issues "Triage" sem triagem há mais de 3 dias
+1. Group by current status (Triage / Backlog / In Progress / In Review)
+2. Highlight "In Progress" issues with no recent activity (possible abandonment)
+3. Highlight "Triage" issues without triage for more than 3 days
 
-Nunca reordenar silenciosamente — apresentar e perguntar ao usuário.
+Never silently reorder — present and ask the user.

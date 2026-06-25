@@ -6,23 +6,23 @@ allowed-tools: Bash(gh *), Bash(git *)
 
 Issue: !`gh issue view ${ARGUMENTS:-} --json number,title,labels,body 2>/dev/null || echo "NOT_FOUND"`
 Config PM: !`cat .claude/pm-config.json 2>/dev/null || echo "NOT_FOUND"`
-Worktrees existentes: !`git worktree list 2>/dev/null`
+Existing worktrees: !`git worktree list 2>/dev/null`
 
-Use a skill `github-pm` para executar o workflow de início de trabalho (Workflow 2).
-Número da issue: `$ARGUMENTS`.
+Use the `github-pm` skill to execute the start work workflow (Workflow 2).
+Issue number: `$ARGUMENTS`.
 
-A skill irá:
+The skill will:
 
-1. Ler detalhes da issue
-2. Sugerir nome da branch (tipo/N-slug)
-3. Criar worktree em .claude/worktrees/
-4. Mover issue para In Progress no Projects v2
-5. Comentar na issue
+1. Read issue details
+2. Suggest a branch name (type/N-slug)
+3. Create a worktree in .claude/worktrees/
+4. Move the issue to In Progress in Projects v2
+5. Comment on the issue
 
-## Após concluir o setup da issue
+## After completing the issue setup
 
-Quando o worktree estiver criado e a issue em In Progress, invoque a skill
-`superpowers:brainstorming` passando o contexto completo da issue:
+Once the worktree is created and the issue is In Progress, invoke the
+`superpowers:brainstorming` skill passing the full issue context:
 
 ```text
 Issue #<N>: <title>
@@ -30,13 +30,13 @@ Labels: <labels>
 Body:
 <body>
 
-Objetivo: gerar um plano de implementação detalhado com abordagem técnica,
-arquitetura, arquivos a criar/modificar, casos de borda e ordem de execução.
+Goal: generate a detailed implementation plan with technical approach,
+architecture, files to create/modify, edge cases, and execution order.
 ```
 
-A skill produzirá um plano estruturado. Apresente o plano ao usuário e aguarde
-confirmação antes de iniciar a implementação.
+The skill will produce a structured plan. Present the plan to the user and wait
+for confirmation before starting implementation.
 
-**Quando o usuário aprovar o plano**, use a skill `superpowers:writing-plans`
-para registrar o plano e em seguida inicie a implementação seguindo a ordem
-definida no plano aprovado.
+**When the user approves the plan**, use the `superpowers:writing-plans`
+skill to record the plan, then begin implementation following the order
+defined in the approved plan.

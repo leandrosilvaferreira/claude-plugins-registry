@@ -7,8 +7,8 @@ allowed-tools: Bash(gh *), Bash(git *), Write
 Config PM: !`cat .claude/pm-config.json 2>/dev/null || echo "NOT_FOUND"`
 Remote: !`git remote get-url origin 2>/dev/null || echo "unknown"`
 
-Use a skill `github-pm` para executar o workflow de criação de issue (Workflow 1).
-Para CRUD da issue, a skill `github-issues` fornece as ferramentas MCP necessárias.
+Use the `github-pm` skill to execute the issue creation workflow (Workflow 1).
+For issue CRUD, the `github-issues` skill provides the necessary MCP tools.
 
-Se argumento fornecido (`$ARGUMENTS`), use como título inicial da issue.
-Confirme título, tipo (bug/feature/task) e critérios de aceite com o usuário antes de criar.
+If an argument is provided (`$ARGUMENTS`), use it as the initial issue title.
+Confirm the title, type (bug/feature/task), and acceptance criteria with the user before creating.

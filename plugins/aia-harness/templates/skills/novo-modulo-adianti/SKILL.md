@@ -4,7 +4,7 @@ description: This skill should be used to scaffold a complete new CRUD module in
 version: 1.2.0
 ---
 
-# Novo Módulo Adianti
+# New Adianti Module
 
 Scaffold a new CRUD module (model + list + form + menu) for an Adianti project.
 The goal is a module **indistinguishable from the ones already in the codebase** —
@@ -133,20 +133,20 @@ class FornecedorList extends TPage
         $this->form = new BootstrapFormBuilder('form_search_Fornecedor');
         $this->form->setFormTitle('Fornecedores');
         $name = new TEntry('name');
-        $this->form->addFields([new TLabel('Nome')], [$name]);
+        $this->form->addFields([new TLabel('Name')], [$name]);
         $this->form->setData(TSession::getValue('FornecedorList_filter_data'));
-        $this->form->addAction('Pesquisar', new TAction([$this, 'onSearch']), 'fa:search blue');
-        $this->form->addActionLink('Novo', new TAction(['FornecedorForm', 'onEdit']), 'fa:plus green');
+        $this->form->addAction('Search', new TAction([$this, 'onSearch']), 'fa:search blue');
+        $this->form->addActionLink('New', new TAction(['FornecedorForm', 'onEdit']), 'fa:plus green');
 
         // DataGrid — call createModel() AFTER all columns and actions are added
         $this->datagrid = new BootstrapDatagridWrapper(new TDataGrid);
         $this->datagrid->addColumn(new TDataGridColumn('id',   'ID',   'center', '10%'));
-        $this->datagrid->addColumn(new TDataGridColumn('name', 'Nome', 'left',   '80%'));
+        $this->datagrid->addColumn(new TDataGridColumn('name', 'Name', 'left',   '80%'));
 
         $action_edit   = new TDataGridAction(['FornecedorForm', 'onEdit'],  ['id' => '{id}']);
         $action_delete = new TDataGridAction([$this, 'onDelete'],            ['id' => '{id}']);
-        $this->datagrid->addAction($action_edit,   'Editar',  'far:edit blue');
-        $this->datagrid->addAction($action_delete, 'Excluir', 'far:trash-alt red');
+        $this->datagrid->addAction($action_edit,   'Edit',   'far:edit blue');
+        $this->datagrid->addAction($action_delete, 'Delete', 'far:trash-alt red');
         $this->datagrid->createModel();   // REQUIRED — must be called after all columns
 
         // Pagination
@@ -209,13 +209,13 @@ class FornecedorForm extends TPage
         $name = new TEntry('name');
 
         $id->setEditable(false);
-        $name->addValidation('Nome', new TRequiredValidator);
+        $name->addValidation('Name', new TRequiredValidator);
 
         $this->form->addFields([new TLabel('ID')],   [$id]);
-        $this->form->addFields([new TLabel('Nome')], [$name]);
+        $this->form->addFields([new TLabel('Name')], [$name]);
 
-        $this->form->addAction('Salvar',  new TAction([$this, 'onSave']),   'fa:save green');
-        $this->form->addActionLink('Lista', new TAction(['FornecedorList', 'onReload']), 'fa:table blue');
+        $this->form->addAction('Save',  new TAction([$this, 'onSave']),   'fa:save green');
+        $this->form->addActionLink('List', new TAction(['FornecedorList', 'onReload']), 'fa:table blue');
 
         $vbox = new TVBox;
         $vbox->style = 'width:100%';
@@ -232,7 +232,7 @@ class FornecedorForm extends TPage
             $data = $this->form->getData();                // 3. read form data
 
             // 4. custom business validation (example)
-            // if (empty($data->name)) throw new Exception("Nome obrigatório.");
+            // if (empty($data->name)) throw new Exception("Name is required.");
 
             $object = new Fornecedor;                      // 5. new or load existing by PK
             $object->fromArray((array) $data);             // 6. fill from form data
@@ -257,7 +257,7 @@ class FornecedorForm extends TPage
                 TTransaction::open('nome_banco');           // REQUIRED even for reads
                 $object = new Fornecedor($param['id']);
                 if ($object->empresa_id !== funcao::RetornaEmpresaId()) {
-                    throw new Exception("Acesso negado.");
+                    throw new Exception("Access denied.");
                 }
                 $this->form->setData($object);
                 TTransaction::close();
@@ -276,7 +276,7 @@ class FornecedorForm extends TPage
             TTransaction::open('nome_banco');
             $object = new Fornecedor($param['id']);
             if ($object->empresa_id !== funcao::RetornaEmpresaId()) {
-                throw new Exception("Acesso negado.");
+                throw new Exception("Access denied.");
             }
             $object->delete();
             TTransaction::close();
@@ -307,7 +307,7 @@ explicit so nothing ships half-defined.
 ## Multi-Tenant Security
 
 This project uses `empresa_id` to isolate tenants. **Enforce on every operation** —
-never skip, even for read-only edits. Violation → `throw new Exception("Acesso negado.")`,
+never skip, even for read-only edits. Violation → `throw new Exception("Access denied.")`,
 which the catch block will rollback and display.
 
 | Operation | Rule |
@@ -325,7 +325,7 @@ $criteria->add(new TFilter('empresa_id', '=', funcao::RetornaEmpresaId()));
 // Guard pattern for onEdit / onDelete
 $object = new Fornecedor($param['id']);
 if ($object->empresa_id !== funcao::RetornaEmpresaId()) {
-    throw new Exception("Acesso negado.");
+    throw new Exception("Access denied.");
 }
 ```
 

@@ -1,27 +1,27 @@
-## Resumo
+## Summary
 
-<!-- Descreva o que esta PR faz e por quê -->
+<!-- Describe what this PR does and why -->
 
-## Issues relacionadas
+## Related issues
 
-<!-- Liste as issues que esta PR resolve -->
+<!-- List the issues this PR resolves -->
 Closes #
 
-## Tipo de mudança
+## Type of change
 
 - [ ] Bug fix
-- [ ] Nova feature
-- [ ] Refatoração (sem mudança de comportamento)
-- [ ] Documentação
-- [ ] Outro
+- [ ] New feature
+- [ ] Refactoring (no behavior change)
+- [ ] Documentation
+- [ ] Other
 
 ## Checklist
 
-- [ ] Código segue os padrões do projeto (CLAUDE.md)
-- [ ] Testes adicionados/atualizados para a mudança
-- [ ] Sem `console.log` ou debug code residual
-- [ ] Self-review realizado
+- [ ] Code follows project standards (CLAUDE.md)
+- [ ] Tests added/updated for the change
+- [ ] No residual `console.log` or debug code
+- [ ] Self-review completed
 
-## Como testar
+## How to test
 
-<!-- Passos para validar esta PR -->
+<!-- Steps to validate this PR -->

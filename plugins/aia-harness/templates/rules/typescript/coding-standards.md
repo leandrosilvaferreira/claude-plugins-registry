@@ -7,35 +7,35 @@ paths:
 
 # TypeScript — Coding Standards
 
-**Fontes:** Google TypeScript Style Guide · google/gts · antigravity.codes
+**Sources:** Google TypeScript Style Guide · google/gts · antigravity.codes
 
-## Anti-padrões
+## Anti-patterns
 
-| Proibido | Alternativa |
-|----------|-------------|
-| `any` | Tipos explícitos, `unknown` com narrowing, generics |
-| `Record<string, any>` | Interfaces específicas do domínio |
-| Type assertion `as Foo` sem narrowing | Type guard `isFoo(x)` ou narrowing com `instanceof`/`in` |
-| `// @ts-ignore` | `// @ts-expect-error` com comentário obrigatório |
-| `==` para comparação | `===` sempre |
-| `!` non-null assertion sem justificativa | Verificação explícita ou `?.` |
-| Arquivo > 350 LOC | Dividir em módulos menores por responsabilidade |
-| Magic strings repetidos | Constantes ou `as const` enum objects |
-| `namespace` | Módulos ES (`import`/`export`) |
-| `enum` numérico | `const` object com `as const` ou string union |
+| Forbidden | Alternative |
+| --------- | ----------- |
+| `any` | Explicit types, `unknown` with narrowing, generics |
+| `Record<string, any>` | Domain-specific interfaces |
+| Type assertion `as Foo` without narrowing | Type guard `isFoo(x)` or narrowing with `instanceof`/`in` |
+| `// @ts-ignore` | `// @ts-expect-error` with mandatory comment |
+| `==` for comparison | `===` always |
+| `!` non-null assertion without justification | Explicit check or `?.` |
+| File > 350 LOC | Split into smaller modules by responsibility |
+| Repeated magic strings | Constants or `as const` enum objects |
+| `namespace` | ES modules (`import`/`export`) |
+| Numeric `enum` | `const` object with `as const` or string union |
 
-## Convenções
+## Conventions
 
-- `strict: true` no `tsconfig.json` — nunca desativar
-- Path alias `@/*` para todos os imports internos
-- `type` para unions/intersections · `interface` para objetos extensíveis
-- Tipos derivados: `ReturnType<typeof fn>`, `Parameters<typeof fn>`, `Awaited<T>`
-- Zod para validação runtime em boundaries externos (input de usuário, APIs externas)
-- Funções públicas: sempre tipar return type explicitamente
-- Generics: nome descritivo quando não óbvio (`TEntity`, não `T` para múltiplos type params)
+- `strict: true` in `tsconfig.json` — never disable
+- Path alias `@/*` for all internal imports
+- `type` for unions/intersections · `interface` for extensible objects
+- Derived types: `ReturnType<typeof fn>`, `Parameters<typeof fn>`, `Awaited<T>`
+- Zod for runtime validation at external boundaries (user input, external APIs)
+- Public functions: always type return type explicitly
+- Generics: descriptive name when not obvious (`TEntity`, not `T` for multiple type params)
 
 ## Tooling
 
-- `tsc --noEmit` na pipeline (sem build step = verificação pura)
-- ESLint + `@typescript-eslint` com config strict
-- Prettier ou Biome para formatação
+- `tsc --noEmit` in the pipeline (no build step = pure type check)
+- ESLint + `@typescript-eslint` with strict config
+- Prettier or Biome for formatting

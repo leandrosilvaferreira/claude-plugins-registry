@@ -5,21 +5,21 @@ paths:
 
 # Subagent Dispatch
 
-## Regra
+## Rule
 
-Ao despachar subagentes para qualquer tarefa de implementação, revisão ou análise:
+When dispatching subagents for any implementation, review, or analysis task:
 
-1. **Consulte a tabela `## Workflow & Agents` no CLAUDE.md** antes de escolher o agente.
-2. **Use o especialista correspondente** ao tipo de tarefa — nunca o agente genérico quando um especialista estiver listado.
-3. **Passe o nome exato** como `subagent_type` no despacho.
+1. **Consult the `## Workflow & Agents` table in CLAUDE.md** before choosing an agent.
+2. **Use the specialist that matches** the task type — never the generic agent when a specialist is listed.
+3. **Pass the exact name** as `subagent_type` in the dispatch.
 
-## Mapeamento de tarefas → agentes
+## Task → agent mapping
 
-| Tipo de tarefa | Agente a usar |
+| Task type | Agent to use |
 |---|---|
-| Implementação de código | especialista de stack (ex: `php-reviewer`, `go-reviewer`) |
-| Revisão de código | `code-reviewer` + especialista de stack + `security-reviewer` |
-| Revisão de segurança | `security-reviewer` |
-| Orquestração de fluxo complexo | `orchestrator` |
+| Code implementation | stack specialist (e.g. `php-reviewer`, `go-reviewer`) |
+| Code review | `code-reviewer` + stack specialist + `security-reviewer` |
+| Security review | `security-reviewer` |
+| Complex flow orchestration | `orchestrator` |
 
-Se nenhum especialista cobrir a tarefa, use o agente genérico como fallback.
+If no specialist covers the task, use the generic agent as a fallback.

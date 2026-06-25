@@ -6,28 +6,28 @@ allowed-tools: Bash(gh *), Bash(git *), AskUserQuestion
 
 Issue: !`gh issue view ${ARGUMENTS:-} --json number,title,labels 2>/dev/null || echo "NOT_FOUND"`
 Config PM: !`cat .claude/pm-config.json 2>/dev/null || echo "NOT_FOUND"`
-Worktrees existentes: !`git worktree list 2>/dev/null`
-Branch atual: !`git branch --show-current`
+Existing worktrees: !`git worktree list 2>/dev/null`
+Current branch: !`git branch --show-current`
 
-Use a skill `github-pm` para executar o workflow de criação de worktree:
+Use the `github-pm` skill to execute the worktree creation workflow:
 
-1. Ler `gh issue view $ARGUMENTS --json title,labels` para determinar tipo e título.
-2. Gerar slug: tipo/N-titulo-em-kebab-case (máx 60 chars; especiais → `-`)
-   - tipo: `feat` (feature/enhancement), `fix` (bug), `chore` (task), `docs`
-   - Exemplo: `feat/42-add-payment-flow`
-3. Confirmar nome da branch com o usuário via AskUserQuestion.
-4. Se worktree já existe para o slug → avisar e perguntar se reabre.
-5. Criar worktree:
+1. Read `gh issue view $ARGUMENTS --json title,labels` to determine the type and title.
+2. Generate slug: type/N-title-in-kebab-case (max 60 chars; special chars → `-`)
+   - type: `feat` (feature/enhancement), `fix` (bug), `chore` (task), `docs`
+   - Example: `feat/42-add-payment-flow`
+3. Confirm the branch name with the user via AskUserQuestion.
+4. If a worktree already exists for the slug → warn and ask if it should be reopened.
+5. Create the worktree:
 
    ```bash
    git worktree add .claude/worktrees/<SLUG> -b <SLUG>
    ```
 
-6. Entrar na worktree via EnterWorktree (se disponível) ou instruir o usuário.
-7. Comentar na issue: "🤖 Worktree criada: branch `<SLUG>`"
-8. Mover issue para In Progress no Projects v2 (usar pm-config.json).
+6. Enter the worktree via EnterWorktree (if available) or instruct the user.
+7. Comment on the issue: "🤖 Worktree created: branch `<SLUG>`"
+8. Move the issue to In Progress in Projects v2 (use pm-config.json).
 
-REGRAS:
+RULES:
 
-- NUNCA criar sem `-b <SLUG>` (sempre nova branch)
-- NUNCA partir de main sem criar branch separada
+- NEVER create without `-b <SLUG>` (always a new branch)
+- NEVER branch off main without creating a separate branch

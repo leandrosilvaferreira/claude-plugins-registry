@@ -6,35 +6,35 @@ paths:
 
 # Java + Spring Boot — Coding Standards
 
-**Fontes:** JetBrains/junie-guidelines · Spring official docs
+**Sources:** JetBrains/junie-guidelines · Spring official docs
 
-## Anti-padrões
+## Anti-patterns
 
-| Proibido | Alternativa |
-|----------|-------------|
-| `@Autowired` em campo | Constructor injection (testável + imutável) |
-| Lógica de negócio em `@Controller` / `@RestController` | Mover para `@Service` |
-| `@Transactional` em Controller | Apenas em `@Service` |
-| Entidade JPA exposta diretamente na API | DTO de resposta + MapStruct/ModelMapper |
-| JPQL em strings literais espalhadas | Spring Data derived queries ou `@Query` centralizado |
-| `@Value` injetando configs individuais | `@ConfigurationProperties` por prefixo |
-| Consultas N+1 | `JOIN FETCH` ou `EntityGraph` |
-| `Optional.get()` sem `isPresent()` | `orElseThrow()` / `orElse()` |
-| `new` para criar beans gerenciados | Deixar o container criar via `@Bean` / `@Component` |
-| `HttpSession` para estado de aplicação | Redis / stateless JWT |
+| Forbidden | Alternative |
+| --------- | ----------- |
+| `@Autowired` on a field | Constructor injection (testable + immutable) |
+| Business logic in `@Controller` / `@RestController` | Move to `@Service` |
+| `@Transactional` in Controller | Only in `@Service` |
+| JPA entity exposed directly in the API | Response DTO + MapStruct/ModelMapper |
+| JPQL in scattered string literals | Spring Data derived queries or centralized `@Query` |
+| `@Value` injecting individual configs | `@ConfigurationProperties` by prefix |
+| N+1 queries | `JOIN FETCH` or `EntityGraph` |
+| `Optional.get()` without `isPresent()` | `orElseThrow()` / `orElse()` |
+| `new` to create managed beans | Let the container create via `@Bean` / `@Component` |
+| `HttpSession` for application state | Redis / stateless JWT |
 
-## Convenções
+## Conventions
 
-- `@RestController` = apenas roteamento + validação de entrada + delegação ao service
-- `@Service` = toda lógica de negócio + transações
-- `@Repository` = apenas operações de persistência
-- Validação de input com `@Valid` + Bean Validation (`@NotNull`, `@Size`, etc.)
-- Profiles: `application.yml` base + `application-{env}.yml` por ambiente
-- Nunca commitar secrets — usar `${ENV_VAR}` no `application.yml`
-- Testes: `@SpringBootTest` para integração · `@WebMvcTest` para camada web isolada · `@DataJpaTest` para repositórios
+- `@RestController` = routing only + input validation + delegation to service
+- `@Service` = all business logic + transactions
+- `@Repository` = persistence operations only
+- Input validation with `@Valid` + Bean Validation (`@NotNull`, `@Size`, etc.)
+- Profiles: `application.yml` base + `application-{env}.yml` per environment
+- Never commit secrets — use `${ENV_VAR}` in `application.yml`
+- Tests: `@SpringBootTest` for integration · `@WebMvcTest` for isolated web layer · `@DataJpaTest` for repositories
 
 ## Tooling
 
-- Actuator habilitado em produção (health, metrics)
-- Micrometer + Prometheus para métricas
-- Flyway ou Liquibase para migrations
+- Actuator enabled in production (health, metrics)
+- Micrometer + Prometheus for metrics
+- Flyway or Liquibase for migrations

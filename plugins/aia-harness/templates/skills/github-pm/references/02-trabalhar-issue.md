@@ -1,35 +1,35 @@
-# Workflow 2: Trabalhar em uma issue
+# Workflow 2: Work on an issue
 
-## Pré-condições
+## Preconditions
 
-- Issue existe e está no Backlog
-- `pm-config.json` disponível
+- Issue exists and is in Backlog
+- `pm-config.json` available
 
-## Passo a passo
+## Step by step
 
-1. Ler detalhes da issue:
+1. Read issue details:
 
    ```bash
    gh issue view <N> --json title,labels,body --repo <owner>/<repo>
    ```
 
-2. Gerar slug da branch: `tipo/N-titulo-em-kebab-case`
-   - tipo: `feat` (feature/enhancement), `fix` (bug), `chore` (task/infra), `docs`
-   - Limitar a 60 chars; caracteres especiais → `-`
-   - Exemplo: `feat/42-add-payment-flow`
+2. Generate branch slug: `type/N-title-in-kebab-case`
+   - type: `feat` (feature/enhancement), `fix` (bug), `chore` (task/infra), `docs`
+   - Limit to 60 chars; special characters → `-`
+   - Example: `feat/42-add-payment-flow`
 
-3. Confirmar o nome da branch com o usuário.
+3. Confirm the branch name with the user.
 
-4. Criar worktree (preferencialmente via `/pm:worktree-new <N>`):
+4. Create worktree (preferably via `/pm:worktree-new <N>`):
 
    ```bash
    git worktree add .claude/worktrees/<SLUG> -b <SLUG>
    ```
 
-5. Mover issue para In Progress no Projects v2 (usar IDs de pm-config.json):
+5. Move issue to In Progress in Projects v2 (use IDs from pm-config.json):
 
    ```bash
-   # GraphQL mutation — ver pm-config-schema.md para campos 
+   # GraphQL mutation — see pm-config-schema.md for fields
    gh api graphql -f query='mutation {
      updateProjectV2ItemFieldValue(input: {
        projectId: "<project_id>"
@@ -40,9 +40,9 @@
    }'
    ```
 
-6. Comentar na issue: "🤖 Iniciando trabalho na branch `<SLUG>`"
+6. Comment on the issue: "🤖 Starting work on branch `<SLUG>`"
 
-## Invariantes
+## Invariants
 
-- NUNCA criar branch diretamente em main sem `-b`
-- Se worktree já existe para o slug → perguntar se reabre
+- NEVER create branch directly on main without `-b`
+- If worktree already exists for the slug → ask if re-opening

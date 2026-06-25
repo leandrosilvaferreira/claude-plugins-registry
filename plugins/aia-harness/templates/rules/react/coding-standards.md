@@ -7,34 +7,34 @@ paths:
 
 # React — Coding Standards
 
-**Fontes:** Airbnb React Style Guide · antigravity.codes · React official docs
+**Sources:** Airbnb React Style Guide · antigravity.codes · React official docs
 
-## Anti-padrões
+## Anti-patterns
 
-| Proibido | Alternativa |
-|----------|-------------|
-| Inline functions em JSX em componentes que re-renderizam muito | Extrair + `useCallback` quando há dependentes do referencial |
-| `key={index}` em listas dinâmicas | IDs estáveis do dado |
-| `useEffect` para lógica síncrona derivada de estado | Estado derivado calculado inline ou `useMemo` |
-| Prop drilling > 2 níveis | Context, Zustand, ou Jotai |
-| Estado duplicado (mesmo dado em dois `useState`) | Fonte única de verdade; derivar o restante |
-| Mutação direta de estado | Sempre criar novo objeto/array |
-| Componente > 250 LOC | Extrair sub-componentes ou custom hooks |
-| `any` nos tipos de props | Interfaces explícitas |
-| Lógica de negócio dentro do componente | Custom hook (`use<Nome>`) |
-| `document.querySelector` em componente React | `useRef` |
+| Forbidden | Alternative |
+|-----------|-------------|
+| Inline functions in JSX on components that re-render frequently | Extract + `useCallback` when referential stability matters to dependents |
+| `key={index}` on dynamic lists | Stable IDs from the data |
+| `useEffect` for synchronous logic derived from state | Derived state calculated inline or with `useMemo` |
+| Prop drilling > 2 levels | Context, Zustand, or Jotai |
+| Duplicated state (same data in two `useState`) | Single source of truth; derive the rest |
+| Direct state mutation | Always create a new object/array |
+| Component > 250 LOC | Extract sub-components or custom hooks |
+| `any` in prop types | Explicit interfaces |
+| Business logic inside the component | Custom hook (`use<Name>`) |
+| `document.querySelector` in a React component | `useRef` |
 
-## Convenções
+## Conventions
 
-- Componentes: `PascalCase` · Custom hooks: `useCamelCase`
-- Props interface nomeada `<ComponentName>Props`
-- `export default` apenas para componentes de página; demais: named exports
-- Composição sobre herança — nunca `extends` em componentes
-- `memo()` apenas quando profiling confirmar problema de re-render
-- Acessibilidade: todo elemento interativo tem `aria-label` ou texto visível
+- Components: `PascalCase` · Custom hooks: `useCamelCase`
+- Props interface named `<ComponentName>Props`
+- `export default` only for page-level components; all others: named exports
+- Composition over inheritance — never `extends` on components
+- `memo()` only when profiling confirms a re-render problem
+- Accessibility: every interactive element has an `aria-label` or visible text
 
 ## Tooling
 
 - `eslint-plugin-react` + `eslint-plugin-react-hooks`
-- `eslint-plugin-jsx-a11y` para acessibilidade
-- React DevTools Profiler para medir antes de otimizar
+- `eslint-plugin-jsx-a11y` for accessibility
+- React DevTools Profiler to measure before optimizing

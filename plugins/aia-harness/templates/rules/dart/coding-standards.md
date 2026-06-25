@@ -6,41 +6,41 @@ paths:
 
 # Dart / Flutter — Coding Standards
 
-**Fontes:** dart.dev/effective-dart · flutter.dev/docs/development/style · Flutter repo style guide
+**Sources:** dart.dev/effective-dart · flutter.dev/docs/development/style · Flutter repo style guide
 
-## Anti-padrões
+## Anti-patterns
 
-| Proibido | Alternativa |
-|----------|-------------|
-| `dynamic` sem motivo | Tipos explícitos |
-| `setState` para lógica de negócio complexa | Provider / Riverpod / Bloc |
-| `print()` em produção | `debugPrint()` (respeitado pelo framework) ou logger |
-| Widget monolítico de 300+ linhas | Extrair em widgets menores com responsabilidade única |
-| `FutureBuilder` sem estado de loading/error | Tratar `ConnectionState.waiting` e erro explicitamente |
-| `!` (null assertion) sem verificação prévia | `?.` safe call ou `if (x != null)` |
-| Importar `dart:io` diretamente em widget | Abstrair atrás de interface/service |
-| `const` omitido onde possível | Sempre usar `const` para widgets imutáveis (melhora performance) |
-| `context.read()` no build | `context.read()` apenas em callbacks; `context.watch()` no build |
+| Forbidden | Alternative |
+| --------- | ----------- |
+| `dynamic` without reason | Explicit types |
+| `setState` for complex business logic | Provider / Riverpod / Bloc |
+| `print()` in production | `debugPrint()` (respected by the framework) or logger |
+| Monolithic widget of 300+ lines | Extract into smaller widgets with single responsibility |
+| `FutureBuilder` without loading/error state | Handle `ConnectionState.waiting` and error explicitly |
+| `!` (null assertion) without prior check | `?.` safe call or `if (x != null)` |
+| Importing `dart:io` directly in a widget | Abstract behind an interface/service |
+| `const` omitted where possible | Always use `const` for immutable widgets (improves performance) |
+| `context.read()` in build | `context.read()` only in callbacks; `context.watch()` in build |
 
-## Convenções (Dart)
+## Conventions (Dart)
 
-- `lowerCamelCase` funções/variáveis · `UpperCamelCase` tipos · `lowercase_with_underscores` arquivos e pacotes
-- Preferir `final` a `var` — imutabilidade por padrão
-- `late` apenas quando inicialização lazy é necessária e valor nunca será null
-- `extension` para adicionar métodos a tipos existentes sem herança
-- Docstrings com `///` para toda API pública
+- `lowerCamelCase` functions/variables · `UpperCamelCase` types · `lowercase_with_underscores` files and packages
+- Prefer `final` over `var` — immutability by default
+- `late` only when lazy initialization is required and the value will never be null
+- `extension` to add methods to existing types without inheritance
+- Docstrings with `///` for all public APIs
 
-## Convenções (Flutter)
+## Conventions (Flutter)
 
-- Estrutura: `lib/features/<feature>/{presentation,domain,data}/`
-- Widgets: `StatelessWidget` por padrão; `StatefulWidget` apenas quando estado local é inevitável
-- `Key` em listas dinâmicas de widgets
-- `Theme.of(context)` para cores e estilos — nunca hard-code
-- Imagens: `assets/images/` com `pubspec.yaml` declarando assets
+- Structure: `lib/features/<feature>/{presentation,domain,data}/`
+- Widgets: `StatelessWidget` by default; `StatefulWidget` only when local state is unavoidable
+- `Key` on dynamic widget lists
+- `Theme.of(context)` for colors and styles — never hard-code
+- Images: `assets/images/` declared in `pubspec.yaml`
 
 ## Tooling
 
-- `dart format` (formatador oficial, zero config)
-- `dart analyze` com `analysis_options.yaml` rigoroso
-- `flutter_lints` ou `very_good_analysis` como base
+- `dart format` (official formatter, zero config)
+- `dart analyze` with strict `analysis_options.yaml`
+- `flutter_lints` or `very_good_analysis` as base
 - `flutter test` + `integration_test` package

@@ -1,72 +1,72 @@
 ---
 name: setup-testing
-description: Semeia testes unitários num projeto que não tem nenhum — instala o framework recomendado para a stack, escreve um teste real num módulo existente, fia o script `test` e roda até passar verde. Use quando o projeto não tem testes, ao "configurar testes", "setup tests", "adicionar testes" ou "criar suíte de testes".
+description: Seeds unit tests in a project that has none — installs the recommended framework for the stack, writes a real test in an existing module, wires the `test` script, and runs until green. Use when the project has no tests, when asked to "configure tests", "setup tests", "add tests", or "create test suite".
 ---
 
 # Setup unit testing
 
-Semeia a infraestrutura de testes unitários e prova que roda. **Nunca alegue verde sem ter rodado e visto a saída.**
+Seeds unit test infrastructure and proves it runs. **Never claim green without having run it and seen the output.**
 
-## 1. Determinar o framework
+## 1. Determine the framework
 
-Leia o framework recomendado no `CLAUDE.md` (linha "recomendado: ..."). Se ausente, use a tabela pela stack detectada. **Confirme com o usuário** — ele pode escolher uma alternativa.
+Read the recommended framework in `CLAUDE.md` (line "recommended: ..."). If absent, use the table for the detected stack. **Confirm with the user** — they may choose an alternative.
 
-| Stack | Framework | Instalar | Config |
+| Stack | Framework | Install | Config |
 | --- | --- | --- | --- |
-| JS/TS + React/Next | Vitest + Testing Library + jsdom | `npm i -D vitest @testing-library/react @testing-library/jest-dom jsdom` (use o PM do projeto) | `vitest.config.ts` |
+| JS/TS + React/Next | Vitest + Testing Library + jsdom | `npm i -D vitest @testing-library/react @testing-library/jest-dom jsdom` (use project PM) | `vitest.config.ts` |
 | JS/TS + Vue/Nuxt | Vitest + @vue/test-utils + jsdom | `npm i -D vitest @vue/test-utils jsdom` | `vitest.config.ts` |
 | JS/TS + Vite | Vitest | `npm i -D vitest` | `vitest.config.ts` |
-| JS/TS Node puro | node:test | — (nativo desde Node 18) | — |
-| PHP + Laravel | Pest | `composer require --dev pestphp/pest && php artisan pest:install` | scaffold do Pest |
-| PHP outros | PHPUnit | `composer require --dev phpunit/phpunit` | `phpunit.xml` |
+| JS/TS Node only | node:test | — (native since Node 18) | — |
+| PHP + Laravel | Pest | `composer require --dev pestphp/pest && php artisan pest:install` | Pest scaffold |
+| PHP other | PHPUnit | `composer require --dev phpunit/phpunit` | `phpunit.xml` |
 | Python | pytest (+ pytest-django / pytest-asyncio / httpx) | `pip install -U pytest ...` | `pytest.ini` |
 | Go | testing (stdlib) | — | — |
 | Rust | `#[test]` | — | — |
-| JVM Spring Boot | JUnit 5 (spring-boot-starter-test) | normalmente já incluso — verificar `pom.xml`/`build.gradle` | — |
-| JVM Quarkus | JUnit 5 + @QuarkusTest | normalmente já incluso — verificar | — |
-| JVM genérico | JUnit 5 | adicionar `org.junit.jupiter:junit-jupiter` ao build file | — |
+| JVM Spring Boot | JUnit 5 (spring-boot-starter-test) | usually already included — check `pom.xml`/`build.gradle` | — |
+| JVM Quarkus | JUnit 5 + @QuarkusTest | usually already included — check | — |
+| JVM generic | JUnit 5 | add `org.junit.jupiter:junit-jupiter` to build file | — |
 | .NET | xUnit | `dotnet add package xunit xunit.runner.visualstudio Microsoft.NET.Test.Sdk` | — |
 
-## 2. Instalar (se necessário)
+## 2. Install (if needed)
 
-Para frameworks não-nativos: **confirme com o usuário antes de rodar o install** (ação de máquina). Rode o comando de install. Se built-in (Go, Rust, node:test), pule este passo.
+For non-native frameworks: **confirm with the user before running the install** (machine action). Run the install command. If built-in (Go, Rust, node:test), skip this step.
 
-## 3. Escrever o arquivo de config
+## 3. Write the config file
 
-Escreva o arquivo de config adaptado ao projeto real: caminhos corretos, ESM/CJS conforme o projeto, `environment: jsdom` para componentes de UI. Não coloque configuração genérica — leia a estrutura do projeto primeiro.
+Write the config file adapted to the real project: correct paths, ESM/CJS as the project uses, `environment: jsdom` for UI components. Do not use generic configuration — read the project structure first.
 
-## 4. Escrever 1 teste REAL
+## 4. Write 1 REAL test
 
-Escolha **um módulo puro/determinístico** existente (util, helper, função de domínio — poucos imports, sem IO/rede/DB). Leia o código, entenda o comportamento e escreva 1 teste unitário genuíno cobrindo o caminho feliz + 1 caso de borda.
+Choose **one pure/deterministic existing module** (util, helper, domain function — few imports, no IO/network/DB). Read the code, understand the behavior, and write 1 genuine unit test covering the happy path + 1 edge case.
 
-- Se nenhum módulo adequado existir, escreva um smoke test mínimo (piso garantido) e **diga explicitamente ao usuário** que é placeholder a ser substituído.
+- If no suitable module exists, write a minimal smoke test (guaranteed floor) and **explicitly tell the user** it is a placeholder to be replaced.
 
-## 5. Fiar o script de teste
+## 5. Wire the test script
 
-Garanta que o script de teste está declarado no manifesto do projeto (`package.json` `"test"`, `composer.json` `"scripts"."test"`, `Makefile` `test:`, etc.). Não duplique se já existir.
+Ensure the test script is declared in the project manifest (`package.json` `"test"`, `composer.json` `"scripts"."test"`, `Makefile` `test:`, etc.). Do not duplicate if it already exists.
 
-## 6. Rodar até verde
+## 6. Run until green
 
-Rode o comando de teste. Corrija erros de config, paths e imports até a saída mostrar verde. **Mostre a saída real** (contagem de pass/fail) ao usuário. Se a instalação falhar (rede/permissão), reporte o comando exato para o usuário rodar manualmente e **não** alegue verde.
+Run the test command. Fix config, path, and import errors until the output shows green. **Show the real output** (pass/fail count) to the user. If installation fails (network/permission), report the exact command for the user to run manually and do **not** claim green.
 
-## 7. Atualizar CLAUDE.md
+## 7. Update CLAUDE.md
 
-Após saída verde confirmada, no `CLAUDE.md` do projeto:
+After confirmed green output, in the project's `CLAUDE.md`:
 
-1. **Remova** a linha de aviso gerada pelo harness (e a linha em branco imediatamente após):
-
-   ```markdown
-   > Sem testes unitários ainda — recomendado: **...**. Rode `/setup-testing` para semear.
-   ```
-
-2. **Adicione** imediatamente abaixo do bloco `## Canonical commands` uma nota sobre a stack de testes configurada e a regra de cobertura:
+1. **Remove** the warning line generated by the harness (and the blank line immediately after):
 
    ```markdown
-   > **Testes:** `{framework}` — rode `{comando-de-teste}`. Escreva testes unitários para **toda** função nova ou módulo adicionado; nunca declare trabalho concluído sem testes passando.
+   > No unit tests yet — recommended: **...**. Run `/setup-testing` to seed.
    ```
 
-   Substitua `{framework}` e `{comando-de-teste}` pelos valores reais do projeto.
+2. **Add** immediately below the `## Canonical commands` block a note about the configured test stack and the coverage rule:
 
-## 8. Reportar
+   ```markdown
+   > **Tests:** `{framework}` — run `{test-command}`. Write unit tests for **every** new function or module added; never declare work complete without tests passing.
+   ```
 
-Resuma o que foi feito: framework instalado, arquivo de config criado, arquivo de teste criado, saída verde. Lembre o usuário de revisar o teste gerado e expandir a cobertura para casos reais do projeto.
+   Replace `{framework}` and `{test-command}` with the actual project values.
+
+## 8. Report
+
+Summarize what was done: framework installed, config file created, test file created, green output. Remind the user to review the generated test and expand coverage for real project cases.

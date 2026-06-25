@@ -5,60 +5,60 @@ paths:
 
 # Code Quality
 
-## Objetivo
+## Objective
 
-Garantir código legível, consistente, seguro para manutenção e pronto para revisão.
+Ensure code is readable, consistent, safe to maintain, and ready for review.
 
-## Faça
+## Do
 
-- Use nomes claros, semânticos e específicos.
-- Nomeie funções pelo que elas fazem.
-- Nomeie variáveis pelo que elas representam.
-- Prefira funções pequenas e focadas.
-- Prefira retornos explícitos.
-- Trate erros de forma clara e rastreável.
-- Inclua contexto útil em mensagens de erro.
-- Use logs para diagnosticar fluxos importantes.
-- Logue eventos relevantes, falhas externas e decisões críticas.
-- Mantenha comentários apenas quando explicarem intenção, decisão ou regra não óbvia.
-- Remova comentários obsoletos.
-- Remova código morto.
-- Remova imports, dependências e variáveis não utilizados.
-- Mantenha formatação consistente com o projeto.
-- Mantenha arquivos organizados por responsabilidade.
-- Evite funções com muitos parâmetros.
-- Use objetos, tipos ou estruturas nomeadas quando parâmetros ficarem ambíguos.
-- Prefira tipos explícitos quando melhorarem clareza.
-- Valide entradas em fronteiras do sistema.
-- Mantenha comportamento previsível e fácil de depurar.
-- Atualize documentação próxima ao código quando alterar comportamento relevante.
-- Garanta que o código esteja pronto para code review.
+- Use clear, semantic, and specific names.
+- Name functions by what they do.
+- Name variables by what they represent.
+- Prefer small, focused functions.
+- Prefer explicit returns.
+- Handle errors clearly and traceably.
+- Include useful context in error messages.
+- Use logs to diagnose important flows.
+- Log relevant events, external failures, and critical decisions.
+- Keep comments only when they explain intent, a decision, or a non-obvious rule.
+- Remove obsolete comments.
+- Remove dead code.
+- Remove unused imports, dependencies, and variables.
+- Keep formatting consistent with the project.
+- Keep files organized by responsibility.
+- Avoid functions with too many parameters.
+- Use named objects, types, or structures when parameters become ambiguous.
+- Prefer explicit types when they improve clarity.
+- Validate inputs at system boundaries.
+- Keep behavior predictable and easy to debug.
+- Update inline documentation when changing relevant behavior.
+- Ensure the code is ready for code review.
 
-## Não faça
+## Don't
 
-- Não use nomes genéricos como data, info, item, obj ou manager sem contexto claro.
-- Não escreva código esperto demais.
-- Não oculte erro com catch vazio.
-- Não retorne null, false ou string vazia para erro sem contexto.
-- Não use comentários para explicar código confuso que deveria ser reescrito.
-- Não deixe TODOs vagos.
-- Não deixe console logs, prints ou debugs temporários.
-- Não misture formatação com alteração funcional.
-- Não crie arquivos grandes com responsabilidades múltiplas.
-- Não crie funções longas com muitos níveis de indentação.
-- Não duplique blocos relevantes de lógica.
-- Não introduza dependência pesada para resolver problema simples.
-- Não faça parsing, validação ou transformação crítica de forma silenciosa.
-- Não ignore warnings relevantes.
-- Não altere estilo do projeto sem necessidade.
-- Não deixe código em estado parcialmente migrado.
-- Não deixe comportamento importante sem teste quando houver política de testes.
+- Do not use generic names like data, info, item, obj, or manager without clear context.
+- Do not write overly clever code.
+- Do not suppress errors with an empty catch.
+- Do not return null, false, or an empty string for an error without context.
+- Do not use comments to explain confusing code that should be rewritten instead.
+- Do not leave vague TODOs.
+- Do not leave temporary console logs, prints, or debug statements.
+- Do not mix formatting changes with functional changes.
+- Do not create large files with multiple responsibilities.
+- Do not create long functions with many levels of indentation.
+- Do not duplicate significant blocks of logic.
+- Do not introduce a heavy dependency to solve a simple problem.
+- Do not perform critical parsing, validation, or transformation silently.
+- Do not ignore relevant warnings.
+- Do not change the project style without need.
+- Do not leave code in a partially migrated state.
+- Do not leave important behavior untested when a test policy exists.
 
-## Critérios de aceitação
+## Acceptance criteria
 
-- O código é legível e direto.
-- Nomes revelam intenção.
-- Erros são tratados de forma explícita.
-- Logs ajudam a diagnosticar sem gerar ruído excessivo.
-- Não há código morto, debug temporário ou comentário obsoleto.
-- A alteração está pronta para revisão.
+- The code is readable and straightforward.
+- Names reveal intent.
+- Errors are handled explicitly.
+- Logs help diagnose without generating excessive noise.
+- There is no dead code, temporary debug output, or obsolete comments.
+- The change is ready for review.

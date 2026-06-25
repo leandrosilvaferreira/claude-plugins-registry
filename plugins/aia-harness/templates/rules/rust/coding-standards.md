@@ -6,35 +6,35 @@ paths:
 
 # Rust — Coding Standards
 
-**Fontes:** mre/idiomatic-rust · Rust API Guidelines · Rust RFC 2436
+**Sources:** mre/idiomatic-rust · Rust API Guidelines · Rust RFC 2436
 
-## Anti-padrões
+## Anti-patterns
 
-| Proibido | Alternativa |
-|----------|-------------|
-| `unwrap()` / `expect()` em código de produção | `?` operator + tratamento explícito de erro |
-| `clone()` desnecessário | Referências / lifetimes corretos |
-| `String` em parâmetros que não precisam de ownership | `&str` — mais flexível e sem alocação |
-| Loops manuais onde iterators resolvem | Iterators + combinators (`map`, `filter`, `collect`) |
-| `match` com braço `_` cobrindo variantes não examinadas | Cobrir variantes explicitamente; `_` apenas com comentário |
-| `pub` em campos de struct sem invariante clara | Métodos de acesso; `pub` em campos apenas em data structs simples |
-| Panic em bibliotecas | `Result<T, E>` em toda função que pode falhar em lib |
-| `Box<dyn Error>` para erros em biblioteca | Tipo de erro customizado ou `thiserror` |
-| Tipos `Arc<Mutex<T>>` em código single-thread | `Rc<RefCell<T>>` ou reestruturar para evitar interior mutability |
+| Forbidden | Alternative |
+| --------- | ----------- |
+| `unwrap()` / `expect()` in production code | `?` operator + explicit error handling |
+| Unnecessary `clone()` | Correct references / lifetimes |
+| `String` in parameters that do not need ownership | `&str` — more flexible and allocation-free |
+| Manual loops where iterators suffice | Iterators + combinators (`map`, `filter`, `collect`) |
+| `match` with `_` arm covering unexamined variants | Cover variants explicitly; `_` only with a comment |
+| `pub` on struct fields without a clear invariant | Access methods; `pub` on fields only in simple data structs |
+| Panic in libraries | `Result<T, E>` in every function that can fail in a lib |
+| `Box<dyn Error>` for errors in a library | Custom error type or `thiserror` |
+| `Arc<Mutex<T>>` types in single-threaded code | `Rc<RefCell<T>>` or restructure to avoid interior mutability |
 
-## Convenções
+## Conventions
 
-- Nomeação: `snake_case` funções/variáveis · `PascalCase` tipos/traits · `UPPER_SNAKE_CASE` constantes
-- `clippy` é a lei — warnings do clippy são erros na pipeline
-- Erros: `thiserror` para bibliotecas · `anyhow` para binários/aplicações
-- Traits: implementar `Debug`, `Display`, `Clone`, `PartialEq` onde faz sentido
-- Lifetimes: nomear lifetimes descritivamente em APIs públicas complexas (`'a` apenas em casos simples)
-- Documentação: `///` em toda função pública; exemplos que compilam em `/// # Examples`
-- `#[must_use]` em funções que retornam `Result` ou valores que não devem ser ignorados
+- Naming: `snake_case` functions/variables · `PascalCase` types/traits · `UPPER_SNAKE_CASE` constants
+- `clippy` is the law — clippy warnings are errors in the pipeline
+- Errors: `thiserror` for libraries · `anyhow` for binaries/applications
+- Traits: implement `Debug`, `Display`, `Clone`, `PartialEq` where it makes sense
+- Lifetimes: name lifetimes descriptively in complex public APIs (`'a` only in simple cases)
+- Documentation: `///` on every public function; examples that compile in `/// # Examples`
+- `#[must_use]` on functions that return `Result` or values that should not be ignored
 
 ## Tooling
 
-- `rustfmt` obrigatório (sem exceção — config em `rustfmt.toml`)
-- `clippy -- -D warnings` na pipeline
-- `cargo test` + `cargo test --doc` (testa exemplos de documentação)
-- `cargo audit` para CVEs nas dependências
+- `rustfmt` mandatory (no exceptions — config in `rustfmt.toml`)
+- `clippy -- -D warnings` in the pipeline
+- `cargo test` + `cargo test --doc` (tests documentation examples)
+- `cargo audit` for CVEs in dependencies

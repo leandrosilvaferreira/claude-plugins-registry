@@ -5,57 +5,57 @@ paths:
 
 # Domain-Driven Design
 
-## Objetivo
+## Objective
 
-Aplicar DDD de forma pragmática, mantendo regras de negócio isoladas de frameworks, banco de dados, APIs externas e detalhes de infraestrutura.
+Apply DDD pragmatically, keeping business rules isolated from frameworks, databases, external APIs, and infrastructure details.
 
-## Faça
+## Do
 
-- Modele o código usando conceitos reais do domínio do negócio.
-- Use nomes que façam sentido para pessoas do negócio e para desenvolvedores.
-- Separe domínio, aplicação, infraestrutura e interface.
-- Mantenha regras de negócio dentro da camada de domínio.
-- Use entidades quando houver identidade e ciclo de vida.
-- Use Value Objects para valores imutáveis com significado no domínio.
-- Use Aggregates para proteger invariantes de negócio.
-- Use Domain Services apenas quando a regra não pertencer naturalmente a uma entidade ou Value Object.
-- Use Application Services ou Use Cases para orquestrar fluxos.
-- Use Repositories como abstração de persistência.
-- Faça a camada de domínio depender de abstrações, não de implementações.
-- Deixe banco de dados, ORM, filas, HTTP, cache e serviços externos na infraestrutura.
-- Mantenha validações de regra de negócio no domínio.
-- Mantenha validações de formato, transporte e entrada na camada de interface ou aplicação.
-- Prefira comandos e métodos que expressem intenção de negócio.
-- Proteja invariantes dentro do próprio modelo de domínio.
-- Use eventos de domínio quando algo relevante aconteceu no negócio.
-- Mantenha o domínio testável sem banco, rede, framework ou container.
-- Crie factories apenas quando a criação do objeto tiver regra relevante.
-- Faça o código refletir a linguagem usada no negócio.
+- Model code using real concepts from the business domain.
+- Use names that make sense to both business people and developers.
+- Separate domain, application, infrastructure, and interface.
+- Keep business rules inside the domain layer.
+- Use entities when there is identity and lifecycle.
+- Use Value Objects for immutable values with meaning in the domain.
+- Use Aggregates to protect business invariants.
+- Use Domain Services only when a rule does not naturally belong to an entity or Value Object.
+- Use Application Services or Use Cases to orchestrate flows.
+- Use Repositories as a persistence abstraction.
+- Make the domain layer depend on abstractions, not implementations.
+- Keep databases, ORMs, queues, HTTP, cache, and external services in the infrastructure layer.
+- Keep business rule validations in the domain.
+- Keep format, transport, and input validations in the interface or application layer.
+- Prefer commands and methods that express business intent.
+- Protect invariants inside the domain model itself.
+- Use domain events when something relevant has happened in the business.
+- Keep the domain testable without a database, network, framework, or container.
+- Create factories only when object creation involves a relevant rule.
+- Make the code reflect the language used in the business.
 
-## Não faça
+## Don't
 
-- Não coloque regra de negócio em controllers, rotas, resolvers, handlers HTTP ou componentes visuais.
-- Não coloque regra de negócio em repositories.
-- Não acople entidades a ORM, banco, framework ou serialização.
-- Não use nomes técnicos genéricos quando existir nome de domínio melhor.
-- Não crie entidades anêmicas que só carregam dados e deixam toda regra em services.
-- Não crie Domain Services para qualquer função simples.
-- Não crie Aggregates grandes demais.
-- Não exponha setters públicos que permitam quebrar invariantes.
-- Não deixe infraestrutura chamar diretamente detalhes internos do domínio.
-- Não modele o domínio baseado apenas nas tabelas do banco.
-- Não misture DTOs, entidades de domínio e modelos de persistência sem necessidade clara.
-- Não use DDD para criar camadas artificiais em CRUD simples.
-- Não crie abstrações de domínio sem regra de negócio real.
-- Não duplique regras de negócio entre domínio, aplicação e interface.
-- Não trate integração externa como parte do domínio.
-- Não deixe casos de uso dependerem diretamente de detalhes de framework.
+- Do not put business rules in controllers, routes, resolvers, HTTP handlers, or visual components.
+- Do not put business rules in repositories.
+- Do not couple entities to ORMs, databases, frameworks, or serialization.
+- Do not use generic technical names when a better domain name exists.
+- Do not create anemic entities that only carry data and leave all rules in services.
+- Do not create Domain Services for any simple function.
+- Do not create Aggregates that are too large.
+- Do not expose public setters that allow invariants to be broken.
+- Do not let infrastructure directly call internal domain details.
+- Do not model the domain based solely on database tables.
+- Do not mix DTOs, domain entities, and persistence models without a clear need.
+- Do not use DDD to create artificial layers in simple CRUDs.
+- Do not create domain abstractions without real business rules.
+- Do not duplicate business rules across domain, application, and interface.
+- Do not treat external integration as part of the domain.
+- Do not let use cases depend directly on framework details.
 
-## Critérios de aceitação
+## Acceptance criteria
 
-- A regra de negócio principal está fora de controllers, rotas e repositories.
-- O domínio pode ser testado sem banco de dados ou serviços externos.
-- Os nomes representam conceitos reais do negócio.
-- As invariantes são protegidas dentro do domínio.
-- A infraestrutura pode ser trocada com impacto mínimo no domínio.
-- Não há camadas extras sem necessidade concreta.
+- The main business rule is outside controllers, routes, and repositories.
+- The domain can be tested without a database or external services.
+- Names represent real business concepts.
+- Invariants are protected inside the domain.
+- Infrastructure can be replaced with minimal impact on the domain.
+- There are no extra layers without a concrete need.

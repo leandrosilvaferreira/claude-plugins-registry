@@ -1,28 +1,28 @@
-# Workflow 3: Fechar issue / marcar como Done
+# Workflow 3: Close issue / mark as Done
 
-## Pré-condições
+## Preconditions
 
-- PR mergeado (o auto-close-issue.yml fecha automaticamente; este workflow é manual)
-- Ou: trabalho concluído sem PR (ex.: infra, documentação)
+- PR merged (auto-close-issue.yml closes automatically; this workflow is manual)
+- Or: work completed without PR (e.g.: infra, documentation)
 
-## Passo a passo
+## Step by step
 
-1. Ler body da issue e verificar critérios de aceite:
+1. Read issue body and verify acceptance criteria:
 
    ```bash
    gh issue view <N> --json body,title --repo <owner>/<repo>
    ```
 
-2. Confirmar com o usuário quais critérios foram atendidos.
+2. Confirm with the user which criteria were met.
 
-3. Se todos os critérios atendidos:
+3. If all criteria met:
 
    ```bash
-   gh issue close <N> --comment "Concluído. [descrever o que foi feito]" \
+   gh issue close <N> --comment "Completed. [describe what was done]" \
      --repo <owner>/<repo>
    ```
 
-4. Mover para Done no Projects v2 (IDs de pm-config.json):
+4. Move to Done in Projects v2 (IDs from pm-config.json):
 
    ```bash
    gh api graphql -f query='mutation { updateProjectV2ItemFieldValue(input: {
@@ -32,9 +32,9 @@
    }) { projectV2Item { id } } }'
    ```
 
-5. Se em worktree → perguntar se remove com `/pm:worktree-remove`.
+5. If in worktree → ask if removing with `/pm:worktree-remove`.
 
-## Invariante
+## Invariant
 
-- NUNCA fechar sem validar critérios de aceite. Se critérios não foram definidos na issue,
-  definir junto com o usuário antes de fechar.
+- NEVER close without validating acceptance criteria. If criteria were not defined in the issue,
+  define them together with the user before closing.

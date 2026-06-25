@@ -5,57 +5,57 @@ paths:
 
 # Coding Principles
 
-## Objetivo
+## Objective
 
-Manter o código simples, coeso, testável, previsível e fácil de evoluir.
+Keep code simple, cohesive, testable, predictable, and easy to evolve.
 
-## Faça
+## Do
 
-- Prefira a solução mais simples que resolva o problema atual.
-- Faça a menor alteração possível para atender ao pedido.
-- Preserve comportamento existente quando não houver pedido explícito de mudança.
-- Aplique KISS como padrão.
-- Aplique YAGNI como padrão.
-- Aplique DRY apenas para duplicação real de regra ou conceito.
-- Aplique Single Responsibility Principle em funções, classes, módulos e arquivos.
-- Mantenha baixo acoplamento e alta coesão.
-- Separe responsabilidades de domínio, aplicação, infraestrutura e interface.
-- Prefira composição em vez de herança.
-- Escreva código explícito em vez de código implícito ou mágico.
-- Use abstrações apenas quando elas reduzirem complexidade.
-- Siga os padrões já existentes no projeto.
-- Mantenha mudanças pequenas e fáceis de revisar.
-- Refatore apenas o necessário para resolver o problema.
-- Ao refatorar, preserve comportamento observável.
-- Prefira dependências direcionadas para dentro, não para frameworks externos.
-- Centralize regras de negócio que representam o mesmo conceito.
-- Remova código morto relacionado à alteração.
-- Mantenha compatibilidade com contratos públicos existentes, salvo instrução contrária.
+- Prefer the simplest solution that solves the current problem.
+- Make the smallest change possible to fulfill the request.
+- Preserve existing behavior when there is no explicit request for change.
+- Apply KISS as the default.
+- Apply YAGNI as the default.
+- Apply DRY only for genuine duplication of a rule or concept.
+- Apply the Single Responsibility Principle to functions, classes, modules, and files.
+- Maintain low coupling and high cohesion.
+- Separate domain, application, infrastructure, and interface responsibilities.
+- Prefer composition over inheritance.
+- Write explicit code instead of implicit or magic code.
+- Use abstractions only when they reduce complexity.
+- Follow the patterns already established in the project.
+- Keep changes small and easy to review.
+- Refactor only what is necessary to solve the problem.
+- When refactoring, preserve observable behavior.
+- Prefer inward-directed dependencies over external frameworks.
+- Centralize business rules that represent the same concept.
+- Remove dead code related to the change.
+- Maintain compatibility with existing public contracts unless instructed otherwise.
 
-## Não faça
+## Don't
 
-- Não implemente funcionalidades futuras não solicitadas.
-- Não crie camadas, interfaces, adapters ou factories sem necessidade concreta.
-- Não aplique DRY em códigos apenas parecidos, mas com intenções diferentes.
-- Não misture refatoração grande com mudança funcional.
-- Não reescreva partes não relacionadas ao problema.
-- Não introduza novo padrão quando o projeto já tiver solução consistente.
-- Não crie funções, classes ou módulos com múltiplas responsabilidades.
-- Não aumente acoplamento entre domínio e infraestrutura.
-- Não transforme código simples em estrutura genérica demais.
-- Não esconda dependências importantes.
-- Não use variáveis globais ou estado compartilhado sem necessidade clara.
-- Não duplique regra de negócio em múltiplas camadas.
-- Não altere contratos públicos sem necessidade ou sem atualizar usos.
-- Não ignore convenções do projeto.
-- Não faça otimizações prematuras.
-- Não deixe comportamento importante implícito ou difícil de rastrear.
+- Do not implement unsolicited future features.
+- Do not create layers, interfaces, adapters, or factories without a concrete need.
+- Do not apply DRY to code that merely looks similar but has different intent.
+- Do not mix large refactoring with functional changes.
+- Do not rewrite parts unrelated to the problem.
+- Do not introduce a new pattern when the project already has a consistent solution.
+- Do not create functions, classes, or modules with multiple responsibilities.
+- Do not increase coupling between domain and infrastructure.
+- Do not turn simple code into an overly generic structure.
+- Do not hide important dependencies.
+- Do not use global variables or shared state without a clear need.
+- Do not duplicate business rules across multiple layers.
+- Do not change public contracts without need or without updating usages.
+- Do not ignore project conventions.
+- Do not make premature optimizations.
+- Do not leave important behavior implicit or hard to trace.
 
-## Critérios de aceitação
+## Acceptance criteria
 
-- A mudança é pequena, objetiva e fácil de revisar.
-- O código segue o estilo e a arquitetura atual do projeto.
-- A solução não adiciona complexidade sem benefício claro.
-- Cada unidade de código tem responsabilidade clara.
-- O comportamento existente foi preservado.
-- O código pode ser entendido por outro desenvolvedor sem explicação externa.
+- The change is small, focused, and easy to review.
+- The code follows the project's current style and architecture.
+- The solution does not add complexity without a clear benefit.
+- Each unit of code has a clear responsibility.
+- Existing behavior has been preserved.
+- The code can be understood by another developer without external explanation.

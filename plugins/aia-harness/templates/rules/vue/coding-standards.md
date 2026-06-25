@@ -7,33 +7,33 @@ paths:
 
 # Vue / Nuxt — Coding Standards
 
-**Fonte:** JetBrains/junie-guidelines (vue/nuxt) · Vue 3 official docs
+**Source:** JetBrains/junie-guidelines (vue/nuxt) · Vue 3 official docs
 
-## Anti-padrões
+## Anti-patterns
 
-| Proibido | Alternativa |
-|----------|-------------|
-| Options API em código novo | Composition API com `<script setup>` |
-| `$emit` sem definição tipada | `defineEmits<{ 'event': [payload: Type] }>()` |
-| Props sem tipos | `defineProps<{ nome: string; ativo: boolean }>()` |
-| Mutação direta de prop | Emit evento de mudança para o pai |
-| `v-if` + `v-for` no mesmo elemento | `v-if` no elemento pai ou computed para filtrar |
-| `ref` para objetos complexos reativos | `reactive()` para objetos; `ref()` para primitivos e quando precisa de `.value` explícito |
-| Lógica de negócio no componente | Composable `use<Nome>.ts` |
-| `any` em `defineProps` / `defineEmits` | Tipos explícitos TypeScript |
-| `watch` para efeitos síncronos derivados | `computed` |
+| Forbidden | Alternative |
+|-----------|-------------|
+| Options API in new code | Composition API with `<script setup>` |
+| `$emit` without typed definition | `defineEmits<{ 'event': [payload: Type] }>()` |
+| Props without types | `defineProps<{ name: string; active: boolean }>()` |
+| Direct prop mutation | Emit a change event to the parent |
+| `v-if` + `v-for` on the same element | `v-if` on the parent element or computed to filter |
+| `ref` for complex reactive objects | `reactive()` for objects; `ref()` for primitives and when explicit `.value` is needed |
+| Business logic in the component | Composable `use<Name>.ts` |
+| `any` in `defineProps` / `defineEmits` | Explicit TypeScript types |
+| `watch` for synchronous derived effects | `computed` |
 
-## Convenções (Nuxt)
+## Conventions (Nuxt)
 
-- `pages/` para rotas; `components/` para reutilizáveis; `composables/` para lógica compartilhada
-- Auto-import: Nuxt importa automaticamente de `composables/` e `components/` — não precisam de import manual
-- `useFetch` / `useAsyncData` para data fetching em SSR — não `fetch` manual em `onMounted`
-- `useState` do Nuxt para estado compartilhado entre server e client
-- Server routes em `server/api/` — não misturar com lógica de componente
-- `app.config.ts` para configuração pública; `runtimeConfig` para segredos
+- `pages/` for routes; `components/` for reusables; `composables/` for shared logic
+- Auto-import: Nuxt automatically imports from `composables/` and `components/` — no manual imports needed
+- `useFetch` / `useAsyncData` for data fetching in SSR — not manual `fetch` in `onMounted`
+- Nuxt's `useState` for state shared between server and client
+- Server routes in `server/api/` — do not mix with component logic
+- `app.config.ts` for public configuration; `runtimeConfig` for secrets
 
 ## Tooling
 
-- Volar (Vue Language Features) no editor
-- `vue-tsc` para typecheck de `.vue`
-- ESLint + `eslint-plugin-vue` com config `vue3-recommended`
+- Volar (Vue Language Features) in the editor
+- `vue-tsc` for `.vue` typecheck
+- ESLint + `eslint-plugin-vue` with `vue3-recommended` config

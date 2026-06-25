@@ -7,34 +7,34 @@ paths:
 
 # Kotlin — Coding Standards
 
-**Fontes:** kotlinlang.org/docs/coding-conventions · Android Kotlin Style Guide
+**Sources:** kotlinlang.org/docs/coding-conventions · Android Kotlin Style Guide
 
-## Anti-padrões
+## Anti-patterns
 
-| Proibido | Alternativa |
-|----------|-------------|
-| `!!` (not-null assertion) | Elvis `?:` ou safe call `?.` + tratamento explícito |
-| Getters/setters estilo Java | Properties Kotlin (`val`/`var`) |
-| Funções utility `static` em companion object | Extension functions |
-| `if-else` como statement de atribuição | Expression form: `val x = if (...) a else b` |
+| Forbidden | Alternative |
+| --------- | ----------- |
+| `!!` (not-null assertion) | Elvis `?:` or safe call `?.` + explicit handling |
+| Java-style getters/setters | Kotlin properties (`val`/`var`) |
+| `static` utility functions in companion object | Extension functions |
+| `if-else` as assignment statement | Expression form: `val x = if (...) a else b` |
 | `for (i in 0..n-1)` | `for (i in 0 until n)` |
-| `it` em lambdas com mais de uma linha | Parâmetro nomeado explícito |
-| Data classes com campos mutáveis (`var`) | `val` + `copy()` para variantes |
-| `when` sem `else` em sealed classes | Sempre cobrir todos os casos (o compilador exige em expression) |
-| `lateinit var` para tipos primitivos | `var` com valor inicial ou `by lazy` |
+| `it` in lambdas with more than one line | Explicit named parameter |
+| Data classes with mutable fields (`var`) | `val` + `copy()` for variants |
+| `when` without `else` in sealed classes | Always cover all cases (compiler requires it in expression form) |
+| `lateinit var` for primitive types | `var` with initial value or `by lazy` |
 
-## Convenções
+## Conventions
 
-- Nomenclatura: `PascalCase` classes · `camelCase` funções/variáveis · `UPPER_SNAKE_CASE` constantes
-- Preferir `val` a `var` — imutabilidade por padrão
-- `data class` para holders de dados; `sealed class` para ADTs
-- Extension functions para funcionalidade utilitária — não polui a API do tipo original
-- Corrotinas: `suspend fun` na camada de negócio; `viewModelScope`/`lifecycleScope` na camada de apresentação
-- `object` para singletons — não `companion object` com estado
-- KDoc em todas as funções públicas de API pública de biblioteca
+- Naming: `PascalCase` classes · `camelCase` functions/variables · `UPPER_SNAKE_CASE` constants
+- Prefer `val` over `var` — immutability by default
+- `data class` for data holders; `sealed class` for ADTs
+- Extension functions for utility functionality — does not pollute the original type's API
+- Coroutines: `suspend fun` in the business layer; `viewModelScope`/`lifecycleScope` in the presentation layer
+- `object` for singletons — not `companion object` with state
+- KDoc on all public functions of a library's public API
 
 ## Tooling
 
-- ktlint para formatação e estilo
-- Detekt para análise estática
-- `kotlinOptions { jvmTarget = "17" }` no build
+- ktlint for formatting and style
+- Detekt for static analysis
+- `kotlinOptions { jvmTarget = "17" }` in the build

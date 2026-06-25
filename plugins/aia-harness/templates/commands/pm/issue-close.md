@@ -7,7 +7,7 @@ allowed-tools: Bash(gh *)
 Issue: !`gh issue view ${ARGUMENTS:-} --json number,title,body,state 2>/dev/null || echo "NOT_FOUND"`
 Config PM: !`cat .claude/pm-config.json 2>/dev/null || echo "NOT_FOUND"`
 
-Use a skill `github-pm` para executar o workflow de fechamento de issue (Workflow 3).
-Número da issue: `$ARGUMENTS`.
+Use the `github-pm` skill to execute the issue closing workflow (Workflow 3).
+Issue number: `$ARGUMENTS`.
 
-OBRIGATÓRIO: validar critérios de aceite no body antes de fechar. Nunca fechar sem esta validação.
+MANDATORY: validate acceptance criteria in the body before closing. Never close without this validation.
