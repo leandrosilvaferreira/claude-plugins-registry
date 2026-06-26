@@ -139,6 +139,8 @@ graphify install --project
 graphify .
 ```
 
+**No API key needed for source code indexing.** graphify indexes source code via AST extraction without any LLM API key — that is the primary objective. A `GEMINI_API_KEY` / `GOOGLE_API_KEY` is only needed for semantic extraction of docs, papers, and images. If graphify prints a warning about a missing API key, ignore it and continue — the source code graph will be fully built.
+
 Commit the produced graph:
 
 ```bash

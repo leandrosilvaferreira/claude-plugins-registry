@@ -151,8 +151,10 @@ Skip this step entirely if `detect` returned zero `video` files. When the corpus
 
 This step has two parts: **structural extraction** (deterministic, free) and **semantic extraction** (LLM, costs tokens).
 
+**No API key required for source code indexing.** Part A (AST extraction) runs fully without any API key and indexes all source code — this is the primary objective for most projects. An API key (`GEMINI_API_KEY` / `GOOGLE_API_KEY`) is only needed for semantic extraction of docs, papers, and images (Part B). If you don't have one, or if the corpus is code-only, skip Part B entirely and ignore any warnings about missing LLM API keys — the graph will be complete for source code.
+
 **Before dispatching subagents:** check whether `GEMINI_API_KEY` or `GOOGLE_API_KEY` is set. If neither is set, print this one-liner to the user:
-> Tip: set `GEMINI_API_KEY` or `GOOGLE_API_KEY` to use Gemini for semantic extraction (`pip install 'graphifyy[gemini]'`).
+> Tip: set `GEMINI_API_KEY` or `GOOGLE_API_KEY` to use Gemini for semantic extraction of docs/images (`pip install 'graphifyy[gemini]'`). **Not required if your goal is source code indexing.**
 
 Print it once, then continue. If `GEMINI_API_KEY` or `GOOGLE_API_KEY` IS set, use `graphify.llm.extract_corpus_parallel(files, backend="gemini")` for semantic extraction instead of dispatching Claude subagents. The default Gemini model is `gemini-3-flash-preview`; set `GRAPHIFY_GEMINI_MODEL` or pass `--model` in headless CLI flows to override it.
 
