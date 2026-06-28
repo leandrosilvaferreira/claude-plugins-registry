@@ -48,6 +48,7 @@ if (!harnessBin || !existsSync(harnessBin)) {
 const result = spawnSync(process.execPath, [harnessBin, "check", cwd, "--json"], {
   encoding: "utf8",
   timeout: 15_000,
+  windowsHide: true,
 });
 
 if (result.status !== 0 && result.status !== 1) {

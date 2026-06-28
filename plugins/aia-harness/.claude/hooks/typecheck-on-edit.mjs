@@ -3,7 +3,7 @@
  * PostToolUse guard hook: runs `tsc --noEmit` when a .mjs source file is edited.
  * Exits 2 on type errors so Claude self-corrects before proceeding.
  * Skips files excluded from tsconfig (templates/ecc, templates/tools, fixtures).
- * Reads hook event JSON from stdin; invoked through node-run.sh.
+ * Reads hook event JSON from stdin.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -43,6 +43,7 @@ try {
   execFileSync(process.execPath, [tscBin, "--noEmit"], {
     cwd: projectDir,
     stdio: "pipe",
+    windowsHide: true,
   });
 } catch (/** @type {any} */ err) {
   const output = (err.stdout?.toString() ?? "") + (err.stderr?.toString() ?? "");

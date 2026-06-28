@@ -102,7 +102,7 @@ export function renderPluginsInstallScript(plugins) {
 import { spawnSync } from "node:child_process";
 import * as rl from "node:readline/promises";
 
-const check = spawnSync("claude", ["--version"], { stdio: "ignore" });
+const check = spawnSync("claude", ["--version"], { stdio: "ignore", shell: true, windowsHide: true });
 if (check.status !== 0) {
   process.stderr.write("aia-harness: 'claude' CLI not found — install Claude Code first.\\n");
   process.exit(1);
@@ -121,10 +121,10 @@ if (!process.argv.includes("-y")) {
 }
 
 for (const [, repo] of marketplaces) {
-  spawnSync("claude", ["plugin", "marketplace", "add", repo], { stdio: "inherit" });
+  spawnSync("claude", ["plugin", "marketplace", "add", repo], { stdio: "inherit", shell: true, windowsHide: true });
 }
 for (const p of plugins) {
-  spawnSync("claude", ["plugin", "install", p.name + "@" + p.marketplace], { stdio: "inherit" });
+  spawnSync("claude", ["plugin", "install", p.name + "@" + p.marketplace], { stdio: "inherit", shell: true, windowsHide: true });
 }
 console.log("Done. Restart Claude Code to load the new plugins.");
 `;

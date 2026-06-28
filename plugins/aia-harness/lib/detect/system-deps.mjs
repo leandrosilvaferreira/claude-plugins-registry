@@ -152,7 +152,7 @@ function getVersion(name, binPath) {
   };
   const attempts = flagSets[name] ?? [["--version"], ["version"]];
   for (const args of attempts) {
-    const r = spawnSync(binPath, args, { timeout: 5000, encoding: "utf8" });
+    const r = spawnSync(binPath, args, { timeout: 5000, encoding: "utf8", windowsHide: true });
     const combined = (r.stdout ?? "") + (r.stderr ?? "");
     const m = combined.match(/\d+\.\d+[\d.]*/);
     if (m) return m[0];

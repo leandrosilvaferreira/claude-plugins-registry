@@ -46,8 +46,12 @@ export const STACK_DEPS = {
  */
 export const TOOL_DEPS = {
   rtk: [{ name: "rtk", level: "required" }],
+  // uv installs and runs the graphify binary (with its own managed python). The
+  // PreToolUse orientation hook is plain Node (already a required engine dep), so
+  // graphify needs no python3 on PATH.
   graphify: [{ name: "uv", level: "required" }],
   ponytail: [],
+  gh: [{ name: "gh", level: "required" }],
 };
 
 /**
@@ -125,9 +129,31 @@ export const INSTALL_HINTS = {
     darwin: "uv tool install graphifyy  OU  pip install graphifyy",
     linux: "uv tool install graphifyy  OU  pip install graphifyy",
   },
+  gh: {
+    win32: "winget install --id GitHub.cli",
+    darwin: "brew install gh",
+    linux: [
+      "(type -p wget >/dev/null || (sudo apt update && sudo apt install wget -y))",
+      "&& sudo mkdir -p -m 755 /etc/apt/keyrings",
+      "&& out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg",
+      "&& cat $out | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null",
+      "&& sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg",
+      '&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"',
+      "| sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null",
+      "&& sudo apt update && sudo apt install gh -y",
+    ].join(" \\\n  "),
+  },
   rtk: {
-    win32:
-      "Download zip from https://github.com/rtk-ai/rtk/releases → extract rtk.exe → add dir to PATH",
+    win32: [
+      "WSL (recommended — full hook + auto-rewrite support):",
+      "  curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh",
+      "  rtk init -g",
+      "Native Windows (limited — no auto-rewrite hook, CLAUDE.md injection fallback only):",
+      "  1. Download rtk-x86_64-pc-windows-msvc.zip from https://github.com/rtk-ai/rtk/releases",
+      "  2. Extract rtk.exe and add its directory to PATH",
+      "  3. rtk init -g",
+      "  NOTE: do NOT install via npm — that installs an unrelated package with the same name.",
+    ].join("\n"),
     darwin:
       "brew install rtk  OU  curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh",
     linux:

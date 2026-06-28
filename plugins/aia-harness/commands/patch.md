@@ -30,7 +30,7 @@ Parse the JSON. Group artifact IDs by prefix into these logical categories
 | `mcp` — .mcp.json | `mcp` (exact) |
 | `skills` — first-party + ECC + ag-kit skills | starts with `skill:`, `ecc-skill:`, `agkit-skill:` |
 | `agents` — ECC + ag-kit agents | starts with `ecc-agent:`, `agkit-agent:` |
-| `tools` — rtk hook, graphify (caveman/ponytail are global plugins, not patched here) | starts with `tool-skill:`, `tool-hooks:`, `graphifyignore` (exact) |
+| `tools` — rtk hook, graphify (caveman/ponytail are global plugins, not patched here) | starts with `tool-skill:`, `tool-hooks:`, `graphifyignore` (exact), or `graphify-orient-hook` (exact) |
 | `git-hooks` — graphify git hooks (post-commit, post-checkout) | starts with `graphify-git-hook:` |
 | `github-pm` — skill, commands, templates, workflows | starts with `github-pm:` |
 | `docs` — harness strategies doc | `strategies` (exact) |

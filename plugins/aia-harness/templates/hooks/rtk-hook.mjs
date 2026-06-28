@@ -10,7 +10,7 @@ import fs from "node:fs";
 /** Locate the rtk binary. Returns null if not found. */
 function findRtk() {
   const cmd = process.platform === "win32" ? "where" : "which";
-  const r = spawnSync(cmd, ["rtk"], { encoding: "utf8" });
+  const r = spawnSync(cmd, ["rtk"], { encoding: "utf8", windowsHide: true });
   if (r.status !== 0) return null;
   return r.stdout.trim().split(/\r?\n/)[0] || null;
 }
@@ -19,7 +19,7 @@ const rtk = process.env.RTK_BIN || findRtk();
 if (!rtk || !fs.existsSync(rtk)) process.exit(0);
 
 try {
-  execFileSync(rtk, ["hook", "claude"], { stdio: "inherit" });
+  execFileSync(rtk, ["hook", "claude"], { stdio: "inherit", windowsHide: true });
 } catch {
   // rtk unavailable or not configured → no-op, never block.
   process.exit(0);

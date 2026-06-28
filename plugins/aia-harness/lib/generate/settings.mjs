@@ -99,6 +99,7 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
           { type: "command", ...hookCmd("format-on-edit.mjs"), timeout: 60 },
           { type: "command", ...hookCmd("set-files-changed.mjs"), timeout: 30 },
           { type: "command", ...hookCmd("sql-idempotent-review.mjs"), timeout: 10 },
+          { type: "command", ...hookCmd("validate-settings-schema.mjs"), timeout: 30 },
         ],
       },
     ],
@@ -146,11 +147,27 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
   if (opts.largeFiles === "block") {
     hooks.Stop[0].hooks.push(lfHook);
   } else {
-    hooks.PostToolUse.push({ matcher: "Edit|Write|MultiEdit", hooks: [lfHook] });
+    hooks.PostToolUse[0].hooks.push(lfHook);
   }
 
+  // Merge extra hooks by matcher, not by naive concat: a tool hook sharing a
+  // matcher with a base group (e.g. rtk and graphify both match "Bash") folds
+  // into that one group instead of creating a second same-matcher group. This
+  // keeps apply.mjs mergeSettingsHooks — which collapses by first matching
+  // matcher — idempotent on re-apply (a duplicate matcher group would otherwise
+  // get the same hook merged into two places).
   for (const [event, entries] of Object.entries(extraHooks)) {
-    hooks[event] = [...(hooks[event] ?? []), ...entries];
+    const base = hooks[event] ?? [];
+    for (const grp of entries) {
+      const m = grp.matcher ?? "";
+      const i = base.findIndex((g) => (g.matcher ?? "") === m);
+      if (i === -1) {
+        base.push(grp);
+      } else {
+        base[i] = { ...base[i], hooks: [...(base[i].hooks ?? []), ...(grp.hooks ?? [])] };
+      }
+    }
+    hooks[event] = base;
   }
 
   const settings = {

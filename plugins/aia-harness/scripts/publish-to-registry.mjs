@@ -11,11 +11,11 @@
  *   REGISTRY_DIR=/other/path npm run publish-registry
  */
 
-import { execFileSync } from "child_process";
-import { existsSync, readFileSync, writeFileSync } from "fs";
-import { resolve, dirname } from "path";
-import { fileURLToPath } from "url";
-import { createInterface } from "readline";
+import { execFileSync } from "node:child_process";
+import { cpSync, existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import { createInterface } from "node:readline";
 
 const PLUGIN_DIR = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const REGISTRY_DIR = resolve(
@@ -35,7 +35,7 @@ const PACKAGE_JSON = `${PLUGIN_DIR}/package.json`;
  * @returns {string}
  */
 function git(args, cwd = PLUGIN_DIR) {
-  return execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
+  return execFileSync("git", args, { cwd, encoding: "utf8", windowsHide: true }).trim();
 }
 
 /**
@@ -149,23 +149,20 @@ const pluginSha = git(["rev-parse", "HEAD"]);
 const shortSha = pluginSha.slice(0, 8);
 log(`Plugin SHA: ${pluginSha}`);
 
-// ── step 3: rsync plugin → registry ───────────────────────────────────────
+// ── step 3: sync plugin → registry ────────────────────────────────────────
 
 log("Syncing plugin files to registry...");
-execFileSync(
-  "rsync",
-  [
-    "-a",
-    "--delete",
-    "--exclude=node_modules",
-    "--exclude=.git",
-    "--exclude=*.test.mjs",
-    "--exclude=.DS_Store",
-    `${PLUGIN_DIR}/`,
-    `${PLUGIN_DEST}/`,
-  ],
-  { encoding: "utf8" },
-);
+const SYNC_EXCLUDES = ["node_modules", ".git", ".DS_Store"];
+rmSync(PLUGIN_DEST, { recursive: true, force: true });
+cpSync(PLUGIN_DIR, PLUGIN_DEST, {
+  recursive: true,
+  filter: (src) => {
+    const name = src.split(/[\\/]/).pop() ?? "";
+    if (SYNC_EXCLUDES.includes(name)) return false;
+    if (name.endsWith(".test.mjs")) return false;
+    return true;
+  },
+});
 
 // ── step 4: commit rsync in registry ──────────────────────────────────────
 

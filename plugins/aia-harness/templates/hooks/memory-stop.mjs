@@ -49,7 +49,7 @@ try {
   process.exit(0); // No flag file → nothing was edited this session.
 }
 
-const allOps = raw.split("\n").filter((l) => l.trim().length > 0);
+const allOps = raw.split(/\r?\n/).filter((l) => l.trim().length > 0);
 
 // Extensions that carry real code knowledge (things a future session cares about).
 const SOURCE_EXTS = new Set([

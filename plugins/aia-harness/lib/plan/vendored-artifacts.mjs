@@ -191,6 +191,40 @@ export function addToolArtifacts(add, toolsRoot, toolIds, profile) {
         defaultSelected: true,
         content: renderGraphifyignore(profile, gitignoreLines),
       });
+      // Vendored graphify usage skill (query/path/explain/update). Lets `apply`
+      // drop it offline — same artifact `graphify install --project` would write,
+      // but without requiring the uv-installed binary first. cpSync skips the
+      // target if it already exists, so a later `graphify install` is idempotent.
+      const skillDir = path.join(toolsRoot, "graphify", "skills", "graphify");
+      if (exists(skillDir)) {
+        add({
+          id: "tool-skill:graphify",
+          relPath: ".claude/skills/graphify",
+          title: "Tool skill: graphify",
+          category: "skills",
+          rationale: "Graphify usage skill, vendored (MIT, safishamsi).",
+          contextCost: 0,
+          defaultSelected: true,
+          copyFrom: skillDir,
+        });
+      }
+      // Cross-platform PreToolUse orientation hook (node, no python3/sh). Wired in
+      // settings.json by buildPlan when graphify is selected; copied here.
+      const orientHook = path.join(toolsRoot, "graphify", "hooks", "graphify-orient.mjs");
+      if (exists(orientHook)) {
+        add({
+          id: "graphify-orient-hook",
+          relPath: ".claude/hooks/graphify-orient.mjs",
+          title: "Graphify orientation hook",
+          category: "tools",
+          rationale:
+            "PreToolUse guard: query the knowledge graph before grep/read (cross-platform node).",
+          contextCost: 0,
+          defaultSelected: true,
+          executable: true,
+          copyFrom: orientHook,
+        });
+      }
       if (profile.vcs?.isGit) {
         const gitHooksDir = path.join(toolsRoot, "graphify", "git-hooks");
         add({

@@ -41,6 +41,7 @@ function currentBranch() {
       cwd: process.env.CLAUDE_PROJECT_DIR ?? process.cwd(),
       encoding: "utf8",
       timeout: 5000,
+      windowsHide: true,
     }).trim();
   } catch {
     return "";
@@ -61,16 +62,18 @@ const verb = isCommit ? "commit" : "push";
 const target = branch || (command.match(/\b(main|master)\b/)?.[0] ?? "main");
 
 const permissionDecisionReason = [
-  `guard-main-branch: you are about to ${verb} directly to \`${target}\`.`,
+  `guard-main-branch: blocked direct ${verb} to \`${target}\`.`,
   "Direct commits/pushes to the main branch bypass code review and CI gates.",
-  "Consider using a feature branch and opening a pull request instead.",
+  "Create a feature branch instead:",
+  "  git checkout -b feat/your-feature-name",
+  "Then open a PR to merge into main.",
 ].join("\n");
 
 process.stdout.write(
   JSON.stringify({
     hookSpecificOutput: {
       hookEventName: "PreToolUse",
-      permissionDecision: "ask",
+      permissionDecision: "deny",
       permissionDecisionReason,
     },
   }),

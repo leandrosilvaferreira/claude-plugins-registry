@@ -56,6 +56,7 @@ const res = spawnSync(phpstan, ["analyse", "--no-progress", "--error-format=raw"
   encoding: "utf8",
   timeout: 55000,
   maxBuffer: 4 * 1024 * 1024,
+  windowsHide: true,
 });
 
 // status 0 = no errors; status 1 = errors found; null/other = signal, timeout,

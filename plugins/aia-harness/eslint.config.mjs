@@ -5,15 +5,7 @@ import prettierConfig from "eslint-config-prettier";
 
 export default [
   {
-    ignores: [
-      "node_modules/**",
-      "tests/fixtures/**",
-      "templates/skills/**",
-      "templates/claude-md/**",
-      "templates/rules/**",
-      "templates/ecc/**",
-      "templates/tools/**",
-    ],
+    ignores: ["node_modules/**", "tests/fixtures/**"],
   },
   js.configs.recommended,
   prettierConfig,

@@ -30,12 +30,16 @@ const projectDir = process.env.CLAUDE_PROJECT_DIR ?? process.cwd();
 
 let status = "";
 try {
-  status = execFileSync("git", ["status", "--porcelain"], { cwd: projectDir, encoding: "utf8" });
+  status = execFileSync("git", ["status", "--porcelain"], {
+    cwd: projectDir,
+    encoding: "utf8",
+    windowsHide: true,
+  });
 } catch {
   process.exit(0);
 }
 
-const changed = status.split("\n").filter((l) => l.trim().length > 0).length;
+const changed = status.split(/\r?\n/).filter((l) => l.trim().length > 0).length;
 if (changed > 0) {
   const message = `aia-harness: ${changed} uncommitted change(s) — run lint & tests before wrapping up.`;
   process.stdout.write(JSON.stringify({ systemMessage: message }));

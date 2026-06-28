@@ -26,9 +26,15 @@ Includes ALL checks:
 import sys
 import subprocess
 import argparse
+import os
 from pathlib import Path
 from typing import List, Dict, Optional
 from datetime import datetime
+
+# Compute skills base path relative to this script's installed location.
+# After harness install: scripts/ and skills/ are siblings under .claude/agents/
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+_AGENTS_BASE = os.path.normpath(os.path.join(_SCRIPT_DIR, ".."))
 
 # ANSI colors
 class Colors:
@@ -64,86 +70,86 @@ VERIFICATION_SUITE = [
     {
         "category": "Security",
         "checks": [
-            ("Security Scan", ".agents/skills/vulnerability-scanner/scripts/security_scan.py", True),
-            ("Dependency Analysis", ".agents/skills/vulnerability-scanner/scripts/dependency_analyzer.py", False),
+            ("Security Scan", "skills/vulnerability-scanner/scripts/security_scan.py", True),
+            ("Dependency Analysis", "skills/vulnerability-scanner/scripts/dependency_analyzer.py", False),
         ]
     },
-    
+
     # P1: Code Quality (CRITICAL)
     {
         "category": "Code Quality",
         "checks": [
-            ("Lint Check", ".agents/skills/lint-and-validate/scripts/lint_runner.py", True),
-            ("Type Coverage", ".agents/skills/lint-and-validate/scripts/type_coverage.py", False),
+            ("Lint Check", "skills/lint-and-validate/scripts/lint_runner.py", True),
+            ("Type Coverage", "skills/lint-and-validate/scripts/type_coverage.py", False),
         ]
     },
-    
+
     # P2: Data Layer
     {
         "category": "Data Layer",
         "checks": [
-            ("Schema Validation", ".agents/skills/database-design/scripts/schema_validator.py", False),
+            ("Schema Validation", "skills/database-design/scripts/schema_validator.py", False),
         ]
     },
-    
+
     # P3: Testing
     {
         "category": "Testing",
         "checks": [
-            ("Test Suite", ".agents/skills/testing-patterns/scripts/test_runner.py", False),
+            ("Test Suite", "skills/testing-patterns/scripts/test_runner.py", False),
         ]
     },
-    
+
     # P4: UX & Accessibility
     {
         "category": "UX & Accessibility",
         "checks": [
-            ("UX Audit", ".agents/skills/frontend-design/scripts/ux_audit.py", False),
-            ("Accessibility Check", ".agents/skills/frontend-design/scripts/accessibility_checker.py", False),
+            ("UX Audit", "skills/frontend-design/scripts/ux_audit.py", False),
+            ("Accessibility Check", "skills/frontend-design/scripts/accessibility_checker.py", False),
         ]
     },
-    
+
     # P5: SEO & Content
     {
         "category": "SEO & Content",
         "checks": [
-            ("SEO Check", ".agents/skills/seo-fundamentals/scripts/seo_checker.py", False),
-            ("GEO Check", ".agents/skills/geo-fundamentals/scripts/geo_checker.py", False),
+            ("SEO Check", "skills/seo-fundamentals/scripts/seo_checker.py", False),
+            ("GEO Check", "skills/geo-fundamentals/scripts/geo_checker.py", False),
         ]
     },
-    
+
     # P6: Performance (requires URL)
     {
         "category": "Performance",
         "requires_url": True,
         "checks": [
-            ("Lighthouse Audit", ".agents/skills/performance-profiling/scripts/lighthouse_audit.py", True),
-            ("Bundle Analysis", ".agents/skills/performance-profiling/scripts/bundle_analyzer.py", False),
+            ("Lighthouse Audit", "skills/performance-profiling/scripts/lighthouse_audit.py", True),
+            ("Bundle Analysis", "skills/performance-profiling/scripts/bundle_analyzer.py", False),
         ]
     },
-    
+
     # P7: E2E Testing (requires URL)
     {
         "category": "E2E Testing",
         "requires_url": True,
         "checks": [
-            ("Playwright E2E", ".agents/skills/webapp-testing/scripts/playwright_runner.py", False),
+            ("Playwright E2E", "skills/webapp-testing/scripts/playwright_runner.py", False),
         ]
     },
-    
+
     # P8: Mobile (if applicable)
     {
         "category": "Mobile",
         "checks": [
-            ("Mobile Audit", ".agents/skills/mobile-design/scripts/mobile_audit.py", False),
+            ("Mobile Audit", "skills/mobile-design/scripts/mobile_audit.py", False),
         ]
     },
-    
+
     # P9: Internationalization
     {
         "category": "Internationalization",
         "checks": [
-            ("i18n Check", ".agents/skills/i18n-localization/scripts/i18n_checker.py", False),
+            ("i18n Check", "skills/i18n-localization/scripts/i18n_checker.py", False),
         ]
     },
 ]
@@ -288,10 +294,10 @@ Examples:
     print(f"Project: {project_path}")
     print(f"URL: {args.url}")
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    
+
     start_time = datetime.now()
-    # Detect agent directory dynamically (default to .agents if exists, fallback to .agent)
-    agent_dir_name = ".agents" if (project_path / ".agents").exists() else ".agents"
+
+    results = []
     
     # Run all verification categories
     for suite in VERIFICATION_SUITE:
@@ -309,8 +315,7 @@ Examples:
         print_header(f"📋 {category.upper()}")
         
         for name, script_path, required in suite["checks"]:
-            actual_script_path = Path(script_path.replace(".agents", agent_dir_name))
-            script = project_path / actual_script_path
+            script = Path(_AGENTS_BASE) / script_path
             result = run_script(name, script, str(project_path), args.url)
             result["category"] = category
             results.append(result)

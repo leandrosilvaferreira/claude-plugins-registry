@@ -13,12 +13,6 @@
     "forceConsistentCasingInFileNames": true,
     "types": ["node"]
   },
-  "include": [
-    "lib/**/*.mjs",
-    "bin/**/*.mjs",
-    "scripts/**/*.mjs",
-    "templates/hooks/**/*.mjs",
-    "tests/*.mjs"
-  ],
-  "exclude": ["node_modules", "tests/fixtures", "templates/ecc", "templates/tools"]
+  "include": ["**/*.mjs"],
+  "exclude": ["node_modules", "tests/fixtures", "templates/ecc", "templates/tools/claude-code-worktrees"]
 }

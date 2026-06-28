@@ -125,7 +125,7 @@ function isSourceFile(absPath) {
 function countLines(absPath) {
   try {
     if (!fs.existsSync(absPath)) return null;
-    return fs.readFileSync(absPath, "utf8").split("\n").length;
+    return fs.readFileSync(absPath, "utf8").split(/\r?\n/).length;
   } catch {
     return null;
   }
@@ -179,7 +179,7 @@ function advisory() {
   const notifiedFlag = path.join(os.tmpdir(), `aia-harness-largefile-notified-${projHash}`);
   const key = `${sessionId}\t${abs}`;
   try {
-    if (fs.readFileSync(notifiedFlag, "utf8").split("\n").includes(key)) return;
+    if (fs.readFileSync(notifiedFlag, "utf8").split(/\r?\n/).includes(key)) return;
   } catch {
     // No flag yet — first notice this session.
   }
@@ -215,16 +215,17 @@ function blockOnStop() {
   // Primary: session-tracked files recorded by set-files-changed.mjs.
   try {
     const raw = fs.readFileSync(flag, "utf8");
-    candidates = [...new Set(raw.split("\n").filter(Boolean))];
+    candidates = [...new Set(raw.split(/\r?\n/).filter(Boolean))];
   } catch {
     // Fallback: working-tree changes visible via git.
     try {
       const status = execFileSync("git", ["status", "--porcelain"], {
         cwd: projectDir,
         encoding: "utf8",
+        windowsHide: true,
       });
       candidates = status
-        .split("\n")
+        .split(/\r?\n/)
         .filter(Boolean)
         .map((line) => path.join(projectDir, line.slice(3).trim()));
     } catch {

@@ -32,7 +32,7 @@ To scope which tools: `--no-tools`.
 
 ```bash
 "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" check "${1:-$CLAUDE_PROJECT_DIR}" \
-  --tools=rtk,graphify --json
+  --tools=rtk,graphify,gh --json
 ```
 
 Read the JSON. If `status === "block"`: present the list of `missing[]` with `installHint`
@@ -44,8 +44,7 @@ install it in step 3.
 
 ## 3. One confirmation, then install machine deps
 
-Use a single `AskUserQuestion` to confirm which machine installs to run. Only on
-approval, run the approved commands.
+Use a single `AskUserQuestion` to confirm which machine installs to run (caveman, ponytail, rtk, gh, graphify). Only on approval, run the approved commands.
 
 **caveman** (Claude Code plugin — global, auto-activates in all projects):
 
@@ -102,6 +101,47 @@ command -v rtk 2>/dev/null || echo "not-in-path"
 
 If `not-in-path`, inform the user that `~/.local/bin` must be added to PATH in their shell profile (`export PATH="$HOME/.local/bin:$PATH"`), then restart Claude Code.
 
+**gh** (GitHub CLI — required for PR review, issue management, and GitHub MCP):
+
+Detect platform first:
+
+```bash
+node -e "console.log(process.platform)"
+```
+
+macOS (`darwin`) — Homebrew:
+
+```bash
+brew install gh
+```
+
+Windows (`win32`) — winget (built-in on Win 10/11):
+
+```bash
+winget install --id GitHub.cli
+```
+
+Linux (`linux`) — official apt keyring sequence:
+
+```bash
+(type -p wget >/dev/null || (sudo apt update && sudo apt install wget -y)) \
+  && sudo mkdir -p -m 755 /etc/apt/keyrings \
+  && out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+  && cat $out | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+  && sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+  && sudo mkdir -p -m 755 /etc/apt/sources.list.d \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+  && sudo apt update && sudo apt install gh -y
+```
+
+Run the matching installer via Bash automatically — no additional confirmation. After install, verify:
+
+```bash
+command -v gh 2>/dev/null || echo "not-in-path"
+```
+
+If `not-in-path`, inform the user to add the install directory to PATH and restart Claude Code.
+
 **graphify** (code-graph, project-level):
 
 To install `uv` automatically: detect the platform with `node -e "console.log(process.platform)"`,
@@ -125,14 +165,10 @@ Windows (`win32`):
 winget install astral-sh.uv
 ```
 
-Once `uv` is available, install graphify and configure:
+Once `uv` is available, install the graphify binary and build the graph:
 
 ```bash
 uv tool install graphifyy
-```
-
-```bash
-graphify install --project
 ```
 
 ```bash
@@ -159,6 +195,14 @@ git commit -m "chore: add graphify code graph"
 
 Do NOT add a `graphify-out/` entry to `.gitignore` — only the specific files above are ignored.
 
-**NOTE:** Git hooks (post-commit, post-checkout) are already copied by the harness to `.git/hooks/` — do NOT run `graphify hook install`.
+**NOTE:** Do NOT run `graphify install --project` or `graphify hook install`. The
+harness already wired everything they would install — the `/graphify` skill
+(`.claude/skills/graphify/`), the PreToolUse orientation hook (a cross-platform Node
+hook at `.claude/hooks/graphify-orient.mjs`, wired in `.claude/settings.json`), and the
+git hooks (`.git/hooks/post-commit`, `post-checkout`) — offline during `apply`. The
+harness hook replaces graphify's `python3`/`sh` inline hooks with plain Node (no system
+`python3` needed; runs on Windows too); running graphify's own installer would add a
+second, redundant orientation hook. You only need the binary (above) to build and query
+the graph.
 
 Uv and graphify installers run via Bash automatically — no confirmation prompt needed. After installing, remind the user to **restart Claude Code** so new hooks/skills load.

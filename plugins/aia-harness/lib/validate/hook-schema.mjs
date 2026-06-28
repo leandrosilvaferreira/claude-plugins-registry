@@ -60,11 +60,17 @@ export function validatePreToolUseOutput(stdout, exitCode) {
       ]),
     );
     if (typeof hso === "object" && !Array.isArray(hso) && hso !== null) {
-      if (!("permissionDecision" in hso)) {
+      // permissionDecision is OPTIONAL: a PreToolUse hook may emit
+      // additionalContext alone (context injection without a permission
+      // decision — e.g. the graphify-orient guard). hookSpecificOutput must
+      // still carry at least one meaningful field; an empty object is a bug.
+      const hasDecision = "permissionDecision" in hso;
+      if (!hasDecision && !("additionalContext" in hso) && !("updatedInput" in hso)) {
         errors.push(
-          "hookSpecificOutput.permissionDecision is required when hookSpecificOutput is present",
+          "hookSpecificOutput must carry at least one of permissionDecision, additionalContext, or updatedInput",
         );
-      } else if (!PERMISSION_DECISIONS.has(hso.permissionDecision)) {
+      }
+      if (hasDecision && !PERMISSION_DECISIONS.has(hso.permissionDecision)) {
         errors.push(
           `hookSpecificOutput.permissionDecision must be "allow", "deny", "ask", or "defer", got "${hso.permissionDecision}"`,
         );

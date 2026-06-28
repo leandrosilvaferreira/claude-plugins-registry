@@ -132,7 +132,9 @@ function main() {
 
   if (cmd === "scan") {
     const profile = scanProject(dir);
-    console.log(flags.has("json") ? JSON.stringify(profile, null, 2) : renderReport(profile));
+    process.stdout.write(
+      (flags.has("json") ? JSON.stringify(profile, null, 2) : renderReport(profile)) + "\n",
+    );
     return 0;
   }
 
@@ -147,9 +149,9 @@ function main() {
     const deps = resolveDepsFromProfile(profile, toolList);
     const report = checkSystemDeps(deps, process.platform);
     if (flags.has("json")) {
-      console.log(JSON.stringify(report, null, 2));
+      process.stdout.write(JSON.stringify(report, null, 2) + "\n");
     } else {
-      console.log(formatDepsReport(report, process.platform));
+      process.stdout.write(formatDepsReport(report, process.platform) + "\n");
     }
     return report.status === "block" ? 1 : 0;
   }
@@ -174,7 +176,9 @@ function main() {
       strict,
       largeFiles,
     });
-    console.log(flags.has("json") ? JSON.stringify(plan, null, 2) : renderPlanSummary(plan));
+    process.stdout.write(
+      (flags.has("json") ? JSON.stringify(plan, null, 2) : renderPlanSummary(plan)) + "\n",
+    );
     return 0;
   }
 
@@ -198,4 +202,4 @@ function main() {
   return 2;
 }
 
-process.exit(main());
+process.exitCode = main();

@@ -4,9 +4,8 @@
  * `.mjs` file Claude just edited, using the project's local ESLint. Never
  * blocks — any failure exits 0. Reads the hook event JSON from stdin.
  *
- * Invoked through .claude/hooks/node-run.sh so it works when `node` is not on
- * PATH; ESLint is launched via the resolved Node (process.execPath) + its JS
- * entry point rather than the .bin shim, so it never depends on a PATH shebang.
+ * ESLint is launched via the resolved Node (process.execPath) + its JS entry
+ * point rather than the .bin shim, so it never depends on a PATH shebang.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -41,6 +40,7 @@ try {
   execFileSync(process.execPath, [eslintBin, "--fix", file], {
     cwd: projectDir,
     stdio: "ignore",
+    windowsHide: true,
   });
 } catch {
   // Lint --fix is best-effort; never block the edit on remaining errors.

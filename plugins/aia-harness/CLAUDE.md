@@ -108,7 +108,7 @@ and graphify. `plugins-catalog` generates a runnable `scripts/install-plugins.mj
 
   | Hook event | Validator | Exit codes | `hookSpecificOutput` fields |
   | --- | --- | --- | --- |
-  | `PreToolUse` | `validatePreToolUseOutput` | 0 (allow/ask), 2 (block tool) | `hookEventName:"PreToolUse"`, `permissionDecision` (`"allow"\|"deny"\|"ask"\|"defer"`), `permissionDecisionReason?`, `updatedInput?`, `additionalContext?` |
+  | `PreToolUse` | `validatePreToolUseOutput` | 0 (allow/ask), 2 (block tool) | `hookEventName:"PreToolUse"`, `permissionDecision?` (`"allow"\|"deny"\|"ask"\|"defer"`), `permissionDecisionReason?`, `updatedInput?`, `additionalContext?` — `permissionDecision` is optional: a hook may emit `additionalContext` alone to inject context without a decision (hookSpecificOutput must carry at least one of the three) |
   | `PostToolUse` | `validatePostToolUseOutput` | 0 (success), 2 (stderr to Claude) | `hookEventName:"PostToolUse"`, `additionalContext?`, `updatedToolOutput?` |
   | `PostToolUseFailure` | `validatePostToolUseFailureOutput` | 0 (success), 2 (stderr to Claude) | `hookEventName:"PostToolUseFailure"`, `additionalContext?` |
   | `Stop` | `validateStopOutput` | 0 (approve), 2 (block stop) | none — top-level `decision` (`"approve"\|"block"`), `reason?` |
@@ -128,11 +128,15 @@ and graphify. `plugins-catalog` generates a runnable `scripts/install-plugins.mj
   When you **create or modify** a hook under `templates/hooks/`, you **must** add or update its compliance test in `tests/hook-<name>.test.mjs`, import the matching validator, and assert every branch. Run `npm test` to verify before committing.
 - `templates/` is excluded from lint and typecheck (it's vendored/scaffolded output, not engine code).
 
+@.claude/memory/INSTRUCTIONS.md
+@.claude/memory/MEMORY.md
+
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
 
 Rules:
+
 - For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
 - If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
 - Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.

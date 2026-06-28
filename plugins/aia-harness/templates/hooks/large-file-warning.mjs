@@ -222,6 +222,7 @@ function blockOnStop() {
       const status = execFileSync("git", ["status", "--porcelain"], {
         cwd: projectDir,
         encoding: "utf8",
+        windowsHide: true,
       });
       candidates = status
         .split(/\r?\n/)

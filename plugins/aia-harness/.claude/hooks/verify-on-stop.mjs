@@ -19,6 +19,7 @@ function hasChanges() {
     const out = execFileSync("git", ["status", "--porcelain"], {
       cwd: projectDir,
       encoding: "utf8",
+      windowsHide: true,
     });
     return out.split("\n").some((l) => l.trim().length > 0);
   } catch {
@@ -38,7 +39,11 @@ function run(binRelPath, extraArgs) {
   const bin = path.join(projectDir, binRelPath);
   if (!fs.existsSync(bin)) return null;
   try {
-    execFileSync(process.execPath, [bin, ...extraArgs], { cwd: projectDir, stdio: "ignore" });
+    execFileSync(process.execPath, [bin, ...extraArgs], {
+      cwd: projectDir,
+      stdio: "ignore",
+      windowsHide: true,
+    });
     return true;
   } catch {
     return false;
@@ -57,7 +62,11 @@ if (lint === false) failed.push("lint");
 // Unit tests: the resolved Node's own test runner (auto-discovers tests/*.test.mjs).
 let unit = null;
 try {
-  execFileSync(process.execPath, ["--test"], { cwd: projectDir, stdio: "ignore" });
+  execFileSync(process.execPath, ["--test"], {
+    cwd: projectDir,
+    stdio: "ignore",
+    windowsHide: true,
+  });
   unit = true;
 } catch {
   unit = false;

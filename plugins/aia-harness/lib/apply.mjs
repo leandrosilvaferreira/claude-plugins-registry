@@ -133,12 +133,18 @@ export function applyPlan(plan, root, opts = {}) {
 
     // Directory artifact (e.g. a vendored ECC skill or mirrored rule dir).
     if (a.content == null && a.copyFrom && isDir(a.copyFrom)) {
-      if (fs.existsSync(target)) {
+      const dirExists = fs.existsSync(target);
+      // Existing dirs are left intact unless `force` — then refresh (rm + recopy)
+      // so a vendored skill/hook dir can be upgraded by `/patch --force`.
+      if (dirExists && !force) {
         result.skipped.push(`${a.relPath}/ (exists)`);
         continue;
       }
-      if (!dryRun) fs.cpSync(a.copyFrom, target, { recursive: true });
-      result.created.push(`${a.relPath}/`);
+      if (!dryRun) {
+        if (dirExists) fs.rmSync(target, { recursive: true, force: true });
+        fs.cpSync(a.copyFrom, target, { recursive: true });
+      }
+      result[dirExists ? "updated" : "created"].push(`${a.relPath}/`);
       continue;
     }
 

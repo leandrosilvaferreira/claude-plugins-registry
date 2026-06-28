@@ -16,6 +16,7 @@ let result;
 
 result = spawnSync("claude", ["plugin", "marketplace", "add", "anthropics/claude-code"], {
   stdio: ["inherit", "inherit", "inherit"],
+  windowsHide: true,
 });
 if (result.status !== 0)
   process.stderr.write(
@@ -24,6 +25,7 @@ if (result.status !== 0)
 
 result = spawnSync("claude", ["plugin", "marketplace", "update", "claude-code-plugins"], {
   stdio: ["inherit", "inherit", "inherit"],
+  windowsHide: true,
 });
 if (result.status !== 0)
   process.stderr.write(
@@ -34,6 +36,7 @@ if (result.status !== 0)
 // Complements the plugin-structure + plugin-settings skills already under .claude/skills/.
 result = spawnSync("claude", ["plugin", "install", "plugin-dev@claude-code-plugins"], {
   stdio: ["inherit", "inherit", "inherit"],
+  windowsHide: true,
 });
 if (result.status !== 0)
   process.stderr.write(

@@ -18,3 +18,7 @@ graphify-out/
 
 # SDD progress ledgers and review packages — local only
 .superpowers/
+
+# Python bytecode — never commit into vendored templates (e.g. ag-kit scripts)
+__pycache__/
+*.pyc

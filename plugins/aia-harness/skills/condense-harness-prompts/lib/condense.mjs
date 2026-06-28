@@ -33,6 +33,7 @@ const MAX_FILE_SIZE = 500_000; // 500KB — refuse oversized prompts.
 // output in. Without this, a wrapped sidecar would fail the code-block gate
 // as a false positive (it looks like an extra code block).
 const OUTER_FENCE_RE = /^\s*(`{3,}|~{3,})[^\n]*\n([\s\S]*)\n\1\s*$/;
+/** @param {string} text @returns {string} */
 function stripLlmWrapper(text) {
   const m = text.match(OUTER_FENCE_RE);
   return m ? m[2] : text;
@@ -54,6 +55,7 @@ const SENSITIVE_NAME_TOKENS = [
   "token",
   "privatekey",
 ];
+/** @param {string} p @returns {boolean} */
 function isSensitivePath(p) {
   const name = basename(p);
   if (SENSITIVE_BASENAME_RE.test(name)) return true;
@@ -76,6 +78,7 @@ const BULLET_RE = /^\s*[-*+]\s+/gm;
 const PATH_RE =
   /(?:\.\/|\.\.\/|\/|[A-Za-z]:\\)[\p{L}\p{N}_\-/\\.]+|[\p{L}\p{N}_\-.]+[/\\][\p{L}\p{N}_\-/\\.]+/gu;
 
+/** @param {string} text @returns {string[]} */
 function extractHeadings(text) {
   const out = [];
   HEADING_RE.lastIndex = 0;
@@ -85,6 +88,7 @@ function extractHeadings(text) {
 }
 
 // Line-based fenced block extractor: ``` or ~~~, variable length, nested.
+/** @param {string} text @returns {string[]} */
 function extractCodeBlocks(text) {
   const blocks = [];
   const lines = text.split("\n");
@@ -117,10 +121,12 @@ function extractCodeBlocks(text) {
   return blocks;
 }
 
+/** @param {string} text @returns {Set<string>} */
 function extractUrls(text) {
   return new Set(text.match(URL_RE) || []);
 }
 
+/** @param {string} text @returns {Set<string>} */
 function extractPaths(text) {
   return new Set(text.match(PATH_RE) || []);
 }
@@ -131,6 +137,7 @@ function extractPaths(text) {
 // place, which creates spurious multi-line inline-code spans → false gate failures.
 const PERMISSIVE_FENCE_RE = /^\s*(`{3,}|~{3,})/;
 
+/** @param {string} text @returns {string[]} */
 function extractInlineCodes(text) {
   // Strip ALL fenced code blocks line-by-line before scanning for inline-code
   // spans. Uses PERMISSIVE_FENCE_RE (any leading whitespace) so fences inside
@@ -169,22 +176,26 @@ function extractInlineCodes(text) {
   return out;
 }
 
+/** @param {string} text @returns {number} */
 function countBullets(text) {
   return (text.match(BULLET_RE) || []).length;
 }
 
+/** @param {string[]} arr @returns {Map<string, number>} */
 function counter(arr) {
   const c = new Map();
   for (const x of arr) c.set(x, (c.get(x) || 0) + 1);
   return c;
 }
 
+/** @param {unknown[]} a @param {unknown[]} b @returns {boolean} */
 function arrEq(a, b) {
   if (a.length !== b.length) return false;
   for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
   return true;
 }
 
+/** @param {Set<string>} a @param {Set<string>} b @returns {{ lost: string[], added: string[] }} */
 function setDiff(a, b) {
   const lost = [...a].filter((x) => !b.has(x));
   const added = [...b].filter((x) => !a.has(x));
@@ -194,6 +205,7 @@ function setDiff(a, b) {
 // Deterministic preservation gate — mirrors caveman-compress validate.py.
 // Same 6 checks, same error/warning split. Errors block the commit; warnings
 // are informational. Order kept identical to the original for parity.
+/** @param {string} orig @param {string} comp @returns {{ valid: boolean, errors: string[], warnings: string[] }} */
 function validate(orig, comp) {
   const errors = [];
   const warnings = [];
@@ -243,6 +255,7 @@ function validate(orig, comp) {
 
 // ---------- file discovery ----------
 
+/** @param {string} dir @returns {string[]} */
 function listMd(dir) {
   if (!existsSync(dir)) return [];
   return readdirSync(dir, { withFileTypes: true })
@@ -251,6 +264,7 @@ function listMd(dir) {
     .sort();
 }
 
+/** @param {string} dir @returns {string[]} */
 function listMdRecursive(dir) {
   if (!existsSync(dir)) return [];
   const out = [];
@@ -262,16 +276,19 @@ function listMdRecursive(dir) {
   return out.sort();
 }
 
+/** @param {string[]} args @param {string} name @returns {string | null} */
 function flag(args, name) {
   const i = args.indexOf(name);
   return i >= 0 && i + 1 < args.length ? args[i + 1] : null;
 }
 
+/** @param {string} msg @returns {never} */
 function fail(msg) {
   process.stderr.write(`${msg}\n`);
   process.exit(1);
 }
 
+/** @param {number} n @returns {string} */
 function humanSize(n) {
   if (n < 1024) return `${n}b`;
   return `${(n / 1024).toFixed(1)}KB`;
@@ -279,6 +296,7 @@ function humanSize(n) {
 
 // ---------- enumerate ----------
 
+/** @param {string[]} args */
 function cmdEnumerate(args) {
   const root = flag(args, "--root") || process.cwd();
   const claude = join(root, ".claude");
@@ -350,6 +368,7 @@ function cmdEnumerate(args) {
 
 // ---------- commit ----------
 
+/** @param {string[]} args */
 function cmdCommit(args) {
   const files = args.filter((a) => !a.startsWith("--"));
   if (!files.length) fail("commit: pass one or more original file paths");
@@ -414,7 +433,9 @@ function cmdCommit(args) {
   }
   const ok = report.filter((r) => r.status === "OK").length;
   const blocked = report.filter((r) => r.status === "BLOCKED").length;
-  const totalSaved = report.filter((r) => r.status === "OK").reduce((s, r) => s + r.saved, 0);
+  const totalSaved = report
+    .filter((r) => r.status === "OK")
+    .reduce((s, r) => s + (r.saved ?? 0), 0);
   process.stdout.write(
     `${line}\n  ${ok} written · ${blocked} blocked · ${totalSaved}b saved\n${line}\n`,
   );
@@ -425,6 +446,7 @@ function cmdCommit(args) {
 
 // ---------- frontmatter validate+fix ----------
 
+/** @param {string[]} args */
 async function cmdFrontmatter(args) {
   const files = args.filter((a) => !a.startsWith("--"));
   if (!files.length) fail("frontmatter: pass one or more file paths");

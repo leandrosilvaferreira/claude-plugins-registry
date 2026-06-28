@@ -99,6 +99,18 @@ export const TOOLS = [
     hooks: [],
     recommended: () => true,
   },
+  {
+    id: "gh",
+    name: "GitHub CLI (gh)",
+    category: "workflow",
+    strategy: "cli",
+    license: "MIT",
+    repo: "cli/cli",
+    deps: ["binary:gh"],
+    hooks: [],
+    // gh has no project-level install indicator; omit detectIn
+    recommended: (p) => Boolean(p.vcs),
+  },
 ];
 
 /**

@@ -204,6 +204,28 @@ export function buildPlan(profile, ctx) {
   for (const [event, entries] of Object.entries(stackHooks.settings)) {
     extraHooks[event] = [...(extraHooks[event] ?? []), ...entries];
   }
+  // Graphify orientation guard (PreToolUse): inject "query the graph first" when
+  // graphify-out/graph.json exists. Cross-platform node hook (no python3 / POSIX
+  // shell) wired exec-form like every other harness hook, so it runs identically on
+  // Linux/macOS/Windows. The hook file is copied by addToolArtifacts. Matcher
+  // "Bash|Read|Glob" is distinct from the base "Bash" group, so it stands alone and
+  // dedups by command+args on re-apply (apply.mjs mergeSettingsHooks).
+  if (toolIds.includes("graphify")) {
+    extraHooks.PreToolUse = [
+      ...(extraHooks.PreToolUse ?? []),
+      {
+        matcher: "Bash|Read|Glob",
+        hooks: [
+          {
+            type: "command",
+            command: "node",
+            args: ["${CLAUDE_PROJECT_DIR}/.claude/hooks/graphify-orient.mjs"],
+            timeout: 10,
+          },
+        ],
+      },
+    ];
+  }
 
   add({
     id: "settings",

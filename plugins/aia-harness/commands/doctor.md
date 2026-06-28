@@ -182,6 +182,22 @@ for the user's platform and stop — do not execute the following steps.
      Note: git hooks are local (not tracked in git) — each developer must install them.
      If graphify is not in the plan, skip this check silently.
 
+   - **Graphify orientation hook (settings.json):** If the plan includes the
+     `settings` artifact AND graphify is in the plan (a `tool-skill:graphify`,
+     `graphify-orient-hook`, or `graphify-git-hook:` ID is present), verify the target
+     `.claude/settings.json` already wires the PreToolUse orientation hook — grep its
+     `hooks.PreToolUse` for the marker string `graphify-orient.mjs`. A project init'd
+     before this hook existed will have a `settings.json` (so whole-file drift never flags
+     it) that is missing the wiring. If the marker is absent, offer to merge it in
+     (non-destructive — the merge adds the hook without touching existing settings):
+
+     ```bash
+     "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" \
+       --yes --only=settings
+     ```
+
+     If graphify is not in the plan, skip this check silently.
+
 4. Present a prioritized findings list. For each accepted fix, show a diff and
    apply with `Edit` only after the user approves. Do not rewrite files wholesale.
 
