@@ -13,13 +13,10 @@ When dispatching subagents for any implementation, review, or analysis task:
 2. **Use the specialist that matches** the task type — never the generic agent when a specialist is listed.
 3. **Pass the exact name** as `subagent_type` in the dispatch.
 
-## Task → agent mapping
+## Superpowers bridging
 
-| Task type | Agent to use |
-|---|---|
-| Code implementation | stack specialist (e.g. `php-reviewer`, `go-reviewer`) |
-| Code review | `code-reviewer` + stack specialist + `security-reviewer` |
-| Security review | `security-reviewer` |
-| Complex flow orchestration | `orchestrator` |
-
-If no specialist covers the task, use the generic agent as a fallback.
+The root `CLAUDE.md` "## Workflow & Agents" section contains a
+"Superpowers → Project Specialists" table built from the agents installed in THIS
+project. When a superpowers skill example shows `general-purpose`, consult that table
+and dispatch the listed specialist instead. Only fall back to `general-purpose` when no
+specialist row covers the task.

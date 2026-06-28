@@ -25,11 +25,11 @@ Parse the JSON. Group artifact IDs by prefix into these logical categories
 |---|---|
 | `settings` — settings.json | `settings` (exact) |
 | `hooks` — all hook files | starts with `hook:` |
-| `claude-md` — root + domain CLAUDE.md files | `claude-md-root` or starts with `claude-md:` |
+| `claude-md` — root + domain CLAUDE.md files (carries the dynamic Superpowers bridge) | `claude-md-root` or starts with `claude-md:` |
 | `rules` — .claude/rules/ files | starts with `rule:` |
 | `mcp` — .mcp.json | `mcp` (exact) |
 | `skills` — first-party + ECC + ag-kit skills | starts with `skill:`, `ecc-skill:`, `agkit-skill:` |
-| `agents` — ECC + ag-kit agents | starts with `ecc-agent:`, `agkit-agent:` |
+| `agents` — ECC + ag-kit + first-party project agents (installs best-practice condition-shaped routing) | starts with `ecc-agent:`, `agkit-agent:`, `agent:project:` |
 | `tools` — rtk hook, graphify (caveman/ponytail are global plugins, not patched here) | starts with `tool-skill:`, `tool-hooks:`, `graphifyignore` (exact), or `graphify-orient-hook` (exact) |
 | `git-hooks` — graphify git hooks (post-commit, post-checkout) | starts with `graphify-git-hook:` |
 | `github-pm` — skill, commands, templates, workflows | starts with `github-pm:` |

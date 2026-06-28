@@ -45,8 +45,34 @@ with `installHint` for the user's platform and stop — do not execute the follo
    If either hook is missing, suggest: "Run `/aia-harness:doctor` to install the graphify hooks."
    If `graphify-out/` does not exist (graphify not initialized) or not a git repo, omit this section silently.
 
-6. Do **not** write any files. If the user wants to scaffold the harness,
-   point them to `/aia-harness:init`.
+## 6. Harness drift (only if already configured)
+
+If the project already has the harness installed (gate: `existingHarness.claudeMd === true` in
+the scan JSON), run a dry-run apply to detect drift (omitting `--yes` keeps this read-only — no
+files are written):
+
+```bash
+"${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" --json
+```
+
+Parse the returned JSON `differs[]` array. If it is non-empty:
+
+- For each unique category in `differs[]`, print one line: `"N <category> artifact(s) are out of date vs the current plugin version."`
+- Also grep the root `CLAUDE.md` file for the marker `aia-harness:agent-routing`. If the marker
+  is absent **and** `.claude/agents/*.md` files exist in the target project (derive "agents exist"
+  from disk: `ls "${1:-$CLAUDE_PROJECT_DIR}/.claude/agents/"*.md 2>/dev/null`), note:
+  `"⚠ Superpowers bridge (aia-harness:agent-routing) is missing from CLAUDE.md while agents exist."`
+
+Then point the user to:
+
+- `/aia-harness:doctor` for guided fixes of out-of-date artifacts
+- `/aia-harness:patch` to selectively force-overwrite specific categories
+
+If `differs[]` is empty and the bridge marker is present (or no agents exist), omit this section
+silently.
+
+Do **not** write any files. If the user wants to scaffold the harness, point them to
+`/aia-harness:init`.
 
 If the scanner cannot find Node.js, tell the user to install Node 18+ or set
 `CLAUDE_NODE`, and offer to run the diagnosis manually instead.

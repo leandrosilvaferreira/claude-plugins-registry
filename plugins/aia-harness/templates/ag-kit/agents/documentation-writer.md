@@ -1,6 +1,9 @@
 ---
 name: documentation-writer
-description: Expert in technical documentation. Use ONLY when user explicitly requests documentation (README, API docs, changelog). DO NOT auto-invoke during normal development.
+description: >
+  Produces clear, example-rich technical documentation — READMEs, API
+  docs, runbooks, and guides. Use when documentation is explicitly
+  requested or after a feature ships and needs user-facing docs.
 tools: Read, Grep, Glob, Bash, Edit, Write
 model: sonnet
 ---

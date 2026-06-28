@@ -1,6 +1,10 @@
 ---
 name: fastapi-reviewer
-description: Reviews FastAPI applications for async correctness, dependency injection, Pydantic schemas, security, OpenAPI quality, testing, and production readiness.
+description: >
+  Reviews FastAPI code for route correctness, Pydantic model validation,
+  dependency injection patterns, async database usage, auth/CORS config,
+  and OpenAPI metadata. Use proactively after editing FastAPI routes,
+  schemas, or middleware. MUST BE USED before merging FastAPI changes.
 tools: Read, Grep, Glob, Bash
 model: sonnet
 ---

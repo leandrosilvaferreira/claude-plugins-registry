@@ -1,6 +1,9 @@
 ---
 name: debugger
-description: Expert in systematic debugging, root cause analysis, and crash investigation. Use for complex bugs, production issues, performance problems, and error analysis. Triggers on bug, error, crash, not working, broken, investigate, fix.
+description: >
+  Finds the root cause of bugs, crashes, and flaky behavior through
+  systematic, evidence-based investigation. Use proactively when a test
+  fails or a defect is reported, before attempting a fix.
 tools: Read, Grep, Glob, Edit, Bash
 model: sonnet
 ---

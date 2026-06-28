@@ -1,6 +1,9 @@
 ---
 name: product-manager
-description: Expert in product requirements, user stories, and acceptance criteria. Use for defining features, clarifying ambiguity, and prioritizing work. Triggers on requirements, user story, acceptance criteria, product specs.
+description: >
+  Clarifies ambiguous requirements and prioritizes roadmap decisions when
+  requirements are undefined before a story exists. Use when discovery and
+  prioritization need structured analysis.
 tools: Read, Grep, Glob, Bash
 model: sonnet
 ---

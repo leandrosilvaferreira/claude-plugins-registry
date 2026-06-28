@@ -1,6 +1,10 @@
 ---
 name: typescript-reviewer
-description: Expert TypeScript/JavaScript code reviewer specializing in type safety, async correctness, Node/web security, and idiomatic patterns. Use for all TypeScript and JavaScript code changes. MUST BE USED for TypeScript/JavaScript projects.
+description: >
+  Reviews TypeScript and JavaScript code for type safety (any abuse,
+  non-null assertions), async correctness, injection risks, and prototype
+  pollution. Use proactively after editing .ts or .js files with no
+  React/JSX involvement.
 tools: Read, Grep, Glob, Bash
 model: sonnet
 ---

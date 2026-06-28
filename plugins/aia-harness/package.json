@@ -1,6 +1,6 @@
 {
   "name": "aia-harness",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Claude Code plugin that scans a project and scaffolds a complete harness-engineering setup (hooks, skills, agents, rules, settings, MCP, worktrees, per-domain CLAUDE.md).",
   "type": "module",
   "private": true,

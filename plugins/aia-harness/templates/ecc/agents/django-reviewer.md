@@ -1,6 +1,10 @@
 ---
 name: django-reviewer
-description: Expert Django code reviewer specializing in ORM correctness, DRF patterns, migration safety, security misconfigurations, and production-grade Django practices. Use for all Django code changes. MUST BE USED for Django projects.
+description: >
+  Reviews Django code for ORM N+1 queries, missing permission_classes,
+  mark_safe misuse, migration correctness, and DRF serializer patterns.
+  Use proactively after editing Django views, models, or serializers. MUST
+  BE USED before merging Django changes.
 tools: Read, Grep, Glob, Bash
 model: sonnet
 ---

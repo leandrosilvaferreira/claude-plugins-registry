@@ -1,6 +1,10 @@
 ---
 name: php-reviewer
-description: Expert PHP code reviewer specializing in PSR-12 compliance, PHP type system, Eloquent ORM patterns, security, and performance. Use for all PHP code changes. MUST BE USED for PHP projects.
+description: >
+  Reviews PHP, Laravel, and Adianti code for SQL injection, mass
+  assignment, XSS (Blade unsafe output), CSRF exemptions, and PSR
+  compliance. Use proactively after editing .php files. MUST BE USED
+  before merging PHP changes.
 tools: Read, Grep, Glob, Bash
 model: sonnet
 ---

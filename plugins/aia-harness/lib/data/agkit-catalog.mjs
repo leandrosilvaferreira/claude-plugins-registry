@@ -160,29 +160,47 @@ function commonSets() {
   };
 }
 
-/** Short "when to use" labels for the CLAUDE.md Workflow & Agents table (≤8 words each). */
 export const AGKIT_AGENT_WHEN_TO_USE = /** @type {Record<string,string>} */ ({
   orchestrator:
-    "multi-agent or cross-domain tasks — dispatch THIS to subdelegate; never dispatch generic agents directly",
-  "project-planner": "feature planning, task decomposition",
-  "code-archaeologist": "understand legacy code, refactoring",
-  "database-architect": "schema, migrations, queries, data modeling",
-  "devops-engineer": "deploy, CI/CD, infra, production",
-  "documentation-writer": "only when documentation explicitly requested",
-  "performance-optimizer": "performance optimization, profiling",
-  "penetration-tester": "pentest, vulnerabilities, offensive security",
-  "product-manager": "product decisions, prioritization, roadmap",
-  "product-owner": "backlog refinement, acceptance criteria",
-  "qa-automation-engineer": "E2E, QA automation, Playwright/Cypress",
-  "test-engineer": "unit tests, integration, code coverage",
-  "security-auditor": "security audit, SAST, defensive review",
-  debugger: "complex bug debugging, root cause analysis",
-  "explorer-agent": "unknown codebase exploration, mapping",
-  "backend-specialist": "API, server-side logic, database integration",
-  "frontend-specialist": "UI components, styling, frontend performance",
-  "seo-specialist": "SEO, meta tags, search-engine visibility",
-  "mobile-developer": "React Native, Flutter, mobile features",
-  "game-developer": "Unity, Godot, game mechanics and engines",
+    "Coordinates multi-agent or cross-domain tasks by subdelegating to specialized agents. Use proactively when a task spans multiple domains or requires parallel subagent execution. MUST BE USED instead of dispatching generic agents directly for complex workflows.",
+  "project-planner":
+    "Breaks features and epics into ordered, executable tasks with clear acceptance criteria. Use proactively when starting a new feature, sprint, or significant refactor that needs a structured plan before implementation begins.",
+  "code-archaeologist":
+    "Reverse-engineers undocumented or legacy code to uncover intent, trace logic, and map hidden dependencies. Use proactively before refactoring unfamiliar legacy code or when you need to understand why existing behavior exists.",
+  "database-architect":
+    "Designs schemas, migrations, indexes, and query strategies for correctness, integrity, and scalability. Use proactively when adding tables, modifying schemas, planning migrations, or diagnosing slow queries.",
+  "devops-engineer":
+    "Owns deployment, CI/CD pipelines, infrastructure configuration, and production operations. Use proactively when deploying, configuring servers, setting up CI, or troubleshooting production incidents.",
+  "documentation-writer":
+    "Produces clear, example-rich technical documentation — READMEs, API docs, runbooks, and guides. Use when documentation is explicitly requested or after a feature ships and needs user-facing docs.",
+  "performance-optimizer":
+    "Profiles and fixes performance bottlenecks — slow endpoints, high memory usage, poor Core Web Vitals, and database query inefficiency. Use proactively after profiling reveals a bottleneck or when response times degrade.",
+  "penetration-tester":
+    "Simulates attacker techniques to find exploitable vulnerabilities using PTES and OWASP methodologies. Use proactively before a security release, after adding new auth flows, or when a pentest is required.",
+  "product-manager":
+    "Clarifies ambiguous requirements and prioritizes roadmap decisions when requirements are undefined before a story exists. Use when discovery and prioritization need structured analysis.",
+  "product-owner":
+    "Translates business objectives into actionable technical specs and defines acceptance criteria for existing stories before implementation begins. Use when a story needs clear acceptance criteria before development starts.",
+  "qa-automation-engineer":
+    "Writes and maintains E2E tests (Playwright/Cypress) and CI/CD quality gates. Use proactively after new user flows are implemented or when E2E coverage is missing for a critical path.",
+  "test-engineer":
+    "Writes unit and integration tests with TDD discipline, coverage analysis, and edge-case discovery. Use proactively after implementing new logic or when test coverage gaps are identified.",
+  "security-auditor":
+    "Performs defensive SAST reviews, threat modeling, and hardening recommendations using defense-in-depth principles. Use proactively before a major release or after architectural changes that touch auth, data handling, or trust boundaries.",
+  debugger:
+    "Finds the root cause of bugs, crashes, and flaky behavior through systematic, evidence-based investigation. Use proactively when a test fails or a defect is reported, before attempting a fix.",
+  "explorer-agent":
+    "Maps an unfamiliar or complex codebase — architecture, patterns, dependencies, and risk areas — to inform planning and integration decisions. Use proactively when onboarding to a new codebase or before planning a cross-cutting change.",
+  "backend-specialist":
+    "Implements and reviews API endpoints, server-side business logic, authentication, and database integration. Use proactively when building or modifying backend services, REST/GraphQL routes, or persistence layers.",
+  "frontend-specialist":
+    "Designs and implements UI components, layouts, styling, and frontend performance with accessibility and maintainability in mind. Use proactively when building or refactoring UI components, design systems, or frontend architecture.",
+  "seo-specialist":
+    "Optimizes metadata, structured data, crawlability, and GEO (AI search) visibility for traditional and AI-powered search engines. Use proactively when adding or modifying public-facing pages that need search visibility.",
+  "mobile-developer":
+    "Builds cross-platform mobile features in React Native or Flutter — navigation, offline support, platform APIs, and native conventions. Use proactively when implementing mobile-specific features, screens, or fixing platform-specific issues.",
+  "game-developer":
+    "Implements game mechanics, physics, AI, and rendering for Unity, Godot, Phaser, or Bevy projects. Use proactively when building game systems, scenes, or solving engine-specific performance and behavior problems.",
 });
 
 /**

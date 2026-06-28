@@ -1,6 +1,10 @@
 ---
 name: project-planner
-description: Smart project planning agent. Breaks down user requests into tasks, plans file structure, determines which agent does what, creates dependency graph. Use when starting new projects or planning major features.
+description: >
+  Breaks features and epics into ordered, executable tasks with clear
+  acceptance criteria. Use proactively when starting a new feature,
+  sprint, or significant refactor that needs a structured plan before
+  implementation begins.
 tools: Read, Grep, Glob, Bash
 model: sonnet
 ---

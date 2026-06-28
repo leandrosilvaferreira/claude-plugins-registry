@@ -1,6 +1,10 @@
 ---
 name: cpp-build-resolver
-description: C++ build, CMake, and compilation error resolution specialist. Fixes build errors, linker issues, and template errors with minimal changes. Use when C++ builds fail.
+description: >
+  Diagnoses and fixes failing C++ builds — CMake configuration errors,
+  linker failures (undefined references, multiple definitions), template
+  instantiation errors, and missing includes. Use proactively when the
+  CMake or compiler step fails.
 tools: Read, Write, Edit, Bash, Grep, Glob
 model: sonnet
 ---

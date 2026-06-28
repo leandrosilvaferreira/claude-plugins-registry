@@ -103,6 +103,12 @@ and graphify. `plugins-catalog` generates a runnable `scripts/install-plugins.mj
   - **Removing a tool from `TOOLS`**: remove its `TOOL_DEPS` entry too (orphan check enforced by tests).
   - The `ToolDef.deps` field (e.g. `["binary:rtk"]`) is documentation for humans and the `add-tools` command. The runtime uses `TOOL_DEPS[tool.id]` via `resolveDepsFromProfile`. Both must be updated together.
   - Run `npm test` after any change to either catalog — the integrity suite catches all four failure modes.
+- **Agent description standard — mandatory**: every candidate agent's routing
+  description lives in its provenance `*_AGENT_WHEN_TO_USE` map (single source of
+  truth for frontmatter + CLAUDE.md table). After adding/editing an agent, run
+  `/revise-agent-frontmatter` and `npm test`
+  (`tests/agent-frontmatter-standard.test.mjs` enforces it). See
+  `.claude/rules/agent-frontmatter-standard.md`.
 - **Safety invariants** (don't regress): consent gate before writes, diffs before overwrite, secrets only as `${ENV}` placeholders, `*.local.*` gitignored, guard hooks exit 2 / formatters fail open. The **strict Stop hook** (`verify-on-stop.mjs`, default on; `--no-strict` opts out) is the one deliberate exception to "Stop never blocks": it blocks on real lint/typecheck failures so the agent self-corrects, but stays **fail-open on infra** (missing runtime/command never blocks) and only runs when the session edited lintable code (gated by `set-files-changed.mjs`). The **large-file guard** (`large-file-warning.mjs`, always installed) is dual-mode, selected at init and threaded via `--large-files=block|advisory` (default = the detector's `profile.largeFiles.recommended`): `block` wires it under `Stop` and returns `decision:"block"` so the agent refactors files over 350 lines before finishing (a second deliberate Stop-block exception; anti-loop via `stop_hook_active`); `advisory` wires it under `PostToolUse` and injects `additionalContext` suggesting a refactor + user confirmation, never blocking. `renderSettings`/`buildPlan` choose the wiring; `/patch` and `/doctor` preserve or offer to configure the mode.
 - **Hook output schema compliance — mandatory**: every hook under `templates/hooks/` distributed to target projects must have unit tests covering **all possible output paths**, and every output must pass the validator from `lib/validate/hook-schema.mjs` matching the hook's event type. All 14 Claude Code hook types are covered:
 

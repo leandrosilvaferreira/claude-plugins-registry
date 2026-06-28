@@ -6,6 +6,8 @@
  */
 
 import { normalizeToolsValue } from "../validate/frontmatter.mjs";
+import { parseFrontmatter, renderFrontmatter } from "../util/frontmatter-yaml.mjs";
+import { applyCanonicalDescription } from "../validate/agent-description.mjs";
 
 const FRONTMATTER_RE = /^(---\n[\s\S]*?\n---\n)/;
 
@@ -65,18 +67,23 @@ function provenanceComment(meta) {
  */
 export function cleanAgentMarkdown(content, meta) {
   const { frontmatter, body } = splitFrontmatter(content);
-  const normalizedFm = frontmatter.replace(/^(tools:\s*)(.+)$/m, (_, key, val) => {
-    const norm = normalizeToolsValue(val)
-      .split(",")
-      .map((t) => t.trim())
-      .filter((t) => !t.startsWith("mcp__code-review-graph__"))
-      .join(", ");
-    return `${key}${norm}`;
-  });
+  let entries = parseFrontmatter(frontmatter);
+  for (const e of entries) {
+    if (e.key === "tools") {
+      e.value = normalizeToolsValue(e.value)
+        .split(",")
+        .map((t) => t.trim())
+        .filter((t) => !t.startsWith("mcp__code-review-graph__"))
+        .join(", ");
+    }
+  }
+  const name = entries.find((e) => e.key === "name")?.value ?? "";
+  entries = applyCanonicalDescription(entries, name);
+  const fm = renderFrontmatter(entries, { fold: new Set(["description"]) });
   let cleaned = removeSection(body, /^##\s+Prompt Defense/i);
   cleaned = removeSection(cleaned, /^##\s+Related/i);
   cleaned = cleaned.replace(/\n{3,}/g, "\n\n").trim();
-  return `${normalizedFm}${provenanceComment(meta)}\n${cleaned}\n`;
+  return `${fm}${provenanceComment(meta)}\n${cleaned}\n`;
 }
 
 /**

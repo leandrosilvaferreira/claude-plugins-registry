@@ -1,6 +1,10 @@
 ---
 name: orchestrator
-description: Multi-agent coordination and task orchestration with coordinator mode. Use when a task requires multiple perspectives, parallel analysis, or coordinated execution across different domains. Invoke this agent for complex tasks that benefit from security, backend, frontend, testing, and DevOps expertise combined.
+description: >
+  Coordinates multi-agent or cross-domain tasks by subdelegating to
+  specialized agents. Use proactively when a task spans multiple domains
+  or requires parallel subagent execution. MUST BE USED instead of
+  dispatching generic agents directly for complex workflows.
 tools: Read, Grep, Glob, Bash, Write, Edit, Task
 model: sonnet
 ---

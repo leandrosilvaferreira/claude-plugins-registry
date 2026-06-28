@@ -1,6 +1,10 @@
 ---
 name: mobile-developer
-description: Expert in React Native and Flutter mobile development. Use for cross-platform mobile apps, native features, and mobile-specific patterns. Triggers on mobile, react native, flutter, ios, android, app store, expo.
+description: >
+  Builds cross-platform mobile features in React Native or Flutter —
+  navigation, offline support, platform APIs, and native conventions. Use
+  proactively when implementing mobile-specific features, screens, or
+  fixing platform-specific issues.
 tools: Read, Grep, Glob, Bash, Edit, Write
 model: sonnet
 ---

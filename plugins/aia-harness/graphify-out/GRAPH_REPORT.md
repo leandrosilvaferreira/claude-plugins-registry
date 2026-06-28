@@ -1,16 +1,16 @@
-# Graph Report - aia_harness  (2026-06-27)
+# Graph Report - aia_harness  (2026-06-28)
 
 ## Corpus Check
-- 642 files · ~509,586 words
+- 660 files · ~520,155 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 8376 nodes · 9328 edges · 723 communities (659 shown, 64 thin omitted)
+- 8516 nodes · 9454 edges · 739 communities (675 shown, 64 thin omitted)
 - Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 268 edges (avg confidence: 0.84)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `98f5cda5`
+- Built from commit: `37df5f60`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -338,6 +338,7 @@
 - [[_COMMUNITY_Community 331|Community 331]]
 - [[_COMMUNITY_Community 332|Community 332]]
 - [[_COMMUNITY_Community 333|Community 333]]
+- [[_COMMUNITY_Community 334|Community 334]]
 - [[_COMMUNITY_Community 335|Community 335]]
 - [[_COMMUNITY_Community 336|Community 336]]
 - [[_COMMUNITY_Community 337|Community 337]]
@@ -497,6 +498,7 @@
 - [[_COMMUNITY_Community 492|Community 492]]
 - [[_COMMUNITY_Community 494|Community 494]]
 - [[_COMMUNITY_Community 495|Community 495]]
+- [[_COMMUNITY_Community 496|Community 496]]
 - [[_COMMUNITY_Community 497|Community 497]]
 - [[_COMMUNITY_Community 498|Community 498]]
 - [[_COMMUNITY_Community 499|Community 499]]
@@ -597,7 +599,6 @@
 - [[_COMMUNITY_Community 597|Community 597]]
 - [[_COMMUNITY_Community 598|Community 598]]
 - [[_COMMUNITY_Community 599|Community 599]]
-- [[_COMMUNITY_Community 600|Community 600]]
 - [[_COMMUNITY_Community 601|Community 601]]
 - [[_COMMUNITY_Community 602|Community 602]]
 - [[_COMMUNITY_Community 603|Community 603]]
@@ -669,6 +670,7 @@
 - [[_COMMUNITY_Community 670|Community 670]]
 - [[_COMMUNITY_Community 671|Community 671]]
 - [[_COMMUNITY_Community 672|Community 672]]
+- [[_COMMUNITY_Community 673|Community 673]]
 - [[_COMMUNITY_Community 674|Community 674]]
 - [[_COMMUNITY_Community 675|Community 675]]
 - [[_COMMUNITY_Community 676|Community 676]]
@@ -688,15 +690,23 @@
 - [[_COMMUNITY_Community 690|Community 690]]
 - [[_COMMUNITY_Community 691|Community 691]]
 - [[_COMMUNITY_Community 692|Community 692]]
+- [[_COMMUNITY_Community 693|Community 693]]
 - [[_COMMUNITY_Community 694|Community 694]]
 - [[_COMMUNITY_Community 695|Community 695]]
 - [[_COMMUNITY_Community 696|Community 696]]
 - [[_COMMUNITY_Community 697|Community 697]]
+- [[_COMMUNITY_Community 698|Community 698]]
 - [[_COMMUNITY_Community 699|Community 699]]
 - [[_COMMUNITY_Community 700|Community 700]]
+- [[_COMMUNITY_Community 701|Community 701]]
+- [[_COMMUNITY_Community 702|Community 702]]
+- [[_COMMUNITY_Community 703|Community 703]]
 - [[_COMMUNITY_Community 704|Community 704]]
 - [[_COMMUNITY_Community 705|Community 705]]
 - [[_COMMUNITY_Community 706|Community 706]]
+- [[_COMMUNITY_Community 707|Community 707]]
+- [[_COMMUNITY_Community 708|Community 708]]
+- [[_COMMUNITY_Community 709|Community 709]]
 - [[_COMMUNITY_Community 710|Community 710]]
 - [[_COMMUNITY_Community 711|Community 711]]
 - [[_COMMUNITY_Community 712|Community 712]]
@@ -705,7 +715,14 @@
 - [[_COMMUNITY_Community 716|Community 716]]
 - [[_COMMUNITY_Community 717|Community 717]]
 - [[_COMMUNITY_Community 718|Community 718]]
+- [[_COMMUNITY_Community 719|Community 719]]
 - [[_COMMUNITY_Community 720|Community 720]]
+- [[_COMMUNITY_Community 721|Community 721]]
+- [[_COMMUNITY_Community 722|Community 722]]
+- [[_COMMUNITY_Community 723|Community 723]]
+- [[_COMMUNITY_Community 724|Community 724]]
+- [[_COMMUNITY_Community 744|Community 744]]
+- [[_COMMUNITY_Community 745|Community 745]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `buildPlan()` - 40 edges
@@ -744,11 +761,11 @@
 - **drizzle stack artifacts** —  [EXTRACTED]
 - **GitHub PM pillar** —  [EXTRACTED]
 
-## Communities (723 total, 64 thin omitted)
+## Communities (739 total, 64 thin omitted)
 
 ### Community 0 - "Asset Catalog & Stack Resolution"
-Cohesion: 0.07
-Nodes (47): one-module-per-provenance asset split, stack-key resolution pattern, AGKIT_AGENT_WHEN_TO_USE, AGKIT_BY_STACK, AGKIT_COMMANDS, AGKIT_COMMON, allAgkitAssets(), BACKEND (+39 more)
+Cohesion: 0.14
+Nodes (13): caveman tool pin (JuliusBrussee/caveman), ponytail tool pin (DietrichGebert/ponytail), diagnose → approve → apply loop, ECC-sourced assets by detected stack, harness-engineering SKILL.md, project-level tools (caveman/ponytail/rtk/graphify), mcp-catalog SKILL.md, MCP wiring rules (env placeholders, small set, no enableAll) (+5 more)
 
 ### Community 1 - "Token Compression Benchmarks"
 Cohesion: 0.11
@@ -795,8 +812,8 @@ Cohesion: 0.11
 Nodes (19): common/coding-style.md, typescript/coding-style.md, TypeScript Avoid any Type, Class Components, Component Shape, File Extensions, File Layout per Component, Hooks Discipline (+11 more)
 
 ### Community 13 - "Tools Vendor Pipeline"
-Cohesion: 0.14
-Nodes (21): tools/transform.mjs (stampMarkdown, stampJs, rewritePluginRoot), CommonJS package.json injection for vendored hooks, token-economy tools vendor pipeline (caveman/ponytail), fetchRaw(), fetchTree(), get(), HERE, main() (+13 more)
+Cohesion: 0.21
+Nodes (14): CommonJS package.json injection for vendored hooks, token-economy tools vendor pipeline (caveman/ponytail), fetchRaw(), fetchTree(), get(), HERE, main(), OUT_DIR (+6 more)
 
 ### Community 14 - "GitHub Org Security"
 Cohesion: 0.33
@@ -819,8 +836,8 @@ Cohesion: 0.14
 Nodes (18): cavecrew skill, cavecrew-builder agent, cavecrew decision guide (SKILL.md), cavecrew-investigator agent, cavecrew-reviewer agent, caveman-commit skill, caveman-commit Conventional Commits generator, caveman-compress skill (+10 more)
 
 ### Community 19 - "Test Fixtures"
-Cohesion: 0.08
-Nodes (23): fixture: php-adianti, fixture: php-laravel, applyPlan(), ensureGitignore(), mergeSettingsHooks(), lib/apply.mjs, writeFile(), FIX (+15 more)
+Cohesion: 0.32
+Nodes (8): E2E_FRAMEWORKS, jsInstall(), jsKey(), recommendTesting(), detectTesting(), ecosystemKey(), TEST_FILE_MATCHERS, testing-catalog.mjs (recommendTesting, E2E_FRAMEWORKS)
 
 ### Community 20 - "GitHub PM Automation"
 Cohesion: 0.05
@@ -839,8 +856,8 @@ Cohesion: 0.22
 Nodes (14): create-settings-command example, example-settings template, Atomic settings file update, Settings file parsing techniques reference, .claude/plugin-name.local.md pattern, Plugin Settings Skill, Quick Exit Pattern, YAML frontmatter settings (+6 more)
 
 ### Community 24 - "Memory & Misc Generators"
-Cohesion: 0.15
-Nodes (21): MCP_CATALOG, recommendedMcp(), marketplaceRepo(), MARKETPLACES, PLUGIN_SUGGESTIONS, suggestPlugins(), renderDomainClaudeMd(), renderMcp() (+13 more)
+Cohesion: 0.09
+Nodes (32): MCP_CATALOG, recommendedMcp(), marketplaceRepo(), MARKETPLACES, PLUGIN_SUGGESTIONS, suggestPlugins(), fixture: empty, renderMcp() (+24 more)
 
 ### Community 25 - "Adianti Framework PHP"
 Cohesion: 0.10
@@ -855,12 +872,12 @@ Cohesion: 0.10
 Nodes (25): ECC Transform Pipeline, Frontmatter Validation and Normalization, GitHub Actions Workflows for PM Automation, GitHub PM Pillar, Hook Compliance and Schema Validation, PreToolUse Hook validate-template-frontmatter, Vendoring Infrastructure, Task 10 Brief: Final validation — GitHub PM pillar (+17 more)
 
 ### Community 28 - "Framework & Command Detection"
-Cohesion: 0.10
-Nodes (36): FRAMEWORKS, CONTAINER_DIRS, detectArchitecture(), kindFor(), LAYER_DIRS, singular(), detectCommands(), genericCommands() (+28 more)
+Cohesion: 0.09
+Nodes (35): large-file guard modes (block vs advisory), FRAMEWORKS, CONTAINER_DIRS, detectArchitecture(), kindFor(), LAYER_DIRS, singular(), detectCommands() (+27 more)
 
 ### Community 29 - "Worktree & Hook Utilities"
-Cohesion: 0.22
-Nodes (8): Next.js Full-Stack Structure (Next.js 16 Optimized), Path Aliases (tsconfig.json), Project Scaffolding, Structure Principles, When to Use What, Next.js Full-Stack Structure, Default Web Stack 2026, Tech Stack Selection 2026
+Cohesion: 0.16
+Nodes (11): applyPlan(), ensureGitignore(), mergeSettingsHooks(), writeFile(), GIT_HOOKS_TMPL, HAS_GRAPHIFY_TMPL, HAS_SKILL_TMPL, makeProfile() (+3 more)
 
 ### Community 30 - "Hook Schema Tests"
 Cohesion: 0.22
@@ -871,12 +888,12 @@ Cohesion: 0.16
 Nodes (20): arrEq(), cmdCommit(), cmdEnumerate(), countBullets(), counter(), extractCodeBlocks(), extractHeadings(), extractInlineCodes() (+12 more)
 
 ### Community 32 - "Language Detection & Classification"
-Cohesion: 0.10
-Nodes (16): classify(), EXTENSION_LANGUAGES, getTool(), RTK_HOOK_COMMAND, selectTools(), TOOLS, toolSettingsHooks(), vendorHookCommand() (+8 more)
+Cohesion: 0.07
+Nodes (28): ProjectProfile (shared data contract), classify(), EXTENSION_LANGUAGES, skillsForProfile(), scanProject() [pipeline orchestrator], detectLanguages(), AGENT_ORDER, agentsWorkflowBlock() (+20 more)
 
 ### Community 33 - "Express Prisma Zod Template"
-Cohesion: 0.21
-Nodes (14): Prisma ORM, Next.js App Router, Next.js Full-Stack Template, Next.js Server Actions, Tailwind CSS v4, Auth.js v5 (NextAuth), Next.js SaaS Template, Stripe Payment Integration (+6 more)
+Cohesion: 0.15
+Nodes (18): Prisma ORM, Next.js App Router, Next.js Full-Stack Template, Next.js Server Actions, Tailwind CSS v4, Auth.js v5 (NextAuth), Next.js SaaS Template, Stripe Payment Integration (+10 more)
 
 ### Community 34 - "Plugin Registry & Versioning"
 Cohesion: 0.10
@@ -920,7 +937,7 @@ Nodes (17): Command: pm:backlog, Command: pm:code-review-pr, Command: pm:commit-
 
 ### Community 44 - "ECC Source Vendoring"
 Cohesion: 0.13
-Nodes (20): allEccAssets(), code-reviewer.md ECC patch (harness pre-review setup), compliance report table (CLAUDE.md / rules / PRD), pre-review setup steps (CLAUDE.md + rules scan before review), affaan-m/ECC upstream repo, ECC MANIFEST.json, ECC patch system (ecc-patches/ overlay), ECC vendor pipeline (agents/rules/skills) (+12 more)
+Nodes (19): code-reviewer.md ECC patch (harness pre-review setup), compliance report table (CLAUDE.md / rules / PRD), pre-review setup steps (CLAUDE.md + rules scan before review), affaan-m/ECC upstream repo, ECC MANIFEST.json, ECC patch system (ecc-patches/ overlay), ECC vendor pipeline (agents/rules/skills), ECC_DIR (+11 more)
 
 ### Community 45 - "Memory Stop Hook Tests"
 Cohesion: 0.14
@@ -931,20 +948,20 @@ Cohesion: 0.12
 Nodes (15): compilerOptions, allowJs, checkJs, forceConsistentCasingInFileNames, lib, module, moduleResolution, noEmit (+7 more)
 
 ### Community 47 - "Testing Rules Cross-Platform"
-Cohesion: 0.08
-Nodes (26): Common Testing Rules (base), C# Testing Rules, FluentAssertions (C#), Testcontainers (C#), WebApplicationFactory ASP.NET Core Integration Tests, xUnit Test Framework (C#), bloc_test BLoC Unit Testing, Dart/Flutter Testing Rules (+18 more)
+Cohesion: 0.14
+Nodes (15): Common Testing Rules (base), C# Testing Rules, FluentAssertions (C#), Testcontainers (C#), WebApplicationFactory ASP.NET Core Integration Tests, xUnit Test Framework (C#), Go Testing Rules, Go Race Detection (-race flag) (+7 more)
 
 ### Community 48 - "Dart BLoC Architecture"
-Cohesion: 0.05
-Nodes (41): large-file guard modes (block vs advisory), ProjectProfile (shared data contract), detectGitHubPM(), MARKER_FILES, scanProject() [pipeline orchestrator], scanProject(), detectLanguages(), detectLargeFiles() (+33 more)
+Cohesion: 0.22
+Nodes (8): 1. Architecture, 2. Drizzle / DB, 3. Validation, 4. TypeScript / lint, 5. Swagger, Checklist, NestJS Code Reviewer, Output format
 
 ### Community 49 - "MCP Catalog Recommender"
 Cohesion: 0.04
 Nodes (47): Anti-Patterns, Branch Cleanup, Branch Management, Branching Strategies, Changelog Generation, Code Review Checklist, Commit Message Template, Commit Messages (+39 more)
 
 ### Community 50 - "Testing Catalog & E2E Frameworks"
-Cohesion: 0.32
-Nodes (8): E2E_FRAMEWORKS, jsInstall(), jsKey(), recommendTesting(), detectTesting(), ecosystemKey(), TEST_FILE_MATCHERS, testing-catalog.mjs (recommendTesting, E2E_FRAMEWORKS)
+Cohesion: 0.18
+Nodes (10): frontmatter compliance scanner, walkMd recursive file walker, argv, fixed, interactive, reportArg, reportLines, ROOT (+2 more)
 
 ### Community 51 - "ag-kit MANIFEST Assets"
 Cohesion: 0.13
@@ -963,8 +980,8 @@ Cohesion: 0.10
 Nodes (19): templates/hooks/phpstan-on-edit.mjs, templates/hooks/sql-idempotent-review.mjs, assertFindings(), assertSkip(), HOOK, phpEvent, ROOT, assertReview() (+11 more)
 
 ### Community 55 - "ag-kit Brownfield Agents"
-Cohesion: 0.17
-Nodes (12): Database & Data, Node.js Ecosystem, Python Ecosystem, Security, Your Expertise Areas, penetration-tester agent, OWASP Top 10 2025, PTES Penetration Testing Methodology (+4 more)
+Cohesion: 0.12
+Nodes (16): Database & Data, Node.js Ecosystem, Python Ecosystem, Security, Your Expertise Areas, code-archaeologist agent, Brownfield Development, Chesterton's Fence Principle (+8 more)
 
 ### Community 56 - "API & TypeScript Concepts"
 Cohesion: 0.14
@@ -979,8 +996,8 @@ Cohesion: 0.50
 Nodes (5): ponytail-audit skill (whole-repo audit), ponytail-debt skill (debt ledger), ponytail-help skill (reference card), ponytail skill (lazy dev mode), ponytail-review skill (over-engineering review)
 
 ### Community 59 - "ag-kit Vendor Pipeline"
-Cohesion: 0.29
-Nodes (3): renderVerifyOnStop(), generate/verify.mjs (renderVerifyOnStop), genHook()
+Cohesion: 0.07
+Nodes (51): one-module-per-provenance asset split, stack-key resolution pattern, AGKIT_AGENT_WHEN_TO_USE, AGKIT_BY_STACK, AGKIT_COMMANDS, AGKIT_COMMON, allAgkitAssets(), BACKEND (+43 more)
 
 ### Community 60 - "GitHub Projects PM Config"
 Cohesion: 0.50
@@ -991,8 +1008,8 @@ Cohesion: 0.17
 Nodes (13): Next.js Anti-Patterns (unnecessary use client, native img, uncached fetch), Next.js App Router Conventions (layout.tsx, page.tsx, loading.tsx, error.tsx), Next.js Coding Standards, React Anti-Patterns (key=index, prop drilling, duplicate state, document.querySelector), React Coding Standards, React Tooling (eslint-plugin-react, eslint-plugin-react-hooks, jsx-a11y), TypeScript Anti-Patterns (any, as-cast without narrowing, @ts-ignore, namespace, numeric enum), TypeScript Coding Standards (+5 more)
 
 ### Community 62 - "DevOps Agent & CI/CD"
-Cohesion: 0.22
-Nodes (9): Astro Static Site Template, Best Practices, Deployment, Directory Structure, Key Concepts, Setup Steps, Tech Stack, Astro 6.x Framework (+1 more)
+Cohesion: 0.12
+Nodes (16): Changes to existing files, `commands/init.md`, Design, Design: `/revise-claude-md` — Rich Intermediate CLAUDE.md Skill, Domain CLAUDE.md quality bar (acceptance criteria), Goal, `lib/data/project-catalog.mjs`, `lib/generate/claude-md.mjs` — `renderDomainClaudeMd` (+8 more)
 
 ### Community 63 - "Documentation Writer Agent"
 Cohesion: 0.10
@@ -1007,8 +1024,8 @@ Cohesion: 0.20
 Nodes (10): Common Hooks Rules (base), dart format (Dart formatter), Dart/Flutter Hooks Rules, Dart PostToolUse Hook (dart format), Dart Pre-commit Checks (format/analyze/test), Go Hooks Rules, Java Hooks Rules, Java PostToolUse Hooks (google-java-format/checkstyle/compile) (+2 more)
 
 ### Community 66 - "Go Patterns Rules"
-Cohesion: 0.29
-Nodes (6): Error Handling, Feature Analysis, Feature Building, Iterative Enhancement Process, Recovery Strategy, Feature Analysis Process
+Cohesion: 0.20
+Nodes (9): After all domains are processed, For each domain:, Phase 1 — Map: discover domains and applicable rules, Phase 2 — Generate: read, synthesize, write with diffs, Revise intermediate CLAUDE.md files, Step 1: Get base domains from scan, Step 2: Expand domain candidates, Step 3: Map rules to domains (+1 more)
 
 ### Community 67 - ".NET C# Testing Concepts"
 Cohesion: 0.17
@@ -1027,12 +1044,12 @@ Cohesion: 0.33
 Nodes (11): 2d-games skill, 3d-games skill, game-art skill, game-audio skill, game-design skill, game-development skill (orchestrator), Game Loop (INPUT→UPDATE→RENDER), mobile-games skill (+3 more)
 
 ### Community 71 - "Performance Optimizer Agent"
-Cohesion: 0.08
-Nodes (39): ag-kit MANIFEST, vudovn/ag-kit GitHub Repository, backend-specialist agent, API Development (REST/GraphQL/tRPC), Node.js Backend Expertise, Python Backend Expertise, Backend Development Architect Role, database-architect agent (+31 more)
+Cohesion: 0.07
+Nodes (43): ag-kit MANIFEST, vudovn/ag-kit GitHub Repository, backend-specialist agent, API Development (REST/GraphQL/tRPC), Node.js Backend Expertise, Python Backend Expertise, Backend Development Architect Role, database-architect agent (+35 more)
 
 ### Community 72 - "Caveman Session Hooks"
 Cohesion: 0.20
-Nodes (12): Kotlin Coding Style Rules, Error Handling, Extension Functions, Formatting, Immutability, Kotlin Coding Style, ktlint/Detekt (Kotlin formatters), Naming (+4 more)
+Nodes (9): API Response Envelope, Builder Pattern, Enum State Machines, Newtype Pattern for Type Safety, References, Repository Pattern with Traits, Rust Patterns, Sealed Traits for Extensibility Control (+1 more)
 
 ### Community 73 - "Large File Warning Hook"
 Cohesion: 0.25
@@ -1047,8 +1064,8 @@ Cohesion: 0.22
 Nodes (11): Concept: C++20 Concepts for Template Constraints, Concept: RAII (Resource Acquisition Is Initialization) in C++, Concept: Rule of Zero / Rule of Five (C++), Concept: Smart Pointers (unique_ptr, shared_ptr) in C++, cpp-build-resolver agent, cpp-reviewer agent, dart-build-resolver agent, kotlin-build-resolver agent (+3 more)
 
 ### Community 76 - "Dart/Flutter Testing"
-Cohesion: 0.18
-Nodes (10): frontmatter compliance scanner, walkMd recursive file walker, argv, fixed, interactive, reportArg, reportLines, ROOT (+2 more)
+Cohesion: 0.06
+Nodes (37): detectGitHubPM(), MARKER_FILES, scanProject(), detectVcs(), fixture: github-project, bug.yml (github issue template fixture), fixture: go-app, fixture: js-ts-app (+29 more)
 
 ### Community 77 - "Code Reviewer Agents"
 Cohesion: 0.33
@@ -1083,12 +1100,12 @@ Cohesion: 0.24
 Nodes (10): Concept: Django REST Framework ViewSet Pattern, Concept: Django N+1 Query Prevention (select_related, prefetch_related), Concept: Django Split Settings Project Structure, Concept: Django Production Security Settings (HSTS, CSRF, DEBUG=False), Concept: Django Service Layer (business logic separation), Concept: Django SQL Injection Prevention (ORM, parameterized raw queries), django-build-resolver agent, django-reviewer agent (+2 more)
 
 ### Community 85 - "Conflict Resolution Rules"
-Cohesion: 0.20
-Nodes (10): Conflict Resolution, Detection Process, Keyword Matrix, Project Type Detection, Conflict Resolution Rules, Keyword Detection Matrix, 13 Project Templates, app-builder Skill (+2 more)
+Cohesion: 0.12
+Nodes (16): Error Handling, Feature Analysis, Feature Building, Iterative Enhancement Process, Recovery Strategy, Conflict Resolution, Detection Process, Keyword Matrix (+8 more)
 
 ### Community 86 - "Multi-Agent Coordinator Skill"
-Cohesion: 0.13
-Nodes (15): /coordinate Command, coordinator-mode skill, Advanced Multi-Agent Coordination, orchestrator agent, Agent Selection Matrix, Available Agents (20 total), 🔴 CRITICAL: Minimum Agent Requirement, 🔴 EXIT GATE (+7 more)
+Cohesion: 0.18
+Nodes (11): Agent Selection Matrix, Available Agents (20 total), 🔴 CRITICAL: Minimum Agent Requirement, 🔴 EXIT GATE, Multi-Agent Orchestration, /orchestrate Command, ORCHESTRATION MODE, Output Format (+3 more)
 
 ### Community 87 - "Quarkus Java Standards"
 Cohesion: 0.22
@@ -1099,24 +1116,24 @@ Cohesion: 0.36
 Nodes (9): Attack lifecycle phases (recon through impact), MITRE ATT&CK framework, Skill: red-team-tactics, Risk prioritization (CVSS + EPSS + asset value), OWASP Top 10:2025 (including Supply Chain A03, Exceptional Conditions A10), Supply chain security (dependencies, lock files, CI/CD, registry), Security checklists (OWASP, Auth, API, Data), Script: security_scan.py (+1 more)
 
 ### Community 89 - "Next.js Feature Building"
-Cohesion: 0.20
-Nodes (13): skillsForProfile(), AGENT_ORDER, agentsWorkflowBlock(), codeReviewRule(), DOMAIN_FIXED_RULES, DOMAIN_LIMIT, FIXED_RULES_MARKER, fixedRulesBlock() (+5 more)
+Cohesion: 0.25
+Nodes (7): 1. Auth / tokens, 2. Authorization, 3. Input / output, 4. Config / secrets, Checklist, NestJS Security Reviewer, Output format
 
 ### Community 90 - "Architecture Context & Classification"
 Cohesion: 0.16
 Nodes (13): Architecture Context Discovery, Project Classification Matrix (MVP/SaaS/Enterprise), Architecture Examples (MVP/SaaS/Enterprise), Architecture Pattern Selection Guidelines, API Patterns, Architecture Patterns Reference, Data Access Patterns, Distributed System Patterns (+5 more)
 
 ### Community 91 - "MANIFEST Commit Counts"
-Cohesion: 0.18
-Nodes (12): code-archaeologist agent, Brownfield Development, Chesterton's Fence Principle, Strangler Fig Refactoring Pattern, qa-automation-engineer agent, Page Object Model (POM), Playwright E2E Test Automation, Unhappy Path Destructive Testing (+4 more)
+Cohesion: 0.17
+Nodes (11): Rust Immutability by Default, Error Handling, Formatting, Immutability, Iterators Over Loops, Module Organization, Naming, Ownership and Borrowing (+3 more)
 
 ### Community 92 - "Worktree Tool Concepts"
 Cohesion: 0.36
 Nodes (8): EnterWorktree tool concept, ExitWorktree tool concept, WorktreeCreate hook concept, .worktreeinclude file concept, WorktreeRemove hook concept, claude-code-worktrees MANIFEST, Worktree Reference (full table), claude-code-worktrees SKILL
 
 ### Community 93 - "Deployment Command & Checklist"
-Cohesion: 0.25
-Nodes (8): Zod Validation, API Response Format, Best Practices, Directory Structure, Express.js API Template, Middleware Stack, Setup Steps, Tech Stack
+Cohesion: 0.15
+Nodes (12): Applied rules, {domain-basename} — {role in one line}, Global Constraints, Key patterns, Local conventions, Responsibility, revise-claude-md Skill Implementation Plan, Self-Review (+4 more)
 
 ### Community 94 - "TDD & Go Fuzz Testing"
 Cohesion: 0.32
@@ -1163,8 +1180,8 @@ Cohesion: 0.29
 Nodes (7): Controller (abstract class), User (class), acme/laravel-app (composer.json), laravel/framework ^11.0, laravel/pint ^1.16 (dev), pestphp/pest ^2.0 (dev), phpstan/phpstan ^1.11 (dev)
 
 ### Community 105 - "ECC Transform Functions"
-Cohesion: 0.71
-Nodes (5): cleanAgentMarkdown(), provenanceComment(), removeSection(), splitFrontmatter(), stampProvenance()
+Cohesion: 0.20
+Nodes (12): Kotlin Coding Style Rules, Error Handling, Extension Functions, Formatting, Immutability, Kotlin Coding Style, ktlint/Detekt (Kotlin formatters), Naming (+4 more)
 
 ### Community 106 - "Marketplace Plugin Registry"
 Cohesion: 0.33
@@ -1299,16 +1316,16 @@ Cohesion: 0.67
 Nodes (4): plan: setup-testing pillar, design: setup-testing pillar, lib/data/testing-catalog.mjs, lib/detect/testing.mjs
 
 ### Community 140 - "Code Reviewer ECC Patch"
-Cohesion: 0.25
-Nodes (8): /deploy Command, Pre-Deployment Checklist, Production Deployment, checklist.py - Master Checklist Runner, Core Checks (P0-P5), Performance Checks (Lighthouse, Playwright), Verification Suite (P0-P9), verify_all.py - Full Verification Suite
+Cohesion: 0.22
+Nodes (9): Auto-merge Configuration (Recommended), Basic Configuration, Extended Configuration, Go Configuration, Grouping Rules, Lock File Maintenance, PHP/Composer Configuration, Renovate (+1 more)
 
 ### Community 141 - "PHP Laravel Agents & Skills"
 Cohesion: 0.50
 Nodes (4): php-reviewer agent, laravel-patterns skill, laravel-security skill, laravel-tdd skill
 
 ### Community 142 - "Java App Template"
-Cohesion: 0.05
-Nodes (44): 10. iOS Checklist, 1. Human Interface Guidelines Philosophy, 2. iOS Typography, 3. iOS Color System, 4. iOS Layout & Spacing, 5. iOS Navigation Patterns, 6. iOS Components, 7. iOS Specific Patterns (+36 more)
+Cohesion: 0.07
+Nodes (29): 10. iOS Checklist, 1. Human Interface Guidelines Philosophy, 2. iOS Typography, 3. iOS Color System, 4. iOS Layout & Spacing, 6. iOS Components, 8. SF Symbols, Before Every iOS Screen (+21 more)
 
 ### Community 143 - "Go Module gorilla/mux"
 Cohesion: 0.50
@@ -1343,7 +1360,7 @@ Cohesion: 0.08
 Nodes (24): Step 4.5 - Graph health check (read-only integrity gate), For /graphify add and --watch, For /graphify query, For the commit hook and native CLAUDE.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands (+16 more)
 
 ### Community 153 - "CLI Template Commander.js"
-Cohesion: 0.20
+Cohesion: 0.18
 Nodes (10): Commander.js CLI Framework, @inquirer/prompts Interactive Prompts, Best Practices, CLI Design Principles, CLI Tool Template, Directory Structure, Key Components, Publishing (+2 more)
 
 ### Community 154 - "Memory System Skill"
@@ -1371,7 +1388,7 @@ Cohesion: 0.20
 Nodes (10): Electron contextBridge IPC Pattern, electron-vite Bundler, Best Practices, Build Targets, Directory Structure, Electron Desktop App Template, Key Concepts, Process Model (+2 more)
 
 ### Community 160 - "Flutter App Template"
-Cohesion: 0.22
+Cohesion: 0.20
 Nodes (9): Go Router Navigation, Riverpod State Management, Architecture Layers, Best Practices, Directory Structure, Flutter App Template, Key Packages, Setup Steps (+1 more)
 
 ### Community 161 - "Go Anti-Patterns Standards"
@@ -1411,20 +1428,20 @@ Cohesion: 0.67
 Nodes (3): Process management (PM2, systemd, Docker, Kubernetes), Scaling strategy (vertical, horizontal, auto), Skill: server-management
 
 ### Community 172 - "Node Run Script (tools)"
-Cohesion: 0.20
-Nodes (10): Skill: security-review, Rust Unsafe Code Safety Comments, Dependency Security, Error Messages, Input Validation, References, Rust Security, Secrets Management (+2 more)
+Cohesion: 0.26
+Nodes (12): cleanAgentMarkdown(), provenanceComment(), removeSection(), splitFrontmatter(), stampProvenance(), tools/transform.mjs (stampMarkdown, stampJs, rewritePluginRoot), META, htmlComment() (+4 more)
 
 ### Community 184 - "Caveman Statusline Script"
 Cohesion: 0.22
-Nodes (9): Auto-merge Configuration (Recommended), Basic Configuration, Extended Configuration, Go Configuration, Grouping Rules, Lock File Maintenance, PHP/Composer Configuration, Renovate (+1 more)
+Nodes (9): Basic Configuration, Commit Message Prefixes, Dependabot, Ecosystem Hygiene — Only Declare What the Repo Actually Has, Grouping Dependencies, Ignoring Dependencies, Multiple Ecosystems, Package Ecosystems (+1 more)
 
 ### Community 185 - "Install Script"
 Cohesion: 0.25
 Nodes (7): common/testing.md, Skill: python-testing, Coverage, Framework, Python Testing, Reference, Test Organization
 
 ### Community 186 - "Ponytail Statusline Script"
-Cohesion: 0.29
-Nodes (6): Agent Coordination, Agent Pipeline, Execution Order, task-slug.md plan file, Agent Coordination - App Builder, Plan Verification Checkpoint
+Cohesion: 0.22
+Nodes (8): Next.js Full-Stack Structure (Next.js 16 Optimized), Path Aliases (tsconfig.json), Project Scaffolding, Structure Principles, When to Use What, Next.js Full-Stack Structure, Default Web Stack 2026, Tech Stack Selection 2026
 
 ### Community 187 - "Uninstall Script"
 Cohesion: 0.22
@@ -1447,16 +1464,16 @@ Cohesion: 0.09
 Nodes (21): Architecture, Catalog registration, `.claude/settings.json` (aia-harness dev), Cross-platform compliance, Design: validate-settings-schema hook, Error format, File change summary, File locations (+13 more)
 
 ### Community 199 - "Package Type Config"
-Cohesion: 0.22
-Nodes (9): Basic Configuration, Commit Message Prefixes, Dependabot, Ecosystem Hygiene — Only Declare What the Repo Actually Has, Grouping Dependencies, Ignoring Dependencies, Multiple Ecosystems, Package Ecosystems (+1 more)
+Cohesion: 0.18
+Nodes (11): Skill: rust-patterns, Skill: security-review, Rust Unsafe Code Safety Comments, Dependency Security, Error Messages, Input Validation, References, Rust Security (+3 more)
 
 ### Community 200 - "Package Type Config (tools)"
 Cohesion: 0.29
 Nodes (6): common/security.md, Skill: django-security, Python Security, Reference, Secret Management, Security Scanning
 
 ### Community 219 - "Caveman Package Init (tools)"
-Cohesion: 0.12
-Nodes (18): Common Patterns Rules (base), Dart BLoC/Cubit State Management, Dart/Flutter Clean Architecture Layers, Dart/Flutter Patterns Rules, Dart freezed Immutable State, Dart GoRouter Navigation, Dart Repository Pattern, Dart Riverpod State Management (+10 more)
+Cohesion: 0.20
+Nodes (10): Common Patterns Rules (base), Go Dependency Injection via Constructor Functions, Go Patterns Rules, Kotlin Coroutine Patterns (viewModelScope/stateIn/supervisorScope), Kotlin Patterns Rules, Kotlin DSL Builder Pattern, Kotlin Multiplatform expect/actual Pattern, Kotlin Repository Pattern (suspend/Flow/Result) (+2 more)
 
 ### Community 222 - "Community 222"
 Cohesion: 0.05
@@ -1467,8 +1484,8 @@ Cohesion: 0.05
 Nodes (42): 🔴 AGENT BOUNDARY ENFORCEMENT (CRITICAL), Agent Chaining with Context, Agent States, Available Agents, Best Practices, 🔴 CHECKPOINT 1: Plan Verification (MANDATORY), 🔴 CHECKPOINT 2: Project Type Routing, 🔴 Checkpoint Summary (CRITICAL) (+34 more)
 
 ### Community 224 - "Community 224"
-Cohesion: 0.07
-Nodes (28): 2. Offline Sync & Conflict Resolution, 4. App Versioning, 5. Authentication for Mobile, 6. Error Handling for Mobile, 7. Media & Binary Handling, 8. Security for Mobile, 9. Monitoring & Analytics, 🚫 AI MOBILE BACKEND ANTI-PATTERNS (+20 more)
+Cohesion: 0.05
+Nodes (43): 1. Push Notifications, 2. Offline Sync & Conflict Resolution, 3. Mobile API Optimization, 4. App Versioning, 5. Authentication for Mobile, 6. Error Handling for Mobile, 7. Media & Binary Handling, 8. Security for Mobile (+35 more)
 
 ### Community 225 - "Community 225"
 Cohesion: 0.05
@@ -1583,8 +1600,8 @@ Cohesion: 0.08
 Nodes (25): 10. Testing Quick Reference, 1. Null Safety Fundamentals, 2. Immutable State, 3. Async Composition, 4. Widget Architecture, 5. State Management: BLoC/Cubit, 6. State Management: Riverpod, 7. Navigation with GoRouter (+17 more)
 
 ### Community 253 - "Community 253"
-Cohesion: 0.07
-Nodes (26): 1. Mobile Typography Fundamentals, 2. System Fonts, 3. Type Scale, 6. Dark Mode Typography, 7. Typography Anti-Patterns, 8. Font Loading & Performance, 9. Typography Checklist, ❌ AI Typography Mistakes (+18 more)
+Cohesion: 0.06
+Nodes (33): 10. Quick Reference, 1. Mobile Typography Fundamentals, 3. Type Scale, 4. Dynamic Type / Text Scaling, 5. Typography Accessibility, 6. Dark Mode Typography, 7. Typography Anti-Patterns, 8. Font Loading & Performance (+25 more)
 
 ### Community 254 - "Community 254"
 Cohesion: 0.08
@@ -1659,8 +1676,8 @@ Cohesion: 0.09
 Nodes (21): Build System Detection, Bundler-Independent Runtime Failures, Bundler-Specific, Common Failure Patterns, Core Responsibilities, CRA (Create React App), Dependency Issues, Diagnostic Commands (+13 more)
 
 ### Community 272 - "Community 272"
-Cohesion: 0.25
-Nodes (7): Skill: python-patterns, Formatting, Immutability, Python Coding Style, Reference, Standards, Python PEP 8 and Type Annotations
+Cohesion: 0.29
+Nodes (3): renderVerifyOnStop(), generate/verify.mjs (renderVerifyOnStop), genHook()
 
 ### Community 273 - "Community 273"
 Cohesion: 0.09
@@ -1903,8 +1920,12 @@ Cohesion: 0.13
 Nodes (14): 1. The Smoke Suite (P0), 2. The Regression Suite (P1), 3. Visual Regression, 🤖 Automating the "Unhappy Path", Browser Automation, CI/CD, 📜 Coding Standards for Tests, Core Philosophy (+6 more)
 
 ### Community 333 - "Community 333"
-Cohesion: 0.13
-Nodes (14): Anti-Patterns, Core Philosophy, Coverage Strategy, Deep Audit Approach, Discovery, Framework Selection, Mocking Principles, Review Checklist (+6 more)
+Cohesion: 0.11
+Nodes (18): AAA Pattern, test-engineer agent, Anti-Patterns, Core Philosophy, Coverage Strategy, Deep Audit Approach, Discovery, Framework Selection (+10 more)
+
+### Community 334 - "Community 334"
+Cohesion: 0.31
+Nodes (3): Project Templates, 🎯 Selective Reading Rule, Usage
 
 ### Community 335 - "Community 335"
 Cohesion: 0.13
@@ -2003,8 +2024,8 @@ Cohesion: 0.14
 Nodes (14): Agent Usage, Approval Criteria, Code Quality, Code Review Standards, Common Issues to Catch, Integration with Other Rules, Performance, Purpose (+6 more)
 
 ### Community 359 - "Community 359"
-Cohesion: 0.15
-Nodes (9): API Response Format, Common Patterns, Design Patterns, Repository Pattern, Skeleton Projects, API Response Format, Custom Hooks Pattern, Repository Pattern (+1 more)
+Cohesion: 0.12
+Nodes (14): API Response Pattern, C# Patterns, Dependency Injection, Options Pattern, Repository Pattern, Dependency Injection, Functional Options, Go Patterns (+6 more)
 
 ### Community 360 - "Community 360"
 Cohesion: 0.14
@@ -2039,8 +2060,8 @@ Cohesion: 0.22
 Nodes (8): graphify reference: extra exports and benchmark, Step 6b - Wiki (only if --wiki flag), Step 7 - Neo4j export (only if --neo4j or --neo4j-push flag), Step 7a - FalkorDB export (only if --falkordb or --falkordb-push flag), Step 7b - SVG export (only if --svg flag), Step 7c - GraphML export (only if --graphml flag), Step 7d - MCP server (only if --mcp flag), Step 8 - Token reduction benchmark (only if total_words > 5000)
 
 ### Community 368 - "Community 368"
-Cohesion: 0.14
-Nodes (13): caveman tool pin (JuliusBrussee/caveman), ponytail tool pin (DietrichGebert/ponytail), diagnose → approve → apply loop, ECC-sourced assets by detected stack, harness-engineering SKILL.md, project-level tools (caveman/ponytail/rtk/graphify), mcp-catalog SKILL.md, MCP wiring rules (env placeholders, small set, no enableAll) (+5 more)
+Cohesion: 0.20
+Nodes (9): Builder Pattern with DSL, Coroutine Patterns, Dependency Injection, expect/actual (KMP), Kotlin Patterns, References, Repository Pattern, UseCase Pattern (+1 more)
 
 ### Community 369 - "Community 369"
 Cohesion: 0.15
@@ -2123,12 +2144,12 @@ Cohesion: 0.29
 Nodes (3): basename, errors, list
 
 ### Community 390 - "Community 390"
-Cohesion: 0.33
-Nodes (5): API Response Pattern, C# Patterns, Dependency Injection, Options Pattern, Repository Pattern
+Cohesion: 0.25
+Nodes (8): Dart BLoC/Cubit State Management, Dart/Flutter Clean Architecture Layers, Dart/Flutter Patterns Rules, Dart freezed Immutable State, Dart GoRouter Navigation, Dart Repository Pattern, Dart Riverpod State Management, Dart UseCase Pattern
 
 ### Community 391 - "Community 391"
-Cohesion: 0.17
-Nodes (11): `/aia-harness:add-mcp [path]`, `/aia-harness:add-plugins [path]`, `/aia-harness:add-tools [path]`, aia-harness command guide, `/aia-harness:doctor [path]`, `/aia-harness:init [path]`, `/aia-harness:patch [path]`, `/aia-harness:scan [path]` (+3 more)
+Cohesion: 0.15
+Nodes (12): `/aia-harness:add-mcp [path]`, `/aia-harness:add-plugins [path]`, `/aia-harness:add-tools [path]`, aia-harness command guide, `/aia-harness:doctor [path]`, `/aia-harness:init [path]`, `/aia-harness:patch [path]`, `/aia-harness:revise-claude-md [path]` (+4 more)
 
 ### Community 392 - "Community 392"
 Cohesion: 0.17
@@ -2143,7 +2164,7 @@ Cohesion: 0.33
 Nodes (5): printWidth, semi, singleQuote, tabWidth, trailingComma
 
 ### Community 395 - "Community 395"
-Cohesion: 0.18
+Cohesion: 0.17
 Nodes (11): Clean Architecture Layer Boundaries, Dart/Flutter Patterns, Dependency Injection, Immutable State with freezed, Navigation (GoRouter), References, Repository Pattern, State Management: BLoC/Cubit (+3 more)
 
 ### Community 396 - "Community 396"
@@ -2159,7 +2180,7 @@ Cohesion: 0.17
 Nodes (9): allOps, complexity-gated memory nudge at Stop, event, flag, h, memoryIndexPath, SKIP_SUFFIXES, SOURCE_EXTS (+1 more)
 
 ### Community 399 - "Community 399"
-Cohesion: 0.17
+Cohesion: 0.18
 Nodes (12): Java Coding Style Rules, Error Handling, Formatting, Immutability, Java Coding Style, Java Modern Language Features (records/sealed/pattern-matching), Modern Java Features, Naming (+4 more)
 
 ### Community 400 - "Community 400"
@@ -2215,8 +2236,8 @@ Cohesion: 0.18
 Nodes (5): Design Principles, Error Handling, Formatting, Go Coding Style, Reference
 
 ### Community 413 - "Community 413"
-Cohesion: 0.10
-Nodes (21): Skill: rust-patterns, Rust Immutability by Default, Error Handling, Formatting, Immutability, Iterators Over Loops, Module Organization, Naming (+13 more)
+Cohesion: 0.22
+Nodes (9): Astro Static Site Template, Best Practices, Deployment, Directory Structure, Key Concepts, Setup Steps, Tech Stack, Astro 6.x Framework (+1 more)
 
 ### Community 414 - "Community 414"
 Cohesion: 0.33
@@ -2284,7 +2305,7 @@ Nodes (10): Best Practices, Chrome Extension Template, Development Tips, Directo
 
 ### Community 430 - "Community 430"
 Cohesion: 0.25
-Nodes (8): Common Error Codes and Fixes, Context/Object Property Access, Deprecated Action Versions, Expression Syntax Errors, Missing Permissions Declarations, ShellCheck Issues in run: Blocks, Undefined Action Inputs/Outputs, YAML Type Errors
+Nodes (8): /deploy Command, Pre-Deployment Checklist, Production Deployment, checklist.py - Master Checklist Runner, Core Checks (P0-P5), Performance Checks (Lighthouse, Playwright), Verification Suite (P0-P9), verify_all.py - Full Verification Suite
 
 ### Community 431 - "Community 431"
 Cohesion: 0.20
@@ -2295,8 +2316,8 @@ Cohesion: 0.12
 Nodes (15): common/patterns.md, Skill: api-design, Skill: laravel-patterns, Boundaries, Dependency Injection, DTOs and Value Objects, PHP Patterns, Reference (+7 more)
 
 ### Community 433 - "Community 433"
-Cohesion: 0.20
-Nodes (9): Skill: fastapi-patterns, Async, Dependency Injection, FastAPI Rules, Schemas, Security, Structure, Testing (+1 more)
+Cohesion: 0.11
+Nodes (16): Skill: fastapi-patterns, Skill: python-patterns, Formatting, Immutability, Python Coding Style, Reference, Standards, Async (+8 more)
 
 ### Community 434 - "Community 434"
 Cohesion: 0.20
@@ -2327,15 +2348,15 @@ Cohesion: 0.12
 Nodes (13): branch, event, isCommit, isPush, onMain, permissionDecisionReason, PreToolUse guard for git commit/push to main/master, Acceptance criteria (+5 more)
 
 ### Community 441 - "Community 441"
-Cohesion: 0.20
-Nodes (9): Builder Pattern with DSL, Coroutine Patterns, Dependency Injection, expect/actual (KMP), Kotlin Patterns, References, Repository Pattern, UseCase Pattern (+1 more)
+Cohesion: 0.29
+Nodes (7): Java API Response Envelope Pattern, Java Builder Pattern, Java Patterns Rules, Java DTO Mapping with Records, Java Repository Pattern, Java Sealed Types for Domain Models, Service Layer
 
 ### Community 442 - "Community 442"
 Cohesion: 0.20
 Nodes (9): Coroutine Testing, Fakes Over Mocks, Kotlin Testing, Ktor MockEngine, Room/SQLDelight Testing, Test Framework, Test Naming, Test Organization (+1 more)
 
 ### Community 443 - "Community 443"
-Cohesion: 0.20
+Cohesion: 0.18
 Nodes (10): Animation Patterns (Framer Motion), Best Practices (Modern), Deployment, Directory Structure, Landing Page Sections, Next.js Static Site Template (Modern Edition), SEO Implementation (Metadata API), Setup Steps (+2 more)
 
 ### Community 444 - "Community 444"
@@ -2355,16 +2376,16 @@ Cohesion: 0.20
 Nodes (10): Boolean Logic & Nesting, Dates, Labels, Milestones, Projects, Types, Linked Content, Missing Metadata, Numeric Filters, People, Query Syntax (+2 more)
 
 ### Community 448 - "Community 448"
-Cohesion: 0.33
-Nodes (6): Authentication, Before API Design, For Every Endpoint, 📝 MOBILE BACKEND CHECKLIST, Push Notifications, Release
+Cohesion: 0.25
+Nodes (7): Bootstrap (`main.ts`), Controllers, Cross-cutting concerns, Dependency Injection, Modules, NestJS Architecture, Services
 
 ### Community 449 - "Community 449"
 Cohesion: 0.22
 Nodes (8): Critical, Finding Priorities, High, Medium, Out of Scope, Output Format, Review Scope, Review Workflow
 
 ### Community 450 - "Community 450"
-Cohesion: 0.29
-Nodes (6): C++ Patterns, Error Handling, RAII (Resource Acquisition Is Initialization), Reference, Rule of Five/Zero, Value Semantics
+Cohesion: 0.25
+Nodes (7): Error responses, Non-200 success codes, Per controller, Per route, Protected routes, Schema accuracy, Swagger / OpenAPI
 
 ### Community 451 - "Community 451"
 Cohesion: 0.22
@@ -2387,8 +2408,8 @@ Cohesion: 0.22
 Nodes (8): Editing Settings, Example Plugin Settings File, Gitignore, Template: Advanced Configuration, Template: Agent State File, Template: Basic Configuration, Template: Feature Flag Pattern, Usage in Hooks
 
 ### Community 456 - "Community 456"
-Cohesion: 0.14
-Nodes (15): Java API Response Envelope Pattern, API Response Envelope, Java Builder Pattern, Builder Pattern, Constructor Injection, Java Patterns Rules, Java DTO Mapping with Records, DTO Mapping (+7 more)
+Cohesion: 0.22
+Nodes (8): API Response Envelope, Builder Pattern, Constructor Injection, DTO Mapping, Java Patterns, References, Repository Pattern, Sealed Types for Domain Models
 
 ### Community 457 - "Community 457"
 Cohesion: 0.22
@@ -2407,20 +2428,20 @@ Cohesion: 0.22
 Nodes (8): File Map, Format-on-Edit Hook — Language-Aware Generation, Global Constraints, Self-Review, Task 1: Create `lib/generate/format-hook.mjs`, Task 2: Wire generated hook into `lib/plan.mjs`, Task 3: Tests for `lib/generate/format-hook.mjs`, Task 4: Wire plan + delete static file
 
 ### Community 461 - "Community 461"
-Cohesion: 0.40
-Nodes (5): Final report, Multi-Repo Release Orchestration, Pre-flight validation (per repo), Release sequence (per repo), Supervisor halts on first failure
+Cohesion: 0.25
+Nodes (8): Common Error Codes and Fixes, Context/Object Property Access, Deprecated Action Versions, Expression Syntax Errors, Missing Permissions Declarations, ShellCheck Issues in run: Blocks, Undefined Action Inputs/Outputs, YAML Type Errors
 
 ### Community 462 - "Community 462"
 Cohesion: 0.33
 Nodes (5): How to save, Persistent Memory — Instructions, Reading memories, Sanitation (mandatory when index is large), When to save (do not wait to be asked)
 
 ### Community 463 - "Community 463"
-Cohesion: 0.40
-Nodes (5): CaptainHook (PHP projects), direnv + `core.hooksPath` (no dependencies), Hook Installation Methods, Husky (Node.js projects), Local Pre-Push Hook
+Cohesion: 0.32
+Nodes (5): GITHUB_PM_ARTIFACTS, PLUGIN_ROOT, selectGitHubPMAssets(), T, lib/data/github-pm-catalog.mjs
 
 ### Community 464 - "Community 464"
-Cohesion: 0.29
-Nodes (7): Auto-merge fails with signature error, "Base branch requires signed commits. Rebase merges cannot be automatically signed", "Merge commits are not allowed on this repository", Merge queue silently fails to enqueue a green PR, Renaming a CI job orphans its required status check → PR stuck "Expected", Rulesets cannot block merge on a pending review, Troubleshooting
+Cohesion: 0.33
+Nodes (6): Kotlin Testing Rules, Kotlin Fakes Over Mocks pattern, Kotlin Ktor MockEngine Testing, Kotlin Room/SQLDelight In-Memory Testing, kotlinx-coroutines-test runTest, Turbine Flow Testing (Kotlin)
 
 ### Community 465 - "Community 465"
 Cohesion: 0.22
@@ -2439,12 +2460,12 @@ Cohesion: 0.40
 Nodes (3): additionalContext, event, PostToolUse SQL idempotency enforcement
 
 ### Community 469 - "Community 469"
-Cohesion: 0.33
-Nodes (6): Custom actions not recognized, False positives on reusable workflows, Large matrix expressions, "shellcheck is not installed", Troubleshooting, yamllint `empty-lines` rejects trailing blank lines
+Cohesion: 0.22
+Nodes (8): Zod Validation, API Response Format, Best Practices, Directory Structure, Express.js API Template, Middleware Stack, Setup Steps, Tech Stack
 
 ### Community 470 - "Community 470"
-Cohesion: 0.33
-Nodes (6): Branch Protection Configuration, Bypass Permissions for Auto-merge, Code Owner Reviews - AVOID with Auto-merge, Merge Strategy Requirements, Required Status Checks - CRITICAL, Strict Status Checks
+Cohesion: 0.29
+Nodes (6): C++ Patterns, Error Handling, RAII (Resource Acquisition Is Initialization), Reference, Rule of Five/Zero, Value Semantics
 
 ### Community 471 - "Community 471"
 Cohesion: 0.20
@@ -2475,8 +2496,8 @@ Cohesion: 0.25
 Nodes (7): After Planning, 🔴 CRITICAL RULES, Expected Output, Naming Examples, /plan - Project Planning Mode, Task, Usage
 
 ### Community 478 - "Community 478"
-Cohesion: 0.33
-Nodes (5): Dependency Injection, Functional Options, Go Patterns, Reference, Small Interfaces
+Cohesion: 0.40
+Nodes (5): bloc_test BLoC Unit Testing, Dart/Flutter Testing Rules, Dart Fakes Over Mocks pattern, flutter_test / dart:test Framework, Dart Golden Tests (visual regression)
 
 ### Community 479 - "Community 479"
 Cohesion: 0.25
@@ -2487,8 +2508,8 @@ Cohesion: 0.25
 Nodes (7): Authentication and Authorization, C# Security, Error Handling, Input Validation, References, Secret Management, SQL Injection Prevention
 
 ### Community 481 - "Community 481"
-Cohesion: 0.40
-Nodes (5): 1. Push Notifications, Anti-Patterns, Platform Architecture, Push Types, Token Management
+Cohesion: 0.29
+Nodes (6): Async and Error Handling, C# Coding Style, Formatting, Immutability, Standards, Types and Models
 
 ### Community 482 - "Community 482"
 Cohesion: 0.25
@@ -2499,8 +2520,8 @@ Cohesion: 0.25
 Nodes (7): Directory Structure, Key Points, Running Commands, Standard Plugin Example, Usage Examples, Using Agents, When to Use This Pattern
 
 ### Community 484 - "Community 484"
-Cohesion: 0.40
-Nodes (5): Auto-merge Decision Matrix, Auto-merge Workflow, GitHub Actions Auto-merge (Dependabot Only), GitHub Actions Auto-merge (Merge Queue), Renovate vs Dependabot Auto-merge
+Cohesion: 0.29
+Nodes (7): Auto-merge fails with signature error, "Base branch requires signed commits. Rebase merges cannot be automatically signed", "Merge commits are not allowed on this repository", Merge queue silently fails to enqueue a green PR, Renaming a CI job orphans its required status check → PR stuck "Expected", Rulesets cannot block merge on a pending review, Troubleshooting
 
 ### Community 485 - "Community 485"
 Cohesion: 0.25
@@ -2539,8 +2560,12 @@ Cohesion: 0.33
 Nodes (5): For /graphify explain, For /graphify path, graphify reference: query, path, explain, Step 0 — Constrained query expansion (REQUIRED before traversal), Step 1 — Traversal
 
 ### Community 495 - "Community 495"
-Cohesion: 0.33
-Nodes (6): Avoid `any`, Interfaces vs. Type Aliases, JavaScript Files, Public APIs, React Props, Types and Interfaces
+Cohesion: 0.25
+Nodes (7): Coverage bar, Layout, Mocking Drizzle, One behavior per test, Testing — Jest, What to test, Wiring DI
+
+### Community 496 - "Community 496"
+Cohesion: 0.25
+Nodes (7): Computed and Watchers, Lifecycle and DOM, Macros and Templates, Reactivity Discipline, Reference, SFC Structure, Vue Coding Style
 
 ### Community 497 - "Community 497"
 Cohesion: 0.40
@@ -2551,8 +2576,8 @@ Cohesion: 0.14
 Nodes (15): assertContext(), assertPassThrough(), HOOK, ROOT, SESSION_EVENT, runHook(), assertSilent(), HOOK (+7 more)
 
 ### Community 499 - "Community 499"
-Cohesion: 0.25
-Nodes (7): Computed and Watchers, Lifecycle and DOM, Macros and Templates, Reactivity Discipline, Reference, SFC Structure, Vue Coding Style
+Cohesion: 0.29
+Nodes (6): Agent Coordination, Agent Pipeline, Execution Order, task-slug.md plan file, Agent Coordination - App Builder, Plan Verification Checkpoint
 
 ### Community 500 - "Community 500"
 Cohesion: 0.25
@@ -2567,20 +2592,20 @@ Cohesion: 0.25
 Nodes (6): API Security Checklist, Authentication Checklist, Data Protection Checklist, Quick Audit Commands, Security Checklists, Security Headers
 
 ### Community 503 - "Community 503"
-Cohesion: 0.50
-Nodes (4): Expo Router File-Based Navigation, NativeWind v5 Styling, React Native App Template, Zustand State Management
+Cohesion: 0.33
+Nodes (6): 5. iOS Navigation Patterns, Gestures, Modal Presentations, Navigation Bar Guidelines, Navigation Types, Tab Bar Guidelines
 
 ### Community 504 - "Community 504"
-Cohesion: 0.40
-Nodes (5): CodeQL Configuration, Required Action, Supported Languages — PHP Is NOT Supported, The Problem, Verification
+Cohesion: 0.21
+Nodes (8): Action Allow-Lists, Fields, Update allow-list, View current allow-list, Benefits, Example structure, Maintenance considerations, Shared Workflow Repos Pattern
 
 ### Community 505 - "Community 505"
 Cohesion: 0.29
 Nodes (7): Best Practices — Skills (`.claude/skills/<name>/SKILL.md`), Compressing `description`, Compressing the body (SKILL.md body), Frontmatter fields, Invariants — never violate when compressing, Optimal structure pattern, Quality signal after compression
 
 ### Community 506 - "Community 506"
-Cohesion: 0.50
-Nodes (4): 3. Mobile API Optimization, Batch Requests, Pagination: Cursor vs Offset, Response Size Reduction
+Cohesion: 0.33
+Nodes (6): Branch Protection Configuration, Bypass Permissions for Auto-merge, Code Owner Reviews - AVOID with Auto-merge, Merge Strategy Requirements, Required Status Checks - CRITICAL, Strict Status Checks
 
 ### Community 507 - "Community 507"
 Cohesion: 0.29
@@ -2619,27 +2644,27 @@ Cohesion: 0.29
 Nodes (6): C++ Testing, Coverage, Framework, Reference, Running Tests, Sanitizers
 
 ### Community 518 - "Community 518"
-Cohesion: 0.29
-Nodes (6): Async and Error Handling, C# Coding Style, Formatting, Immutability, Standards, Types and Models
+Cohesion: 0.33
+Nodes (6): Avoid `any`, Interfaces vs. Type Aliases, JavaScript Files, Public APIs, React Props, Types and Interfaces
 
 ### Community 519 - "Community 519"
 Cohesion: 0.29
 Nodes (7): agents/orchestration/deployment-orchestrator.md, .claude-plugin/plugin.json, commands/ci/build.md, File Contents, hooks/hooks.json, .mcp.json, skills/kubernetes-ops/SKILL.md
 
 ### Community 520 - "Community 520"
-Cohesion: 0.50
-Nodes (4): Find all items in a release, Find which release contains an issue, GitHub web search, Querying Releases
+Cohesion: 0.40
+Nodes (5): 2. System Fonts, Android: Roboto Family, Custom Font Considerations, iOS: SF Pro Family, When to Use System Fonts
 
 ### Community 521 - "Community 521"
-Cohesion: 0.29
+Cohesion: 0.25
 Nodes (7): Best Practices (2026 Standards), Directory Structure, Environment Variables, Key Concepts (Updated), Next.js Full-Stack Template (2026 Edition), Setup Steps, Tech Stack
 
 ### Community 522 - "Community 522"
-Cohesion: 0.29
+Cohesion: 0.25
 Nodes (7): Database Schema, Directory Structure, Environment Variables, Next.js SaaS Template (Updated 2026), SaaS Features, Setup Steps, Tech Stack
 
 ### Community 523 - "Community 523"
-Cohesion: 0.29
+Cohesion: 0.25
 Nodes (7): Best Practices, Directory Structure (Nuxt 4 Standard), Environment Variables, Key Concepts (2026), Nuxt 4 Full-Stack Template (2026 Edition), Setup Steps, Tech Stack
 
 ### Community 524 - "Community 524"
@@ -2647,11 +2672,11 @@ Cohesion: 0.29
 Nodes (6): CLAUDE.md AI Enrichment + Stack-Aware Skills Block — Implementation Plan, Global Constraints, Self-Review, Task 1: Extend `lib/data/frameworks.mjs` + create `lib/data/skill-map.mjs`, Task 2: Add `skillsBlock()` to `lib/generate/claude-md.mjs` + update `renderRootClaudeMd()`, Task 3: Update `commands/init.md` with step 5.5 — Enrich CLAUDE.md
 
 ### Community 525 - "Community 525"
-Cohesion: 0.29
+Cohesion: 0.25
 Nodes (7): API Structure, Best Practices, Directory Structure, FastAPI API Template, Key Concepts, Setup Steps, Tech Stack
 
 ### Community 526 - "Community 526"
-Cohesion: 0.29
+Cohesion: 0.25
 Nodes (7): Best Practices (Updated), Directory Structure, Key Packages & Purpose, Navigation Patterns (Expo Router), React Native App Template (2026 Edition), Setup Steps (2026 Standard), Tech Stack
 
 ### Community 527 - "Community 527"
@@ -2667,12 +2692,12 @@ Cohesion: 0.29
 Nodes (7): Available colors, Create issue with type, GraphQL Feature Header, Issue Types (Advanced GraphQL), List types (org or repo level), Read an issue's type, Set type on an existing issue
 
 ### Community 530 - "Community 530"
-Cohesion: 0.50
-Nodes (4): First release, Issues not being labeled, PRs not being labeled, Troubleshooting
-
-### Community 531 - "Community 531"
 Cohesion: 0.29
 Nodes (7): Anti-pattern: `permissions: read-all`, Common Workflows That Need Fixing, Composite Action Sub-Action Allow-List Gotcha, Least-Privilege Workflow Permissions, Pattern: Workflow-level read, job-level write, require_last_push_approval + Merge Queue Incompatibility, SLSA Provenance: Use actions/attest-build-provenance (not slsa-github-generator)
+
+### Community 531 - "Community 531"
+Cohesion: 0.40
+Nodes (5): 7. iOS Specific Patterns, Context Menus, Pull to Refresh, Sheets & Half-Sheets, Swipe Actions
 
 ### Community 532 - "Community 532"
 Cohesion: 0.29
@@ -2743,8 +2768,8 @@ Cohesion: 0.33
 Nodes (6): Anti-Patterns, Class Hierarchy, Classes & Class Hierarchies (C.*), Key Rules, Rule of Five, Rule of Zero
 
 ### Community 549 - "Community 549"
-Cohesion: 0.67
-Nodes (3): Project Templates, 🎯 Selective Reading Rule, Usage
+Cohesion: 0.40
+Nodes (5): Auto-merge Decision Matrix, Auto-merge Workflow, GitHub Actions Auto-merge (Dependabot Only), GitHub Actions Auto-merge (Merge Queue), Renovate vs Dependabot Auto-merge
 
 ### Community 550 - "Community 550"
 Cohesion: 0.33
@@ -2771,8 +2796,8 @@ Cohesion: 0.33
 Nodes (5): Checklist, How to test, Related issues, Summary, Type of change
 
 ### Community 556 - "Community 556"
-Cohesion: 0.50
-Nodes (4): 10. Quick Reference, Line Height, Minimum Sizes, Typography Tokens
+Cohesion: 0.29
+Nodes (6): Auth & Security, DTOs, Future: refresh tokens (not yet implemented), Guards & current user, JWT, Passwords
 
 ### Community 557 - "Community 557"
 Cohesion: 0.33
@@ -2899,8 +2924,8 @@ Cohesion: 0.40
 Nodes (4): Anti-patterns, C# / .NET — Coding Standards, Conventions, Tooling
 
 ### Community 589 - "Community 589"
-Cohesion: 0.50
-Nodes (4): 4. Dynamic Type / Text Scaling, Android Text Scaling (MANDATORY), iOS Dynamic Type (MANDATORY), Scaling Challenges
+Cohesion: 0.29
+Nodes (6): Constraints belong in the schema, DTOs are zod schemas, Global pipe, Schema accuracy feeds Swagger, Validation — Zod, Where to validate
 
 ### Community 590 - "Community 590"
 Cohesion: 0.40
@@ -2942,10 +2967,6 @@ Nodes (4): Anti-patterns, Conventions, Kotlin — Coding Standards, Tooling
 Cohesion: 0.40
 Nodes (4): Catalog, Example `.mcp.json`, Strategic MCP catalog, Wiring rules (non-negotiable)
 
-### Community 600 - "Community 600"
-Cohesion: 0.50
-Nodes (4): ⏸️ CHECKPOINT: User Approval, PHASE 1: PLANNING (Sequential - NO parallel agents), PHASE 2: IMPLEMENTATION (Parallel agents after approval), 🔴 STRICT 2-PHASE ORCHESTRATION
-
 ### Community 601 - "Community 601"
 Cohesion: 0.40
 Nodes (4): Anti-patterns, Conventions, Next.js — Coding Standards, Tooling
@@ -2963,8 +2984,8 @@ Cohesion: 0.40
 Nodes (4): Anti-patterns, Conventions, PHP + Laravel — Coding Standards, Tooling
 
 ### Community 606 - "Community 606"
-Cohesion: 0.50
-Nodes (4): 5. Typography Accessibility, Contrast Requirements (WCAG), Line Height for Accessibility, Minimum Sizes
+Cohesion: 0.33
+Nodes (6): Custom actions not recognized, False positives on reusable workflows, Large matrix expressions, "shellcheck is not installed", Troubleshooting, yamllint `empty-lines` rejects trailing blank lines
 
 ### Community 607 - "Community 607"
 Cohesion: 0.40
@@ -2979,8 +3000,8 @@ Cohesion: 0.40
 Nodes (4): Anti-patterns, Conventions, React — Coding Standards, Tooling
 
 ### Community 610 - "Community 610"
-Cohesion: 0.50
-Nodes (4): Auto-Approve Race Condition with Copilot Reviewer, Diagnosis, Fix — re-run the workflow, Prevention
+Cohesion: 0.40
+Nodes (5): CodeQL Configuration, Required Action, Supported Languages — PHP Is NOT Supported, The Problem, Verification
 
 ### Community 611 - "Community 611"
 Cohesion: 0.40
@@ -2988,11 +3009,11 @@ Nodes (5): 4. Client-Side Data Fetching (MEDIUM-HIGH), Deduplicate global event 
 
 ### Community 612 - "Community 612"
 Cohesion: 0.50
-Nodes (4): Enable via API, Key behavior, SHA Pinning Requirement (`sha_pinning_required`), Verify current setting
+Nodes (4): /coordinate Command, coordinator-mode skill, Advanced Multi-Agent Coordination, orchestrator agent
 
 ### Community 613 - "Community 613"
-Cohesion: 0.50
-Nodes (4): Mitigation, Real-world example: trivy-action v0.28, The problem, Transitive Dependency Risks
+Cohesion: 0.40
+Nodes (5): API Response Format, Common Patterns, Design Patterns, Repository Pattern, Skeleton Projects
 
 ### Community 614 - "Community 614"
 Cohesion: 0.40
@@ -3031,8 +3052,8 @@ Cohesion: 0.50
 Nodes (5): BFS traversal mode, DFS traversal mode, graphify query, path, explain reference, graphify save-result feedback loop, Constrained query vocab expansion
 
 ### Community 623 - "Community 623"
-Cohesion: 0.40
-Nodes (5): 1. Add the workflow, 2. Enable Discussions (for announcements), 3. Ensure permissions, 4. Link issues to PRs, Setup
+Cohesion: 0.50
+Nodes (4): 9. iOS Accessibility, Dynamic Type Scaling, Reduce Motion, VoiceOver Requirements
 
 ### Community 624 - "Community 624"
 Cohesion: 0.50
@@ -3182,9 +3203,13 @@ Nodes (4): Cross-Component Patterns, Layered Architecture, Plugin Within Plugin,
 Cohesion: 0.50
 Nodes (4): Confidence score rubric, Extraction subagent prompt spec, Hyperedge extraction rule, Node ID format rules
 
+### Community 673 - "Community 673"
+Cohesion: 0.33
+Nodes (5): Config & Environment, ConfigModule, Env validation (`src/config/env.ts`), Only exception, Rules
+
 ### Community 676 - "Community 676"
-Cohesion: 0.21
-Nodes (8): Action Allow-Lists, Fields, Update allow-list, View current allow-list, Benefits, Example structure, Maintenance considerations, Shared Workflow Repos Pattern
+Cohesion: 0.40
+Nodes (5): Final report, Multi-Repo Release Orchestration, Pre-flight validation (per repo), Release sequence (per repo), Supervisor halts on first failure
 
 ### Community 681 - "Community 681"
 Cohesion: 0.50
@@ -3214,6 +3239,10 @@ Nodes (3): Directory Structure, Test Classes, Test Organization
 Cohesion: 0.67
 Nodes (3): Testing Exception Attributes, Testing Exceptions, Testing Expected Exceptions
 
+### Community 693 - "Community 693"
+Cohesion: 0.33
+Nodes (5): Database — Drizzle ORM, Injection, Migrations, Queries, Schema conventions
+
 ### Community 694 - "Community 694"
 Cohesion: 0.67
 Nodes (3): graphify add and watch reference, graphify.ingest, graphify.watch
@@ -3226,6 +3255,10 @@ Nodes (3): GitHub clone and cross-repo merge reference, graphify clone command, 
 Cohesion: 0.67
 Nodes (3): graphify CLAUDE.md integration, graphify commit hook and CLAUDE.md integration reference, graphify post-commit hook
 
+### Community 698 - "Community 698"
+Cohesion: 0.33
+Nodes (5): Async errors, Error Handling, Global exception filter (recommended target, not required), Never leak internals, Throw, don't hand-format
+
 ### Community 699 - "Community 699"
 Cohesion: 0.67
 Nodes (3): graphify.transcribe, graphify video/audio transcription reference, Whisper transcription
@@ -3233,6 +3266,18 @@ Nodes (3): graphify.transcribe, graphify video/audio transcription reference, Wh
 ### Community 700 - "Community 700"
 Cohesion: 0.67
 Nodes (3): build_merge function, detect_incremental function, graphify incremental update and cluster-only reference
+
+### Community 701 - "Community 701"
+Cohesion: 0.33
+Nodes (5): Interceptor vs guard vs exception filter, Interceptors, Keep interceptors stateless and light, Registration, When to use interceptors
+
+### Community 702 - "Community 702"
+Cohesion: 0.33
+Nodes (5): Graceful shutdown (recommended target, not yet wired), Logging, Observability, Redact secrets — hard rule, Structured logging (recommended target, not yet wired)
+
+### Community 703 - "Community 703"
+Cohesion: 0.50
+Nodes (4): Auto-Approve Race Condition with Copilot Reviewer, Diagnosis, Fix — re-run the workflow, Prevention
 
 ### Community 704 - "Community 704"
 Cohesion: 0.67
@@ -3246,6 +3291,18 @@ Nodes (3): 1. Security Expert Mindset, Core Principles, Threat Modeling Question
 Cohesion: 0.67
 Nodes (3): 2025 Key Changes, 2. OWASP Top 10:2025, Risk Categories
 
+### Community 707 - "Community 707"
+Cohesion: 0.40
+Nodes (4): Conventions, NestJS Generate Test, Template, What to test
+
+### Community 708 - "Community 708"
+Cohesion: 0.40
+Nodes (5): 1. Add the workflow, 2. Enable Discussions (for announcements), 3. Ensure permissions, 4. Link issues to PRs, Setup
+
+### Community 709 - "Community 709"
+Cohesion: 0.50
+Nodes (4): Enable via API, Key behavior, SHA Pinning Requirement (`sha_pinning_required`), Verify current setting
+
 ### Community 710 - "Community 710"
 Cohesion: 0.67
 Nodes (3): 6. Exceptional Conditions (A10 - New), Fail-Open vs Fail-Closed, What to Check
@@ -3254,12 +3311,40 @@ Nodes (3): 6. Exceptional Conditions (A10 - New), Fail-Open vs Fail-Closed, What
 Cohesion: 0.67
 Nodes (3): 8. Code Pattern Analysis, High-Risk Patterns, Secret Patterns
 
+### Community 719 - "Community 719"
+Cohesion: 0.50
+Nodes (3): NestJS DB Migration, Rules, Steps
+
+### Community 721 - "Community 721"
+Cohesion: 0.50
+Nodes (3): Gate (stop at first failure, report PASS/FAIL per step), NestJS PR Check, Output format
+
+### Community 722 - "Community 722"
+Cohesion: 0.40
+Nodes (5): CaptainHook (PHP projects), direnv + `core.hooksPath` (no dependencies), Hook Installation Methods, Husky (Node.js projects), Local Pre-Push Hook
+
+### Community 723 - "Community 723"
+Cohesion: 0.50
+Nodes (4): ⏸️ CHECKPOINT: User Approval, PHASE 1: PLANNING (Sequential - NO parallel agents), PHASE 2: IMPLEMENTATION (Parallel agents after approval), 🔴 STRICT 2-PHASE ORCHESTRATION
+
+### Community 724 - "Community 724"
+Cohesion: 0.50
+Nodes (4): Mitigation, Real-world example: trivy-action v0.28, The problem, Transitive Dependency Risks
+
+### Community 744 - "Community 744"
+Cohesion: 0.50
+Nodes (4): Find all items in a release, Find which release contains an issue, GitHub web search, Querying Releases
+
+### Community 745 - "Community 745"
+Cohesion: 0.50
+Nodes (4): First release, Issues not being labeled, PRs not being labeled, Troubleshooting
+
 ## Ambiguous Edges - Review These
 - `sync-agkit.mjs` → `github/awesome-copilot upstream repo`  [AMBIGUOUS]
   scripts/sync-agkit.mjs · relation: conceptually_related_to
 
 ## Knowledge Gaps
-- **5287 isolated node(s):** `event`, `eslintBin`, `event`, `command`, `event` (+5282 more)
+- **5381 isolated node(s):** `event`, `eslintBin`, `event`, `command`, `event` (+5376 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **64 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -3269,13 +3354,13 @@ _Questions this graph is uniquely positioned to answer:_
 - **What is the exact relationship between `sync-agkit.mjs` and `github/awesome-copilot upstream repo`?**
   _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
 - **Why does `Mobile Developer` connect `Mobile Developer Agent` to `Community 387`?**
-  _High betweenness centrality (0.010) - this node is a cross-community bridge._
+  _High betweenness centrality (0.009) - this node is a cross-community bridge._
 - **Why does `mobile-developer agent` connect `Performance Optimizer Agent` to `Mobile Developer Agent`?**
   _High betweenness centrality (0.009) - this node is a cross-community bridge._
 - **What connects `event`, `eslintBin`, `event` to the rest of the system?**
-  _5333 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _5427 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Asset Catalog & Stack Resolution` be split into smaller, more focused modules?**
-  _Cohesion score 0.06971153846153846 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected._
 - **Should `Token Compression Benchmarks` be split into smaller, more focused modules?**
   _Cohesion score 0.10526315789473684 - nodes in this community are weakly interconnected._
 - **Should `Caveman Activation Hooks` be split into smaller, more focused modules?**

@@ -56,6 +56,22 @@ export const PROJECT_BY_STACK = {
   python: { agents: [], skills: [], rules: ["python/coding-standards.md"] },
   django: { agents: [], skills: [], rules: ["django/coding-standards.md"] },
   fastapi: { agents: [], skills: [], rules: ["fastapi/coding-standards.md"] },
+  nestjs: {
+    agents: ["nestjs-code-reviewer", "nestjs-security-reviewer"],
+    skills: ["nestjs-db-migration", "nestjs-gen-test", "nestjs-pr-check"],
+    rules: [
+      "nestjs/architecture.md",
+      "nestjs/auth-security.md",
+      "nestjs/config-env.md",
+      "nestjs/database-drizzle.md",
+      "nestjs/error-handling.md",
+      "nestjs/interceptors.md",
+      "nestjs/observability.md",
+      "nestjs/swagger-openapi.md",
+      "nestjs/testing-jest.md",
+      "nestjs/validation-zod.md",
+    ],
+  },
   php: { agents: [], skills: [], rules: ["php/coding-standards.md"] },
   "php-laravel": { agents: [], skills: [], rules: ["php-laravel/coding-standards.md"] },
   "php-adianti": {
@@ -180,6 +196,18 @@ export function selectProjectAssets(profile) {
 
   return { agents: [...agents].sort(), skills: [...skills].sort(), rules: [...rules].sort() };
 }
+
+/**
+ * When-to-use descriptions for first-party agents, used by resolveAgentWhenToUse
+ * to populate the root CLAUDE.md Agents table.
+ * @type {Record<string, string>}
+ */
+export const PROJECT_AGENT_WHEN_TO_USE = {
+  "nestjs-code-reviewer":
+    "Reviews NestJS controllers, services, modules, Drizzle schemas, and zod DTOs for architecture, DB, validation, TypeScript, and Swagger compliance. Use proactively after editing any NestJS HTTP or persistence file. MUST BE USED before merging NestJS changes (excluding auth — use nestjs-security-reviewer for those).",
+  "nestjs-security-reviewer":
+    "Exploitability-focused review of NestJS auth, JWT config, authorization guards, input handling, CORS, and env/secret exposure. Use proactively after any change to auth, users, config/env files, or a new endpoint. MUST BE USED before merging auth or security-sensitive NestJS changes.",
+};
 
 /**
  * Union of every first-party catalogued skill — handy for inventory/tests.

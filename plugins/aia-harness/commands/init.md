@@ -140,16 +140,19 @@ for the user's platform and stop — do not execute the following steps.
 
    Goal: detect real patterns — naming conventions, import structure, error handling style, test organization.
 
-   **Pass 3 — Synthesize and rewrite.** Using data from passes 1 and 2, edit the root `CLAUDE.md` **and every nested domain `CLAUDE.md`** that was written:
+   **Pass 3 — Synthesize and rewrite.** Using data from passes 1 and 2, edit the root `CLAUDE.md`:
 
    1. Rewrite the root `## Architecture map`: one line per relevant module/directory, describing **responsibility + relationships** (e.g. "protected by middleware X", "consumes service Y via lib/Z"). Omit obvious directories (`node_modules`, `dist`, `.git`). Max 15 entries.
    2. Rewrite the root `## Conventions`: 4–7 **project-specific** conventions detected from the source — concrete and actionable, not generic. Replace only the placeholder line under `## Conventions`. **Do not touch `## Engineering rules`** (the `aia-harness:fixed` section) — those non-negotiable rules stay verbatim; never move, reword, or drop them.
-   3. **Enrich each nested domain `CLAUDE.md`** (the `<domain>/CLAUDE.md` files written under each detected domain — they otherwise ship as an identical generic stub, which is the bug this prevents). For each one, using the files you read for **that** directory in Pass 2 (read the directory now if Pass 2 did not cover it):
-      - replace the `## Responsibility` AI-ENRICH section with 2–4 sentences on what concretely lives there and what does not (and where that other code lives);
-      - replace the `## Local conventions` placeholder with 2–5 conventions actually observed in that directory (naming, base classes, error handling, file layout) — not generic lines. **Leave the domain `## Rules` (`aia-harness:fixed`) section untouched.**
-      Each domain file must end up **distinct** from the others in its `## Responsibility` / `## Local conventions` (the fixed `## Rules` is identical by design). If a directory genuinely has too little to say, keep it to one honest line rather than inventing — but never leave the identical stub.
-   4. Remove every `<!-- AI-ENRICH: ... -->` comment from the files you touched (root + domains), but **keep every `aia-harness:fixed` marker** so the protected rules stay flagged for future audits.
-   5. Show a combined diff (root + domain files) versus the skeletons. Wait for explicit user approval before writing with `Edit`.
+   3. Remove every `<!-- AI-ENRICH: ... -->` comment from the root `CLAUDE.md` you touched, but **keep every `aia-harness:fixed` marker** so the protected rules stay flagged for future audits.
+   4. Show a diff of the root `CLAUDE.md` versus the skeleton. Wait for explicit user approval before writing with `Edit`.
+
+5.6. **Intermediate CLAUDE.md (domain enrichment).** Invoke the `aia-harness:revise-claude-md` skill (Skill tool, `skill: "aia-harness:revise-claude-md"`, `args: "${1:-$CLAUDE_PROJECT_DIR}"`) to generate rich domain `CLAUDE.md` files for strategic subdirectories. This runs:
+
+   - Phase 1: maps domains (base from scan + expansion) and applicable rules; presents plan for approval.
+   - Phase 2: reads real source files + rule files per domain; generates rich `CLAUDE.md` with `## Key patterns`, `## Applied rules`, and `## Local conventions`; shows diff; writes on consent.
+
+   If the user skips this step, the domain `CLAUDE.md` files remain as generic skeletons that can be enriched later by running `/aia-harness:revise-claude-md` directly.
 
 5.7. **Seed unit tests (if missing).** Read `profile.testing` from the JSON returned by scan/plan.
    **If `testing.configured === false` and `testing.recommended` is not null**, offer

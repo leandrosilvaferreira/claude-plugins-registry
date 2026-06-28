@@ -100,32 +100,55 @@ export const ECC_BY_STACK = {
   },
 };
 
-/** Short "when to use" labels for the CLAUDE.md Workflow & Agents table (≤8 words each). */
 export const ECC_AGENT_WHEN_TO_USE = /** @type {Record<string,string>} */ ({
-  "code-reviewer": "review after any code change",
-  "security-reviewer": "security review before merge",
-  "go-reviewer": "Go code review",
-  "go-build-resolver": "when Go build fails",
-  "rust-reviewer": "Rust code review",
-  "rust-build-resolver": "when Rust build fails",
-  "typescript-reviewer": "TypeScript/JavaScript code review",
-  "react-reviewer": "React component review",
-  "react-build-resolver": "when React build fails",
-  "vue-reviewer": "Vue component review",
-  "java-reviewer": "Java/Spring/Quarkus code review",
-  "java-build-resolver": "when Java build fails",
-  "kotlin-reviewer": "Kotlin code review",
-  "kotlin-build-resolver": "when Kotlin build fails",
-  "php-reviewer": "PHP/Laravel/Adianti code review",
-  "python-reviewer": "Python code review",
-  "django-reviewer": "Django code review",
-  "django-build-resolver": "when Django build fails",
-  "fastapi-reviewer": "FastAPI code review",
-  "csharp-reviewer": "C#/.NET code review",
-  "cpp-reviewer": "C++ code review",
-  "cpp-build-resolver": "when C++ build fails",
-  "flutter-reviewer": "Flutter/Dart code review",
-  "dart-build-resolver": "when Flutter/Dart build fails",
+  "code-reviewer":
+    "Reviews any code change for bugs, security, error handling, and test coverage. Use proactively after editing any source file. MUST BE USED before merging a pull request.",
+  "security-reviewer":
+    "Reviews code for OWASP Top 10 vulnerabilities, hardcoded secrets, broken auth, and dependency CVEs. Use proactively before any merge that touches auth, input handling, or secrets. MUST BE USED before shipping security-sensitive changes.",
+  "go-reviewer":
+    "Reviews Go code for idiomatic style, concurrency safety, error wrapping, and interface correctness. Use proactively after editing any .go file. MUST BE USED before merging Go changes.",
+  "go-build-resolver":
+    "Diagnoses and fixes failing Go builds — compile errors, `go vet` failures, module/version conflicts, and staticcheck violations. Use proactively when `go build` or `go test` fails.",
+  "rust-reviewer":
+    "Reviews Rust code for ownership correctness, unsafe justification, unwrap/expect misuse, error context, and lifetime soundness. Use proactively after editing any .rs file. MUST BE USED before merging Rust changes.",
+  "rust-build-resolver":
+    "Diagnoses and fixes failing Rust builds — borrow checker errors, lifetime conflicts, trait mismatches, cargo dependency issues, and clippy violations. Use proactively when `cargo build` or `cargo check` fails.",
+  "typescript-reviewer":
+    "Reviews TypeScript and JavaScript code for type safety (any abuse, non-null assertions), async correctness, injection risks, and prototype pollution. Use proactively after editing .ts or .js files with no React/JSX involvement.",
+  "react-reviewer":
+    "Reviews React and Next.js code for hooks rules, Server/Client component boundaries, key props, accessibility, render performance, and Server Action safety. Use proactively after editing .tsx or .jsx files. MUST BE USED before merging React component changes.",
+  "react-build-resolver":
+    "Diagnoses and fixes failing React builds across Vite, webpack, Next.js, CRA, and Bun — JSX compile errors, bundler config issues, missing @types/react, and hydration mismatches. Use proactively when the React build or dev server fails.",
+  "vue-reviewer":
+    "Reviews Vue 3 code for reactivity correctness (ref/reactive/computed), composable cleanup, v-html safety, props/emits contracts, Vue Router guards, and Pinia store patterns. Use proactively after editing .vue files. MUST BE USED before merging Vue component changes.",
+  "java-reviewer":
+    "Reviews Java code for Spring/Quarkus patterns, N+1 queries, transaction boundaries, injection misuse, and null safety. Use proactively after editing .java files. MUST BE USED before merging Java changes.",
+  "java-build-resolver":
+    "Diagnoses and fixes failing Java builds — Maven/Gradle compilation errors, dependency resolution failures, annotation processor issues, and Spring/Quarkus startup problems. Use proactively when `mvn compile` or `gradle build` fails.",
+  "kotlin-reviewer":
+    "Reviews Kotlin code for coroutine safety, Flow anti-patterns, Compose recomposition traps, lifecycle bugs, and clean architecture boundaries. Use proactively after editing .kt files. MUST BE USED before merging Kotlin changes.",
+  "kotlin-build-resolver":
+    "Diagnoses and fixes failing Kotlin/Gradle builds — compiler errors, Gradle configuration issues, dependency conflicts, detekt and ktlint violations. Use proactively when the Kotlin build fails.",
+  "php-reviewer":
+    "Reviews PHP, Laravel, and Adianti code for SQL injection, mass assignment, XSS (Blade unsafe output), CSRF exemptions, and PSR compliance. Use proactively after editing .php files. MUST BE USED before merging PHP changes.",
+  "python-reviewer":
+    "Reviews Python code for injection risks, bare excepts, type annotation gaps, and Pythonic idioms. Use proactively after editing .py files. MUST BE USED before merging Python changes.",
+  "django-reviewer":
+    "Reviews Django code for ORM N+1 queries, missing permission_classes, mark_safe misuse, migration correctness, and DRF serializer patterns. Use proactively after editing Django views, models, or serializers. MUST BE USED before merging Django changes.",
+  "django-build-resolver":
+    "Diagnoses and fixes failing Django startups — pip/Poetry dependency errors, migration conflicts, circular imports, settings misconfiguration, and WSGI/ASGI failures. Use proactively when Django fails to start or migrations fail.",
+  "fastapi-reviewer":
+    "Reviews FastAPI code for route correctness, Pydantic model validation, dependency injection patterns, async database usage, auth/CORS config, and OpenAPI metadata. Use proactively after editing FastAPI routes, schemas, or middleware. MUST BE USED before merging FastAPI changes.",
+  "csharp-reviewer":
+    "Reviews C# and .NET code for SQL injection, empty catch blocks, async/await misuse (sync-over-async), LINQ correctness, and Nullable Reference Types compliance. Use proactively after editing .cs files. MUST BE USED before merging C# changes.",
+  "cpp-reviewer":
+    "Reviews C++ code for memory safety (raw new/delete, buffer overflows, use-after-free), undefined behavior, RAII correctness, and modern C++17/20 idioms. Use proactively after editing .cpp or .h files. MUST BE USED before merging C++ changes.",
+  "cpp-build-resolver":
+    "Diagnoses and fixes failing C++ builds — CMake configuration errors, linker failures (undefined references, multiple definitions), template instantiation errors, and missing includes. Use proactively when the CMake or compiler step fails.",
+  "flutter-reviewer":
+    "Reviews Flutter and Dart code for widget rebuild issues, state management anti-patterns, performance pitfalls, accessibility, and architecture boundary violations. Use proactively after editing .dart files. MUST BE USED before merging Flutter changes.",
+  "dart-build-resolver":
+    "Diagnoses and fixes failing Dart/Flutter builds — analyzer errors, null safety violations, pubspec dependency conflicts, build_runner failures, and platform-specific (Android/iOS/web) build errors. Use proactively when `flutter build` or `dart analyze` reports errors.",
 });
 
 /**

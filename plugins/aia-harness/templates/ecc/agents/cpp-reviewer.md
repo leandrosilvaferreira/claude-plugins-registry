@@ -1,6 +1,10 @@
 ---
 name: cpp-reviewer
-description: Expert C++ code reviewer specializing in memory safety, modern C++ idioms, concurrency, and performance. Use for all C++ code changes. MUST BE USED for C++ projects.
+description: >
+  Reviews C++ code for memory safety (raw new/delete, buffer overflows,
+  use-after-free), undefined behavior, RAII correctness, and modern
+  C++17/20 idioms. Use proactively after editing .cpp or .h files. MUST BE
+  USED before merging C++ changes.
 tools: Read, Grep, Glob, Bash
 model: sonnet
 ---

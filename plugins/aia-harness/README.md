@@ -163,7 +163,7 @@ claude
 | Step | Command | What happens |
 |------|---------|--------------|
 | 1️⃣ **Diagnose** | `/aia-harness:scan` | Read-only. Prints stack, package manager, frameworks, architectural domains, canonical commands, and any existing harness. Writes nothing. |
-| 2️⃣ **Scaffold** | `/aia-harness:init` | The full flow: scan → propose a plan → **you multi-select** what to apply → **diffs** for anything that would overwrite → apply → enrich `CLAUDE.md` from real source → safety review. |
+| 2️⃣ **Scaffold** | `/aia-harness:init` | The full flow: scan → propose a plan → **you multi-select** what to apply → **diffs** for anything that would overwrite → apply → enrich root `CLAUDE.md` → generate **rich domain `CLAUDE.md` files** (via `revise-claude-md`) → safety review. |
 | 3️⃣ **Maintain** | `/aia-harness:doctor` | Later, after a plugin update or codebase drift: audits the harness and **additively** adds what's missing, one diff at a time. |
 
 That's the loop. `scan` is always safe to run; `init` never writes without your approval; `doctor` keeps an existing harness healthy over time.
@@ -179,7 +179,7 @@ All commands are namespaced `/aia-harness:<name>` and take an optional `[path]` 
 | Command | What it does |
 |---------|--------------|
 | **`scan`** `[path]` | Read-only diagnosis of stack, package manager, frameworks, monorepo layout, canonical commands, architecture, and existing harness. |
-| **`init`** `[path]` | The headline flow: scan → plan → **consent (multi-select)** → diffs → apply → enrich CLAUDE.md → `harness-reviewer` safety pass → optional plugin/tool/MCP install. |
+| **`init`** `[path]` | The headline flow: scan → plan → **consent (multi-select)** → diffs → apply → enrich root `CLAUDE.md` → generate rich domain `CLAUDE.md` files (via `revise-claude-md`) → `harness-reviewer` safety pass → optional plugin/tool/MCP install. |
 | **`doctor`** `[path]` | Audits an existing harness (CLAUDE.md quality, settings safety, hook hygiene, drift after upgrades) and **additively** applies missing pieces — never mass-overwrites. |
 | **`patch`** `[path]` | Pick artifact **categories** (settings, hooks, rules, …) and force-overwrite only those. Use when one part of a configured project needs a refresh. |
 
@@ -197,6 +197,7 @@ All commands are namespaced `/aia-harness:<name>` and take an optional `[path]` 
 | Command | What it does |
 |---------|--------------|
 | **`check-deps`** `[path]` | Reports required system dependencies (Node, Python, Go, …) with platform-specific install hints. Read-only. |
+| **`revise-claude-md`** `[path]` | Generates rich intermediate `CLAUDE.md` files for strategic subdirectories. Reads `.claude/rules/` (recursive — including per-stack subdirs), analyzes real source files, maps rules to domains by relevance, and produces domain-specific files with `## Key patterns` (concrete class names, DI tokens, naming conventions), `## Applied rules` (condensed summaries + `@`-references), and `## Local conventions` (derived from real code). Two-phase: map → approve → generate with diffs. Runs automatically as step 5.6 of `init`; run standalone to refresh after project structure or rules change. |
 | **`condense-harness-prompts`** `[path]` | Validates/auto-fixes artifact frontmatter, then semantically condenses your `.claude/` markdown via parallel Opus subagents behind a deterministic safety gate. |
 | **`help`** | Prints the full command reference plus an *"I want to…"* decision guide mapping intent → command. |
 

@@ -28,6 +28,7 @@ show the engine version:
 | Add **strategic MCP servers** (`.mcp.json`) | `/aia-harness:add-mcp` |
 | Install the **recommended marketplace plugins** for the stack | `/aia-harness:add-plugins` |
 | Install **token-economy / code-graph tools** (caveman, ponytail, rtk, graphify) | `/aia-harness:add-tools` |
+| Generate or refresh **rich intermediate CLAUDE.md** files for strategic subdirectories | `/aia-harness:revise-claude-md` |
 | See this help | `/aia-harness:help` |
 
 **Project state → recommended command:**
@@ -123,6 +124,21 @@ Vendoring + wiring of rtk/worktrees is automatic; plugin/binary/package installs
 **When to use:** you want to reduce token consumption or have a code graph.
 **Writes files?** Yes — only the rtk hook in `.claude/hooks/` and claude-code-worktrees in `.claude/skills/`, wiring in `settings.json`, `.graphifyignore`. Caveman and ponytail install as user-level plugins — do **not** write to `.claude/`.
 **Parameters:** `path` (optional). Scope: `--no-tools`.
+
+### `/aia-harness:revise-claude-md [path]`
+
+**What it does:** generates rich, concrete CLAUDE.md files for strategic subdirectories of the
+target project. Two-phase flow: Phase 1 discovers domains (scan-detected + own analysis), maps
+`.claude/rules/` files (recursive — including `ecc/`, `stack/` subdirs) to domains by relevance,
+and presents a plan for approval. Phase 2 reads up to 8 key source files per domain + applicable
+rule files, generates domain CLAUDE.md with `## Key patterns` (concrete class names, DI tokens,
+naming patterns), `## Applied rules` (condensed rule summaries + `@`-references), and
+`## Local conventions` (derived from real code). Shows diff before each write; never writes
+without approval.
+**When to use:** after `/aia-harness:init` (runs automatically as step 5.6), or standalone to
+refresh domain CLAUDE.md files when project structure or rules change.
+**Writes files?** Yes — `<domain>/CLAUDE.md` files only, never root CLAUDE.md, always with diff + approval.
+**Parameters:** `path` (optional).
 
 ---
 

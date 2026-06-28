@@ -66,6 +66,42 @@ for the user's platform and stop — do not execute the following steps.
    alone — point the user to `/aia-harness:patch` to force-overwrite those by
    category.
 
+3a. **Outdated artifacts — installed but differing from the current plugin version.**
+    Step 2 finds *missing* artifacts; this finds *stale* ones (present but out of date,
+    e.g. agents whose routing descriptions predate the best-practice update). Run a
+    dry-run apply and read the structured drift list (omitting `--yes` keeps it a dry run — no files are written):
+
+    ```bash
+    "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" --json
+    ```
+
+    Parse `differs[]` (each `{ id, relPath, category }`). Group by `category`. For each
+    category with entries, report the count + sample `relPath`s. Of particular note:
+    - **`agents`** — installed agent files whose descriptions differ. Re-applying gives
+      the best-practice, condition-shaped "Use proactively" routing descriptions that the
+      native router and the CLAUDE.md table depend on.
+
+    **IMPORTANT — exclude `claude-md` from the multi-select offered here.** The root
+    `CLAUDE.md` always appears in `differs[]` as category `claude-md` because init
+    enrichment edits `## Conventions` and `## Architecture map` — whole-file force-overwrite
+    would silently destroy that enrichment. The root file's structural integrity
+    (superpowers bridge, behavioral guidelines, fixed rules) is audited separately in step 3
+    via the `aia-harness:agent-routing`, `aia-harness:behavioral`, and `aia-harness:fixed`
+    markers — not by brute force-overwrite here.
+
+    Use `AskUserQuestion` (multi-select, grouped by category, **omitting `claude-md`**) to
+    let the user pick which categories to refresh. For each chosen category, collect its
+    `differs[].id`s and force-overwrite ONLY those:
+
+    ```bash
+    "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" \
+      --yes --force --only=<comma-joined ids>
+    ```
+
+    `--force` is required (these files exist and differ). Files outside the selected ids
+    are untouched. If the user prefers, point them at `/aia-harness:patch` for the same
+    by-category force-overwrite.
+
 3. Audit each existing artifact and grade it:
    - **Unit tests:** report `profile.testing`:
      - If `configured` is `false`: flag the gap and recommend `/setup-testing` (suggested framework: `testing.recommended`).
@@ -77,7 +113,7 @@ for the user's platform and stop — do not execute the following steps.
      `<!-- AI-ENRICH:` markers and flag them — they mean enrichment was skipped.
      Also flag **nested domain `CLAUDE.md` files that are identical generic stubs**
      (same `## Responsibility` / `## Local conventions` boilerplate across domains);
-     offer to enrich each from the real files in its directory (distinct per domain).
+     suggest running `/aia-harness:revise-claude-md` to generate rich domain files.
      Compare only `## Responsibility` / `## Local conventions` — the
      `aia-harness:fixed` `## Rules` block is identical across domains **by design**,
      so do not treat it as stub duplication.
@@ -101,6 +137,21 @@ for the user's platform and stop — do not execute the following steps.
      Warn the user that `--force` will overwrite the root `CLAUDE.md` — their
      enriched `## Conventions` and `## Architecture map` sections will need to be
      re-enriched (run the enrichment pass from `/aia-harness:init` step 5.5 after).
+   - **Superpowers agent-routing bridge (when agents are installed):** if the plan
+     includes any `agents` artifact, grep the root `CLAUDE.md` for the marker
+     `aia-harness:agent-routing`. If absent, the file predates the superpowers→specialist
+     bridge (the section that tells Claude to dispatch project specialists instead of
+     `general-purpose`). Offer to regenerate the root file:
+
+     ```bash
+     "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" \
+       --yes --force --only=claude-md-root
+     ```
+
+     Warn (as with the behavioral block) that `--force` overwrites the root `CLAUDE.md`,
+     so the enriched `## Conventions` / `## Architecture map` must be re-enriched after
+     (run the enrichment pass from `/aia-harness:init` step 5.5). If the marker is present,
+     the bridge is current — say nothing.
    - **settings.json:** permissions should be least-privilege; deny reads of
      `.env`/secrets; `defaultMode:"bypassPermissions"` is expected at the top level
      (the harness generates it intentionally so project settings never shadow the flag

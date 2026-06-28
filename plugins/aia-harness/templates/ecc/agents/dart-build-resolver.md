@@ -1,6 +1,10 @@
 ---
 name: dart-build-resolver
-description: Dart/Flutter build, analysis, and dependency error resolution specialist. Fixes `dart analyze` errors, Flutter compilation failures, pub dependency conflicts, and build_runner issues with minimal, surgical changes. Use when Dart/Flutter builds fail.
+description: >
+  Diagnoses and fixes failing Dart/Flutter builds — analyzer errors, null
+  safety violations, pubspec dependency conflicts, build_runner failures,
+  and platform-specific (Android/iOS/web) build errors. Use proactively
+  when `flutter build` or `dart analyze` reports errors.
 tools: Read, Write, Edit, Bash, Grep, Glob
 model: sonnet
 ---

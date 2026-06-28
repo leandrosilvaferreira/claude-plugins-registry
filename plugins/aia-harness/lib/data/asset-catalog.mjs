@@ -43,23 +43,41 @@ export {
 
 import { ECC_AGENT_WHEN_TO_USE } from "./ecc-catalog.mjs";
 import { AGKIT_AGENT_WHEN_TO_USE } from "./agkit-catalog.mjs";
+import { PROJECT_AGENT_WHEN_TO_USE } from "./project-catalog.mjs";
 
 /**
- * Resolve a short "when to use" label for any agent name distributed by the harness.
- * Checks ECC map first, then ag-kit. Falls back to the bare name if unknown.
+ * Canonical best-practice description for an agent, or null if not catalogued.
+ * Single source of truth for BOTH the native-router frontmatter and the
+ * CLAUDE.md routing table.
+ * @param {string} name
+ * @returns {string | null}
+ */
+export function resolveCanonicalDescription(name) {
+  return (
+    ECC_AGENT_WHEN_TO_USE[name] ??
+    AGKIT_AGENT_WHEN_TO_USE[name] ??
+    PROJECT_AGENT_WHEN_TO_USE[name] ??
+    null
+  );
+}
+
+/**
+ * Resolve a "when to use" label for the CLAUDE.md table; falls back to the bare
+ * name if the agent is not catalogued.
  * @param {string} name
  * @returns {string}
  */
 export function resolveAgentWhenToUse(name) {
-  return ECC_AGENT_WHEN_TO_USE[name] ?? AGKIT_AGENT_WHEN_TO_USE[name] ?? name;
+  return resolveCanonicalDescription(name) ?? name;
 }
 
-// First-party (ours) — templates/skills/ + templates/hooks/
+// First-party (ours) — templates/skills/ + templates/hooks/ + templates/agents/
 export {
   PROJECT_COMMON,
   PROJECT_BY_STACK,
   PROJECT_HOOK_FILES,
   PROJECT_HOOK_BY_STACK,
+  PROJECT_AGENT_WHEN_TO_USE,
   selectProjectAssets,
   selectProjectHooks,
   allProjectAssets,

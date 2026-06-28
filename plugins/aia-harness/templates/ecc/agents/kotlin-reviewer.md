@@ -1,6 +1,10 @@
 ---
 name: kotlin-reviewer
-description: Kotlin and Android/KMP code reviewer. Reviews Kotlin code for idiomatic patterns, coroutine safety, Compose best practices, clean architecture violations, and common Android pitfalls.
+description: >
+  Reviews Kotlin code for coroutine safety, Flow anti-patterns, Compose
+  recomposition traps, lifecycle bugs, and clean architecture boundaries.
+  Use proactively after editing .kt files. MUST BE USED before merging
+  Kotlin changes.
 tools: Read, Grep, Glob, Bash
 model: sonnet
 ---

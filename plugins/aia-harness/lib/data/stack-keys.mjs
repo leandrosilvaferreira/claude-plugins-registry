@@ -27,9 +27,10 @@ export function stackKeys(profile) {
     case "TypeScript":
     case "JavaScript":
       keys.push("typescript");
-      if (has("React") || has("Next.js") || has("Nest.js")) keys.push("react");
+      if (has("React") || has("Next.js")) keys.push("react");
       if (has("Next.js")) keys.push("next");
       if (has("Vue") || has("Nuxt")) keys.push("vue");
+      if (has("NestJS")) keys.push("nestjs");
       break;
     case "Java":
       if (has("Quarkus")) keys.push("java-quarkus");

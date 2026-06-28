@@ -30,6 +30,14 @@ export const FIXED_RULES_MARKER =
   "<!-- aia-harness:fixed — non-negotiable; do not edit, reorder, or remove during enrichment -->";
 
 /**
+ * Marker comment placed in the superpowers-bridge subsection so `/doctor` and
+ * `/scan` can detect a root CLAUDE.md that predates the bridge (whole-file drift
+ * is unreliable — enrichment always makes CLAUDE.md differ).
+ */
+export const AGENT_ROUTING_MARKER =
+  "<!-- aia-harness:agent-routing — superpowers→specialist bridge; do not remove -->";
+
+/**
  * Sentinel comment marking the behavioral guidelines section. Like
  * FIXED_RULES_MARKER, it is not an AI-ENRICH comment so enrichment leaves it
  * intact. `doctor` greps for `aia-harness:behavioral` to confirm the block
@@ -194,6 +202,38 @@ export function skillsBlock(profile) {
   return `## Skills — for this stack\n\n> Invoke the matching skill before working in its domain.\n\n${lines.join("\n")}\n`;
 }
 
+/**
+ * Coarse routing role for an agent name, used to build the superpowers bridge.
+ * Returns null for agents that don't map to a generic superpowers role.
+ * @param {string} name
+ * @returns {{ role: string, superpowersGeneric: string } | null}
+ */
+export function routingRole(name) {
+  if (name.endsWith("-build-resolver"))
+    return { role: "Fix a failing build", superpowersGeneric: "general-purpose" };
+  if (name.endsWith("-reviewer"))
+    return { role: "Review / audit changed code", superpowersGeneric: "general-purpose" };
+  /** @type {Record<string,string>} */
+  const exact = {
+    "backend-specialist": "Backend / API / server-side / domain logic",
+    "frontend-specialist": "UI / components / styling / pages",
+    "database-architect": "Schema / migration / query / data modeling",
+    "test-engineer": "Unit / integration tests",
+    "qa-automation-engineer": "E2E / QA automation",
+    debugger: "Bug / crash / root-cause analysis",
+    "explorer-agent": "Explore / map an unfamiliar codebase",
+    "code-archaeologist": "Understand legacy code before changing it",
+    orchestrator: "Multi-domain feature — subdelegates to specialists",
+    "performance-optimizer": "Performance profiling / optimization",
+    "devops-engineer": "Deploy / CI/CD / infra",
+    "security-auditor": "Security audit / defensive review",
+    "penetration-tester": "Offensive security / pentest",
+    "mobile-developer": "Mobile (React Native / Flutter)",
+    "documentation-writer": "Documentation (only when explicitly requested)",
+  };
+  return exact[name] ? { role: exact[name], superpowersGeneric: "general-purpose" } : null;
+}
+
 /** Priority order for the agents table — most-used roles first. */
 const AGENT_ORDER = [
   "orchestrator",
@@ -258,6 +298,47 @@ export function agentsWorkflowBlock(agents) {
     return ai - bi;
   });
   const rows = sorted.map((a) => `| \`${a.name}\` | ${a.whenToUse} |`).join("\n");
+
+  // Group agents by unique role label; preserve first appearance order
+  /** @type {Map<string, string[]>} */
+  const roleToAgents = new Map();
+  sorted.forEach((a) => {
+    const r = routingRole(a.name);
+    if (r) {
+      if (!roleToAgents.has(r.role)) {
+        roleToAgents.set(r.role, []);
+      }
+      const agents = roleToAgents.get(r.role);
+      if (agents) agents.push(a.name);
+    }
+  });
+
+  const bridgeRows = Array.from(roleToAgents.entries())
+    .map(([role, names]) => `| ${role} | ${names.map((n) => `\`${n}\``).join(" / ")} |`)
+    .join("\n");
+
+  const bridge = bridgeRows
+    ? `
+### Superpowers → Project Specialists (mandatory bridging)
+${AGENT_ROUTING_MARKER}
+
+Superpowers skills (\`dispatching-parallel-agents\`, \`subagent-driven-development\`,
+\`executing-plans\`, \`systematic-debugging\`) show \`general-purpose\` as the default
+\`subagent_type\` in their examples. **Never dispatch \`general-purpose\` (or a generic
+implementer) when a specialist below covers the domain** — pass the specialist's exact
+name as \`subagent_type\` instead.
+
+> Basis: superpowers itself states "User's explicit instructions (CLAUDE.md) — highest
+> priority." This section applies that priority over the agent types its examples suggest.
+> The normal flow is unchanged (brainstorming → writing-plans → subagent-driven-development);
+> only the dispatched \`subagent_type\` changes.
+
+| When superpowers would use \`general-purpose\` for… | Dispatch instead |
+|---|---|
+${bridgeRows}
+`
+    : "";
+
   return `## Workflow & Agents
 
 For every non-trivial implementation: invoke \`superpowers:subagent-driven-development\`.
@@ -266,7 +347,7 @@ When dispatching subagents, you MUST use the matching specialist agent from the 
 | Agent | When to use |
 |---|---|
 ${rows}
-`;
+${bridge}`;
 }
 
 /**
@@ -373,15 +454,32 @@ export function renderDomainClaudeMd(_profile, domain) {
 Scope: ${domain.role} (${domain.kind}).
 
 ## Responsibility
-<!-- AI-ENRICH: from the real files in ${domain.path}/, state in 2-4 sentences what concretely belongs here and what does NOT (where that other code lives). Replace this comment and the line below. -->
+<!-- AI-ENRICH: Read the real files in ${domain.path}/. State in 2-4 sentences what concretely
+     belongs here and what does NOT (where that other code lives). Replace this comment and the line below. -->
 The ${domain.role}.
 
-## Local conventions
-<!-- AI-ENRICH: 2-5 conventions actually observed in ${domain.path}/ (naming, base classes, error handling, file layout). Replace the placeholder below with concrete, directory-specific ones. Leave the "## Rules" section untouched — those are fixed. -->
+## Key patterns
+<!-- AI-ENRICH: Read 3-6 key source files in ${domain.path}/. Extract concrete patterns:
+     specific class names, DI tokens, naming conventions, error handling patterns, method names.
+     Derive from real code only — no generic advice. Replace comment and placeholder. -->
 
-- _Directory-specific conventions are added here during \`/aia-harness:init\` enrichment._
+- _Key patterns are added here during enrichment._
+
+## Applied rules
+<!-- AI-ENRICH: Read .claude/rules/ (and all subdirs — ecc/, stack/, etc). List rules relevant
+     to ${domain.path}/ as @-references with a 1-2 sentence condensed summary of what matters
+     HERE specifically. Format: \`- @.claude/rules/X.md — summary\`.
+     Omit generic rules with no domain-specific relevance. Replace comment and placeholder. -->
+
+- _Applicable rules are added here during enrichment._
+
+## Local conventions
+<!-- AI-ENRICH: 2-5 conventions actually observed in ${domain.path}/ files (naming, base classes,
+     error handling, file layout). Replace the placeholder below. Leave the "## Rules" section untouched. -->
+
+- _Directory-specific conventions are added here during \`/aia-harness:revise-claude-md\` enrichment._
 
 ${fixedRulesBlock("Rules", DOMAIN_FIXED_RULES)}
-<!-- Generated by aia-harness for domain \`${domain.path}\`. -->
+<!-- Generated by aia-harness for domain \`${domain.path}\`. Re-run /aia-harness:revise-claude-md to enrich. -->
 `;
 }

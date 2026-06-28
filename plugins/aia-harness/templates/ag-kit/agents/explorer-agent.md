@@ -1,6 +1,10 @@
 ---
 name: explorer-agent
-description: Advanced codebase discovery, deep architectural analysis, and proactive research agent. The eyes and ears of the framework. Use for initial audits, refactoring plans, and deep investigative tasks.
+description: >
+  Maps an unfamiliar or complex codebase — architecture, patterns,
+  dependencies, and risk areas — to inform planning and integration
+  decisions. Use proactively when onboarding to a new codebase or before
+  planning a cross-cutting change.
 tools: Read, Grep, Glob, Bash
 model: sonnet 
 ---

@@ -193,7 +193,11 @@ function main() {
     const selected = opts.only ? new Set(opts.only.split(",").map((s) => s.trim())) : undefined;
     const dryRun = !flags.has("yes");
     const res = applyPlan(plan, profile.root, { selected, dryRun, force: flags.has("force") });
-    printApply(res, dryRun);
+    if (flags.has("json")) {
+      process.stdout.write(JSON.stringify(res, null, 2) + "\n");
+    } else {
+      printApply(res, dryRun);
+    }
     return res.errors.length > 0 ? 1 : 0;
   }
 

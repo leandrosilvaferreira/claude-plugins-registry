@@ -16,6 +16,7 @@ import { detectAssetType, validateFrontmatter } from "./validate/frontmatter.mjs
  * @property {string[]} skipped
  * @property {{ path: string, error: string }[]} errors
  * @property {boolean} dryRun
+ * @property {{ id: string, relPath: string, category: string }[]} differs
  */
 
 /**
@@ -124,7 +125,7 @@ export function applyPlan(plan, root, opts = {}) {
   const selected = opts.selected;
 
   /** @type {ApplyResult} */
-  const result = { created: [], updated: [], skipped: [], errors: [], dryRun };
+  const result = { created: [], updated: [], skipped: [], errors: [], dryRun, differs: [] };
 
   for (const a of plan.artifacts) {
     if (selected ? !selected.has(a.id) : !a.defaultSelected) continue;
@@ -207,6 +208,7 @@ export function applyPlan(plan, root, opts = {}) {
           }
           // fall through to write
         } else {
+          result.differs.push({ id: a.id, relPath: a.relPath, category: a.category });
           result.skipped.push(`${a.relPath} (exists, differs — left unchanged)`);
           continue;
         }

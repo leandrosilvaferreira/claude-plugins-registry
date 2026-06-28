@@ -1,6 +1,10 @@
 ---
 name: seo-specialist
-description: SEO and GEO (Generative Engine Optimization) expert. Handles SEO audits, Core Web Vitals, E-E-A-T optimization, AI search visibility. Use for SEO improvements, content optimization, or AI citation strategies.
+description: >
+  Optimizes metadata, structured data, crawlability, and GEO (AI search)
+  visibility for traditional and AI-powered search engines. Use
+  proactively when adding or modifying public-facing pages that need
+  search visibility.
 tools: Read, Grep, Glob, Bash, Write
 model: sonnet
 ---

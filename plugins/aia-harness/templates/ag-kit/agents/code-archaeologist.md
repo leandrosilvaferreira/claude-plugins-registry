@@ -1,6 +1,10 @@
 ---
 name: code-archaeologist
-description: Expert in legacy code, refactoring, and understanding undocumented systems. Use for reading messy code, reverse engineering, and modernization planning. Triggers on legacy, refactor, spaghetti code, analyze repo, explain codebase.
+description: >
+  Reverse-engineers undocumented or legacy code to uncover intent, trace
+  logic, and map hidden dependencies. Use proactively before refactoring
+  unfamiliar legacy code or when you need to understand why existing
+  behavior exists.
 tools: Read, Grep, Glob, Edit, Write
 model: sonnet
 ---

@@ -7,6 +7,10 @@
  */
 import { splitFrontmatter } from "../ecc/transform.mjs";
 import { normalizeToolsValue } from "../validate/frontmatter.mjs";
+import { parseFrontmatter, renderFrontmatter } from "../util/frontmatter-yaml.mjs";
+import { applyCanonicalDescription } from "../validate/agent-description.mjs";
+
+export { parseFrontmatter, renderFrontmatter };
 
 /** Antigravity agent tools that map onto a Claude Code equivalent. */
 const AGENT_TOOL_MAP = /** @type {Record<string,string>} */ ({ FindByName: "Glob", Agent: "Task" });
@@ -39,42 +43,6 @@ function unquote(v) {
     return t.slice(1, -1);
   }
   return t;
-}
-
-/** @param {string} v @returns {boolean} */
-function needsQuote(v) {
-  return /:\s/.test(v) || /^[\s"'#&*!|>%@`]/.test(v) || v.includes('"');
-}
-
-/** @param {string} v @returns {string} */
-function quoteIfNeeded(v) {
-  return needsQuote(v) ? `"${v.replace(/"/g, '\\"')}"` : v;
-}
-
-/**
- * Parse a flat YAML frontmatter block into ordered entries. Assumes one
- * `key: value` per line (true for ag-kit agent/skill/workflow frontmatters).
- * @param {string} frontmatter  Includes the --- fences.
- * @returns {{ key: string, value: string }[]}
- */
-export function parseFrontmatter(frontmatter) {
-  /** @type {{ key: string, value: string }[]} */
-  const entries = [];
-  for (const line of frontmatter.split("\n")) {
-    if (line === "---" || line.trim() === "") continue;
-    const m = line.match(/^([A-Za-z0-9_-]+):\s?(.*)$/);
-    if (m) entries.push({ key: m[1], value: m[2] });
-  }
-  return entries;
-}
-
-/**
- * @param {{ key: string, value: string }[]} entries
- * @returns {string}  Frontmatter block including --- fences and trailing newline.
- */
-export function renderFrontmatter(entries) {
-  const body = entries.map((e) => `${e.key}: ${quoteIfNeeded(e.value)}`).join("\n");
-  return `---\n${body}\n---\n`;
 }
 
 /**
@@ -116,14 +84,16 @@ export function mapAgentTools(value) {
  */
 export function cleanAgentMarkdown(content, meta) {
   const { frontmatter, body } = splitFrontmatter(content);
-  const entries = parseFrontmatter(frontmatter).filter(
+  let entries = parseFrontmatter(frontmatter).filter(
     (e) => e.key !== "skills" && e.key !== "model",
   );
   for (const e of entries) {
     if (e.key === "tools") e.value = mapAgentTools(e.value);
   }
+  const name = entries.find((e) => e.key === "name")?.value ?? "";
+  entries = applyCanonicalDescription(entries, name);
   entries.push({ key: "model", value: "sonnet" });
-  const fm = renderFrontmatter(entries);
+  const fm = renderFrontmatter(entries, { fold: new Set(["description"]) });
   return `${fm}${provenanceComment(meta.sourcePath, meta.commit)}\n${body.replace(/^\n+/, "")}`;
 }
 

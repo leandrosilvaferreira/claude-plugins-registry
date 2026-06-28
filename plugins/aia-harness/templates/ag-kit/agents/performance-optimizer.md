@@ -1,6 +1,10 @@
 ---
 name: performance-optimizer
-description: Expert in performance optimization, profiling, Core Web Vitals, and bundle optimization. Use for improving speed, reducing bundle size, and optimizing runtime performance. Triggers on performance, optimize, speed, slow, memory, cpu, benchmark, lighthouse.
+description: >
+  Profiles and fixes performance bottlenecks — slow endpoints, high memory
+  usage, poor Core Web Vitals, and database query inefficiency. Use
+  proactively after profiling reveals a bottleneck or when response times
+  degrade.
 tools: Read, Grep, Glob, Bash, Edit, Write
 model: sonnet
 ---

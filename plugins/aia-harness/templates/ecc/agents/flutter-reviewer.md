@@ -1,6 +1,10 @@
 ---
 name: flutter-reviewer
-description: Flutter and Dart code reviewer. Reviews Flutter code for widget best practices, state management patterns, Dart idioms, performance pitfalls, accessibility, and clean architecture violations. Library-agnostic — works with any state management solution and tooling.
+description: >
+  Reviews Flutter and Dart code for widget rebuild issues, state
+  management anti-patterns, performance pitfalls, accessibility, and
+  architecture boundary violations. Use proactively after editing .dart
+  files. MUST BE USED before merging Flutter changes.
 tools: Read, Grep, Glob, Bash
 model: sonnet
 ---

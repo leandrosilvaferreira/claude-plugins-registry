@@ -120,12 +120,16 @@ export function buildPlan(profile, ctx) {
   const eccRoot = path.join(pluginRoot, "templates", "ecc");
   const agkit = selectAgkitAssets(profile);
   const agkitRoot = path.join(pluginRoot, "templates", "ag-kit");
+  const projectAgentsDir = path.join(pluginRoot, "templates", "agents");
   const agentMetas = [
     ...ecc.agents
       .filter((n) => exists(path.join(eccRoot, "agents", `${n}.md`)))
       .map((n) => ({ name: n, whenToUse: resolveAgentWhenToUse(n) })),
     ...agkit.agents
       .filter((n) => exists(path.join(agkitRoot, "agents", `${n}.md`)))
+      .map((n) => ({ name: n, whenToUse: resolveAgentWhenToUse(n) })),
+    ...selectProjectAssets(profile)
+      .agents.filter((n) => exists(path.join(projectAgentsDir, `${n}.md`)))
       .map((n) => ({ name: n, whenToUse: resolveAgentWhenToUse(n) })),
   ].filter((m, i, arr) => arr.findIndex((x) => x.name === m.name) === i);
 
@@ -278,6 +282,18 @@ export function buildPlan(profile, ctx) {
       contextCost: 0,
       defaultSelected: true,
       copyFrom: path.join(pluginRoot, "templates", "skills", s),
+    });
+  }
+  for (const a of selectProjectAssets(profile).agents) {
+    add({
+      id: `agent:project:${a}`,
+      relPath: `.claude/agents/${a}.md`,
+      title: `Agent: ${a}`,
+      category: "agents",
+      rationale: "First-party agent distributed by aia-harness.",
+      contextCost: 0,
+      defaultSelected: true,
+      copyFrom: path.join(pluginRoot, "templates", "agents", `${a}.md`),
     });
   }
   for (const r of selectProjectAssets(profile).rules) {

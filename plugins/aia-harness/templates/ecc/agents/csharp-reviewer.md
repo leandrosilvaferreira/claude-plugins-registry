@@ -1,6 +1,10 @@
 ---
 name: csharp-reviewer
-description: Expert C# code reviewer specializing in .NET conventions, async patterns, security, nullable reference types, and performance. Use for all C# code changes. MUST BE USED for C# projects.
+description: >
+  Reviews C# and .NET code for SQL injection, empty catch blocks,
+  async/await misuse (sync-over-async), LINQ correctness, and Nullable
+  Reference Types compliance. Use proactively after editing .cs files.
+  MUST BE USED before merging C# changes.
 tools: Read, Grep, Glob, Bash
 model: sonnet
 ---
