@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 `aia-harness` is two surfaces over one engine:
 
 1. **Claude Code plugin** — commands (`commands/`), agents (`agents/`), skills (`skills/`), hooks (`hooks/`) that drive an interactive **diagnose → approve → apply** flow.
-2. **Deterministic CLI** (`bin/harness.mjs`, exposed as `bin/aia-harness`) — pure engine the commands shell out to.
+2. **Deterministic CLI** (`bin/harness.mjs`) — pure engine the commands shell out to, invoked via `node bin/harness.mjs`. The old `bin/aia-harness` shell wrapper was removed for cross-platform `.mjs`-only compliance (see `.claude/rules/scripts-cross-platform.md`).
 
 It scans a target project, diagnoses its stack/architecture, and scaffolds a harness (CLAUDE.md files, rules, settings, hooks, skills, agents, `.mcp.json`, worktree config) into *that* project — including vendored ECC agents/skills/rules and token-economy
 tools (caveman, ponytail, rtk, graphify). The plugin never edits the target without consent + diffs.

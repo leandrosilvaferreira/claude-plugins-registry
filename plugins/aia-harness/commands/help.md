@@ -11,7 +11,7 @@ Start with the "Where to start" section, then detail each command. If useful,
 show the engine version:
 
 ```bash
-"${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" version
+node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" version
 ```
 
 ---
@@ -144,14 +144,14 @@ refresh domain CLAUDE.md files when project structure or rules change.
 
 ## ⚙️ Engine CLI behind the commands
 
-The commands above are wrappers over the deterministic binary
-`bin/aia-harness` (= `bin/harness.mjs`). For direct use / debugging:
+The commands above are wrappers over the deterministic entrypoint
+`bin/harness.mjs`, invoked via `node` (there is no `bin/aia-harness`). For direct use / debugging:
 
 ```bash
-aia-harness scan  [dir] [--json]     # diagnose → ProjectProfile (read-only)
-aia-harness plan  [dir] [--json]     # ProjectProfile → HarnessPlan (no writes)
-aia-harness apply [dir] [--yes]      # apply the plan (dry-run without --yes)
-aia-harness help | version
+node bin/harness.mjs scan  [dir] [--json]     # diagnose → ProjectProfile (read-only)
+node bin/harness.mjs plan  [dir] [--json]     # ProjectProfile → HarnessPlan (no writes)
+node bin/harness.mjs apply [dir] [--yes]      # apply the plan (dry-run without --yes)
+node bin/harness.mjs help | version
 ```
 
 **`apply` flags:**

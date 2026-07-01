@@ -13,10 +13,21 @@ allowed-tools:
 Target directory: `$1` if provided, else `$CLAUDE_PROJECT_DIR`. Plugins install at
 **user level** (Claude Code has no per-project plugin install).
 
+<!-- aia-harness:target-dir-resolution -->
+Resolve the target directory **once**, at the start of this command, into a concrete literal
+absolute path. `$CLAUDE_PROJECT_DIR` is documented as available "when hooks are executed" but is
+not guaranteed inside the general-purpose Bash tool used to run these instructions — it can
+silently expand empty there, and the CLI then falls back to the shell's *current* working
+directory, which is wrong if the agent has since `cd`'d elsewhere (e.g. into the scratchpad for
+intermediate file work). Reuse that one resolved literal path in every subsequent CLI invocation
+below — never re-expand a bare `$CLAUDE_PROJECT_DIR` in a later, separately-issued Bash call,
+since each Bash tool call is a fresh shell (only cwd persists, not exported variables) and an
+earlier `cd` silently redirects any later bare-env-var fallback to the wrong place.
+
 ## 0. Check system dependencies
 
 ```bash
-"${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" check "${1:-$CLAUDE_PROJECT_DIR}" --json
+node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" check "${1:-$CLAUDE_PROJECT_DIR}" --json
 ```
 
 If `status === "block"`: present the list of `missing[]` with `installHint` for the user's platform and stop — do not execute the following steps.
@@ -24,13 +35,13 @@ If `status === "block"`: present the list of `missing[]` with `installHint` for 
 1. Generate the plan and the runnable installer (writes `scripts/install-plugins.mjs`):
 
    ```bash
-   "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" --yes --only=install-plugins
+   node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" --yes --only=install-plugins
    ```
 
    (or run a full `/aia-harness:init` first). Inspect the suggested set:
 
    ```bash
-   "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" plan "${1:-$CLAUDE_PROJECT_DIR}" --json
+   node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" plan "${1:-$CLAUDE_PROJECT_DIR}" --json
    ```
 
 2. Present the suggested plugins grouped by purpose (development / quality /

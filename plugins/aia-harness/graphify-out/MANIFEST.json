@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   ".claude-plugin/plugin.json": {
-    "mtime": 1782921561.3493528,
-    "ast_hash": "ddeab3531faf5b0b8cff3ceb54e03ed2",
+    "mtime": 1782925364.4543605,
+    "ast_hash": "c7f84ce2a92bb5a1f6a903595f40596c",
     "semantic_hash": ""
   },
   ".claude/hooks/eslint-fix.mjs": {
@@ -360,8 +360,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1782921561.3517904,
-    "ast_hash": "3696719bad52070598459520fa4e9342",
+    "mtime": 1782925364.4544702,
+    "ast_hash": "8356f82c07fce728c3c8fc7f7f8c6488",
     "semantic_hash": ""
   },
   "scripts/agkit-source.json": {
@@ -1150,13 +1150,13 @@
     "semantic_hash": ""
   },
   ".claude/memory/MEMORY.md": {
-    "mtime": 1782925089.2252843,
-    "ast_hash": "b03c4880df965e3599edacf3d71aefcd",
+    "mtime": 1782932882.0044885,
+    "ast_hash": "c7c1454d1900f25535e1a27d8ec25a9b",
     "semantic_hash": ""
   },
   ".claude/memory/cross-platform-artifacts.md": {
-    "mtime": 1782363350.7906327,
-    "ast_hash": "7b9a4dc448661e41b646402695c6dd86",
+    "mtime": 1782930611.6858056,
+    "ast_hash": "bbc7c619910bde8f7589d4f9d4ce826a",
     "semantic_hash": ""
   },
   ".claude/memory/gh-pr-token-404.md": {
@@ -1180,8 +1180,8 @@
     "semantic_hash": ""
   },
   ".claude/memory/node-runtime-nvm.md": {
-    "mtime": 1781756783.7695305,
-    "ast_hash": "d14da562375e0e0cfc8b3756e5f9ff6f",
+    "mtime": 1782931505.350852,
+    "ast_hash": "875d259739e6f8d22d55bc43869dc487",
     "semantic_hash": ""
   },
   ".claude/memory/project-level-only.md": {
@@ -1345,8 +1345,8 @@
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1782924889.126675,
-    "ast_hash": "7b9d8491b470303f6a60c593b24be38f",
+    "mtime": 1782931477.018727,
+    "ast_hash": "6b4c6eb13a14c880488b4e67f4623fee",
     "semantic_hash": ""
   },
   "PUBLISHING.md": {
@@ -1375,58 +1375,58 @@
     "semantic_hash": ""
   },
   "commands/add-github-pm.md": {
-    "mtime": 1782364828.0538697,
-    "ast_hash": "ceb6e0e5e749b613a77d42b503220431",
+    "mtime": 1782932214.252308,
+    "ast_hash": "d543d7387ef2e581c375e1ddd5bfb172",
     "semantic_hash": ""
   },
   "commands/add-mcp.md": {
-    "mtime": 1781762800.543618,
-    "ast_hash": "47e0c8249eda93c2cff8d4cd1750bc0f",
+    "mtime": 1782932212.0235426,
+    "ast_hash": "fb89d3e83c303d8dc5dbfab87ab5929a",
     "semantic_hash": ""
   },
   "commands/add-plugins.md": {
-    "mtime": 1782364831.4682064,
-    "ast_hash": "d07c8a48fb8afb3127d4e255ca05ecf4",
+    "mtime": 1782932216.741925,
+    "ast_hash": "0c2bf94f43b39bc77d16ffaa52f336c0",
     "semantic_hash": ""
   },
   "commands/add-tools.md": {
-    "mtime": 1782590199.8295956,
-    "ast_hash": "6043c677387e697f48903993857407a9",
+    "mtime": 1782932217.812425,
+    "ast_hash": "0e9a835a8703fd82bcaffca7a93c2e1a",
     "semantic_hash": ""
   },
   "commands/check-deps.md": {
-    "mtime": 1782364817.1230013,
-    "ast_hash": "9e4d8f67b0c96cec7bb34514047e2dd8",
+    "mtime": 1782932210.5933921,
+    "ast_hash": "68c9bc83917778c93ea45870c5d4243f",
     "semantic_hash": ""
   },
   "commands/condense-harness-prompts.md": {
-    "mtime": 1782364992.9277046,
-    "ast_hash": "7227517c51a07cdd21cddfae9db5a4f6",
+    "mtime": 1782932215.3286767,
+    "ast_hash": "41ab122128faf19613ebaa9ecbe6fe52",
     "semantic_hash": ""
   },
   "commands/doctor.md": {
-    "mtime": 1782875112.8010645,
-    "ast_hash": "10c6c2bfef584c91d2709a559062280c",
+    "mtime": 1782932205.921095,
+    "ast_hash": "d1a41ab0b0968cc4415704f296d8b756",
     "semantic_hash": ""
   },
   "commands/help.md": {
-    "mtime": 1782661155.3765647,
-    "ast_hash": "ccc995212990a353627941bda849948f",
+    "mtime": 1782932695.5676994,
+    "ast_hash": "6099ea5452843857ec1c7cb46781832a",
     "semantic_hash": ""
   },
   "commands/init.md": {
-    "mtime": 1782660985.486147,
-    "ast_hash": "07acef591ee534286cd957135a7b0842",
+    "mtime": 1782932207.3037674,
+    "ast_hash": "c4142245c8256fb6fb2a40983e342d05",
     "semantic_hash": ""
   },
   "commands/patch.md": {
-    "mtime": 1782685323.7573097,
-    "ast_hash": "ec525c93a61109d84073916895ae686e",
+    "mtime": 1782932208.7209911,
+    "ast_hash": "65febf6fb99c83dac4253f5743031039",
     "semantic_hash": ""
   },
   "commands/scan.md": {
-    "mtime": 1782685323.7578459,
-    "ast_hash": "305d6cb5f0ed9c01a6715a792b72a3cc",
+    "mtime": 1782932200.3811076,
+    "ast_hash": "d1502012712584be5a17e7fcd4519d86",
     "semantic_hash": ""
   },
   "docs/specs/2026-06-17-aia-harness-plugin-design.md": {
@@ -1660,8 +1660,8 @@
     "semantic_hash": ""
   },
   "skills/harness-engineering/SKILL.md": {
-    "mtime": 1782335226.5459213,
-    "ast_hash": "8f1d322341fc42365868babc85215455",
+    "mtime": 1782931487.9251864,
+    "ast_hash": "4d3ceaaa6ee9113b0c472c8f576107b3",
     "semantic_hash": ""
   },
   "skills/mcp-catalog/SKILL.md": {
@@ -3562,6 +3562,26 @@
   "docs/superpowers/plans/2026-07-01-hooks-cwd-resolution-audit.md": {
     "mtime": 1782924889.127288,
     "ast_hash": "d4e566d252b02a41cb9725150d2a6cab",
+    "semantic_hash": ""
+  },
+  "tests/commands-cli-invocation.test.mjs": {
+    "mtime": 1782931132.9845498,
+    "ast_hash": "b71eb3718d0dec5fff64523d2ee895d7",
+    "semantic_hash": ""
+  },
+  ".claude/memory/node-resolution-target-machine.md": {
+    "mtime": 1782930629.9365962,
+    "ast_hash": "1ce10941b041a952564a48cc520559ef",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-07-01-cli-invocation-regression-fix.md": {
+    "mtime": 1782930664.734937,
+    "ast_hash": "d7d5473eda54b43d9724801dc9549094",
+    "semantic_hash": ""
+  },
+  ".claude/memory/commands-project-dir-not-guaranteed.md": {
+    "mtime": 1782932860.576464,
+    "ast_hash": "c03dcd7da0bad1c49cb88107f2d2792a",
     "semantic_hash": ""
   }
 }

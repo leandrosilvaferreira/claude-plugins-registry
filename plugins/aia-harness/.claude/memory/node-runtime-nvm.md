@@ -9,4 +9,4 @@ metadata:
 
 Node.js is nvm-managed on this machine and is NOT on PATH in non-interactive shells — bare `node`/`npm`/`npx` return nothing. Newest install: `~/.nvm/versions/node/v22.16.0/bin`. `bun` also exists at `~/.bun/bin/bun`. No system node.
 
-**How to apply:** Prefix node/npm Bash calls with `export PATH="$HOME/.nvm/versions/node/v22.16.0/bin:$PATH"`. For shipped scripts that must find node at runtime, use a resolver order `$CLAUDE_NODE → node on PATH → newest ~/.nvm/versions/node/*/bin/node → bun` (see the `aia-harness` plugin's `bin/node-run.sh` / `bin/aia-harness`).
+**How to apply:** Prefix node/npm Bash calls with `export PATH="$HOME/.nvm/versions/node/v22.16.0/bin:$PATH"`. For shipped scripts that must find node at runtime, use a resolver order `$CLAUDE_NODE → node on PATH → newest ~/.nvm/versions/node/*/bin/node → bun`.

@@ -17,12 +17,24 @@ Never overwrite a file without showing a diff first.
 
 Target directory: `$1` if provided, else `$CLAUDE_PROJECT_DIR`.
 
+<!-- aia-harness:target-dir-resolution -->
+Resolve this **once**, at the
+start of this command, into a concrete literal absolute path. `$CLAUDE_PROJECT_DIR` is documented
+as available "when hooks are executed" but is not guaranteed inside the general-purpose Bash tool
+used to run these instructions — it can silently expand empty there, and the CLI then falls back
+to the shell's *current* working directory, which is wrong if the agent has since `cd`'d elsewhere
+(e.g. into the scratchpad for intermediate file work). Reuse that one resolved literal path in
+every subsequent CLI invocation for the rest of this flow — never re-expand a bare
+`$CLAUDE_PROJECT_DIR` in a later, separately-issued Bash call, since each Bash tool call is a
+fresh shell (only cwd persists, not exported variables) and an earlier `cd` silently redirects any
+later bare-env-var fallback to the wrong place.
+
 ## Flow
 
 ## 0. Check system dependencies
 
 ```bash
-"${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" check "${1:-$CLAUDE_PROJECT_DIR}" --json
+node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" check "${1:-$CLAUDE_PROJECT_DIR}" --json
 ```
 
 If `status === "block"`: present the list of `missing[]` with `installHint`
@@ -31,13 +43,13 @@ for the user's platform and stop — do not execute the following steps.
 1. **Diagnose.** Run and present the report:
 
    ```bash
-   "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" scan "${1:-$CLAUDE_PROJECT_DIR}"
+   node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" scan "${1:-$CLAUDE_PROJECT_DIR}"
    ```
 
 2. **Plan.** Get the machine-readable plan:
 
    ```bash
-   "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" plan "${1:-$CLAUDE_PROJECT_DIR}" --json
+   node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" plan "${1:-$CLAUDE_PROJECT_DIR}" --json
    ```
 
    Summarize the proposed artifacts grouped by category, each with its rationale
@@ -91,7 +103,7 @@ for the user's platform and stop — do not execute the following steps.
    target already exists, show the diff before deciding to overwrite:
 
    ```bash
-   "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" --only=<ids> --large-files=<mode>
+   node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" --only=<ids> --large-files=<mode>
    ```
 
 5. **Apply.** Once approved, write the selected artifacts (add `--force` only for
@@ -101,7 +113,7 @@ for the user's platform and stop — do not execute the following steps.
    (the hook is always installed; the flag only picks its mode):
 
    ```bash
-   "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" --yes --only=<ids> --large-files=<mode> [--no-strict]
+   node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" --yes --only=<ids> --large-files=<mode> [--no-strict]
    ```
 
 5.5. **Enrich CLAUDE.md.** After apply, analyze the target project in 3 passes and rewrite the AI-ENRICH-marked sections of the generated `CLAUDE.md`. Do not alter `## Stack`, `## Canonical commands`, or `## Skills`. **Never touch any section carrying the `aia-harness:fixed` marker** (root `## Engineering rules`, domain `## Rules`) — those are non-negotiable baseline rules that must survive verbatim; you may only add to `## Conventions` / `## Local conventions`, never relocate rules out of the fixed section.

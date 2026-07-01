@@ -12,10 +12,24 @@ allowed-tools:
 
 Target directory: `$1` if provided, else `$CLAUDE_PROJECT_DIR`.
 
+<!-- aia-harness:target-dir-resolution -->
+Resolve this **once**, at the
+start of this command, into a concrete literal absolute path. `$CLAUDE_PROJECT_DIR` is documented
+as available "when hooks are executed" but is not guaranteed inside the general-purpose Bash tool
+used to run these instructions — it can silently expand empty there, and the CLI then falls back
+to the shell's *current* working directory, which is wrong if the agent has since `cd`'d elsewhere
+(e.g. into the scratchpad for intermediate file work). Reuse that one resolved literal path in
+every subsequent CLI invocation below — never re-expand a bare `$CLAUDE_PROJECT_DIR` in a later,
+separately-issued Bash call, since each Bash tool call is a fresh shell (only cwd persists, not
+exported variables) and an earlier `cd` silently redirects any later bare-env-var fallback to the
+wrong place. **This is the longest command in the plugin** — the same resolved path must still be
+the one reused in every `apply --only=...` call scattered across step 3's sub-checks below, not
+just the calls immediately following this paragraph.
+
 ## 0. Check system dependencies
 
 ```bash
-"${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" check "${1:-$CLAUDE_PROJECT_DIR}" --json
+node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" check "${1:-$CLAUDE_PROJECT_DIR}" --json
 ```
 
 If `status === "block"`: present the list of `missing[]` with `installHint`
@@ -24,7 +38,7 @@ for the user's platform and stop — do not execute the following steps.
 1. Re-scan to see what exists:
 
    ```bash
-   "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" scan "${1:-$CLAUDE_PROJECT_DIR}" --json
+   node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" scan "${1:-$CLAUDE_PROJECT_DIR}" --json
    ```
 
 2. **Completeness — what the current plugin version expects but is missing.**
@@ -32,7 +46,7 @@ for the user's platform and stop — do not execute the following steps.
    expected artifact set for the detected stack and this plugin version:
 
    ```bash
-   "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" plan "${1:-$CLAUDE_PROJECT_DIR}" --json
+   node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" plan "${1:-$CLAUDE_PROJECT_DIR}" --json
    ```
 
    Every artifact in the plan carries `exists` (already present in the project)
@@ -55,7 +69,7 @@ for the user's platform and stop — do not execute the following steps.
    missing targets and leaves everything that already exists untouched:
 
    ```bash
-   "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" --yes --only=<chosen ids>
+   node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" --yes --only=<chosen ids>
    ```
 
    Report the engine's `created` list back. If any newly-created file is a
@@ -72,7 +86,7 @@ for the user's platform and stop — do not execute the following steps.
     dry-run apply and read the structured drift list (omitting `--yes` keeps it a dry run — no files are written):
 
     ```bash
-    "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" --json
+    node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" --json
     ```
 
     Parse `differs[]` (each `{ id, relPath, category }`). Group by `category`. For each
@@ -94,7 +108,7 @@ for the user's platform and stop — do not execute the following steps.
     `differs[].id`s and force-overwrite ONLY those:
 
     ```bash
-    "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" \
+    node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
       --yes --force --only=<comma-joined ids>
     ```
 
@@ -130,7 +144,7 @@ for the user's platform and stop — do not execute the following steps.
      restore it by force-regenerating the root file:
 
      ```bash
-     "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" \
+     node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
        --yes --force --only=claude-md-root
      ```
 
@@ -144,7 +158,7 @@ for the user's platform and stop — do not execute the following steps.
      `general-purpose`). Offer to regenerate the root file:
 
      ```bash
-     "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" \
+     node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
        --yes --force --only=claude-md-root
      ```
 
@@ -170,7 +184,7 @@ for the user's platform and stop — do not execute the following steps.
      hook file only):
 
      ```bash
-     "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" \
+     node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
        --yes --force --only=settings,hook:large-file-warning.mjs --large-files=<mode>
      ```
 
@@ -182,7 +196,7 @@ for the user's platform and stop — do not execute the following steps.
      project's primary language). If it looks like a placeholder or was generated for
      a different stack, flag it and offer to regenerate with:
      ```bash
-     "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" \
+     node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
        --yes --force --only=strategies
      ```
 
@@ -202,7 +216,7 @@ for the user's platform and stop — do not execute the following steps.
      commands under `.claude/commands/`), verify each command file exists on disk. If any are
      missing, offer to add them:
      ```bash
-     "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" \
+     node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
        --yes --only=<agkit-command:ids>
      ```
 
@@ -226,7 +240,7 @@ for the user's platform and stop — do not execute the following steps.
      If either is missing: report as missing and offer to install:
 
      ```bash
-     "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" \
+     node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
        --yes --only=graphify-git-hook:post-commit,graphify-git-hook:post-checkout
      ```
 
@@ -243,7 +257,7 @@ for the user's platform and stop — do not execute the following steps.
      (non-destructive — the merge adds the hook without touching existing settings):
 
      ```bash
-     "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" \
+     node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
        --yes --only=settings
      ```
 

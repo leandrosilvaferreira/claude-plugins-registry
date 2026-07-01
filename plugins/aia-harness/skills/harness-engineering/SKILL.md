@@ -6,15 +6,15 @@ description: Use when setting up, scaffolding, bootstrapping, or improving a Cla
 # Harness engineering
 
 Turn any project into a well-tuned Claude Code workspace, safely. The plugin
-ships a deterministic engine (`bin/aia-harness`) that scans the project and
+ships a deterministic engine (`bin/harness.mjs`, run via `node`) that scans the project and
 produces a scaffold plan; you orchestrate the **diagnose → approve → apply**
 loop and tailor the generated prose.
 
 ## The loop (always)
 
-1. **Diagnose** — `"${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" scan <dir>`.
+1. **Diagnose** — `node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" scan <dir>`.
    Present the stack, commands, architecture, and any existing harness.
-2. **Plan** — `"${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" plan <dir> --json`.
+2. **Plan** — `node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" plan <dir> --json`.
    Show artifacts grouped by category with rationale + context cost.
 3. **Consent** — ask which artifacts to apply (multi-select). Default-select the
    `selected` items; leave `opt-in` ones unchecked.

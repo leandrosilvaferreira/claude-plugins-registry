@@ -13,17 +13,30 @@ Run the deterministic scanner and present the result. This command is read-only.
 ## 0. Check system dependencies
 
 ```bash
-"${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" check "${1:-$CLAUDE_PROJECT_DIR}" --json
+node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" check "${1:-$CLAUDE_PROJECT_DIR}" --json
 ```
 
 Read the returned JSON. If `status === "block"`: present the list of `missing[]`
 with `installHint` for the user's platform and stop — do not execute the following steps.
 
 1. Determine the target directory: `$1` if provided, otherwise `$CLAUDE_PROJECT_DIR`.
+
+   <!-- aia-harness:target-dir-resolution -->
+   Resolve this **once**, at the start, into a concrete literal absolute path.
+   `$CLAUDE_PROJECT_DIR` is documented as available "when hooks are executed" but is not
+   guaranteed inside the general-purpose Bash tool used to run these instructions — it can
+   silently expand empty there, and the CLI then falls back to the shell's *current* working
+   directory, which is wrong if the agent has since `cd`'d elsewhere (e.g. into the scratchpad
+   for intermediate file work). Reuse that one resolved literal path in every subsequent CLI
+   invocation for the rest of this command — never re-expand a bare `$CLAUDE_PROJECT_DIR` in a
+   later, separately-issued Bash call, since each Bash tool call is a fresh shell (only cwd
+   persists, not exported variables) and an earlier `cd` silently redirects any later
+   bare-env-var fallback to the wrong place.
+
 2. Run:
 
    ```bash
-   "${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" scan "${1:-$CLAUDE_PROJECT_DIR}"
+   node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" scan "${1:-$CLAUDE_PROJECT_DIR}"
    ```
 
 3. Present the diagnosis to the user: primary language, stack,
@@ -52,7 +65,7 @@ the scan JSON), run a dry-run apply to detect drift (omitting `--yes` keeps this
 files are written):
 
 ```bash
-"${CLAUDE_PLUGIN_ROOT}/bin/aia-harness" apply "${1:-$CLAUDE_PROJECT_DIR}" --json
+node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" --json
 ```
 
 Parse the returned JSON `differs[]` array. If it is non-empty:
