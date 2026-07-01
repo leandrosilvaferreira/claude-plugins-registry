@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   ".claude-plugin/plugin.json": {
-    "mtime": 1782608999.118314,
-    "ast_hash": "5038202aa24cf02d16b893ab3d5d07af",
+    "mtime": 1782685380.319488,
+    "ast_hash": "b689ebb8025df10ae1ce40065b41d9fc",
     "semantic_hash": ""
   },
   ".claude/hooks/eslint-fix.mjs": {
@@ -315,8 +315,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1782608999.1184678,
-    "ast_hash": "4ed3e2383d1862d0127dd65b5ad35046",
+    "mtime": 1782685380.31964,
+    "ast_hash": "d23ee6fd03e1f11cd788515cde75b130",
     "semantic_hash": ""
   },
   "scripts/agkit-source.json": {
@@ -945,8 +945,8 @@
     "semantic_hash": ""
   },
   ".claude/memory/MEMORY.md": {
-    "mtime": 1782591969.2373796,
-    "ast_hash": "6d7eecd5fb131c50eec0071ef7960f01",
+    "mtime": 1782685438.1586137,
+    "ast_hash": "31dcd6754686565d7095e6fa0363e218",
     "semantic_hash": ""
   },
   ".claude/memory/secrets-file-model.md": {
@@ -3490,68 +3490,73 @@
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-06-28-specialist-agent-routing.md": {
-    "mtime": 1782669232.0585399,
+    "mtime": 1782685323.7591417,
     "ast_hash": "ab9c9ddcd97db303d86ffad1ea7fe0a6",
     "semantic_hash": ""
   },
   "docs/superpowers/specs/2026-06-28-specialist-agent-routing-design.md": {
-    "mtime": 1782662784.692682,
+    "mtime": 1782685323.760141,
     "ast_hash": "dfea172fce54b326adb87fbd297781a3",
     "semantic_hash": ""
   },
   "lib/util/frontmatter-yaml.mjs": {
-    "mtime": 1782669364.4492278,
+    "mtime": 1782685323.7658477,
     "ast_hash": "ade2a8a23f51ae4a1606899ec08b611b",
     "semantic_hash": ""
   },
   "tests/frontmatter-yaml.test.mjs": {
-    "mtime": 1782669351.458085,
+    "mtime": 1782685323.7934275,
     "ast_hash": "c81254fe7548ab68dbc64b1f55429035",
     "semantic_hash": ""
   },
   "lib/validate/agent-description.mjs": {
-    "mtime": 1782669633.135321,
+    "mtime": 1782685323.7662702,
     "ast_hash": "2e69aa36f50e68728f3bbc62128ece0c",
     "semantic_hash": ""
   },
   "tests/agent-description.test.mjs": {
-    "mtime": 1782669633.1353257,
+    "mtime": 1782685323.7904165,
     "ast_hash": "4e7eaf0a882b48b3541e153c968b18cd",
     "semantic_hash": ""
   },
   "scripts/apply-agent-descriptions.mjs": {
-    "mtime": 1782670141.3963695,
+    "mtime": 1782685323.766877,
     "ast_hash": "9e78ccfc5d86264d47af8d47f80b23e1",
     "semantic_hash": ""
   },
   "tests/claude-md.test.mjs": {
-    "mtime": 1782683313.286164,
+    "mtime": 1782685323.7922785,
     "ast_hash": "66b3c8eccbf48eeebcf3324a2b05960f",
     "semantic_hash": ""
   },
   "skills/revise-agent-frontmatter/SKILL.md": {
-    "mtime": 1782671229.5089417,
+    "mtime": 1782685323.7675176,
     "ast_hash": "aa748bc9cb75c436faf68da8079d681c",
     "semantic_hash": ""
   },
   "tests/agent-frontmatter-standard.test.mjs": {
-    "mtime": 1782672023.8152158,
+    "mtime": 1782685323.7907188,
     "ast_hash": "8999e7188e2f1d40d0b550af3849fd94",
     "semantic_hash": ""
   },
   ".claude/rules/agent-frontmatter-standard.md": {
-    "mtime": 1782672181.3249168,
+    "mtime": 1782685323.7546115,
     "ast_hash": "ed5baa3f902ba14e98bc46af1ddd2887",
     "semantic_hash": ""
   },
   "tests/apply-differs.test.mjs": {
-    "mtime": 1782683533.1752493,
+    "mtime": 1782685323.7917385,
     "ast_hash": "f5db10417065a9dc5ea51dbbc86137e8",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-06-28-agent-routing-drift-detection.md": {
-    "mtime": 1782683104.0465944,
+    "mtime": 1782685323.7584555,
     "ast_hash": "4647759d59e023494b04b5bce91e878e",
+    "semantic_hash": ""
+  },
+  ".claude/memory/gh-pr-token-404.md": {
+    "mtime": 1782685422.605296,
+    "ast_hash": "649175c22ba29044190f8bc05de9cbbf",
     "semantic_hash": ""
   }
 }
