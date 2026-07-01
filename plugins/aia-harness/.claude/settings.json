@@ -35,7 +35,7 @@
           {
             "type": "command",
             "command": "node",
-            "args": ["$CLAUDE_PROJECT_DIR/.claude/hooks/validate-template-frontmatter.mjs"],
+            "args": ["${CLAUDE_PROJECT_DIR}/.claude/hooks/validate-template-frontmatter.mjs"],
             "timeout": 10
           }
         ]
@@ -46,7 +46,7 @@
           {
             "type": "command",
             "command": "node",
-            "args": ["$CLAUDE_PROJECT_DIR/.claude/hooks/graphify-bash-ctx.mjs"],
+            "args": ["${CLAUDE_PROJECT_DIR}/.claude/hooks/graphify-bash-ctx.mjs"],
             "timeout": 10
           }
         ]
@@ -57,7 +57,7 @@
           {
             "type": "command",
             "command": "node",
-            "args": ["$CLAUDE_PROJECT_DIR/.claude/hooks/graphify-read-ctx.mjs"],
+            "args": ["${CLAUDE_PROJECT_DIR}/.claude/hooks/graphify-read-ctx.mjs"],
             "timeout": 10
           }
         ]
@@ -70,19 +70,19 @@
           {
             "type": "command",
             "command": "node",
-            "args": ["$CLAUDE_PROJECT_DIR/.claude/hooks/eslint-fix.mjs"],
+            "args": ["${CLAUDE_PROJECT_DIR}/.claude/hooks/eslint-fix.mjs"],
             "timeout": 30
           },
           {
             "type": "command",
             "command": "node",
-            "args": ["$CLAUDE_PROJECT_DIR/.claude/hooks/typecheck-on-edit.mjs"],
+            "args": ["${CLAUDE_PROJECT_DIR}/.claude/hooks/typecheck-on-edit.mjs"],
             "timeout": 30
           },
           {
             "type": "command",
             "command": "node",
-            "args": ["$CLAUDE_PROJECT_DIR/.claude/hooks/validate-settings-schema.mjs"],
+            "args": ["${CLAUDE_PROJECT_DIR}/.claude/hooks/validate-settings-schema.mjs"],
             "timeout": 30
           }
         ]
@@ -94,13 +94,13 @@
           {
             "type": "command",
             "command": "node",
-            "args": ["$CLAUDE_PROJECT_DIR/.claude/hooks/verify-on-stop.mjs"],
+            "args": ["${CLAUDE_PROJECT_DIR}/.claude/hooks/verify-on-stop.mjs"],
             "timeout": 120
           },
           {
             "type": "command",
             "command": "node",
-            "args": ["$CLAUDE_PROJECT_DIR/.claude/hooks/large-file-warning.mjs"],
+            "args": ["${CLAUDE_PROJECT_DIR}/.claude/hooks/large-file-warning.mjs"],
             "timeout": 10
           }
         ]

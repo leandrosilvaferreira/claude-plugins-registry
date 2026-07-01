@@ -7,3 +7,6 @@
 - [project-level-only](project-level-only.md) — ferramentas/config instaladas em .claude/ do repo, nunca global (~/.claude)
 - [publish-registry-command](publish-registry-command.md) — bump de versão e publicar plugin via BUMP/PUSH/TAG env vars + npm run publish-registry
 - [gh-pr-token-404](gh-pr-token-404.md) — gh PR/API dá 404 neste repo (escopo do token); usar git SSH para push/merge
+- [hook-placeholder-braces](hook-placeholder-braces.md) — hooks exec-form (args) só expandem ${VAR} com chaves, nunca $VAR bare — bare quebra silenciosamente
+- [merge-settings-hooks-dedup-key](merge-settings-hooks-dedup-key.md) — mergeSettingsHooks só adiciona hooks faltantes; nunca repara valor de hook existente
+- [subagent-worktree-drift](subagent-worktree-drift.md) — subagent via Agent tool não herda EnterWorktree; pode commitar em main por engano (visto 2x com haiku)

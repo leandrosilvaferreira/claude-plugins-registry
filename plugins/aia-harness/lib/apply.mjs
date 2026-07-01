@@ -46,8 +46,26 @@ export function mergeSettingsHooks(existingJson, incomingJson) {
     merged.hooks = {};
   }
 
+  /**
+   * Normalizes placeholder bracing for key computation ONLY — the stored
+   * hook object (whichever one wins) is never rewritten by this function.
+   * A bare $CLAUDE_PROJECT_DIR and a braced ${CLAUDE_PROJECT_DIR} refer to
+   * the same hook; without this, a routine re-apply after a placeholder
+   * fix would add a duplicate instead of recognizing the hook as already
+   * present.
+   * @param {unknown} v
+   */
+  const normalizePlaceholders = (v) =>
+    typeof v === "string"
+      ? v.replace(/\$(?!\{)(CLAUDE_PROJECT_DIR|CLAUDE_PLUGIN_ROOT|CLAUDE_PLUGIN_DATA)\b/g, "${$1}")
+      : v;
+
   /** @param {{ command?: unknown, args?: unknown }} h */
-  const hookKey = (h) => JSON.stringify({ command: h.command, args: h.args });
+  const hookKey = (h) =>
+    JSON.stringify({
+      command: normalizePlaceholders(h.command),
+      args: Array.isArray(h.args) ? h.args.map(normalizePlaceholders) : h.args,
+    });
 
   for (const [eventKey, incomingGroups] of Object.entries(incoming.hooks)) {
     if (!Array.isArray(incomingGroups)) continue;

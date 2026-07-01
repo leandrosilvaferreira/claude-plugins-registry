@@ -15,6 +15,7 @@ import { detectVcs } from "./vcs.mjs";
 import { detectTesting } from "./testing.mjs";
 import { detectLargeFiles } from "./large-files.mjs";
 import { detectGitHubPM } from "./github-pm.mjs";
+import { detectHookHygiene } from "./hook-hygiene.mjs";
 
 /** Root-level files worth surfacing in the report as evidence. */
 const MARKER_FILES = new Set([
@@ -100,6 +101,9 @@ export function scanProject(root, opts = {}) {
       hasWorkflows: false,
       hasPmConfig: false,
     }),
+    hookHygiene: /** @type {import('../profile.mjs').HookHygieneInfo} */ ({
+      placeholderIssues: [],
+    }),
     vcs,
     markers,
     truncated,
@@ -107,5 +111,6 @@ export function scanProject(root, opts = {}) {
   profile.testing = detectTesting(profile, files);
   profile.largeFiles = detectLargeFiles(abs, files);
   profile.githubPM = detectGitHubPM(profile, files);
+  profile.hookHygiene = detectHookHygiene(abs, existingHarness.settings);
   return profile;
 }

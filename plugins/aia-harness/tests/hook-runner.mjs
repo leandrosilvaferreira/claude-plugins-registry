@@ -18,11 +18,11 @@ import path from "node:path";
  *
  * @param {string} hookPath  - absolute path to the hook .mjs file
  * @param {any}    event     - object serialised as JSON and piped to stdin
- * @param {{ env?: Record<string,string> }} [opts]
+ * @param {{ env?: Record<string,string>, args?: string[] }} [opts]
  * @returns {HookResult}
  */
 export function runHook(hookPath, event, opts = {}) {
-  const result = spawnSync(process.execPath, [hookPath], {
+  const result = spawnSync(process.execPath, [hookPath, ...(opts.args ?? [])], {
     input: JSON.stringify(event),
     encoding: "utf8",
     env: { ...process.env, ...opts.env },
@@ -39,7 +39,7 @@ export function runHook(hookPath, event, opts = {}) {
  *
  * @param {string} hookPath
  * @param {string} rawInput
- * @param {{ env?: Record<string,string> }} [opts]
+ * @param {{ env?: Record<string,string>, args?: string[] }} [opts]
  * @returns {HookResult}
  */
 export function runHookRaw(hookPath, rawInput, opts = {}) {

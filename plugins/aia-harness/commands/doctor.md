@@ -249,6 +249,20 @@ for the user's platform and stop — do not execute the following steps.
 
      If graphify is not in the plan, skip this check silently.
 
+   - **Hook placeholder hygiene (settings.json):** Read `hookHygiene.placeholderIssues`
+     from the `scan --json` output (step 1). If empty, say nothing. Otherwise, for each
+     entry (`{ event, matcher, script, arg, placeholder }`), explain: exec-form hooks
+     (an `args` array) spawn without a shell, so Claude Code only expands the **braced**
+     `${placeholder}` form — the bare `$placeholder` currently in `arg` is passed through
+     literally and will throw `MODULE_NOT_FOUND`. List every affected `script` with its
+     event and the exact `arg` string. Ask the user to approve the fix with
+     `AskUserQuestion`, then fix each one with `Edit` directly on `.claude/settings.json`
+     — replace `$<placeholder>` with `${<placeholder>}` in that exact `args` string, and
+     nothing else on the line. **Do not** fix this with `apply --only=settings`:
+     `mergeSettingsHooks` dedups hook entries by exact `{command, args}` string identity,
+     so re-applying would add a duplicate hook, not repair the broken one — `Edit` is the
+     only correct fix here.
+
 4. Present a prioritized findings list. For each accepted fix, show a diff and
    apply with `Edit` only after the user approves. Do not rewrite files wholesale.
 

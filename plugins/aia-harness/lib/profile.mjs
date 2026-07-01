@@ -122,6 +122,24 @@
  */
 
 /**
+ * @typedef {Object} HookPlaceholderIssue
+ * @property {string} event       Hook event key the offending entry lives under (e.g. "PostToolUse").
+ * @property {string} matcher     Matcher string of the group ("" if the group has none, e.g. SessionStart).
+ * @property {string} script      Basename of the offending `args` string (its last `/`-separated segment).
+ * @property {string} arg         The full offending `args[]` string, verbatim.
+ * @property {"CLAUDE_PROJECT_DIR"|"CLAUDE_PLUGIN_ROOT"|"CLAUDE_PLUGIN_DATA"} placeholder
+ *   Which path placeholder was found unbraced.
+ */
+
+/**
+ * @typedef {Object} HookHygieneInfo
+ * @property {HookPlaceholderIssue[]} placeholderIssues  Exec-form hook `args` entries using a
+ *   bare (unbraced) path placeholder. Exec-form hooks (an `args` array present) bypass the
+ *   shell, so Claude Code only substitutes the braced `${VAR}` form — a bare `$VAR` is passed
+ *   through literally and `node` throws MODULE_NOT_FOUND resolving it as a relative path.
+ */
+
+/**
  * @typedef {{ name: string, level: 'required'|'recommended' }} DepEntry
  */
 
@@ -159,6 +177,7 @@
  * @property {TestingInfo} testing
  * @property {LargeFilesInfo} largeFiles    Pre-existing oversized-source summary + recommended guard mode.
  * @property {GitHubPMInfo} githubPM        GitHub PM detection results.
+ * @property {HookHygieneInfo} hookHygiene  Bare-placeholder hook hygiene results.
  * @property {VcsInfo} vcs
  * @property {string[]} markers             Notable marker files found at root.
  * @property {boolean} truncated            True if the file walk hit its cap.

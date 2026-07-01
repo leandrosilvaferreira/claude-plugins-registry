@@ -45,6 +45,12 @@ export function renderReport(profile) {
     `- skills: ${eh.skills.length > 0 ? eh.skills.join(", ") : "no"}`,
   ].join("\n");
 
+  const hhIssues = profile.hookHygiene.placeholderIssues;
+  const hookHygieneBlock =
+    hhIssues.length > 0
+      ? `\n\n## ⚠ Hook placeholder hygiene\n${hhIssues.length} hook(s) in .claude/settings.json use a bare $VAR instead of \${VAR} — Claude Code only expands the braced form in exec-form hooks (no shell), so these will throw MODULE_NOT_FOUND. Run \`/aia-harness:doctor\` to fix.\n${hhIssues.map((i) => `  - \`${i.script}\` (${i.event}): \`${i.arg}\``).join("\n")}`
+      : "";
+
   return `# Harness diagnosis — ${profile.root.split("/").pop()}
 
 ## Languages
@@ -78,7 +84,7 @@ ${profile.testing.configured ? `- present${profile.testing.framework ? ` — ${p
 
 ## Existing harness
 ${existing}
-`;
+${hookHygieneBlock}`;
 }
 
 /**

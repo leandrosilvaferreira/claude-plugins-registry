@@ -130,6 +130,7 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
         hooks: [
           { type: "command", ...hookCmd("verify-on-stop.mjs"), timeout: 300 },
           { type: "command", ...hookCmd("memory-stop.mjs"), timeout: 30 },
+          { type: "command", ...hookCmd("sql-idempotent-review.mjs"), timeout: 15 },
         ],
       },
     ],
