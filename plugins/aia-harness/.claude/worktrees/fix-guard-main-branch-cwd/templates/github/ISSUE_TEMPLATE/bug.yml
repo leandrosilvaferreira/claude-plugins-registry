@@ -1,0 +1,39 @@
+name: Bug Report
+description: Report a bug or unexpected behavior
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: "**Thanks for reporting!** Fill in the fields below."
+  - type: textarea
+    id: description
+    attributes:
+      label: Problem description
+      description: What happened? What was expected?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Do X
+        2. Click on Y
+        3. See the error
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: How will we know the bug is fixed?
+      placeholder: |
+        - [ ] Expected behavior working
+        - [ ] No regression in adjacent use cases
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Version, environment, logs, screenshots

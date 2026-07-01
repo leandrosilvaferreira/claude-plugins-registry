@@ -1,0 +1,27 @@
+name: Feature Request
+description: Suggest a new feature or enhancement
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature description
+      description: What should be possible to do that is not possible today?
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why is this feature important? What problem does it solve?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      placeholder: |
+        - [ ] User can do X
+        - [ ] Edge case Y handled correctly
+    validations:
+      required: true

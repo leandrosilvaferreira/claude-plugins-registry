@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   ".claude-plugin/plugin.json": {
-    "mtime": 1782917527.2853358,
-    "ast_hash": "e5bb28f5136652fdcac29a463c01d4ba",
+    "mtime": 1782921090.2850068,
+    "ast_hash": "76165a52e915a267836153fee6f46a7c",
     "semantic_hash": ""
   },
   ".claude/hooks/eslint-fix.mjs": {
@@ -85,8 +85,8 @@
     "semantic_hash": ""
   },
   "hooks/scripts/check-plugin-update.mjs": {
-    "mtime": 1782918043.1987224,
-    "ast_hash": "fddd41aee2459af6de61cfb9d2cf3ba8",
+    "mtime": 1782921096.4137042,
+    "ast_hash": "cdf0670c4bf005451f9ff27b3b7c46fb",
     "semantic_hash": ""
   },
   "hooks/scripts/update-check-logic.mjs": {
@@ -360,8 +360,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1782866194.839736,
-    "ast_hash": "84213fb49ea104e9ed36d5ec7e04eecf",
+    "mtime": 1782918656.8801591,
+    "ast_hash": "e1bdb6d186c8e6da3f8b4edf089e5fd8",
     "semantic_hash": ""
   },
   "scripts/agkit-source.json": {
@@ -400,8 +400,8 @@
     "semantic_hash": ""
   },
   "scripts/publish-to-registry.mjs": {
-    "mtime": 1782591618.0104406,
-    "ast_hash": "18506d01042b5428be7f0f1fd493f3a0",
+    "mtime": 1782921519.9694903,
+    "ast_hash": "23de19e86dc0ec7a8b05cd34c555104f",
     "semantic_hash": ""
   },
   "scripts/sync-agkit.mjs": {
@@ -925,8 +925,8 @@
     "semantic_hash": ""
   },
   "tests/hook-check-plugin-update.test.mjs": {
-    "mtime": 1782918063.7768936,
-    "ast_hash": "9795fc2b5adf02549136b8c811e6a503",
+    "mtime": 1782921111.9025724,
+    "ast_hash": "0c458b9f0af2fa73f0174bd75d7cec5d",
     "semantic_hash": ""
   },
   "tests/hook-graphify-orient.test.mjs": {
@@ -1150,8 +1150,8 @@
     "semantic_hash": ""
   },
   ".claude/memory/MEMORY.md": {
-    "mtime": 1782875247.1536906,
-    "ast_hash": "4d8bfa981b638d50a9b30fa05b52135a",
+    "mtime": 1782920621.8288033,
+    "ast_hash": "5a9a855ea049413a73459dd18beabb16",
     "semantic_hash": ""
   },
   ".claude/memory/cross-platform-artifacts.md": {
@@ -3517,6 +3517,21 @@
   "tests/fixtures/go-app/.golangci.yml": {
     "mtime": 1781758366.8540788,
     "ast_hash": "54a3d33c1aafefb81477e7f33399f8f2",
+    "semantic_hash": ""
+  },
+  ".claude/memory/claude-cannot-invoke-builtin-slash-commands.md": {
+    "mtime": 1782920591.5301294,
+    "ast_hash": "457722d4fe4ee28227dea67857db80c3",
+    "semantic_hash": ""
+  },
+  ".claude/memory/claude-plugin-cli-and-marketplace-autoupdate.md": {
+    "mtime": 1782920572.842366,
+    "ast_hash": "0c430d8173a1ff0469a38412262b931f",
+    "semantic_hash": ""
+  },
+  ".claude/memory/hook-type-table-stale.md": {
+    "mtime": 1782920607.6157498,
+    "ast_hash": "69b3aefbaaa870ef64a47668832e43b4",
     "semantic_hash": ""
   }
 }

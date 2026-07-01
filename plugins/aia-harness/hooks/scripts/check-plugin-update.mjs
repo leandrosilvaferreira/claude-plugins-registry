@@ -12,8 +12,11 @@
  *   AIA_UPDATE_CHECK_CLAUDE_BIN        — command to run instead of the real
  *                                        `claude` binary on PATH.
  *   AIA_UPDATE_CHECK_CACHE_FILE        — cache file path. Falls back to
- *                                        argv[2] (the ${CLAUDE_PLUGIN_DATA}
- *                                        path plugin.json passes for real).
+ *                                        argv[2] (the
+ *                                        ${CLAUDE_PLUGIN_DATA}/update-check.json
+ *                                        path plugin.json passes for real —
+ *                                        CLAUDE_PLUGIN_DATA itself is a
+ *                                        directory, not a file).
  *   AIA_UPDATE_CHECK_MARKETPLACE_HOME  — replaces os.homedir() when locating
  *                                        the cached marketplace clone.
  *

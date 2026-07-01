@@ -1,0 +1,48 @@
+{
+  "name": "aia-harness",
+  "version": "0.3.2",
+  "description": "Claude Code plugin that scans a project and scaffolds a complete harness-engineering setup (hooks, skills, agents, rules, settings, MCP, worktrees, per-domain CLAUDE.md).",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "bin": {
+    "aia-harness": "./bin/harness.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "typecheck": "tsc",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"**/*.mjs\" \"**/*.json\" --ignore-path .gitignore",
+    "test:unit": "node --test tests/*.test.mjs",
+    "test": "npm run typecheck && npm run lint && npm run test:unit",
+    "sync:ecc": "node scripts/sync-ecc.mjs",
+    "sync:tools": "node scripts/sync-tools.mjs",
+    "sync:agkit": "node scripts/sync-agkit.mjs",
+    "sync:github-issues": "node scripts/sync-github-issues.mjs",
+    "sync:github-project": "node scripts/sync-github-project.mjs",
+    "scan": "node bin/harness.mjs scan",
+    "publish-registry": "node scripts/publish-to-registry.mjs"
+  },
+  "keywords": [
+    "claude-code",
+    "plugin",
+    "harness",
+    "scaffold",
+    "bootstrap",
+    "stack-detection",
+    "developer-tools"
+  ],
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@types/node": "^22.10.0",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.6",
+    "globals": "^15.14.0",
+    "prettier": "^3.8.4",
+    "typescript": "^5.7.0"
+  }
+}

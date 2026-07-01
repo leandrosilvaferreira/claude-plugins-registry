@@ -50,8 +50,16 @@ function ask(question, envOverride = "") {
   }
   return new Promise((res) => {
     const rl = createInterface({ input: process.stdin, output: process.stdout });
-    rl.on("close", () => res(""));
+    let answered = false;
+    // rl.close() below can synchronously fire this 'close' handler before
+    // this same callback reaches its own res(answer) line — on piped stdin
+    // that race let the empty-fallback below win and silently discard a
+    // real answer. The flag makes the fallback a no-op once answered.
+    rl.on("close", () => {
+      if (!answered) res("");
+    });
     rl.question(question, (answer) => {
+      answered = true;
       rl.close();
       res(answer.trim());
     });
