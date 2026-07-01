@@ -1,7 +1,0 @@
-{
-  "repo": "github/awesome-copilot",
-  "commit": "df246af8efee2e4c4bf0c98bda9eb9f5a01734fd",
-  "path": "skills/github-issues",
-  "license": "MIT",
-  "description": "GitHub Issues skill — CRUD, Projects v2, sub-issues, search"
-}

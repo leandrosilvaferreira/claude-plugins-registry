@@ -65,7 +65,8 @@ const SOURCE_EXTS = [
 ];
 if (!SOURCE_EXTS.some((e) => s.includes(e))) process.exit(0);
 
-const projectDir = process.env.CLAUDE_PROJECT_DIR ?? process.cwd();
+const cwdArg = typeof event.cwd === "string" && event.cwd ? event.cwd : "";
+const projectDir = cwdArg || process.env.CLAUDE_PROJECT_DIR || process.cwd();
 if (!fs.existsSync(path.join(projectDir, "graphify-out", "graph.json"))) process.exit(0);
 
 process.stdout.write(

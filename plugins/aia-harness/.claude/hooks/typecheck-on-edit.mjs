@@ -30,12 +30,13 @@ const file = event?.tool_input?.file_path ?? event?.tool_input?.path;
 if (!file || typeof file !== "string") process.exit(0);
 if (path.extname(file).toLowerCase() !== ".mjs") process.exit(0);
 
-// Skip paths excluded from tsconfig.
+const cwdArg = typeof event.cwd === "string" && event.cwd ? event.cwd : "";
+const projectDir = cwdArg || process.env.CLAUDE_PROJECT_DIR || process.cwd();
+
 const EXCLUDED = ["templates/ecc", "templates/tools", "tests/fixtures"];
-const rel = path.relative(process.env.CLAUDE_PROJECT_DIR ?? process.cwd(), file);
+const rel = path.relative(projectDir, file);
 if (EXCLUDED.some((ex) => rel.startsWith(ex))) process.exit(0);
 
-const projectDir = process.env.CLAUDE_PROJECT_DIR ?? process.cwd();
 const tscBin = path.join(projectDir, "node_modules", "typescript", "bin", "tsc");
 if (!fs.existsSync(tscBin)) process.exit(0);
 

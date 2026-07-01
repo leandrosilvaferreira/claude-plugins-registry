@@ -1,7 +1,0 @@
-{
-  "repo": "netresearch/github-project-skill",
-  "commit": "176d9186772916c92d213a2d3292974de7d812cd",
-  "path": "skills/github-project",
-  "license": "MIT AND CC-BY-SA-4.0",
-  "description": "GitHub Project skill — PR/CI troubleshooting, branch protection, merge diagnosis"
-}

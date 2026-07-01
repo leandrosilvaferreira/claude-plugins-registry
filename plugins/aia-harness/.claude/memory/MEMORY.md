@@ -10,6 +10,9 @@
 - [hook-placeholder-braces](hook-placeholder-braces.md) — hooks exec-form (args) só expandem ${VAR} com chaves, nunca $VAR bare — bare quebra silenciosamente
 - [merge-settings-hooks-dedup-key](merge-settings-hooks-dedup-key.md) — mergeSettingsHooks só adiciona hooks faltantes; nunca repara valor de hook existente
 - [subagent-worktree-drift](subagent-worktree-drift.md) — subagent via Agent tool não herda EnterWorktree; pode commitar em main por engano (visto 2x com haiku)
+- [controller-session-worktree-cwd-drift](controller-session-worktree-cwd-drift.md) — sessão controller (não só subagent) também sofre drift de cwd pra fora da worktree; usar `git -C`/`cd &&` sempre; ExitWorktree perde tracking após reentrada via path
 - [claude-plugin-cli-and-marketplace-autoupdate](claude-plugin-cli-and-marketplace-autoupdate.md) — claude plugin list/update/marketplace update são CLI reais; marketplaces de terceiros não auto-atualizam por padrão
 - [claude-cannot-invoke-builtin-slash-commands](claude-cannot-invoke-builtin-slash-commands.md) — modelo não consegue rodar /reload-plugins ou outro slash command nativo sozinho; só humano ou sessão nova
 - [hook-type-table-stale](hook-type-table-stale.md) — tabela de 14 tipos de hook no CLAUDE.md/hook-schema.mjs está desatualizada; plataforma tem mais tipos (UserPromptExpansion, TaskCreated, etc.)
+- [claude-plugin-data-is-a-directory](claude-plugin-data-is-a-directory.md) — ${CLAUDE_PLUGIN_DATA} é diretório (~/.claude/plugins/data/{id}/), não arquivo — passar puro como cache-file causa EISDIR silencioso
+- [readline-question-close-race](readline-question-close-race.md) — ask() com node:readline pode perder resposta "y" via pipe — rl.close() dispara 'close' antes do próprio res(answer); precisa flag `answered`

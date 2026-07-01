@@ -36,9 +36,14 @@ if (!isCommit && !isPush) process.exit(0);
 
 /** @returns {string} */
 function currentBranch() {
+  // event.cwd reflects the session's actual active directory (tracks EnterWorktree);
+  // $CLAUDE_PROJECT_DIR stays pinned to the original repo root for the whole session,
+  // so preferring it here would check the wrong checkout's branch when the session
+  // has switched into a git worktree.
+  const dir = event?.cwd || process.env.CLAUDE_PROJECT_DIR || process.cwd();
   try {
     return execFileSync("git", ["branch", "--show-current"], {
-      cwd: process.env.CLAUDE_PROJECT_DIR ?? process.cwd(),
+      cwd: dir,
       encoding: "utf8",
       timeout: 5000,
       windowsHide: true,

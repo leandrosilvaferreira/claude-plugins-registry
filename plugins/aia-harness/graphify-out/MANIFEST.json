@@ -5,33 +5,33 @@
     "semantic_hash": ""
   },
   ".claude-plugin/plugin.json": {
-    "mtime": 1782921090.2850068,
-    "ast_hash": "76165a52e915a267836153fee6f46a7c",
+    "mtime": 1782921561.3493528,
+    "ast_hash": "ddeab3531faf5b0b8cff3ceb54e03ed2",
     "semantic_hash": ""
   },
   ".claude/hooks/eslint-fix.mjs": {
-    "mtime": 1782591969.235829,
-    "ast_hash": "b1160d7da8b6f013f336eb1d0fbefa96",
+    "mtime": 1782924889.1218789,
+    "ast_hash": "0b96b37d0d3bc1ddba77da1b2ee985b4",
     "semantic_hash": ""
   },
   ".claude/hooks/graphify-bash-ctx.mjs": {
-    "mtime": 1782590209.3644812,
-    "ast_hash": "fec7d6935677248571a3c61b36da0076",
+    "mtime": 1782924889.1222687,
+    "ast_hash": "631c0818bf9fe2016140b8e4949c46c6",
     "semantic_hash": ""
   },
   ".claude/hooks/graphify-read-ctx.mjs": {
-    "mtime": 1782590209.3643162,
-    "ast_hash": "fd4e708e74487452adef1b73afacdfda",
+    "mtime": 1782924889.1226485,
+    "ast_hash": "e6508c85e182436351e5892820a73fd4",
     "semantic_hash": ""
   },
   ".claude/hooks/large-file-warning.mjs": {
-    "mtime": 1782591969.2362545,
-    "ast_hash": "07af6d34afd1e9f717e272d31b8ac35e",
+    "mtime": 1782924889.1231835,
+    "ast_hash": "61959493225bdf7d35c2f127ce7a7b9e",
     "semantic_hash": ""
   },
   ".claude/hooks/typecheck-on-edit.mjs": {
-    "mtime": 1782591969.2366445,
-    "ast_hash": "ec701155b31055d2a395b9882821842a",
+    "mtime": 1782924889.1234763,
+    "ast_hash": "7d9283c94a876a4b9de25699f28a83e8",
     "semantic_hash": ""
   },
   ".claude/hooks/validate-settings-schema.mjs": {
@@ -40,13 +40,13 @@
     "semantic_hash": ""
   },
   ".claude/hooks/validate-template-frontmatter.mjs": {
-    "mtime": 1782338004.9266696,
-    "ast_hash": "8157f3d8b044a3ede32f8bee6aa313ef",
+    "mtime": 1782924889.1238506,
+    "ast_hash": "f526b045ec6cc850905741b1edae4d17",
     "semantic_hash": ""
   },
   ".claude/hooks/verify-on-stop.mjs": {
-    "mtime": 1782591969.2370193,
-    "ast_hash": "0efea98cd985fa6b30a26827769d632d",
+    "mtime": 1782924889.1241755,
+    "ast_hash": "e8cc9f424c56639252c8a2d0ab6be539",
     "semantic_hash": ""
   },
   ".claude/settings.json": {
@@ -285,8 +285,8 @@
     "semantic_hash": ""
   },
   "lib/generate/verify.mjs": {
-    "mtime": 1782407357.2328784,
-    "ast_hash": "264b5c8f63c55cc6548de8c96639ed4b",
+    "mtime": 1782924889.1275344,
+    "ast_hash": "a3bf9136f3342bf73e235a9d8c8dd19c",
     "semantic_hash": ""
   },
   "lib/github-pm/transform.mjs": {
@@ -360,8 +360,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1782918656.8801591,
-    "ast_hash": "e1bdb6d186c8e6da3f8b4edf089e5fd8",
+    "mtime": 1782921561.3517904,
+    "ast_hash": "3696719bad52070598459520fa4e9342",
     "semantic_hash": ""
   },
   "scripts/agkit-source.json": {
@@ -530,13 +530,13 @@
     "semantic_hash": ""
   },
   "templates/hooks/guard-main-branch.mjs": {
-    "mtime": 1782591969.2425315,
-    "ast_hash": "edb785afe49a22cb4cfb664763f32faa",
+    "mtime": 1782924889.1287625,
+    "ast_hash": "b5a79485cb326410ecef5131e63ed7e2",
     "semantic_hash": ""
   },
   "templates/hooks/large-file-warning.mjs": {
-    "mtime": 1782591969.2427845,
-    "ast_hash": "07af6d34afd1e9f717e272d31b8ac35e",
+    "mtime": 1782924889.128953,
+    "ast_hash": "61959493225bdf7d35c2f127ce7a7b9e",
     "semantic_hash": ""
   },
   "templates/hooks/memory-stop.mjs": {
@@ -545,8 +545,8 @@
     "semantic_hash": ""
   },
   "templates/hooks/phpstan-on-edit.mjs": {
-    "mtime": 1782591969.243513,
-    "ast_hash": "d56628edf8442d350e2c2cdd802bde3b",
+    "mtime": 1782924889.1292822,
+    "ast_hash": "934cb4b44cac117c5dbfaafea1851292",
     "semantic_hash": ""
   },
   "templates/hooks/rtk-hook.mjs": {
@@ -560,8 +560,8 @@
     "semantic_hash": ""
   },
   "templates/hooks/sql-idempotent-review.mjs": {
-    "mtime": 1782867892.0094264,
-    "ast_hash": "74ee908d4f9ab23ab5c9d94e0a173133",
+    "mtime": 1782924889.1297069,
+    "ast_hash": "9dede78f74be34c28029b68539697e45",
     "semantic_hash": ""
   },
   "templates/hooks/validate-settings-schema.mjs": {
@@ -570,8 +570,8 @@
     "semantic_hash": ""
   },
   "templates/hooks/verify-on-stop.mjs": {
-    "mtime": 1782591969.24422,
-    "ast_hash": "08ac77e76dd49665459ca3495656453d",
+    "mtime": 1782924889.1300936,
+    "ast_hash": "a3e1d19ff0b4eb4cc87c7dd8714c4240",
     "semantic_hash": ""
   },
   "templates/hooks/worktree-prompt-ctx.mjs": {
@@ -935,13 +935,13 @@
     "semantic_hash": ""
   },
   "tests/hook-guard-main-branch.test.mjs": {
-    "mtime": 1782584004.3220313,
-    "ast_hash": "8e942f20b5be3d169e9f8058fe4f8dac",
+    "mtime": 1782924889.1305933,
+    "ast_hash": "d503b6dfeb1a04271339bd6fac8de4ca",
     "semantic_hash": ""
   },
   "tests/hook-large-file-warning.test.mjs": {
-    "mtime": 1782338004.927065,
-    "ast_hash": "1dfcbdbb7b157abca2db00d0a539f3fc",
+    "mtime": 1782924889.1308718,
+    "ast_hash": "a40ea9c046d57b67587337fbcf844145",
     "semantic_hash": ""
   },
   "tests/hook-memory-stop.test.mjs": {
@@ -950,8 +950,8 @@
     "semantic_hash": ""
   },
   "tests/hook-phpstan-on-edit.test.mjs": {
-    "mtime": 1781843246.4047577,
-    "ast_hash": "fe73729b7511fbcfe29361383d56f01a",
+    "mtime": 1782924889.1311302,
+    "ast_hash": "d9a189c8087f2eb3976464d3ce5292fe",
     "semantic_hash": ""
   },
   "tests/hook-rtk-hook.test.mjs": {
@@ -975,8 +975,8 @@
     "semantic_hash": ""
   },
   "tests/hook-sql-idempotent-review.test.mjs": {
-    "mtime": 1782867627.0705473,
-    "ast_hash": "29f80b4c3de8bfdcd40a6f7a29280549",
+    "mtime": 1782924889.1314878,
+    "ast_hash": "45eb25a4e5f6fac39e67d4781b9c331d",
     "semantic_hash": ""
   },
   "tests/hook-validate-settings-schema.test.mjs": {
@@ -985,13 +985,13 @@
     "semantic_hash": ""
   },
   "tests/hook-validate-template-frontmatter.test.mjs": {
-    "mtime": 1782338004.9271116,
-    "ast_hash": "bcff35103c3a134a0e75070e4b700e7e",
+    "mtime": 1782924889.1318715,
+    "ast_hash": "74685769e06521abe63be8a276a74a48",
     "semantic_hash": ""
   },
   "tests/hook-verify-on-stop.test.mjs": {
-    "mtime": 1782342256.9142013,
-    "ast_hash": "40381336723a9aea2bc8118460cdf461",
+    "mtime": 1782924889.1321948,
+    "ast_hash": "f5288de8e53f45078d3958262a3e95ec",
     "semantic_hash": ""
   },
   "tests/hook-worktree-prompt-ctx.test.mjs": {
@@ -1105,13 +1105,13 @@
     "semantic_hash": ""
   },
   "tests/verify-hook.test.mjs": {
-    "mtime": 1782407371.410442,
-    "ast_hash": "714f13efed5dcea86165482fb2145d31",
+    "mtime": 1782924889.132632,
+    "ast_hash": "b2379612659accb9ed2df8df16f4508b",
     "semantic_hash": ""
   },
   "tests/verify.test.mjs": {
-    "mtime": 1781772642.9720619,
-    "ast_hash": "d74e6681747a9137a1b648c101863b97",
+    "mtime": 1782924889.1332235,
+    "ast_hash": "c2539786a508b88b0079ca40c1409297",
     "semantic_hash": ""
   },
   "tsconfig.json": {
@@ -1150,8 +1150,8 @@
     "semantic_hash": ""
   },
   ".claude/memory/MEMORY.md": {
-    "mtime": 1782920621.8288033,
-    "ast_hash": "5a9a855ea049413a73459dd18beabb16",
+    "mtime": 1782925089.2252843,
+    "ast_hash": "b03c4880df965e3599edacf3d71aefcd",
     "semantic_hash": ""
   },
   ".claude/memory/cross-platform-artifacts.md": {
@@ -1200,8 +1200,8 @@
     "semantic_hash": ""
   },
   ".claude/memory/subagent-worktree-drift.md": {
-    "mtime": 1782875230.8406296,
-    "ast_hash": "9e5e3f635d6b89ae8911e4db0ef6ee7e",
+    "mtime": 1782925066.212703,
+    "ast_hash": "dcc5d1c2c0c3a976a1b34e639aa9a7f0",
     "semantic_hash": ""
   },
   ".claude/rules/agent-frontmatter-standard.md": {
@@ -1345,8 +1345,8 @@
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1782685323.7551892,
-    "ast_hash": "282fe6447bc47a2e65466a3202061f4c",
+    "mtime": 1782924889.126675,
+    "ast_hash": "7b9d8491b470303f6a60c593b24be38f",
     "semantic_hash": ""
   },
   "PUBLISHING.md": {
@@ -3532,6 +3532,36 @@
   ".claude/memory/hook-type-table-stale.md": {
     "mtime": 1782920607.6157498,
     "ast_hash": "69b3aefbaaa870ef64a47668832e43b4",
+    "semantic_hash": ""
+  },
+  ".claude/memory/claude-plugin-data-is-a-directory.md": {
+    "mtime": 1782921659.1400054,
+    "ast_hash": "9ec90d183ec53e221593333df0fe1726",
+    "semantic_hash": ""
+  },
+  ".claude/memory/readline-question-close-race.md": {
+    "mtime": 1782921671.3946896,
+    "ast_hash": "41c637f2f9f3fedc784ea149d3622e94",
+    "semantic_hash": ""
+  },
+  ".claude/memory/controller-session-worktree-cwd-drift.md": {
+    "mtime": 1782925035.8664749,
+    "ast_hash": "91a3917eb1b2c96898cf6793f4465fcd",
+    "semantic_hash": ""
+  },
+  ".claude/rules/hooks-cwd-resolution.md": {
+    "mtime": 1782924889.1244643,
+    "ast_hash": "b0444acd22f5dbf20848d09e8677571a",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-07-01-guard-main-branch-cwd-fix.md": {
+    "mtime": 1782924889.127069,
+    "ast_hash": "0bcf397c739203ac771326999079873e",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-07-01-hooks-cwd-resolution-audit.md": {
+    "mtime": 1782924889.127288,
+    "ast_hash": "d4e566d252b02a41cb9725150d2a6cab",
     "semantic_hash": ""
   }
 }

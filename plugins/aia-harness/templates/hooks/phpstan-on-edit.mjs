@@ -41,7 +41,8 @@ if (!file || typeof file !== "string") process.exit(0);
 const ext = path.extname(file).toLowerCase();
 if (ext !== ".php" && ext !== ".phtml") process.exit(0);
 
-const projectDir = process.env.CLAUDE_PROJECT_DIR || process.cwd();
+const cwdArg = typeof event.cwd === "string" && event.cwd ? event.cwd : "";
+const projectDir = cwdArg || process.env.CLAUDE_PROJECT_DIR || process.cwd();
 
 const phpstan = path.join(projectDir, "vendor", "bin", "phpstan");
 if (!fs.existsSync(phpstan)) process.exit(0);

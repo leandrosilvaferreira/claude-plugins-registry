@@ -81,7 +81,8 @@ const filePath = toolInput.file_path ?? "";
 if (toolName !== "Write" && toolName !== "Edit") exit({});
 if (!filePath.endsWith(".md")) exit({});
 
-const projectDir = process.env.CLAUDE_PROJECT_DIR ?? ROOT;
+const cwdArg = typeof event?.cwd === "string" && event.cwd ? event.cwd : "";
+const projectDir = cwdArg || process.env.CLAUDE_PROJECT_DIR || ROOT;
 const templatesDir = path.join(projectDir, "templates");
 
 let relPath;

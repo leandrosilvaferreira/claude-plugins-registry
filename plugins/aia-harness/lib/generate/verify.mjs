@@ -76,10 +76,11 @@ if (!hasLintable) { clearFlag(); approve(); }
 const binDir = path.dirname(process.execPath);
 const env = Object.assign({}, process.env, { PATH: binDir + path.delimiter + (process.env.PATH || "") });
 
+const execDir = (event && typeof event.cwd === "string" && event.cwd) || projectDir;
 const failures = [];
 for (const entry of COMMANDS) {
   try {
-    execSync(entry.cmd, { cwd: projectDir, env: env, timeout: 120000, stdio: ["ignore", "pipe", "pipe"] });
+    execSync(entry.cmd, { cwd: execDir, env: env, timeout: 120000, stdio: ["ignore", "pipe", "pipe"] });
   } catch (err) {
     // ENOENT / exit 127 = command or runtime missing -> infra, fail open.
     if (err.code === "ENOENT" || err.status === 127) continue;

@@ -150,6 +150,7 @@ try {
 
 const projectDir = process.env.CLAUDE_PROJECT_DIR ?? process.cwd();
 const projHash = createHash("sha1").update(projectDir).digest("hex").slice(0, 12);
+const execDir = (typeof event.cwd === "string" && event.cwd && event.cwd) || projectDir;
 
 /** Shared DDD-aligned extraction guidance. */
 const DDD_HINTS = [
@@ -169,7 +170,7 @@ function advisory() {
   const ti = event.tool_input || {};
   const file = ti.file_path ?? ti.path;
   if (!file || typeof file !== "string") return;
-  const abs = path.isAbsolute(file) ? file : path.join(projectDir, file);
+  const abs = path.isAbsolute(file) ? file : path.join(execDir, file);
   if (!isSourceFile(abs)) return;
   const lines = countLines(abs);
   if (lines == null || lines <= MAX_LINES) return;
@@ -189,7 +190,7 @@ function advisory() {
     // Best-effort; a missed de-dup only repeats the (harmless) advice.
   }
 
-  const rel = path.relative(projectDir, abs) || path.basename(abs);
+  const rel = path.relative(execDir, abs) || path.basename(abs);
   const additionalContext = [
     `${rel} has ${lines} lines (over the ${MAX_LINES}-line budget).`,
     "Tell the user and OFFER to refactor it into smaller units. Do NOT refactor without the user's approval.",
@@ -220,14 +221,14 @@ function blockOnStop() {
     // Fallback: working-tree changes visible via git.
     try {
       const status = execFileSync("git", ["status", "--porcelain"], {
-        cwd: projectDir,
+        cwd: execDir,
         encoding: "utf8",
         windowsHide: true,
       });
       candidates = status
         .split(/\r?\n/)
         .filter(Boolean)
-        .map((line) => path.join(projectDir, line.slice(3).trim()));
+        .map((line) => path.join(execDir, line.slice(3).trim()));
     } catch {
       return;
     }
@@ -236,11 +237,11 @@ function blockOnStop() {
   /** @type {{ file: string; lines: number }[]} */
   const oversized = [];
   for (const f of candidates) {
-    const abs = path.isAbsolute(f) ? f : path.join(projectDir, f);
+    const abs = path.isAbsolute(f) ? f : path.join(execDir, f);
     if (!isSourceFile(abs)) continue;
     const lines = countLines(abs);
     if (lines != null && lines > MAX_LINES) {
-      oversized.push({ file: path.relative(projectDir, abs), lines });
+      oversized.push({ file: path.relative(execDir, abs), lines });
     }
   }
   if (oversized.length === 0) return;

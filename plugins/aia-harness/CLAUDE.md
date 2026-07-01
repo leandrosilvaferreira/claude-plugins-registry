@@ -132,6 +132,11 @@ and graphify. `plugins-catalog` generates a runnable `scripts/install-plugins.mj
   Standard JSON fields (all hooks): `{ continue?: boolean, suppressOutput?: boolean, systemMessage?: string }`. Exit codes 0 and 2 are always valid; any other exit code is a bug. `hookSpecificOutput.hookEventName` is the discriminator — include it whenever emitting `hookSpecificOutput` so the runtime routes it correctly.
 
   When you **create or modify** a hook under `templates/hooks/`, you **must** add or update its compliance test in `tests/hook-<name>.test.mjs`, import the matching validator, and assert every branch. Run `npm test` to verify before committing.
+- **Hook cwd resolution — mandatory**: any hook that resolves a directory for
+  a command or a path check must prefer `event.cwd` over
+  `CLAUDE_PROJECT_DIR`/`process.cwd()`, except for the small set of hooks
+  that hash a *stable* session key for a shared flag file, which must keep
+  using `CLAUDE_PROJECT_DIR` alone. See `.claude/rules/hooks-cwd-resolution.md`.
 - `templates/` is excluded from lint and typecheck (it's vendored/scaffolded output, not engine code).
 
 @.claude/memory/INSTRUCTIONS.md

@@ -39,3 +39,8 @@ find where it actually landed (commonly `main`), then recover via `git reset --h
 `git cherry-pick <sha>` onto the correct worktree branch. Prefer `sonnet`-tier or higher
 for any subagent dispatch that will run `git commit` inside a worktree; reserve cheap
 tiers for read-only or non-worktree work.
+
+See also: [[controller-session-worktree-cwd-drift]] — the same drift mechanism,
+confirmed to also hit the controller session itself (not only dispatched
+subagents), plus what happens when it causes `ExitWorktree` to lose track of
+the active worktree.

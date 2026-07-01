@@ -1,7 +1,0 @@
-{
-  "id": "claude-code-worktrees",
-  "kind": "skill",
-  "source": "local user skill (~/.claude/skills/claude-code-worktrees)",
-  "license": "user-authored",
-  "note": "Skill-only (no hooks). Vendored from the maintainer's local skill; no upstream repo. Re-copy manually to update."
-}

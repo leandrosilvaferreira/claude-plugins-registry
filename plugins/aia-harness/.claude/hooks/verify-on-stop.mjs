@@ -11,7 +11,25 @@ import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 
-const projectDir = process.env.CLAUDE_PROJECT_DIR ?? process.cwd();
+/** @returns {string} */
+function readStdin() {
+  try {
+    return fs.readFileSync(0, "utf8");
+  } catch {
+    return "";
+  }
+}
+
+/** @type {any} */
+let event = {};
+try {
+  event = JSON.parse(readStdin() || "{}");
+} catch {
+  // ignore parse errors — cwd fallback below still works
+}
+
+const cwdArg = typeof event.cwd === "string" && event.cwd ? event.cwd : "";
+const projectDir = cwdArg || process.env.CLAUDE_PROJECT_DIR || process.cwd();
 
 /** @returns {boolean} */
 function hasChanges() {

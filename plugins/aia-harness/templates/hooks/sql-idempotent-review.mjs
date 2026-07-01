@@ -155,10 +155,12 @@ function readNotifiedSet() {
 function blockOnStop() {
   if (event && event.stop_hook_active) return;
 
+  const execDir = (typeof event.cwd === "string" && event.cwd && event.cwd) || projectDir;
+
   let status;
   try {
     status = execFileSync("git", ["status", "--porcelain", "--untracked-files=all"], {
-      cwd: projectDir,
+      cwd: execDir,
       encoding: "utf8",
       windowsHide: true,
     });
@@ -170,7 +172,7 @@ function blockOnStop() {
     .split(/\r?\n/)
     .filter(Boolean)
     .filter((line) => !/[DR]/.test(line.slice(0, 2)))
-    .map((line) => path.join(projectDir, line.slice(3).trim()))
+    .map((line) => path.join(execDir, line.slice(3).trim()))
     .filter((abs) => path.extname(abs).toLowerCase() === ".sql");
 
   const sessionId = typeof event.session_id === "string" ? event.session_id : "nosession";
@@ -180,7 +182,7 @@ function blockOnStop() {
 
   for (const abs of fresh) markNotified(abs);
 
-  const list = fresh.map((abs) => `  • ${path.relative(projectDir, abs)}`).join("\n");
+  const list = fresh.map((abs) => `  • ${path.relative(execDir, abs)}`).join("\n");
   const reason = [
     `${fresh.length} SQL file(s) changed this session but were never reviewed for`,
     `idempotency (likely written by an external tool — migration generator, ORM,`,

@@ -32,7 +32,8 @@ const file = event?.tool_input?.file_path ?? event?.tool_input?.path;
 if (!file || typeof file !== "string") process.exit(0);
 if (path.extname(file).toLowerCase() !== ".mjs") process.exit(0);
 
-const projectDir = process.env.CLAUDE_PROJECT_DIR ?? process.cwd();
+const cwdArg = typeof event.cwd === "string" && event.cwd ? event.cwd : "";
+const projectDir = cwdArg || process.env.CLAUDE_PROJECT_DIR || process.cwd();
 const eslintBin = path.join(projectDir, "node_modules", "eslint", "bin", "eslint.js");
 if (!fs.existsSync(eslintBin)) process.exit(0);
 

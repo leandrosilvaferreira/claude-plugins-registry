@@ -31,7 +31,8 @@ if (!/\b(grep|rg[ \t]|ripgrep|find[ \t]|fd[ \t]|ack[ \t]|ag[ \t])/.test(command)
   process.exit(0);
 }
 
-const projectDir = process.env.CLAUDE_PROJECT_DIR ?? process.cwd();
+const cwdArg = typeof event.cwd === "string" && event.cwd ? event.cwd : "";
+const projectDir = cwdArg || process.env.CLAUDE_PROJECT_DIR || process.cwd();
 if (!fs.existsSync(path.join(projectDir, "graphify-out", "graph.json"))) process.exit(0);
 
 process.stdout.write(

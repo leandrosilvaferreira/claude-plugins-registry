@@ -26,7 +26,8 @@ try {
 // Anti-loop guard: skip when already inside a stop-hook chain.
 if (event?.stop_hook_active) process.exit(0);
 
-const projectDir = process.env.CLAUDE_PROJECT_DIR ?? process.cwd();
+const cwdArg = typeof event.cwd === "string" && event.cwd ? event.cwd : "";
+const projectDir = cwdArg || process.env.CLAUDE_PROJECT_DIR || process.cwd();
 
 let status = "";
 try {
