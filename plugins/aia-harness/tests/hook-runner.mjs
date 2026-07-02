@@ -5,6 +5,7 @@
  */
 import { spawnSync } from "node:child_process";
 import { execSync } from "node:child_process";
+import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -53,6 +54,31 @@ export function runHookRaw(hookPath, rawInput, opts = {}) {
     stderr: result.stderr ?? "",
     exitCode: result.status ?? 0,
   };
+}
+
+/**
+ * Assert that captured stdout carries no leading/trailing whitespace around
+ * its JSON value, and — when non-empty — round-trips byte-for-byte through
+ * JSON.stringify(JSON.parse(stdout)). Catches stray blank lines, debug
+ * prints, pretty-printing, or duplicate/concatenated JSON objects that
+ * `JSON.parse` alone would silently tolerate (it accepts surrounding
+ * whitespace). Empty stdout (fail-open/pass-through) must be exactly "".
+ *
+ * @param {string} stdout
+ */
+export function assertCleanStdoutJson(stdout) {
+  assert.equal(
+    stdout,
+    stdout.trim(),
+    "stdout must have no leading/trailing whitespace around the JSON value",
+  );
+  if (stdout === "") return;
+  const parsed = JSON.parse(stdout);
+  assert.equal(
+    stdout,
+    JSON.stringify(parsed),
+    "stdout must be a single compact JSON value — no pretty-printing, blank lines, or extra content",
+  );
 }
 
 /**

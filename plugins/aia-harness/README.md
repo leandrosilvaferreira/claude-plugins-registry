@@ -264,7 +264,7 @@ One `init` produces a coherent, least-privilege harness — **not a pile of defa
 
 **Stack-conditional** (PHP): `phpstan-on-edit` (`PostToolUse`) runs PHPStan on the edited file and feeds findings back so Claude fixes them.
 
-> Every hook ships with unit tests asserting its output validates against the matching Claude Code event schema across **all 14 hook types** — exit codes, `hookSpecificOutput`, the lot.
+> Every hook ships with unit tests asserting its output validates against the matching Claude Code event schema across **all 30 hook types** in the official SDK's `HOOK_EVENTS` set — exit codes, `hookSpecificOutput`, the lot — cross-checked at compile time against `@anthropic-ai/claude-agent-sdk`'s real TypeScript declarations.
 
 </details>
 

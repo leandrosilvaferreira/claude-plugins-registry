@@ -55,7 +55,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..")
 
 /** @param {any} obj @returns {void} */
 function exit(obj) {
-  if (obj && Object.keys(obj).length > 0) process.stdout.write(JSON.stringify(obj) + "\n");
+  if (obj && Object.keys(obj).length > 0) process.stdout.write(JSON.stringify(obj));
   process.exit(0);
 }
 

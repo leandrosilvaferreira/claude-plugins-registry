@@ -40,7 +40,10 @@ export function requireObject(parsed) {
 }
 
 /**
- * Validate the common standard output fields present on all hooks.
+ * Validate the common standard output fields present on all hooks (the
+ * SyncHookJSONOutput envelope from @anthropic-ai/claude-agent-sdk, minus
+ * `decision` and `hookSpecificOutput` which are event-specific and checked
+ * by each event's own validator).
  * @param {Record<string, any>} obj
  * @returns {string[]} errors
  */
@@ -55,6 +58,15 @@ export function validateCommonFields(obj) {
   }
   if ("systemMessage" in obj && typeof obj.systemMessage !== "string") {
     errs.push(`systemMessage must be a string, got ${typeof obj.systemMessage}`);
+  }
+  if ("stopReason" in obj && typeof obj.stopReason !== "string") {
+    errs.push(`stopReason must be a string, got ${typeof obj.stopReason}`);
+  }
+  if ("terminalSequence" in obj && typeof obj.terminalSequence !== "string") {
+    errs.push(`terminalSequence must be a string, got ${typeof obj.terminalSequence}`);
+  }
+  if ("reason" in obj && typeof obj.reason !== "string") {
+    errs.push(`reason must be a string, got ${typeof obj.reason}`);
   }
   return errs;
 }
@@ -137,9 +149,71 @@ export function checkHookSpecificOutput(hso, eventName, stringFields) {
 }
 
 /**
+ * Validate that `field`, if present on `hso`, is an array of strings.
+ * @param {any} hso
+ * @param {string} field
+ * @returns {string[]}
+ */
+export function checkStringArrayField(hso, field) {
+  if (!(field in hso)) return [];
+  const val = hso[field];
+  if (!Array.isArray(val) || !val.every((v) => typeof v === "string")) {
+    return [`hookSpecificOutput.${field} must be an array of strings`];
+  }
+  return [];
+}
+
+/**
+ * Validate that `field`, if present on `hso`, is a boolean.
+ * @param {any} hso
+ * @param {string} field
+ * @returns {string[]}
+ */
+export function checkBooleanField(hso, field) {
+  if (!(field in hso)) return [];
+  if (typeof hso[field] !== "boolean") {
+    return [`hookSpecificOutput.${field} must be a boolean, got ${typeof hso[field]}`];
+  }
+  return [];
+}
+
+/**
+ * Validate that `field`, if present on `hso`, is a non-null, non-array object.
+ * @param {any} hso
+ * @param {string} field
+ * @returns {string[]}
+ */
+export function checkObjectField(hso, field) {
+  if (!(field in hso)) return [];
+  const val = hso[field];
+  if (typeof val !== "object" || Array.isArray(val) || val === null) {
+    return [`hookSpecificOutput.${field} must be a non-null object`];
+  }
+  return [];
+}
+
+/**
+ * Validate that `field`, if present on `hso`, is one of `allowed`.
+ * @param {any} hso
+ * @param {string} field
+ * @param {Set<string>} allowed
+ * @returns {string[]}
+ */
+export function checkEnumField(hso, field, allowed) {
+  if (!(field in hso)) return [];
+  if (!allowed.has(hso[field])) {
+    return [
+      `hookSpecificOutput.${field} must be one of ${[...allowed].join(", ")}, got "${hso[field]}"`,
+    ];
+  }
+  return [];
+}
+
+/**
  * Standard-output-only validator: used for hooks whose output is just the
- * common fields with no hookSpecificOutput (SessionStart, SessionEnd,
- * PreCompact, Notification).
+ * common fields with no hookSpecificOutput (SessionEnd, PreCompact,
+ * StopFailure, PostCompact, TeammateIdle, TaskCreated, TaskCompleted,
+ * ConfigChange, WorktreeRemove, InstructionsLoaded).
  *
  * Exit 0 or 2 are valid.
  * @param {string} stdout

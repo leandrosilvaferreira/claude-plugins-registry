@@ -288,7 +288,7 @@ with fixtures under `tests/fixtures/`.
    - Are the detection predicates tested against fixtures?
 
 5. Check `lib/validate/hook-schema.mjs`:
-   - Does `tests/hook-schema.test.mjs` cover all 14 event types?
+   - Does `tests/hook-schema.test.mjs` cover all 30 event types?
    - For each event type: are valid + invalid cases tested? Are exit-code semantics
      tested?
 
