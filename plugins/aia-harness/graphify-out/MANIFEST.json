@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   ".claude-plugin/plugin.json": {
-    "mtime": 1782932992.0325277,
-    "ast_hash": "7ec0b401788d7a1e8b0248e4dfdad441",
+    "mtime": 1782955287.5029094,
+    "ast_hash": "b0a804320dddbb5b6814a181cd7824e2",
     "semantic_hash": ""
   },
   ".claude/hooks/eslint-fix.mjs": {
@@ -360,8 +360,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1782932992.0326033,
-    "ast_hash": "b8cf22be231423b9df66c46a64474c10",
+    "mtime": 1782955287.5030649,
+    "ast_hash": "5482d6a2f1b2f435b1a176cb109e7f6f",
     "semantic_hash": ""
   },
   "scripts/agkit-source.json": {
@@ -1150,8 +1150,8 @@
     "semantic_hash": ""
   },
   ".claude/memory/MEMORY.md": {
-    "mtime": 1782932882.0044885,
-    "ast_hash": "c7c1454d1900f25535e1a27d8ec25a9b",
+    "mtime": 1782956119.3129601,
+    "ast_hash": "f5b303d76c96fb82181522803ff82503",
     "semantic_hash": ""
   },
   ".claude/memory/cross-platform-artifacts.md": {
@@ -3605,8 +3605,13 @@
     "semantic_hash": ""
   },
   "commands/revise-agent-routing.md": {
-    "mtime": 1782952080.3900132,
-    "ast_hash": "65c73c93c80c8fca75c00f9c25e974ce",
+    "mtime": 1782956048.4978027,
+    "ast_hash": "9b2e82c19ceb4b4998e199a4e1d9a848",
+    "semantic_hash": ""
+  },
+  ".claude/memory/command-skill-same-name-collision.md": {
+    "mtime": 1782956100.3486195,
+    "ast_hash": "cffa879524a4911f65d74b2972713a70",
     "semantic_hash": ""
   }
 }

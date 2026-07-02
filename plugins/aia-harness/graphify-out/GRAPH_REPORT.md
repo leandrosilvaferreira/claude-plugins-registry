@@ -1,16 +1,16 @@
 # Graph Report - aia_harness  (2026-07-01)
 
 ## Corpus Check
-- 710 files · ~581,804 words
+- 711 files · ~582,216 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 7642 nodes · 8154 edges · 637 communities (596 shown, 41 thin omitted)
+- 7643 nodes · 8155 edges · 637 communities (596 shown, 41 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 5 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3db6c390`
+- Built from commit: `ded6b528`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -667,8 +667,8 @@ Cohesion: 0.04
 Nodes (47): 10. Vendoring das Skills Externas, 11. Comando `/add-github-pm` (Abordagem C), 12. Integração com comandos existentes, 13. Testes, 14. Sequência de implementação, 15. Decisões registradas, 1. Detecção — `lib/detect/github-pm.mjs`, 2. Catálogo — `lib/data/github-pm-catalog.mjs` (+39 more)
 
 ### Community 4 - "Community 4"
-Cohesion: 0.08
-Nodes (26): 10. Android Checklist, 1. Material Design 3 Philosophy, 3. Material Color System, 4. Android Layout & Spacing, 6. Material Components, 8. Material Symbols, Android Platform Guidelines, Before Android Release (+18 more)
+Cohesion: 0.04
+Nodes (48): 10. Android Checklist, 1. Material Design 3 Philosophy, 2. Android Typography, 3. Material Color System, 4. Android Layout & Spacing, 5. Android Navigation Patterns, 6. Material Components, 7. Android-Specific Patterns (+40 more)
 
 ### Community 5 - "Community 5"
 Cohesion: 0.04
@@ -711,8 +711,8 @@ Cohesion: 0.05
 Nodes (42): 🔴 AGENT BOUNDARY ENFORCEMENT (CRITICAL), Agent Chaining with Context, Agent States, Available Agents, Best Practices, 🔴 CHECKPOINT 1: Plan Verification (MANDATORY), 🔴 CHECKPOINT 2: Project Type Routing, 🔴 Checkpoint Summary (CRITICAL) (+34 more)
 
 ### Community 15 - "Community 15"
-Cohesion: 0.05
-Nodes (38): 2. Offline Sync & Conflict Resolution, 3. Mobile API Optimization, 4. App Versioning, 5. Authentication for Mobile, 6. Error Handling for Mobile, 7. Media & Binary Handling, 8. Security for Mobile, 9. Monitoring & Analytics (+30 more)
+Cohesion: 0.06
+Nodes (35): 1. Push Notifications, 2. Offline Sync & Conflict Resolution, 4. App Versioning, 5. Authentication for Mobile, 6. Error Handling for Mobile, 8. Security for Mobile, 9. Monitoring & Analytics, 🚫 AI MOBILE BACKEND ANTI-PATTERNS (+27 more)
 
 ### Community 16 - "Community 16"
 Cohesion: 0.09
@@ -735,8 +735,8 @@ Cohesion: 0.05
 Nodes (40): Acceptance, Acceptance, Acceptance, Acceptance, Acceptance, Acceptance, Acceptance, Base branch detection (+32 more)
 
 ### Community 21 - "Community 21"
-Cohesion: 0.05
-Nodes (38): 10. Quick Reference, 1. Mobile Color Fundamentals, 2. OLED Considerations, 3. Dark Mode Design, 4. Outdoor Visibility, 5. Semantic Colors, 6. Dynamic Color (Android), 7. Color Accessibility (+30 more)
+Cohesion: 0.08
+Nodes (25): 1. Mobile Color Fundamentals, 2. OLED Considerations, 4. Outdoor Visibility, 5. Semantic Colors, 6. Dynamic Color (Android), 8. Color Anti-Patterns, 9. Color System Checklist, ❌ AI Color Mistakes (+17 more)
 
 ### Community 22 - "Community 22"
 Cohesion: 0.05
@@ -851,8 +851,8 @@ Cohesion: 0.07
 Nodes (29): API Development, API Style Selection, Architecture, Backend Development Architect, Common Anti-Patterns You Avoid, 🛑 CRITICAL: CLARIFY BEFORE CODING (MANDATORY), Database & Data, Database Selection (+21 more)
 
 ### Community 50 - "Community 50"
-Cohesion: 0.08
-Nodes (26): 1. Framework Selection, 2. State Management Selection, 3. Navigation Pattern Selection, 4. Storage Strategy Selection, 5. Offline Strategy Selection, 6. Authentication Pattern Selection, 7. Project Type Templates, 8. Decision Checklist (+18 more)
+Cohesion: 0.07
+Nodes (30): 10. Quick Reference, 1. Framework Selection, 2. State Management Selection, 3. Navigation Pattern Selection, 4. Storage Strategy Selection, 5. Offline Strategy Selection, 6. Authentication Pattern Selection, 7. Project Type Templates (+22 more)
 
 ### Community 51 - "Community 51"
 Cohesion: 0.07
@@ -939,8 +939,8 @@ Cohesion: 0.08
 Nodes (24): 4-Phase Debugging Process, After Fix, Anti-Patterns (What NOT to Do), Backend Issues, Before Starting, Binary Search Debugging, Browser Issues, Bug Categories & Investigation Strategy (+16 more)
 
 ### Community 72 - "Community 72"
-Cohesion: 0.06
-Nodes (32): Build Commands by Framework, 🔴 BUILD VERIFICATION (MANDATORY Before "Done"), 📝 CHECKPOINT (MANDATORY Before Any Mobile Work), Common Build Errors to Watch For, ⚠️ CRITICAL: ASK BEFORE ASSUMING (MANDATORY), ⛔ DEFAULT TENDENCIES TO AVOID, Development Decision Process, 📱 Emulator Quick Commands (All Platforms) (+24 more)
+Cohesion: 0.08
+Nodes (25): 📝 CHECKPOINT (MANDATORY Before Any Mobile Work), ⚠️ CRITICAL: ASK BEFORE ASSUMING (MANDATORY), ⛔ DEFAULT TENDENCIES TO AVOID, Development Decision Process, FlatList (React Native), ListView.builder (Flutter), 🔴 MANDATORY: Read Skill Files Before Working, 🚫 MOBILE ANTI-PATTERNS (NEVER DO THESE!) (+17 more)
 
 ### Community 73 - "Community 73"
 Cohesion: 0.08
@@ -2851,12 +2851,12 @@ Cohesion: 0.29
 Nodes (7): Anti-pattern: `permissions: read-all`, Common Workflows That Need Fixing, Composite Action Sub-Action Allow-List Gotcha, Least-Privilege Workflow Permissions, Pattern: Workflow-level read, job-level write, require_last_push_approval + Merge Queue Incompatibility, SLSA Provenance: Use actions/attest-build-provenance (not slsa-github-generator)
 
 ### Community 621 - "Community 621"
-Cohesion: 0.33
-Nodes (6): 5. Android Navigation Patterns, Back Navigation, Bottom Navigation, Navigation Components, Navigation Rail (Tablets), Top App Bar
+Cohesion: 0.29
+Nodes (7): Build Commands by Framework, 🔴 BUILD VERIFICATION (MANDATORY Before "Done"), Common Build Errors to Watch For, 📱 Emulator Quick Commands (All Platforms), Mandatory Build Checklist, What to Check After Build, Why This Is Non-Negotiable
 
 ### Community 622 - "Community 622"
-Cohesion: 0.33
-Nodes (6): 7. Android-Specific Patterns, Bottom Sheets, Dialogs, Pull to Refresh, Ripple Effect, Snackbars
+Cohesion: 0.40
+Nodes (5): 3. Dark Mode Design, Color Inversion Rules, Dark Mode Benefits, Dark Mode Color Strategy, Text Colors in Dark Mode
 
 ### Community 624 - "Community 624"
 Cohesion: 0.33
@@ -2867,16 +2867,16 @@ Cohesion: 0.33
 Nodes (6): Branch Protection Configuration, Bypass Permissions for Auto-merge, Code Owner Reviews - AVOID with Auto-merge, Merge Strategy Requirements, Required Status Checks - CRITICAL, Strict Status Checks
 
 ### Community 626 - "Community 626"
-Cohesion: 0.40
-Nodes (5): 1. Push Notifications, Anti-Patterns, Platform Architecture, Push Types, Token Management
+Cohesion: 0.50
+Nodes (4): 3. Mobile API Optimization, Batch Requests, Pagination: Cursor vs Offset, Response Size Reduction
 
 ### Community 627 - "Community 627"
-Cohesion: 0.40
-Nodes (5): 2. Android Typography, Font Weight Usage, Material Type Scale, Roboto Font Family, Scalable Pixels (sp)
+Cohesion: 0.50
+Nodes (4): 7. Media & Binary Handling, Chunked Upload (Large Files), Image Optimization, Streaming Audio/Video
 
 ### Community 628 - "Community 628"
-Cohesion: 0.40
-Nodes (5): 9. Android Accessibility, Font Scaling, Reduce Motion, TalkBack Requirements, Touch Target Size
+Cohesion: 0.50
+Nodes (4): 10. Quick Reference, Contrast Ratios, Dark Mode Backgrounds, Text on Dark
 
 ### Community 629 - "Community 629"
 Cohesion: 0.40
@@ -2896,7 +2896,7 @@ Nodes (5): CaptainHook (PHP projects), direnv + `core.hooksPath` (no dependencie
 
 ### Community 633 - "Community 633"
 Cohesion: 0.50
-Nodes (4): 10. Quick Reference, Framework Quick Pick, State Quick Pick, Storage Quick Pick
+Nodes (4): 7. Color Accessibility, Colorblind Considerations, Contrast Testing Tools, Sufficient Contrast
 
 ### Community 634 - "Community 634"
 Cohesion: 0.50

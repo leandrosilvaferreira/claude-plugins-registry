@@ -18,3 +18,4 @@
 - [claude-plugin-data-is-a-directory](claude-plugin-data-is-a-directory.md) — ${CLAUDE_PLUGIN_DATA} é diretório (~/.claude/plugins/data/{id}/), não arquivo — passar puro como cache-file causa EISDIR silencioso
 - [readline-question-close-race](readline-question-close-race.md) — ask() com node:readline pode perder resposta "y" via pipe — rl.close() dispara 'close' antes do próprio res(answer); precisa flag `answered`
 - [commands-project-dir-not-guaranteed](commands-project-dir-not-guaranteed.md) — $CLAUDE_PROJECT_DIR só garantido em hooks; commands/*.md (Bash tool comum) não coberto por hooks-cwd-resolution.md, falha silencioso
+- [command-skill-same-name-collision](command-skill-same-name-collision.md) — command+skill com mesmo nome + Skill tool call literal de dentro do command = loop infinito (resolve pro command, não pro skill); Read direto do SKILL.md em vez de Skill tool
