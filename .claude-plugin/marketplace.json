@@ -19,7 +19,7 @@
         "url": "https://github.com/leandrosilvaferreira/claude-plugins-registry.git",
         "path": "plugins/aia-harness",
         "ref": "main",
-        "sha": "932f47eaf104ac814d8e48da1135dc108ccef78e"
+        "sha": "cc71787191fa35e7d76ff0e4dd55ee409390b36d"
       },
       "homepage": "https://github.com/leandrosilvaferreira/claude-plugins-registry/tree/main/plugins/aia-harness"
     }

@@ -5,7 +5,7 @@
   "plugins": [
     {
       "name": "aia-harness",
-      "version": "0.3.7",
+      "version": "0.3.8",
       "description": "Scan a project and scaffold a complete Claude Code harness: hooks, skills, agents, rules, settings, MCPs, worktree config and per-domain CLAUDE.md. Diagnose, approve, apply.",
       "author": {
         "name": "Leandro Silva Ferreira",
