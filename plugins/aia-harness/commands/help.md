@@ -29,6 +29,7 @@ node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" version
 | Install the **recommended marketplace plugins** for the stack | `/aia-harness:add-plugins` |
 | Install **token-economy / code-graph tools** (caveman, ponytail, rtk, graphify) | `/aia-harness:add-tools` |
 | Generate or refresh **rich intermediate CLAUDE.md** files for strategic subdirectories | `/aia-harness:revise-claude-md` |
+| **Sync agent routing** — audit `.claude/agents` frontmatter descriptions and fix stale/missing CLAUDE.md mentions | `/aia-harness:revise-agent-routing` |
 | See this help | `/aia-harness:help` |
 
 **Project state → recommended command:**
@@ -138,6 +139,22 @@ without approval.
 **When to use:** after `/aia-harness:init` (runs automatically as step 5.6), or standalone to
 refresh domain CLAUDE.md files when project structure or rules change.
 **Writes files?** Yes — `<domain>/CLAUDE.md` files only, never root CLAUDE.md, always with diff + approval.
+**Parameters:** `path` (optional).
+
+### `/aia-harness:revise-agent-routing [path]`
+
+**What it does:** audits every `.claude/agents/*.md` frontmatter `description` against the
+routing-description standard (condition-shaped, "Use proactively" + trigger, 40-600 chars) and
+offers to fix it in place. Cross-references each agent against the project's CLAUDE.md
+`## Workflow & Agents` table (or free-text mentions if there's no table): fixes stale table
+rows, proposes a minimal edit for name-only mentions, and flags/offers to add orphaned agents
+(never mentioned anywhere). Works on any existing project, not just one scaffolded by
+aia-harness. Shows a diff before every write; never writes without approval.
+**When to use:** after adding or editing agents by hand, via a third-party plugin, or via
+`/aia-harness:add-plugins` — anything that didn't go through `/aia-harness:init`'s own
+agent-description pipeline.
+**Writes files?** Only approved fixes, via `Edit` — agent frontmatter `description:` lines and
+CLAUDE.md `## Workflow & Agents` rows/sections.
 **Parameters:** `path` (optional).
 
 ---

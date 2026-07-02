@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   ".claude-plugin/plugin.json": {
-    "mtime": 1782925364.4543605,
-    "ast_hash": "c7f84ce2a92bb5a1f6a903595f40596c",
+    "mtime": 1782932992.0325277,
+    "ast_hash": "7ec0b401788d7a1e8b0248e4dfdad441",
     "semantic_hash": ""
   },
   ".claude/hooks/eslint-fix.mjs": {
@@ -360,8 +360,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1782925364.4544702,
-    "ast_hash": "8356f82c07fce728c3c8fc7f7f8c6488",
+    "mtime": 1782932992.0326033,
+    "ast_hash": "b8cf22be231423b9df66c46a64474c10",
     "semantic_hash": ""
   },
   "scripts/agkit-source.json": {
@@ -1355,8 +1355,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1782661986.1732366,
-    "ast_hash": "2dd7a7b91a95442a5e72bf81559c7628",
+    "mtime": 1782952741.5822194,
+    "ast_hash": "87e422ffafe75ecb8346f0a5d92b6fbe",
     "semantic_hash": ""
   },
   "agents/architecture-mapper.md": {
@@ -1410,8 +1410,8 @@
     "semantic_hash": ""
   },
   "commands/help.md": {
-    "mtime": 1782932695.5676994,
-    "ast_hash": "6099ea5452843857ec1c7cb46781832a",
+    "mtime": 1782952429.4640195,
+    "ast_hash": "6c95e8b0781074f8b70695b1850bf156",
     "semantic_hash": ""
   },
   "commands/init.md": {
@@ -3582,6 +3582,31 @@
   ".claude/memory/commands-project-dir-not-guaranteed.md": {
     "mtime": 1782932860.576464,
     "ast_hash": "c03dcd7da0bad1c49cb88107f2d2792a",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/specs/2026-07-01-revise-agent-routing-design.md": {
+    "mtime": 1782948752.2020185,
+    "ast_hash": "0ed2877c82335dc31362ef3d70b443b6",
+    "semantic_hash": ""
+  },
+  "skills/revise-agent-routing/lib/revise-agent-routing.mjs": {
+    "mtime": 1782949992.6262825,
+    "ast_hash": "dce94915962f90d50fcad1ec6383205b",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-07-01-revise-agent-routing.md": {
+    "mtime": 1782949038.854421,
+    "ast_hash": "12649a2a34ade88b337386438e151a15",
+    "semantic_hash": ""
+  },
+  "skills/revise-agent-routing/SKILL.md": {
+    "mtime": 1782954979.9798055,
+    "ast_hash": "8dac03d71cc601f5f9828e20c4a20ea0",
+    "semantic_hash": ""
+  },
+  "commands/revise-agent-routing.md": {
+    "mtime": 1782952080.3900132,
+    "ast_hash": "65c73c93c80c8fca75c00f9c25e974ce",
     "semantic_hash": ""
   }
 }
