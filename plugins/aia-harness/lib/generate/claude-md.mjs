@@ -147,7 +147,7 @@ export function codeReviewRule(agents) {
     .filter((n) => n.endsWith("-reviewer") && !always.includes(n));
   const all = [...always, ...stackReviewers];
   const named = all.map((n) => `\`${n}\``).join(" and ");
-  return `When performing a code review (user requests it or a workflow triggers it), always use ${named}.`;
+  return `When performing a code review (user requests it or a workflow triggers it), always use ${named}, applying the \`uncle-bob-craft\` skill's criteria (Dependency Rule, SOLID in context, code smells) alongside their findings.`;
 }
 
 /** Per-domain non-negotiable rules; same FIXED_RULES_MARKER protection. */

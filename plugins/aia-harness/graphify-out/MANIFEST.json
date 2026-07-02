@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   ".claude-plugin/plugin.json": {
-    "mtime": 1782956303.3862464,
-    "ast_hash": "551c59562b5451549b05341ce41064f6",
+    "mtime": 1782956746.5444238,
+    "ast_hash": "54a6603df96e31e6d99521314bf2bcdf",
     "semantic_hash": ""
   },
   ".claude/hooks/eslint-fix.mjs": {
@@ -150,8 +150,8 @@
     "semantic_hash": ""
   },
   "lib/data/project-catalog.mjs": {
-    "mtime": 1782685323.7640328,
-    "ast_hash": "d7100e61bad2c33152365a0af08c4159",
+    "mtime": 1782963734.2681398,
+    "ast_hash": "fea5f99abe26681874a6409273934012",
     "semantic_hash": ""
   },
   "lib/data/skill-map.mjs": {
@@ -250,8 +250,8 @@
     "semantic_hash": ""
   },
   "lib/generate/claude-md.mjs": {
-    "mtime": 1782685323.765245,
-    "ast_hash": "4ac086438d805666128fcb9355407d55",
+    "mtime": 1782964124.1567483,
+    "ast_hash": "58acbf1247b9a74cadf102b7c1e39f6a",
     "semantic_hash": ""
   },
   "lib/generate/format-hook.mjs": {
@@ -360,8 +360,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1782956303.3864012,
-    "ast_hash": "6790cc4441db09bc2e01da2f71e28ee3",
+    "mtime": 1782956746.5444994,
+    "ast_hash": "2dcd4d9f642b882bdc7d5512fbaf71ee",
     "semantic_hash": ""
   },
   "scripts/agkit-source.json": {
@@ -1065,8 +1065,8 @@
     "semantic_hash": ""
   },
   "tests/skill-map.test.mjs": {
-    "mtime": 1782338004.9275813,
-    "ast_hash": "7b524a5d3f5b1973191f903b0d963f80",
+    "mtime": 1782964112.83717,
+    "ast_hash": "4425035e1b2e9197206964ee4be9efff",
     "semantic_hash": ""
   },
   "tests/templates-orphan.test.mjs": {
@@ -1120,13 +1120,13 @@
     "semantic_hash": ""
   },
   ".claude/CLAUDE.md": {
-    "mtime": 1782162987.84193,
-    "ast_hash": "db73b0edd7ffbc61ceac177130730865",
+    "mtime": 1782965065.6363423,
+    "ast_hash": "ca071114d8704e82bbc5c7ecfafd2dec",
     "semantic_hash": ""
   },
   ".claude/agents/aia-harness-code-reviewer.md": {
-    "mtime": 1782338901.93195,
-    "ast_hash": "a59352c98d1f5087ab5b0129cbe499e4",
+    "mtime": 1782965373.0158155,
+    "ast_hash": "fee7f3c640aa2ecf85014dbe7b694af3",
     "semantic_hash": ""
   },
   ".claude/agents/engine-test-writer.md": {
@@ -1345,8 +1345,8 @@
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1782931477.018727,
-    "ast_hash": "6b4c6eb13a14c880488b4e67f4623fee",
+    "mtime": 1782963023.9050221,
+    "ast_hash": "610237fcd1faa4479ed82a403e7cfae2",
     "semantic_hash": ""
   },
   "PUBLISHING.md": {
@@ -1355,8 +1355,8 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1782952741.5822194,
-    "ast_hash": "87e422ffafe75ecb8346f0a5d92b6fbe",
+    "mtime": 1782965734.3123753,
+    "ast_hash": "4dd5b6de3582cda7df7a3f21626602ea",
     "semantic_hash": ""
   },
   "agents/architecture-mapper.md": {
@@ -3170,8 +3170,8 @@
     "semantic_hash": ""
   },
   "templates/rules/04-code-quality.md": {
-    "mtime": 1782371870.9079423,
-    "ast_hash": "b86de69c15695c1b68f38442068a3b0e",
+    "mtime": 1782964413.3276181,
+    "ast_hash": "e0b0ef22c4ce22fb180cfa45eb0cc23e",
     "semantic_hash": ""
   },
   "templates/rules/05-testing.md": {
@@ -3612,6 +3612,96 @@
   "skills/revise-agent-routing-workflow/SKILL.md": {
     "mtime": 1782956594.2228358,
     "ast_hash": "e7465beaa7577214a6b638936a19c510",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/specs/2026-07-01-uncle-bob-craft-skill-design.md": {
+    "mtime": 1782962690.7038937,
+    "ast_hash": "2d7220754a133f4fa7f9cae0e22e39b4",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-07-01-uncle-bob-craft-skill.md": {
+    "mtime": 1782966117.2118185,
+    "ast_hash": "79ad1501005c4b550db39c09663e2590",
+    "semantic_hash": ""
+  },
+  "templates/skills/uncle-bob-craft/README.md": {
+    "mtime": 1782963236.9981213,
+    "ast_hash": "b9595eb783f7582bf56682a8afdebd73",
+    "semantic_hash": ""
+  },
+  "templates/skills/uncle-bob-craft/SKILL.md": {
+    "mtime": 1782963249.5998454,
+    "ast_hash": "ab6d7cd14141a53d63b6edaf1f327598",
+    "semantic_hash": ""
+  },
+  "templates/skills/uncle-bob-craft/examples/code-review-checklist.md": {
+    "mtime": 1782963236.99867,
+    "ast_hash": "85b67acd207046f7064302cd73631c96",
+    "semantic_hash": ""
+  },
+  "templates/skills/uncle-bob-craft/reference.md": {
+    "mtime": 1782963236.9902375,
+    "ast_hash": "7d55c3a645bda10c529c3c6679100d4d",
+    "semantic_hash": ""
+  },
+  "templates/skills/uncle-bob-craft/references/clean-agile.md": {
+    "mtime": 1782963236.9976492,
+    "ast_hash": "83ecb0d4d70e1f7445899a369225f703",
+    "semantic_hash": ""
+  },
+  "templates/skills/uncle-bob-craft/references/clean-architecture.md": {
+    "mtime": 1782963236.9971943,
+    "ast_hash": "8a5e1f2891dd0d7b57d292011387bb72",
+    "semantic_hash": ""
+  },
+  "templates/skills/uncle-bob-craft/references/clean-coder.md": {
+    "mtime": 1782963236.9960575,
+    "ast_hash": "febf9c5534365637f37bd011ffc626e8",
+    "semantic_hash": ""
+  },
+  "templates/skills/uncle-bob-craft/references/design-patterns.md": {
+    "mtime": 1782963236.9965377,
+    "ast_hash": "052298e32244a2326bf37d6b528f028f",
+    "semantic_hash": ""
+  },
+  ".claude/skills/uncle-bob-craft/README.md": {
+    "mtime": 1782964710.7093225,
+    "ast_hash": "b9595eb783f7582bf56682a8afdebd73",
+    "semantic_hash": ""
+  },
+  ".claude/skills/uncle-bob-craft/SKILL.md": {
+    "mtime": 1782964717.5208743,
+    "ast_hash": "ab6d7cd14141a53d63b6edaf1f327598",
+    "semantic_hash": ""
+  },
+  ".claude/skills/uncle-bob-craft/examples/code-review-checklist.md": {
+    "mtime": 1782964710.7097492,
+    "ast_hash": "85b67acd207046f7064302cd73631c96",
+    "semantic_hash": ""
+  },
+  ".claude/skills/uncle-bob-craft/reference.md": {
+    "mtime": 1782964710.7076044,
+    "ast_hash": "7d55c3a645bda10c529c3c6679100d4d",
+    "semantic_hash": ""
+  },
+  ".claude/skills/uncle-bob-craft/references/clean-agile.md": {
+    "mtime": 1782964710.7089782,
+    "ast_hash": "83ecb0d4d70e1f7445899a369225f703",
+    "semantic_hash": ""
+  },
+  ".claude/skills/uncle-bob-craft/references/clean-architecture.md": {
+    "mtime": 1782964710.7086995,
+    "ast_hash": "8a5e1f2891dd0d7b57d292011387bb72",
+    "semantic_hash": ""
+  },
+  ".claude/skills/uncle-bob-craft/references/clean-coder.md": {
+    "mtime": 1782964710.7080886,
+    "ast_hash": "febf9c5534365637f37bd011ffc626e8",
+    "semantic_hash": ""
+  },
+  ".claude/skills/uncle-bob-craft/references/design-patterns.md": {
+    "mtime": 1782964710.7084365,
+    "ast_hash": "052298e32244a2326bf37d6b528f028f",
     "semantic_hash": ""
   }
 }

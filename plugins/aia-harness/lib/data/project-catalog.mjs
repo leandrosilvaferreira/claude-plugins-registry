@@ -24,7 +24,14 @@ import { stackKeys } from "./stack-keys.mjs";
 /** First-party skills shipped to every target project (templates/skills/<name>/). */
 export const PROJECT_COMMON = {
   agents: /** @type {string[]} */ ([]),
-  skills: ["run-tests", "lint-fix", "pre-commit-verify", "setup-testing", "goal-builder"],
+  skills: [
+    "run-tests",
+    "lint-fix",
+    "pre-commit-verify",
+    "setup-testing",
+    "goal-builder",
+    "uncle-bob-craft",
+  ],
   rules: /** @type {string[]} */ ([
     "01-ddd.md",
     "02-design-patterns.md",

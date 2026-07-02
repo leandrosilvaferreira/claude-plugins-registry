@@ -237,7 +237,7 @@ One `init` produces a coherent, least-privilege harness — **not a pile of defa
 - 🤫 **`.claude/settings.local.json`** — env values, gitignored.
 - 🔗 **`.mcp.json`** — strategic MCP servers with `${ENV}` placeholders.
 - 🪝 **`.claude/hooks/`** — pure-ESM hooks run through a node-resolver wrapper (formatter, strict verify loop, secret guard, large-file guard, and more).
-- 🧰 **`.claude/skills/`** — operational skills (`run-tests`, `lint-fix`, `pre-commit-verify`, `setup-testing`, …).
+- 🧰 **`.claude/skills/`** — operational skills (`run-tests`, `lint-fix`, `pre-commit-verify`, `setup-testing`, `uncle-bob-craft`, …).
 - 🌳 **`.worktreeinclude`**, **`.lsp.json`** (opt-in), **`docs/harness/strategies.md`**, and an opt-in marketplace install script.
 - 🧩 **Stack-matched agents, skills, and rules** vendored from ECC and ag-kit (see [Credits](#-credits--acknowledgments)).
 
@@ -280,6 +280,7 @@ One `init` produces a coherent, least-privilege harness — **not a pile of defa
 | `pre-commit-verify` | Full pre-commit/PR gate — typecheck, lint, and tests must all pass. |
 | `setup-testing` | Seeds unit tests in a project with none: installs the stack's framework, writes a real test, wires the script, runs to green. |
 | `goal-builder` | Generates an optimized `/goal` command for autonomous / overnight execution. |
+| `uncle-bob-craft` | Applies Robert C. Martin's Clean Code/Architecture/Coder/Agile criteria during code review and writing — Dependency Rule, SOLID, code smells. |
 | `adianti-framework` | Expert guidance for PHP Adianti Framework 7.x/8.x (TRecord, TForm, TDataGrid, CRUD, master-detail). |
 | `novo-modulo-adianti` | Scaffolds a complete Adianti CRUD module by mirroring an existing one. |
 | `github-pm` | PM orchestrator for GitHub issues/PRs/Projects v2 (see [Power-Ups](#-power-ups)). |

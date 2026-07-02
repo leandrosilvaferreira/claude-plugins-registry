@@ -32,7 +32,7 @@ Ensure code is readable, consistent, safe to maintain, and ready for review.
 - Validate inputs at system boundaries.
 - Keep behavior predictable and easy to debug.
 - Update inline documentation when changing relevant behavior.
-- Ensure the code is ready for code review.
+- Ensure the code is ready for code review — apply the `uncle-bob-craft` skill (Dependency Rule, SOLID in context, code smells) as part of that check.
 
 ## Don't
 

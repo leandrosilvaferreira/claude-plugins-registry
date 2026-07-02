@@ -348,6 +348,25 @@ Flag as **MINOR**: style inconsistencies, missing frontmatter fields.
 
 ---
 
+## Complementary: Craft & Design (Uncle Bob criteria)
+
+Not a numbered dimension — apply opportunistically while auditing the 7 dimensions above,
+on any `lib/`, `bin/`, or `scripts/` code touched. Full criteria:
+`.claude/skills/uncle-bob-craft/SKILL.md`.
+
+- **Dependency Rule**: does `lib/` (pure core) stay free of IO? IO belongs only in `detect`
+  (reads), `apply` (writes), `bin` (orchestrates) — per this project's own architecture.
+- **SOLID in context**: single responsibility per catalog/generator/detector module; no
+  god-functions doing selection + rendering + IO in one place.
+- **Smells**: rigidity (one change forces edits across many files), needless repetition
+  (same catalog-selection logic duplicated instead of shared), opacity (a function whose
+  name doesn't match what it does).
+- Suggest at most one or two concrete refactors — do not turn this into a second audit
+  pass. Fold any finding into MINOR unless it independently meets a CRITICAL/MAJOR bar from
+  the 7 dimensions above.
+
+---
+
 ## Output format
 
 Produce a structured markdown report with this exact structure:
