@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   ".claude-plugin/plugin.json": {
-    "mtime": 1782955287.5029094,
-    "ast_hash": "b0a804320dddbb5b6814a181cd7824e2",
+    "mtime": 1782956303.3862464,
+    "ast_hash": "551c59562b5451549b05341ce41064f6",
     "semantic_hash": ""
   },
   ".claude/hooks/eslint-fix.mjs": {
@@ -360,8 +360,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1782955287.5030649,
-    "ast_hash": "5482d6a2f1b2f435b1a176cb109e7f6f",
+    "mtime": 1782956303.3864012,
+    "ast_hash": "6790cc4441db09bc2e01da2f71e28ee3",
     "semantic_hash": ""
   },
   "scripts/agkit-source.json": {
@@ -3589,29 +3589,29 @@
     "ast_hash": "0ed2877c82335dc31362ef3d70b443b6",
     "semantic_hash": ""
   },
-  "skills/revise-agent-routing/lib/revise-agent-routing.mjs": {
-    "mtime": 1782949992.6262825,
-    "ast_hash": "dce94915962f90d50fcad1ec6383205b",
-    "semantic_hash": ""
-  },
   "docs/superpowers/plans/2026-07-01-revise-agent-routing.md": {
     "mtime": 1782949038.854421,
     "ast_hash": "12649a2a34ade88b337386438e151a15",
     "semantic_hash": ""
   },
-  "skills/revise-agent-routing/SKILL.md": {
-    "mtime": 1782954979.9798055,
-    "ast_hash": "8dac03d71cc601f5f9828e20c4a20ea0",
-    "semantic_hash": ""
-  },
   "commands/revise-agent-routing.md": {
-    "mtime": 1782956048.4978027,
-    "ast_hash": "9b2e82c19ceb4b4998e199a4e1d9a848",
+    "mtime": 1782956699.2478604,
+    "ast_hash": "a22d1aedfa8180963f41ca014d896e3f",
     "semantic_hash": ""
   },
   ".claude/memory/command-skill-same-name-collision.md": {
-    "mtime": 1782956100.3486195,
-    "ast_hash": "cffa879524a4911f65d74b2972713a70",
+    "mtime": 1782956680.4251676,
+    "ast_hash": "62384c80e435eea28e2a2198e6c9ae6e",
+    "semantic_hash": ""
+  },
+  "skills/revise-agent-routing-workflow/lib/revise-agent-routing.mjs": {
+    "mtime": 1782956648.2800198,
+    "ast_hash": "373dde5ac42dab064d52649a12348d17",
+    "semantic_hash": ""
+  },
+  "skills/revise-agent-routing-workflow/SKILL.md": {
+    "mtime": 1782956594.2228358,
+    "ast_hash": "e7465beaa7577214a6b638936a19c510",
     "semantic_hash": ""
   }
 }

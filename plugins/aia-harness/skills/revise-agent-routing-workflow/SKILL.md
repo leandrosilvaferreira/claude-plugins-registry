@@ -1,5 +1,5 @@
 ---
-name: revise-agent-routing
+name: revise-agent-routing-workflow
 description: >
   Audit .claude/agents/*.md frontmatter descriptions against the routing-description
   standard (condition-shaped, "Use proactively", 40-600 chars) and sync them with the
@@ -33,7 +33,7 @@ tool call is a fresh shell (only cwd persists, not exported variables) and an ea
 redirects any later bare-env-var fallback to the wrong place.
 
 The lib script backing every step below:
-`"${CLAUDE_PLUGIN_ROOT}/skills/revise-agent-routing/lib/revise-agent-routing.mjs"`.
+`"${CLAUDE_PLUGIN_ROOT}/skills/revise-agent-routing-workflow/lib/revise-agent-routing.mjs"`.
 It only reads — every write in this skill goes through `Edit`, shown as a diff, after
 explicit approval.
 
@@ -44,7 +44,7 @@ explicit approval.
 ### Step 1: List agents
 
 ```bash
-node "${CLAUDE_PLUGIN_ROOT}/skills/revise-agent-routing/lib/revise-agent-routing.mjs" \
+node "${CLAUDE_PLUGIN_ROOT}/skills/revise-agent-routing-workflow/lib/revise-agent-routing.mjs" \
   list --root "${1:-$CLAUDE_PROJECT_DIR}"
 ```
 
@@ -61,7 +61,7 @@ continue with the rest.
 For each agent in `agents`:
 
 ```bash
-node "${CLAUDE_PLUGIN_ROOT}/skills/revise-agent-routing/lib/revise-agent-routing.mjs" \
+node "${CLAUDE_PLUGIN_ROOT}/skills/revise-agent-routing-workflow/lib/revise-agent-routing.mjs" \
   check --text "<agent.description>"
 ```
 
@@ -117,7 +117,7 @@ re-run `list`.
 ### Step 1: Parse the root table
 
 ```bash
-node "${CLAUDE_PLUGIN_ROOT}/skills/revise-agent-routing/lib/revise-agent-routing.mjs" \
+node "${CLAUDE_PLUGIN_ROOT}/skills/revise-agent-routing-workflow/lib/revise-agent-routing.mjs" \
   table --root "${1:-$CLAUDE_PROJECT_DIR}"
 ```
 
@@ -138,7 +138,7 @@ For every agent in the Phase 1 map, using `table`'s `rows`:
 - **No row found**: run the textual fallback —
 
   ```bash
-  node "${CLAUDE_PLUGIN_ROOT}/skills/revise-agent-routing/lib/revise-agent-routing.mjs" \
+  node "${CLAUDE_PLUGIN_ROOT}/skills/revise-agent-routing-workflow/lib/revise-agent-routing.mjs" \
     grep --root "${1:-$CLAUDE_PROJECT_DIR}" --name "<agent.name>"
   ```
 

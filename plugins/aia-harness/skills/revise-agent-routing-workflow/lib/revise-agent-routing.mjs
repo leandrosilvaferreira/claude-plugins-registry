@@ -16,8 +16,8 @@ import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
-// skills/revise-agent-routing/lib/ → 3 levels up → plugin root → lib/... . Same depth and
-// same computation as condense.mjs's cmdFrontmatter.
+// skills/<any-skill-name>/lib/ → 3 levels up → plugin root → lib/... . Same depth and
+// same computation as condense.mjs's cmdFrontmatter (name-agnostic, survives a skill rename).
 const PLUGIN_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 
 /** @param {string[]} args @param {string} name @returns {string | null} */

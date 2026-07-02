@@ -1,7 +1,7 @@
 # Graph Report - aia_harness  (2026-07-01)
 
 ## Corpus Check
-- 711 files · ~582,216 words
+- 711 files · ~582,193 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `ded6b528`
+- Built from commit: `1f0dd4ca`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -635,11 +635,11 @@
 
 ## Surprising Connections (you probably didn't know these)
 - `cmdList()` --calls--> `parseFrontmatter()`  [INFERRED]
-  skills/revise-agent-routing/lib/revise-agent-routing.mjs → lib/util/frontmatter-yaml.mjs
+  skills/revise-agent-routing-workflow/lib/revise-agent-routing.mjs → lib/util/frontmatter-yaml.mjs
 - `cmdGrep()` --calls--> `collectFiles()`  [INFERRED]
-  skills/revise-agent-routing/lib/revise-agent-routing.mjs → lib/util/fs.mjs
+  skills/revise-agent-routing-workflow/lib/revise-agent-routing.mjs → lib/util/fs.mjs
 - `cmdCheck()` --calls--> `checkAgentDescription()`  [INFERRED]
-  skills/revise-agent-routing/lib/revise-agent-routing.mjs → lib/validate/agent-description.mjs
+  skills/revise-agent-routing-workflow/lib/revise-agent-routing.mjs → lib/validate/agent-description.mjs
 - `assertBlock()` --calls--> `validateStopOutput()`  [EXTRACTED]
   tests/hook-large-file-warning.test.mjs → lib/validate/hook-schema.mjs
 - `assertSilent()` --calls--> `validateUserPromptSubmitOutput()`  [EXTRACTED]
