@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   ".claude-plugin/plugin.json": {
-    "mtime": 1782999400.8893898,
-    "ast_hash": "b8bdb128abe7b52e306296c9560969be",
+    "mtime": 1783017615.688538,
+    "ast_hash": "efbd631d528ed5843c058fe2cf491e35",
     "semantic_hash": ""
   },
   ".claude/hooks/eslint-fix.mjs": {
@@ -360,8 +360,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1783013633.7046306,
-    "ast_hash": "913e62a4ea7dde043b1223839a9584b2",
+    "mtime": 1783017615.6887362,
+    "ast_hash": "c30dc4f2a2d6f318ebb20aed4f63ba2f",
     "semantic_hash": ""
   },
   "scripts/agkit-source.json": {
@@ -575,8 +575,8 @@
     "semantic_hash": ""
   },
   "templates/hooks/worktree-prompt-ctx.mjs": {
-    "mtime": 1782342256.9121923,
-    "ast_hash": "2a00bda1e687a8a346d570adbeb316b2",
+    "mtime": 1783055385.7124634,
+    "ast_hash": "d2e496d6af90d7e7aa154de1a54e9c1c",
     "semantic_hash": ""
   },
   "templates/hooks/worktree-session-ctx.mjs": {
@@ -995,8 +995,8 @@
     "semantic_hash": ""
   },
   "tests/hook-worktree-prompt-ctx.test.mjs": {
-    "mtime": 1783015164.2011104,
-    "ast_hash": "13555585fce407bd9d67bc3b627357cd",
+    "mtime": 1783055592.828159,
+    "ast_hash": "fef6e968ea81b3d232e422d34d372895",
     "semantic_hash": ""
   },
   "tests/hook-worktree-session-ctx.test.mjs": {
@@ -1150,8 +1150,8 @@
     "semantic_hash": ""
   },
   ".claude/memory/MEMORY.md": {
-    "mtime": 1783015255.9965818,
-    "ast_hash": "dccd7d45b6171538b3673172224d1383",
+    "mtime": 1783054278.1256793,
+    "ast_hash": "40f58928cbd8304e86aa0cc903f1bd66",
     "semantic_hash": ""
   },
   ".claude/memory/cross-platform-artifacts.md": {
@@ -3717,6 +3717,11 @@
   ".claude/memory/archive/hook-type-table-stale.md": {
     "mtime": 1783015232.2101846,
     "ast_hash": "197b43fa4a16d2b3e2428548e11d7536",
+    "semantic_hash": ""
+  },
+  ".claude/memory/worktree-session-title-hook.md": {
+    "mtime": 1783054757.7405772,
+    "ast_hash": "35d6d4eeee5a0fb87e0f070b4ed4febc",
     "semantic_hash": ""
   }
 }
