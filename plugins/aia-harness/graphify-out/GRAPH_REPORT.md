@@ -1,16 +1,16 @@
-# Graph Report - aia_harness  (2026-07-03)
+# Graph Report - aia_harness  (2026-07-06)
 
 ## Corpus Check
-- 733 files · ~603,512 words
+- 734 files · ~603,970 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 7891 nodes · 8560 edges · 647 communities (606 shown, 41 thin omitted)
+- 7892 nodes · 8561 edges · 642 communities (600 shown, 42 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 5 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `29250200`
+- Built from commit: `051e8766`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -620,13 +620,8 @@
 - [[_COMMUNITY_Community 632|Community 632]]
 - [[_COMMUNITY_Community 633|Community 633]]
 - [[_COMMUNITY_Community 634|Community 634]]
-- [[_COMMUNITY_Community 635|Community 635]]
 - [[_COMMUNITY_Community 636|Community 636]]
 - [[_COMMUNITY_Community 637|Community 637]]
-- [[_COMMUNITY_Community 638|Community 638]]
-- [[_COMMUNITY_Community 641|Community 641]]
-- [[_COMMUNITY_Community 642|Community 642]]
-- [[_COMMUNITY_Community 643|Community 643]]
 - [[_COMMUNITY_Community 644|Community 644]]
 - [[_COMMUNITY_Community 645|Community 645]]
 - [[_COMMUNITY_Community 646|Community 646]]
@@ -650,15 +645,15 @@
   skills/revise-agent-routing-workflow/lib/revise-agent-routing.mjs → lib/util/fs.mjs
 - `cmdCheck()` --calls--> `checkAgentDescription()`  [INFERRED]
   skills/revise-agent-routing-workflow/lib/revise-agent-routing.mjs → lib/validate/agent-description.mjs
-- `cmdFrontmatter()` --calls--> `detectAssetType()`  [INFERRED]
-  skills/condense-harness-prompts/lib/condense.mjs → lib/validate/frontmatter.mjs
-- `cmdFrontmatter()` --calls--> `validateFrontmatter()`  [INFERRED]
-  skills/condense-harness-prompts/lib/condense.mjs → lib/validate/frontmatter.mjs
+- `normalizeFragmentLines()` --calls--> `normalizeToolsValue()`  [EXTRACTED]
+  .claude/hooks/validate-template-frontmatter.mjs → lib/validate/frontmatter.mjs
+- `main()` --calls--> `applyPlan()`  [EXTRACTED]
+  bin/harness.mjs → lib/apply.mjs
 
 ## Import Cycles
 - None detected.
 
-## Communities (647 total, 41 thin omitted)
+## Communities (642 total, 42 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.11
@@ -745,8 +740,8 @@ Cohesion: 0.05
 Nodes (40): Acceptance, Acceptance, Acceptance, Acceptance, Acceptance, Acceptance, Acceptance, Base branch detection (+32 more)
 
 ### Community 21 - "Community 21"
-Cohesion: 0.09
-Nodes (22): 1. Mobile Color Fundamentals, 3. Dark Mode Design, 4. Outdoor Visibility, 6. Dynamic Color (Android), 8. Color Anti-Patterns, 9. Color System Checklist, ❌ AI Color Mistakes, Before Choosing Colors (+14 more)
+Cohesion: 0.05
+Nodes (38): 10. Quick Reference, 1. Mobile Color Fundamentals, 2. OLED Considerations, 3. Dark Mode Design, 4. Outdoor Visibility, 5. Semantic Colors, 6. Dynamic Color (Android), 7. Color Accessibility (+30 more)
 
 ### Community 22 - "Community 22"
 Cohesion: 0.05
@@ -801,8 +796,8 @@ Cohesion: 0.06
 Nodes (33): agents, author, Best Practices, commands, Common Validation Errors, Complete Field Reference, Complete Plugin, Component Path Fields (+25 more)
 
 ### Community 35 - "Community 35"
-Cohesion: 0.12
-Nodes (20): MCP_CATALOG, recommendedMcp(), marketplaceRepo(), MARKETPLACES, PLUGIN_SUGGESTIONS, suggestPlugins(), renderMcp(), renderMemoryInstructions() (+12 more)
+Cohesion: 0.09
+Nodes (29): MCP_CATALOG, recommendedMcp(), marketplaceRepo(), MARKETPLACES, PLUGIN_SUGGESTIONS, suggestPlugins(), renderMcp(), renderMemoryInstructions() (+21 more)
 
 ### Community 36 - "Community 36"
 Cohesion: 0.06
@@ -825,12 +820,12 @@ Cohesion: 0.06
 Nodes (30): Agents, Auto-Discovery Mechanism, Best Practices, ${CLAUDE_PLUGIN_ROOT}, Commands, Common Patterns, Component Files, Component Organization (+22 more)
 
 ### Community 41 - "Community 41"
-Cohesion: 0.12
-Nodes (23): allEccAssets(), ECC_BY_STACK, ECC_COMMON, selectEccAssets(), GITHUB_PM_ARTIFACTS, PLUGIN_ROOT, selectGitHubPMAssets(), T (+15 more)
+Cohesion: 0.10
+Nodes (29): resolveAgentWhenToUse(), allEccAssets(), ECC_BY_STACK, ECC_COMMON, selectEccAssets(), GITHUB_PM_ARTIFACTS, PLUGIN_ROOT, selectGitHubPMAssets() (+21 more)
 
 ### Community 42 - "Community 42"
-Cohesion: 0.06
-Nodes (35): 10. Navigation Checklist, 1. Navigation Selection Decision Tree, 2. Tab Bar Navigation, 3. Stack Navigation, 4. Drawer Navigation, 5. Modal Navigation, 6. Deep Linking, 7. Navigation State Persistence (+27 more)
+Cohesion: 0.07
+Nodes (27): 1. Navigation Selection Decision Tree, 2. Tab Bar Navigation, 3. Stack Navigation, 4. Drawer Navigation, 6. Deep Linking, 7. Navigation State Persistence, 8. Transition Animations, 9. Navigation Anti-Patterns (+19 more)
 
 ### Community 43 - "Community 43"
 Cohesion: 0.06
@@ -845,24 +840,24 @@ Cohesion: 0.06
 Nodes (30): Archived Upstream Actions, Best Practices, By Feature (Recommended), By Layer, CHANGELOG.md, CODE_OF_CONDUCT.md, CODEOWNERS, CONTRIBUTING.md (+22 more)
 
 ### Community 46 - "Community 46"
-Cohesion: 0.14
-Nodes (21): formatDepsReport(), main(), parseArgs(), PLUGIN_ROOT, printApply(), printHelp(), ENGINE_DEPS, INSTALL_HINTS (+13 more)
+Cohesion: 0.15
+Nodes (20): formatDepsReport(), main(), parseArgs(), PLUGIN_ROOT, printApply(), printHelp(), ENGINE_DEPS, INSTALL_HINTS (+12 more)
 
 ### Community 47 - "Community 47"
 Cohesion: 0.18
 Nodes (10): Global Constraints, Revise Agent Routing Implementation Plan, Task 1: Lib script — `list` + `check` subcommands, Task 2: Lib script — `table` + `grep` subcommands, Task 3: Integration smoke test (all 4 verdicts) + final lib gate, Task 4: `skills/revise-agent-routing/SKILL.md`, Task 5: `commands/revise-agent-routing.md`, Task 6: `commands/help.md` — register the new command (+2 more)
 
 ### Community 48 - "Community 48"
-Cohesion: 0.11
-Nodes (32): FRAMEWORKS, CONTAINER_DIRS, detectArchitecture(), kindFor(), LAYER_DIRS, singular(), detectCommands(), genericCommands() (+24 more)
+Cohesion: 0.07
+Nodes (38): applyPlan(), ensureGitignore(), mergeSettingsHooks(), writeFile(), FRAMEWORKS, detectCommands(), genericCommands(), goCommands() (+30 more)
 
 ### Community 49 - "Community 49"
 Cohesion: 0.07
 Nodes (29): API Development, API Style Selection, Architecture, Backend Development Architect, Common Anti-Patterns You Avoid, 🛑 CRITICAL: CLARIFY BEFORE CODING (MANDATORY), Database & Data, Database Selection (+21 more)
 
 ### Community 50 - "Community 50"
-Cohesion: 0.08
-Nodes (26): 10. Quick Reference, 1. Framework Selection, 2. State Management Selection, 3. Navigation Pattern Selection, 4. Storage Strategy Selection, 5. Offline Strategy Selection, 6. Authentication Pattern Selection, 8. Decision Checklist (+18 more)
+Cohesion: 0.07
+Nodes (30): 10. Quick Reference, 1. Framework Selection, 2. State Management Selection, 3. Navigation Pattern Selection, 4. Storage Strategy Selection, 5. Offline Strategy Selection, 6. Authentication Pattern Selection, 7. Project Type Templates (+22 more)
 
 ### Community 51 - "Community 51"
 Cohesion: 0.07
@@ -877,8 +872,8 @@ Cohesion: 0.12
 Nodes (25): provenanceComment(), splitFrontmatter(), transformSkill(), fetchRaw(), get(), getJson(), HERE, listAllBlobs() (+17 more)
 
 ### Community 54 - "Community 54"
-Cohesion: 0.07
-Nodes (28): 1. Testing Tool Selection, 2. Testing Pyramid for Mobile, 4. Platform-Specific Testing, 5. Offline & Network Testing, 6. Performance Testing, 7. Accessibility Testing, 8. CI/CD Integration, 🚫 AI MOBILE TESTING ANTI-PATTERNS (+20 more)
+Cohesion: 0.06
+Nodes (33): 1. Testing Tool Selection, 2. Testing Pyramid for Mobile, 3. What to Test at Each Level, 4. Platform-Specific Testing, 5. Offline & Network Testing, 6. Performance Testing, 7. Accessibility Testing, 8. CI/CD Integration (+25 more)
 
 ### Community 55 - "Community 55"
 Cohesion: 0.07
@@ -926,7 +921,7 @@ Nodes (27): Anti-pattern: `permissions: read-all`, Auto-Merge Compatibility, Bra
 
 ### Community 66 - "Community 66"
 Cohesion: 0.13
-Nodes (19): hasFrontmatter, normalizeFragmentLines(), output, ROOT, templatesDir, type, detectAssetType(), normalizeToolsValue() (+11 more)
+Nodes (20): hasFrontmatter, normalizeFragmentLines(), output, ROOT, templatesDir, type, detectAssetType(), normalizeToolsValue() (+12 more)
 
 ### Community 67 - "Community 67"
 Cohesion: 0.20
@@ -949,8 +944,8 @@ Cohesion: 0.08
 Nodes (24): 4-Phase Debugging Process, After Fix, Anti-Patterns (What NOT to Do), Backend Issues, Before Starting, Binary Search Debugging, Browser Issues, Bug Categories & Investigation Strategy (+16 more)
 
 ### Community 72 - "Community 72"
-Cohesion: 0.06
-Nodes (32): Build Commands by Framework, 🔴 BUILD VERIFICATION (MANDATORY Before "Done"), 📝 CHECKPOINT (MANDATORY Before Any Mobile Work), Common Build Errors to Watch For, ⚠️ CRITICAL: ASK BEFORE ASSUMING (MANDATORY), ⛔ DEFAULT TENDENCIES TO AVOID, Development Decision Process, 📱 Emulator Quick Commands (All Platforms) (+24 more)
+Cohesion: 0.07
+Nodes (28): Build Commands by Framework, 🔴 BUILD VERIFICATION (MANDATORY Before "Done"), 📝 CHECKPOINT (MANDATORY Before Any Mobile Work), Common Build Errors to Watch For, ⚠️ CRITICAL: ASK BEFORE ASSUMING (MANDATORY), ⛔ DEFAULT TENDENCIES TO AVOID, Development Decision Process, 📱 Emulator Quick Commands (All Platforms) (+20 more)
 
 ### Community 73 - "Community 73"
 Cohesion: 0.08
@@ -993,8 +988,8 @@ Cohesion: 0.09
 Nodes (22): Anti-Patterns, Bundle Size, Caching, Core Philosophy, Core Web Vitals Targets, CSS, Images, JavaScript (+14 more)
 
 ### Community 83 - "Community 83"
-Cohesion: 0.11
-Nodes (18): 🚫 AI MOBILE DEFAULTS (FORBIDDEN LIST), Analysis for Every Gesture, 🧪 ANTI-MEMORIZATION TEST, Ask Yourself Before Every Solution, 🔍 COMPONENT DECOMPOSITION (MANDATORY), 📊 CONTEXT-BASED DECISION PROTOCOL, Decomposition Analysis for Every Screen, 🧠 DEEP MOBILE THINKING PROTOCOL (+10 more)
+Cohesion: 0.09
+Nodes (23): 🚫 AI MOBILE DEFAULTS (FORBIDDEN LIST), Analysis for Every Gesture, 🧪 ANTI-MEMORIZATION TEST, Ask Yourself Before Every Solution, 🔍 COMPONENT DECOMPOSITION (MANDATORY), 📊 CONTEXT-BASED DECISION PROTOCOL, Decomposition Analysis for Every Screen, 🧠 DEEP MOBILE THINKING PROTOCOL (+15 more)
 
 ### Community 84 - "Community 84"
 Cohesion: 0.09
@@ -1014,7 +1009,7 @@ Nodes (43): PERMISSION_REQUEST_BEHAVIORS, validateNotificationOutput, validatePe
 
 ### Community 88 - "Community 88"
 Cohesion: 0.16
-Nodes (21): arrEq(), cmdCommit(), cmdEnumerate(), cmdFrontmatter(), countBullets(), counter(), extractCodeBlocks(), extractHeadings() (+13 more)
+Nodes (20): arrEq(), cmdCommit(), cmdEnumerate(), countBullets(), counter(), extractCodeBlocks(), extractHeadings(), extractInlineCodes() (+12 more)
 
 ### Community 89 - "Community 89"
 Cohesion: 0.09
@@ -1037,8 +1032,8 @@ Cohesion: 0.09
 Nodes (21): Alternatives to GoogleTest, Basic Unit Test (gtest), Best Practices, C++ Testing (Agent Skill), CMake/CTest Quickstart, Code Examples, Common Pitfalls, Core Concepts (+13 more)
 
 ### Community 94 - "Community 94"
-Cohesion: 0.07
-Nodes (30): actionlint - GitHub Actions Workflow Linter, CI Integration Patterns, Combined with Other Linters, Command-Line Usage, Common Error Codes and Fixes, Configuration File, Configuration for Common Project Types, Context/Object Property Access (+22 more)
+Cohesion: 0.09
+Nodes (22): actionlint - GitHub Actions Workflow Linter, CI Integration Patterns, Combined with Other Linters, Command-Line Usage, Configuration File, Configuration for Common Project Types, Custom actions not recognized, Direct Run in CI (+14 more)
 
 ### Community 95 - "Community 95"
 Cohesion: 0.21
@@ -1073,8 +1068,8 @@ Cohesion: 0.10
 Nodes (19): Advanced Plugin Example, agents/orchestration/deployment-orchestrator.md, .claude-plugin/plugin.json, commands/ci/build.md, Configuration Management, Directory Structure, File Contents, hooks/hooks.json (+11 more)
 
 ### Community 103 - "Community 103"
-Cohesion: 0.19
-Nodes (13): skillsForProfile(), AGENT_ORDER, agentsWorkflowBlock(), codeReviewRule(), fixedRulesBlock(), renderDomainClaudeMd(), renderRootClaudeMd(), ROOT_FIXED_RULES (+5 more)
+Cohesion: 0.09
+Nodes (18): skillsForProfile(), AGENT_ORDER, agentsWorkflowBlock(), codeReviewRule(), commandsBlock(), DOMAIN_FIXED_RULES, fixedRulesBlock(), renderDomainClaudeMd() (+10 more)
 
 ### Community 104 - "Community 104"
 Cohesion: 0.10
@@ -1501,8 +1496,8 @@ Cohesion: 0.20
 Nodes (7): After publishing, Bump type guide, Non-interactive (CI / scripts), Publishing to the Registry, Quick release, Registry location, What the script does
 
 ### Community 210 - "Community 210"
-Cohesion: 0.18
-Nodes (16): resolveAgentWhenToUse(), resolveCanonicalDescription(), PROJECT_AGENT_WHEN_TO_USE, cleanAgentMarkdown(), provenanceComment(), removeSection(), splitFrontmatter(), stampProvenance() (+8 more)
+Cohesion: 0.20
+Nodes (14): resolveCanonicalDescription(), cleanAgentMarkdown(), provenanceComment(), removeSection(), splitFrontmatter(), stampProvenance(), applyCanonicalDescription(), checkAgentDescription() (+6 more)
 
 ### Community 211 - "Community 211"
 Cohesion: 0.15
@@ -1573,8 +1568,8 @@ Cohesion: 0.17
 Nodes (11): 1. `lib/data/skill-map.mjs` (NOVO), 2. `lib/generate/claude-md.mjs` — extensões, 3. `commands/init.md` — step 7.5 (NOVO), Arquivos afetados, Componentes, Decisões de design, Design: CLAUDE.md AI Enrichment + Stack-Aware Skills Block, Fora de escopo (+3 more)
 
 ### Community 228 - "Community 228"
-Cohesion: 0.14
-Nodes (26): AGENT_TOOL_DROP, CLAUDE_AGENT_TOOLS, cleanAgentMarkdown(), cleanCommandMarkdown(), cleanScript(), cleanSkillMarkdown(), mapAgentTools(), provenanceComment() (+18 more)
+Cohesion: 0.16
+Nodes (24): AGENT_TOOL_DROP, CLAUDE_AGENT_TOOLS, cleanAgentMarkdown(), cleanCommandMarkdown(), cleanScript(), cleanSkillMarkdown(), mapAgentTools(), provenanceComment() (+16 more)
 
 ### Community 229 - "Community 229"
 Cohesion: 0.17
@@ -1881,8 +1876,8 @@ Cohesion: 0.22
 Nodes (8): graphify reference: extra exports and benchmark, Step 6b - Wiki (only if --wiki flag), Step 7 - Neo4j export (only if --neo4j or --neo4j-push flag), Step 7a - FalkorDB export (only if --falkordb or --falkordb-push flag), Step 7b - SVG export (only if --svg flag), Step 7c - GraphML export (only if --graphml flag), Step 7d - MCP server (only if --mcp flag), Step 8 - Token reduction benchmark (only if total_words > 5000)
 
 ### Community 308 - "Community 308"
-Cohesion: 0.07
-Nodes (25): detectGitHubPM(), detectHookHygiene(), detectHookPlaceholderIssues(), MARKER_FILES, scanProject(), detectLargeFiles(), IGNORED_DIRS, isSourceFile() (+17 more)
+Cohesion: 0.05
+Nodes (37): classify(), EXTENSION_LANGUAGES, E2E_FRAMEWORKS, jsInstall(), jsKey(), recommendTesting(), CONTAINER_DIRS, detectArchitecture() (+29 more)
 
 ### Community 309 - "Community 309"
 Cohesion: 0.25
@@ -2801,8 +2796,8 @@ Cohesion: 0.67
 Nodes (3): 3. Supply Chain Security (A03), Attack Surface, Defense Principles
 
 ### Community 549 - "Community 549"
-Cohesion: 0.09
-Nodes (17): applyPlan(), ensureGitignore(), mergeSettingsHooks(), writeFile(), FIX, HAS_ADIANTI, HAS_ECC, ROOT (+9 more)
+Cohesion: 0.25
+Nodes (8): Common Error Codes and Fixes, Context/Object Property Access, Deprecated Action Versions, Expression Syntax Errors, Missing Permissions Declarations, ShellCheck Issues in run: Blocks, Undefined Action Inputs/Outputs, YAML Type Errors
 
 ### Community 550 - "Community 550"
 Cohesion: 0.67
@@ -2836,10 +2831,6 @@ Nodes (3): Directory Structure, Test Classes, Test Organization
 Cohesion: 0.67
 Nodes (3): Testing Exception Attributes, Testing Exceptions, Testing Expected Exceptions
 
-### Community 560 - "Community 560"
-Cohesion: 0.11
-Nodes (11): classify(), EXTENSION_LANGUAGES, getTool(), selectTools(), toolSettingsHooks(), vendorHookCommand(), detectLanguages(), DOMAIN_FIXED_RULES (+3 more)
-
 ### Community 614 - "Community 614"
 Cohesion: 0.67
 Nodes (3): 5. Risk Prioritization, CVSS + Context, Prioritization Decision Tree
@@ -2861,8 +2852,8 @@ Cohesion: 0.13
 Nodes (15): Clean Agile, Clean Architecture, Component design (summary), Dependency Rule, Design patterns (when and when not), Design smells (from Clean Code / Clean Architecture), Heuristics (review checklist style), Iron Cross (four values that support the above) (+7 more)
 
 ### Community 619 - "Community 619"
-Cohesion: 0.33
-Nodes (7): E2E_FRAMEWORKS, jsInstall(), jsKey(), recommendTesting(), detectTesting(), ecosystemKey(), TEST_FILE_MATCHERS
+Cohesion: 0.50
+Nodes (4): FlatList (React Native), ListView.builder (Flutter), Quick Reference, Touch Targets
 
 ### Community 620 - "Community 620"
 Cohesion: 0.40
@@ -2893,12 +2884,12 @@ Cohesion: 0.67
 Nodes (3): 🎯 Loop until the goal is met — `goal-builder` + `/goal`, 🌳 Parallel & Autonomous Workflows, 🌿 Parallel teams on separate branches — git worktrees
 
 ### Community 629 - "Community 629"
-Cohesion: 0.40
-Nodes (5): List Pattern Questioning, Navigation Pattern Questioning, 🎯 PATTERN QUESTIONING MATRIX, State Pattern Questioning, UI Pattern Questioning
+Cohesion: 0.50
+Nodes (4): 10. Navigation Checklist, Before Every Screen, Before Navigation Architecture, Before Release
 
 ### Community 630 - "Community 630"
-Cohesion: 0.40
-Nodes (5): 3. What to Test at Each Level, Component Tests (RNTL / flutter_test), E2E Tests, Integration Tests, Unit Tests (Jest)
+Cohesion: 0.50
+Nodes (4): 5. Modal Navigation, Modal Dismissal, Modal Types, Modal vs Push
 
 ### Community 631 - "Community 631"
 Cohesion: 0.25
@@ -2916,10 +2907,6 @@ Nodes (6): Estimation, Mentoring and collaboration, Professionalism, Sustainable
 Cohesion: 0.33
 Nodes (6): Estimation, Mentoring and collaboration, Professionalism, Sustainable pace, Tests as a requirement, The Clean Coder — Deep Reference
 
-### Community 635 - "Community 635"
-Cohesion: 0.50
-Nodes (4): 7. Project Type Templates, E-Commerce App, Productivity/SaaS App, Social/Content App
-
 ### Community 636 - "Community 636"
 Cohesion: 0.40
 Nodes (5): Agile values (manifesto), Clean Agile — Deep Reference, Iron Cross (four supporting values), Practices, Relationship to craft
@@ -2927,22 +2914,6 @@ Nodes (5): Agile values (manifesto), Clean Agile — Deep Reference, Iron Cross 
 ### Community 637 - "Community 637"
 Cohesion: 0.40
 Nodes (5): Cargo cult and misuse, Design Patterns — Use vs Misuse, Good signals, When not to use a pattern, When to use a pattern
-
-### Community 638 - "Community 638"
-Cohesion: 0.50
-Nodes (4): 10. Quick Reference, Contrast Ratios, Dark Mode Backgrounds, Text on Dark
-
-### Community 641 - "Community 641"
-Cohesion: 0.50
-Nodes (4): 2. OLED Considerations, Battery Savings with OLED, How OLED Differs, True Black vs Near Black
-
-### Community 642 - "Community 642"
-Cohesion: 0.50
-Nodes (4): 5. Semantic Colors, Consistent Meaning, Error State Colors, Semantic Color Rules
-
-### Community 643 - "Community 643"
-Cohesion: 0.50
-Nodes (4): 7. Color Accessibility, Colorblind Considerations, Contrast Testing Tools, Sufficient Contrast
 
 ### Community 644 - "Community 644"
 Cohesion: 0.50
@@ -2959,7 +2930,7 @@ Nodes (4): Examples, Form submission with MSW and userEvent, Testing a Suspense 
 ## Knowledge Gaps
 - **5282 isolated node(s):** `event`, `eslintBin`, `event`, `command`, `event` (+5277 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **41 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **42 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
@@ -2968,7 +2939,7 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.002) - this node is a cross-community bridge._
 - **Why does `validateStopOutput()` connect `Community 67` to `Community 96`, `Community 286`, `Community 87`?**
   _High betweenness centrality (0.001) - this node is a cross-community bridge._
-- **Why does `React Hooks` connect `Community 216` to `Community 214`?**
+- **Why does `Dart/Flutter Testing` connect `Community 215` to `Community 394`?**
   _High betweenness centrality (0.001) - this node is a cross-community bridge._
 - **What connects `event`, `eslintBin`, `event` to the rest of the system?**
   _5306 weakly-connected nodes found - possible documentation gaps or missing edges._

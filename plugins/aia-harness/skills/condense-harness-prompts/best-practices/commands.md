@@ -40,7 +40,7 @@ The body is the full prompt sent to Claude when `/name` is invoked. It is a task
 **Mandatory to preserve:**
 - Bash blocks with exact commands and flags (`"${CLAUDE_PLUGIN_ROOT}/bin/..."`  etc.)
 - Context variables: `$1`, `$ARGUMENTS`, `${CLAUDE_PROJECT_DIR}`, `${CLAUDE_PLUGIN_ROOT}`
-- Dynamic context syntax: `!`` `git status` ``` — injects command output into the prompt
+- Dynamic-context injection (bang immediately followed by a backtick-delimited command, e.g. running `git status`) — injects command output into the prompt. Never render the literal pattern in any doc, including inside code fences — the loader executes it on load regardless of nesting.
 - Numbered workflow sections with mandatory steps
 - Mapping tables (e.g. category → artifact IDs)
 - Conditional logic ("if X then Y, otherwise Z")
@@ -83,19 +83,21 @@ Target: `$1` if provided, else `$CLAUDE_PROJECT_DIR`.
 
 ## Dynamic context injection
 
-The `!`` `` pattern is processed when the command is loaded — the result goes into the prompt. Preserve exact:
+The dynamic-context pattern (bang immediately followed by a backtick-delimited command) is processed when the command is loaded — the result goes into the prompt. Preserve exact:
 
 ```markdown
 ## Current state
 
-- Status: !`git status`
-- Diff: !`git diff HEAD`
+- Status: ! `git status`
+- Diff: ! `git diff HEAD`
 ```
+
+(shown here with a space after the bang so this reference doc stays inert — real usage has no space)
 
 ## Invariants — never violate when compressing
 
 - `$1`, `$ARGUMENTS`, `${CLAUDE_PROJECT_DIR}`, `${CLAUDE_PLUGIN_ROOT}` — substitution variables; preserve exact
-- `!`` `command` `` ` — dynamic context; preserve exact (the triple backtick and the command inside)
+- Dynamic-context injection (bang immediately followed by a backtick-delimited command) — preserve exact, including any surrounding fence it appears in
 - Paths with `"${CLAUDE_PLUGIN_ROOT}/..."` — double quotes and interpolation are required for paths with spaces
 - `AskUserQuestion` options — each option defines a flow path; removing one breaks the command
 - `allowed-tools: Bash(pattern)` — the pattern restricts which bash commands are allowed; do not simplify to `Bash`

@@ -149,7 +149,7 @@ STEP 0 — MANDATORY: Read the best-practices file for this artifact type:
 Apply the invariants and type-specific compression rules in it BEFORE and DURING compression. In particular:
 - agents: preserve delegation triggers in the `description`; do not change behavioral frontmatter fields (`tools`, `model`, `permissionMode`, `isolation`, etc.)
 - skills: preserve "Use when..." patterns in the `description`; do not change `allowed-tools`/`paths`/`disable-model-invocation`
-- commands: preserve `$1`/`${VAR}` variables, dynamic context `` !`...` ``, AskUserQuestion options, paths with `${CLAUDE_PLUGIN_ROOT}`
+- commands: preserve `$1`/`${VAR}` variables, dynamic-context injection (bang immediately followed by a backtick-delimited command — never render literally in any doc, see best-practices/commands.md), AskUserQuestion options, paths with `${CLAUDE_PLUGIN_ROOT}`
 - rules: NEVER remove `paths:` from the frontmatter; compress the body aggressively (every token saved repeats in every session)
 
 CAVEMAN FULL — cut: articles (a/the), filler (just/really/basically/simply), hedging (maybe/could/I think), pleasantries. Sentences → fragments. Short synonyms. Say once, do not repeat.

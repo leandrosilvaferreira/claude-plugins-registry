@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   ".claude-plugin/plugin.json": {
-    "mtime": 1783017615.688538,
-    "ast_hash": "efbd631d528ed5843c058fe2cf491e35",
+    "mtime": 1783055881.8518546,
+    "ast_hash": "8cf573ecef1b9d34459f15a5bd1f8289",
     "semantic_hash": ""
   },
   ".claude/hooks/eslint-fix.mjs": {
@@ -360,8 +360,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1783017615.6887362,
-    "ast_hash": "c30dc4f2a2d6f318ebb20aed4f63ba2f",
+    "mtime": 1783055881.8520203,
+    "ast_hash": "69edd5d47054fa1bb3cbdd1fa14bfe50",
     "semantic_hash": ""
   },
   "scripts/agkit-source.json": {
@@ -1150,8 +1150,8 @@
     "semantic_hash": ""
   },
   ".claude/memory/MEMORY.md": {
-    "mtime": 1783054278.1256793,
-    "ast_hash": "40f58928cbd8304e86aa0cc903f1bd66",
+    "mtime": 1783363757.8644938,
+    "ast_hash": "13d185f0d253711e9c91d8f108846365",
     "semantic_hash": ""
   },
   ".claude/memory/cross-platform-artifacts.md": {
@@ -1635,8 +1635,8 @@
     "semantic_hash": ""
   },
   "skills/condense-harness-prompts/SKILL.md": {
-    "mtime": 1782423596.9690082,
-    "ast_hash": "ed57d1387f720625e4e81ae86057e74c",
+    "mtime": 1783363591.8309,
+    "ast_hash": "37a662f32dfa1866c5453262c65513a4",
     "semantic_hash": ""
   },
   "skills/condense-harness-prompts/best-practices/agents.md": {
@@ -1645,8 +1645,8 @@
     "semantic_hash": ""
   },
   "skills/condense-harness-prompts/best-practices/commands.md": {
-    "mtime": 1782423497.9813068,
-    "ast_hash": "86fb693197a9509171843492ca8ca73b",
+    "mtime": 1783363609.6029522,
+    "ast_hash": "41eee18c0697d111a59221cd1406751f",
     "semantic_hash": ""
   },
   "skills/condense-harness-prompts/best-practices/rules.md": {
@@ -3722,6 +3722,11 @@
   ".claude/memory/worktree-session-title-hook.md": {
     "mtime": 1783054757.7405772,
     "ast_hash": "35d6d4eeee5a0fb87e0f070b4ed4febc",
+    "semantic_hash": ""
+  },
+  ".claude/memory/skill-loader-bang-backtick.md": {
+    "mtime": 1783363736.4908805,
+    "ast_hash": "6620ffd1fa8e6d5939d0791893543757",
     "semantic_hash": ""
   }
 }

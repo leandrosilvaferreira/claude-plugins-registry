@@ -1088,7 +1088,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_apply",
-      "community": 549,
+      "community": 48,
       "norm_label": "apply.mjs"
     },
     {
@@ -1098,7 +1098,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "lib_apply_mergesettingshooks",
-      "community": 549,
+      "community": 48,
       "norm_label": "mergesettingshooks()"
     },
     {
@@ -1108,7 +1108,7 @@
       "source_location": "L121",
       "_origin": "ast",
       "id": "lib_apply_ensuregitignore",
-      "community": 549,
+      "community": 48,
       "norm_label": "ensuregitignore()"
     },
     {
@@ -1118,7 +1118,7 @@
       "source_location": "L140",
       "_origin": "ast",
       "id": "lib_apply_applyplan",
-      "community": 549,
+      "community": 48,
       "norm_label": "applyplan()"
     },
     {
@@ -1128,7 +1128,7 @@
       "source_location": "L252",
       "_origin": "ast",
       "id": "lib_apply_writefile",
-      "community": 549,
+      "community": 48,
       "norm_label": "writefile()"
     },
     {
@@ -1298,7 +1298,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "lib_data_asset_catalog_resolveagentwhentouse",
-      "community": 210,
+      "community": 41,
       "norm_label": "resolveagentwhentouse()"
     },
     {
@@ -1478,7 +1478,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_data_languages",
-      "community": 560,
+      "community": 308,
       "norm_label": "languages.mjs"
     },
     {
@@ -1488,7 +1488,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "lib_data_languages_extension_languages",
-      "community": 560,
+      "community": 308,
       "norm_label": "extension_languages"
     },
     {
@@ -1498,7 +1498,7 @@
       "source_location": "L102",
       "_origin": "ast",
       "id": "lib_data_languages_classify",
-      "community": 560,
+      "community": 308,
       "norm_label": "classify()"
     },
     {
@@ -1678,7 +1678,7 @@
       "source_location": "L212",
       "_origin": "ast",
       "id": "lib_data_project_catalog_project_agent_when_to_use",
-      "community": 210,
+      "community": 41,
       "norm_label": "project_agent_when_to_use"
     },
     {
@@ -1738,7 +1738,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_data_testing_catalog",
-      "community": 619,
+      "community": 308,
       "norm_label": "testing-catalog.mjs"
     },
     {
@@ -1748,7 +1748,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "lib_data_testing_catalog_e2e_frameworks",
-      "community": 619,
+      "community": 308,
       "norm_label": "e2e_frameworks"
     },
     {
@@ -1758,7 +1758,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "lib_data_testing_catalog_jsinstall",
-      "community": 619,
+      "community": 308,
       "norm_label": "jsinstall()"
     },
     {
@@ -1768,7 +1768,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "lib_data_testing_catalog_jskey",
-      "community": 619,
+      "community": 308,
       "norm_label": "jskey()"
     },
     {
@@ -1778,7 +1778,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "lib_data_testing_catalog_recommendtesting",
-      "community": 619,
+      "community": 308,
       "norm_label": "recommendtesting()"
     },
     {
@@ -1788,7 +1788,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_data_tools_catalog",
-      "community": 560,
+      "community": 41,
       "norm_label": "tools-catalog.mjs"
     },
     {
@@ -1798,7 +1798,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "lib_data_tools_catalog_vendorhookcommand",
-      "community": 560,
+      "community": 41,
       "norm_label": "vendorhookcommand()"
     },
     {
@@ -1818,7 +1818,7 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "lib_data_tools_catalog_gettool",
-      "community": 560,
+      "community": 41,
       "norm_label": "gettool()"
     },
     {
@@ -1828,7 +1828,7 @@
       "source_location": "L129",
       "_origin": "ast",
       "id": "lib_data_tools_catalog_selecttools",
-      "community": 560,
+      "community": 41,
       "norm_label": "selecttools()"
     },
     {
@@ -1838,7 +1838,7 @@
       "source_location": "L139",
       "_origin": "ast",
       "id": "lib_data_tools_catalog_toolsettingshooks",
-      "community": 560,
+      "community": 41,
       "norm_label": "toolsettingshooks()"
     },
     {
@@ -1848,7 +1848,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_detect_architecture",
-      "community": 48,
+      "community": 308,
       "norm_label": "architecture.mjs"
     },
     {
@@ -1858,7 +1858,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "lib_detect_architecture_layer_dirs",
-      "community": 48,
+      "community": 308,
       "norm_label": "layer_dirs"
     },
     {
@@ -1868,7 +1868,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "lib_detect_architecture_container_dirs",
-      "community": 48,
+      "community": 308,
       "norm_label": "container_dirs"
     },
     {
@@ -1878,7 +1878,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "lib_detect_architecture_singular",
-      "community": 48,
+      "community": 308,
       "norm_label": "singular()"
     },
     {
@@ -1888,7 +1888,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "lib_detect_architecture_kindfor",
-      "community": 48,
+      "community": 308,
       "norm_label": "kindfor()"
     },
     {
@@ -1898,7 +1898,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "lib_detect_architecture_detectarchitecture",
-      "community": 48,
+      "community": 308,
       "norm_label": "detectarchitecture()"
     },
     {
@@ -2118,7 +2118,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_detect_language",
-      "community": 560,
+      "community": 308,
       "norm_label": "language.mjs"
     },
     {
@@ -2128,7 +2128,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "lib_detect_language_detectlanguages",
-      "community": 560,
+      "community": 308,
       "norm_label": "detectlanguages()"
     },
     {
@@ -2328,7 +2328,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_detect_testing",
-      "community": 619,
+      "community": 308,
       "norm_label": "testing.mjs"
     },
     {
@@ -2338,7 +2338,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "lib_detect_testing_test_file_matchers",
-      "community": 619,
+      "community": 308,
       "norm_label": "test_file_matchers"
     },
     {
@@ -2348,7 +2348,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "lib_detect_testing_ecosystemkey",
-      "community": 619,
+      "community": 308,
       "norm_label": "ecosystemkey()"
     },
     {
@@ -2358,7 +2358,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "lib_detect_testing_detecttesting",
-      "community": 619,
+      "community": 308,
       "norm_label": "detecttesting()"
     },
     {
@@ -2478,7 +2478,7 @@
       "source_location": "L154",
       "_origin": "ast",
       "id": "lib_generate_claude_md_domain_fixed_rules",
-      "community": 560,
+      "community": 103,
       "norm_label": "domain_fixed_rules"
     },
     {
@@ -2498,7 +2498,7 @@
       "source_location": "L174",
       "_origin": "ast",
       "id": "lib_generate_claude_md_commandsblock",
-      "community": 46,
+      "community": 103,
       "norm_label": "commandsblock()"
     },
     {
@@ -2828,7 +2828,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_generate_settings",
-      "community": 560,
+      "community": 103,
       "norm_label": "settings.mjs"
     },
     {
@@ -2838,7 +2838,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "lib_generate_settings_permprefix",
-      "community": 560,
+      "community": 103,
       "norm_label": "permprefix()"
     },
     {
@@ -2848,7 +2848,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "lib_generate_settings_hookcmd",
-      "community": 560,
+      "community": 103,
       "norm_label": "hookcmd()"
     },
     {
@@ -2858,7 +2858,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "lib_generate_settings_rendersettings",
-      "community": 560,
+      "community": 103,
       "norm_label": "rendersettings()"
     },
     {
@@ -2998,7 +2998,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "lib_plan_vendored_artifacts_addeccartifacts",
-      "community": 48,
+      "community": 35,
       "norm_label": "addeccartifacts()"
     },
     {
@@ -3008,7 +3008,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "lib_plan_vendored_artifacts_addagkitartifacts",
-      "community": 48,
+      "community": 35,
       "norm_label": "addagkitartifacts()"
     },
     {
@@ -3128,7 +3128,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_util_frontmatter_yaml",
-      "community": 228,
+      "community": 560,
       "norm_label": "frontmatter-yaml.mjs"
     },
     {
@@ -3138,7 +3138,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "lib_util_frontmatter_yaml_needsquote",
-      "community": 228,
+      "community": 560,
       "norm_label": "needsquote()"
     },
     {
@@ -3148,7 +3148,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "lib_util_frontmatter_yaml_quoteifneeded",
-      "community": 228,
+      "community": 560,
       "norm_label": "quoteifneeded()"
     },
     {
@@ -3168,7 +3168,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "lib_util_frontmatter_yaml_foldbody",
-      "community": 228,
+      "community": 560,
       "norm_label": "foldbody()"
     },
     {
@@ -5638,7 +5638,7 @@
       "source_location": "L450",
       "_origin": "ast",
       "id": "skills_condense_harness_prompts_lib_condense_cmdfrontmatter",
-      "community": 88,
+      "community": 66,
       "norm_label": "cmdfrontmatter()"
     },
     {
@@ -8658,7 +8658,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_agkit_plan_apply_test",
-      "community": 308,
+      "community": 35,
       "norm_label": "agkit-plan-apply.test.mjs"
     },
     {
@@ -8668,7 +8668,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "tests_agkit_plan_apply_test_root",
-      "community": 308,
+      "community": 35,
       "norm_label": "root"
     },
     {
@@ -8678,7 +8678,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "tests_agkit_plan_apply_test_fix",
-      "community": 308,
+      "community": 35,
       "norm_label": "fix"
     },
     {
@@ -8708,7 +8708,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_apply_differs_test",
-      "community": 549,
+      "community": 48,
       "norm_label": "apply-differs.test.mjs"
     },
     {
@@ -8718,7 +8718,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "tests_apply_differs_test_mkplan",
-      "community": 549,
+      "community": 48,
       "norm_label": "mkplan()"
     },
     {
@@ -8728,7 +8728,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_apply_frontmatter_test",
-      "community": 549,
+      "community": 48,
       "norm_label": "apply-frontmatter.test.mjs"
     },
     {
@@ -8738,7 +8738,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "tests_apply_frontmatter_test_plan",
-      "community": 549,
+      "community": 48,
       "norm_label": "plan()"
     },
     {
@@ -9118,7 +9118,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_ecc_plan_apply_test",
-      "community": 549,
+      "community": 35,
       "norm_label": "ecc-plan-apply.test.mjs"
     },
     {
@@ -9128,7 +9128,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "tests_ecc_plan_apply_test_root",
-      "community": 549,
+      "community": 35,
       "norm_label": "root"
     },
     {
@@ -9138,7 +9138,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "tests_ecc_plan_apply_test_fix",
-      "community": 549,
+      "community": 35,
       "norm_label": "fix"
     },
     {
@@ -9148,7 +9148,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "tests_ecc_plan_apply_test_has_ecc",
-      "community": 549,
+      "community": 35,
       "norm_label": "has_ecc"
     },
     {
@@ -9158,7 +9158,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "tests_ecc_plan_apply_test_has_adianti",
-      "community": 549,
+      "community": 35,
       "norm_label": "has_adianti"
     },
     {
@@ -10253,7 +10253,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_graphify_git_hooks_test",
-      "community": 549,
+      "community": 48,
       "norm_label": "graphify-git-hooks.test.mjs"
     },
     {
@@ -10263,7 +10263,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "tests_graphify_git_hooks_test_root",
-      "community": 549,
+      "community": 48,
       "norm_label": "root"
     },
     {
@@ -10273,7 +10273,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "tests_graphify_git_hooks_test_git_hooks_tmpl",
-      "community": 549,
+      "community": 48,
       "norm_label": "git_hooks_tmpl"
     },
     {
@@ -10283,7 +10283,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "tests_graphify_git_hooks_test_skill_tmpl",
-      "community": 549,
+      "community": 48,
       "norm_label": "skill_tmpl"
     },
     {
@@ -10293,7 +10293,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "tests_graphify_git_hooks_test_has_skill_tmpl",
-      "community": 549,
+      "community": 48,
       "norm_label": "has_skill_tmpl"
     },
     {
@@ -10303,7 +10303,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "tests_graphify_git_hooks_test_withtmpdir",
-      "community": 549,
+      "community": 48,
       "norm_label": "withtmpdir()"
     },
     {
@@ -10313,7 +10313,7 @@
       "source_location": "L134",
       "_origin": "ast",
       "id": "tests_graphify_git_hooks_test_makeprofile",
-      "community": 549,
+      "community": 48,
       "norm_label": "makeprofile()"
     },
     {
@@ -10323,7 +10323,7 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "tests_graphify_git_hooks_test_has_graphify_tmpl",
-      "community": 549,
+      "community": 48,
       "norm_label": "has_graphify_tmpl"
     },
     {
@@ -10333,7 +10333,7 @@
       "source_location": "L460",
       "_origin": "ast",
       "id": "tests_graphify_git_hooks_test_settingscontentfor",
-      "community": 549,
+      "community": 48,
       "norm_label": "settingscontentfor()"
     },
     {
@@ -10343,7 +10343,7 @@
       "source_location": "L472",
       "_origin": "ast",
       "id": "tests_graphify_git_hooks_test_pretooluse",
-      "community": 549,
+      "community": 48,
       "norm_label": "pretooluse()"
     },
     {
@@ -10353,7 +10353,7 @@
       "source_location": "L481",
       "_origin": "ast",
       "id": "tests_graphify_git_hooks_test_orientgroups",
-      "community": 549,
+      "community": 48,
       "norm_label": "orientgroups()"
     },
     {
@@ -11613,7 +11613,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_plan_apply_test",
-      "community": 549,
+      "community": 48,
       "norm_label": "plan-apply.test.mjs"
     },
     {
@@ -11623,7 +11623,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "tests_plan_apply_test_root",
-      "community": 549,
+      "community": 48,
       "norm_label": "root"
     },
     {
@@ -11633,7 +11633,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "tests_plan_apply_test_fix",
-      "community": 549,
+      "community": 48,
       "norm_label": "fix"
     },
     {
@@ -11643,7 +11643,7 @@
       "source_location": "L231",
       "_origin": "ast",
       "id": "tests_plan_apply_test_makesettingsartifact",
-      "community": 549,
+      "community": 48,
       "norm_label": "makesettingsartifact()"
     },
     {
@@ -11653,7 +11653,7 @@
       "source_location": "L252",
       "_origin": "ast",
       "id": "tests_plan_apply_test_makeplan",
-      "community": 549,
+      "community": 48,
       "norm_label": "makeplan()"
     },
     {
@@ -11693,7 +11693,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_plan_large_files_test",
-      "community": 35,
+      "community": 308,
       "norm_label": "plan-large-files.test.mjs"
     },
     {
@@ -11703,7 +11703,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "tests_plan_large_files_test_root",
-      "community": 35,
+      "community": 308,
       "norm_label": "root"
     },
     {
@@ -11713,7 +11713,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "tests_plan_large_files_test_writelines",
-      "community": 35,
+      "community": 308,
       "norm_label": "writelines()"
     },
     {
@@ -11723,7 +11723,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "tests_plan_large_files_test_withdir",
-      "community": 35,
+      "community": 308,
       "norm_label": "withdir()"
     },
     {
@@ -11733,7 +11733,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "tests_plan_large_files_test_settingshooks",
-      "community": 35,
+      "community": 308,
       "norm_label": "settingshooks()"
     },
     {
@@ -11743,7 +11743,7 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "tests_plan_large_files_test_haslf",
-      "community": 35,
+      "community": 308,
       "norm_label": "haslf()"
     },
     {
@@ -11933,7 +11933,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_settings_strict_test",
-      "community": 560,
+      "community": 103,
       "norm_label": "settings-strict.test.mjs"
     },
     {
@@ -11943,7 +11943,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "tests_settings_strict_test_profile",
-      "community": 560,
+      "community": 103,
       "norm_label": "profile()"
     },
     {
@@ -11953,7 +11953,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "tests_settings_strict_test_hooktarget",
-      "community": 560,
+      "community": 103,
       "norm_label": "hooktarget()"
     },
     {
@@ -11963,7 +11963,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "tests_settings_strict_test_posttoolusecommands",
-      "community": 560,
+      "community": 103,
       "norm_label": "posttoolusecommands()"
     },
     {
@@ -11973,7 +11973,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "tests_settings_strict_test_stopcommands",
-      "community": 560,
+      "community": 103,
       "norm_label": "stopcommands()"
     },
     {
@@ -11983,7 +11983,7 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "tests_settings_strict_test_postcommands",
-      "community": 560,
+      "community": 103,
       "norm_label": "postcommands()"
     },
     {
@@ -11993,7 +11993,7 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "tests_settings_strict_test_allexecformargs",
-      "community": 560,
+      "community": 103,
       "norm_label": "allexecformargs()"
     },
     {
@@ -12003,7 +12003,7 @@
       "source_location": "L220",
       "_origin": "ast",
       "id": "tests_settings_strict_test_groupswithmatcher",
-      "community": 560,
+      "community": 103,
       "norm_label": "groupswithmatcher()"
     },
     {
@@ -12093,7 +12093,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_testing_catalog_test",
-      "community": 619,
+      "community": 308,
       "norm_label": "testing-catalog.test.mjs"
     },
     {
@@ -12103,7 +12103,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "tests_testing_catalog_test_profile",
-      "community": 619,
+      "community": 308,
       "norm_label": "profile()"
     },
     {
@@ -12143,7 +12143,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_tools_catalog_test",
-      "community": 560,
+      "community": 41,
       "norm_label": "tools-catalog.test.mjs"
     },
     {
@@ -12153,7 +12153,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "tests_tools_catalog_test_profile",
-      "community": 560,
+      "community": 41,
       "norm_label": "profile()"
     },
     {
@@ -12163,7 +12163,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_tools_plan_apply_test",
-      "community": 308,
+      "community": 35,
       "norm_label": "tools-plan-apply.test.mjs"
     },
     {
@@ -12173,7 +12173,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "tests_tools_plan_apply_test_root",
-      "community": 308,
+      "community": 35,
       "norm_label": "root"
     },
     {
@@ -12183,7 +12183,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "tests_tools_plan_apply_test_fix",
-      "community": 308,
+      "community": 35,
       "norm_label": "fix"
     },
     {
@@ -12193,7 +12193,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "tests_tools_plan_apply_test_has_tools",
-      "community": 308,
+      "community": 35,
       "norm_label": "has_tools"
     },
     {
@@ -12223,7 +12223,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_test",
-      "community": 560,
+      "community": 103,
       "norm_label": "unit.test.mjs"
     },
     {
@@ -12233,7 +12233,7 @@
       "source_location": "L87",
       "_origin": "ast",
       "id": "tests_unit_test_minimalrootprofile",
-      "community": 560,
+      "community": 103,
       "norm_label": "minimalrootprofile()"
     },
     {
@@ -12243,7 +12243,7 @@
       "source_location": "L209",
       "_origin": "ast",
       "id": "tests_unit_test_minimalprofile",
-      "community": 560,
+      "community": 103,
       "norm_label": "minimalprofile()"
     },
     {
@@ -13045,6 +13045,16 @@
       "id": "claude_memory_secrets_file_model",
       "community": 37,
       "norm_label": "secrets-file-model.md"
+    },
+    {
+      "label": "skill-loader-bang-backtick.md",
+      "file_type": "document",
+      "source_file": ".claude/memory/skill-loader-bang-backtick.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "claude_memory_skill_loader_bang_backtick",
+      "community": 37,
+      "norm_label": "skill-loader-bang-backtick.md"
     },
     {
       "label": "subagent-worktree-drift.md",
@@ -26440,7 +26450,7 @@
       "label": "Invariants \u2014 never violate when compressing",
       "file_type": "document",
       "source_file": "skills/condense-harness-prompts/best-practices/commands.md",
-      "source_location": "L95",
+      "source_location": "L97",
       "_origin": "ast",
       "id": "skills_condense_harness_prompts_best_practices_commands_invariants_never_violate_when_compressing",
       "community": 311,
@@ -29463,7 +29473,7 @@
       "source_location": "L222",
       "_origin": "ast",
       "id": "templates_ag_kit_agents_mobile_developer_quick_reference",
-      "community": 72,
+      "community": 619,
       "norm_label": "quick reference"
     },
     {
@@ -29473,7 +29483,7 @@
       "source_location": "L224",
       "_origin": "ast",
       "id": "templates_ag_kit_agents_mobile_developer_touch_targets",
-      "community": 72,
+      "community": 619,
       "norm_label": "touch targets"
     },
     {
@@ -29483,7 +29493,7 @@
       "source_location": "L232",
       "_origin": "ast",
       "id": "templates_ag_kit_agents_mobile_developer_flatlist_react_native",
-      "community": 72,
+      "community": 619,
       "norm_label": "flatlist (react native)"
     },
     {
@@ -29493,7 +29503,7 @@
       "source_location": "L247",
       "_origin": "ast",
       "id": "templates_ag_kit_agents_mobile_developer_listview_builder_flutter",
-      "community": 72,
+      "community": 619,
       "norm_label": "listview.builder (flutter)"
     },
     {
@@ -40113,7 +40123,7 @@
       "source_location": "L374",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_decision_trees_7_project_type_templates",
-      "community": 635,
+      "community": 50,
       "norm_label": "7. project type templates"
     },
     {
@@ -40123,7 +40133,7 @@
       "source_location": "L376",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_decision_trees_e_commerce_app",
-      "community": 635,
+      "community": 50,
       "norm_label": "e-commerce app"
     },
     {
@@ -40133,7 +40143,7 @@
       "source_location": "L394",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_decision_trees_social_content_app",
-      "community": 635,
+      "community": 50,
       "norm_label": "social/content app"
     },
     {
@@ -40143,7 +40153,7 @@
       "source_location": "L412",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_decision_trees_productivity_saas_app",
-      "community": 635,
+      "community": 50,
       "norm_label": "productivity/saas app"
     },
     {
@@ -40733,7 +40743,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_color_system_2_oled_considerations",
-      "community": 641,
+      "community": 21,
       "norm_label": "2. oled considerations"
     },
     {
@@ -40743,7 +40753,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_color_system_how_oled_differs",
-      "community": 641,
+      "community": 21,
       "norm_label": "how oled differs"
     },
     {
@@ -40753,7 +40763,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_color_system_battery_savings_with_oled",
-      "community": 641,
+      "community": 21,
       "norm_label": "battery savings with oled"
     },
     {
@@ -40763,7 +40773,7 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_color_system_true_black_vs_near_black",
-      "community": 641,
+      "community": 21,
       "norm_label": "true black vs near black"
     },
     {
@@ -40853,7 +40863,7 @@
       "source_location": "L195",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_color_system_5_semantic_colors",
-      "community": 642,
+      "community": 21,
       "norm_label": "5. semantic colors"
     },
     {
@@ -40863,7 +40873,7 @@
       "source_location": "L197",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_color_system_consistent_meaning",
-      "community": 642,
+      "community": 21,
       "norm_label": "consistent meaning"
     },
     {
@@ -40873,7 +40883,7 @@
       "source_location": "L206",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_color_system_semantic_color_rules",
-      "community": 642,
+      "community": 21,
       "norm_label": "semantic color rules"
     },
     {
@@ -40883,7 +40893,7 @@
       "source_location": "L222",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_color_system_error_state_colors",
-      "community": 642,
+      "community": 21,
       "norm_label": "error state colors"
     },
     {
@@ -40933,7 +40943,7 @@
       "source_location": "L289",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_color_system_7_color_accessibility",
-      "community": 643,
+      "community": 21,
       "norm_label": "7. color accessibility"
     },
     {
@@ -40943,7 +40953,7 @@
       "source_location": "L291",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_color_system_colorblind_considerations",
-      "community": 643,
+      "community": 21,
       "norm_label": "colorblind considerations"
     },
     {
@@ -40953,7 +40963,7 @@
       "source_location": "L309",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_color_system_contrast_testing_tools",
-      "community": 643,
+      "community": 21,
       "norm_label": "contrast testing tools"
     },
     {
@@ -40963,7 +40973,7 @@
       "source_location": "L320",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_color_system_sufficient_contrast",
-      "community": 643,
+      "community": 21,
       "norm_label": "sufficient contrast"
     },
     {
@@ -41033,7 +41043,7 @@
       "source_location": "L391",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_color_system_10_quick_reference",
-      "community": 638,
+      "community": 21,
       "norm_label": "10. quick reference"
     },
     {
@@ -41043,7 +41053,7 @@
       "source_location": "L393",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_color_system_dark_mode_backgrounds",
-      "community": 638,
+      "community": 21,
       "norm_label": "dark mode backgrounds"
     },
     {
@@ -41053,7 +41063,7 @@
       "source_location": "L403",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_color_system_text_on_dark",
-      "community": 638,
+      "community": 21,
       "norm_label": "text on dark"
     },
     {
@@ -41063,7 +41073,7 @@
       "source_location": "L411",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_color_system_contrast_ratios",
-      "community": 638,
+      "community": 21,
       "norm_label": "contrast ratios"
     },
     {
@@ -41303,7 +41313,7 @@
       "source_location": "L129",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_design_thinking_pattern_questioning_matrix",
-      "community": 629,
+      "community": 83,
       "norm_label": "\ud83c\udfaf pattern questioning matrix"
     },
     {
@@ -41313,7 +41323,7 @@
       "source_location": "L133",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_design_thinking_navigation_pattern_questioning",
-      "community": 629,
+      "community": 83,
       "norm_label": "navigation pattern questioning"
     },
     {
@@ -41323,7 +41333,7 @@
       "source_location": "L142",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_design_thinking_state_pattern_questioning",
-      "community": 629,
+      "community": 83,
       "norm_label": "state pattern questioning"
     },
     {
@@ -41333,7 +41343,7 @@
       "source_location": "L151",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_design_thinking_list_pattern_questioning",
-      "community": 629,
+      "community": 83,
       "norm_label": "list pattern questioning"
     },
     {
@@ -41343,7 +41353,7 @@
       "source_location": "L160",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_design_thinking_ui_pattern_questioning",
-      "community": 629,
+      "community": 83,
       "norm_label": "ui pattern questioning"
     },
     {
@@ -41603,7 +41613,7 @@
       "source_location": "L186",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_navigation_5_modal_navigation",
-      "community": 42,
+      "community": 630,
       "norm_label": "5. modal navigation"
     },
     {
@@ -41613,7 +41623,7 @@
       "source_location": "L188",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_navigation_modal_vs_push",
-      "community": 42,
+      "community": 630,
       "norm_label": "modal vs push"
     },
     {
@@ -41623,7 +41633,7 @@
       "source_location": "L206",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_navigation_modal_types",
-      "community": 42,
+      "community": 630,
       "norm_label": "modal types"
     },
     {
@@ -41633,7 +41643,7 @@
       "source_location": "L215",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_navigation_modal_dismissal",
-      "community": 42,
+      "community": 630,
       "norm_label": "modal dismissal"
     },
     {
@@ -41783,7 +41793,7 @@
       "source_location": "L430",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_navigation_10_navigation_checklist",
-      "community": 42,
+      "community": 629,
       "norm_label": "10. navigation checklist"
     },
     {
@@ -41793,7 +41803,7 @@
       "source_location": "L432",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_navigation_before_navigation_architecture",
-      "community": 42,
+      "community": 629,
       "norm_label": "before navigation architecture"
     },
     {
@@ -41803,7 +41813,7 @@
       "source_location": "L440",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_navigation_before_every_screen",
-      "community": 42,
+      "community": 629,
       "norm_label": "before every screen"
     },
     {
@@ -41813,7 +41823,7 @@
       "source_location": "L448",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_navigation_before_release",
-      "community": 42,
+      "community": 629,
       "norm_label": "before release"
     },
     {
@@ -42383,7 +42393,7 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_testing_3_what_to_test_at_each_level",
-      "community": 630,
+      "community": 54,
       "norm_label": "3. what to test at each level"
     },
     {
@@ -42393,7 +42403,7 @@
       "source_location": "L118",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_testing_unit_tests_jest",
-      "community": 630,
+      "community": 54,
       "norm_label": "unit tests (jest)"
     },
     {
@@ -42403,7 +42413,7 @@
       "source_location": "L135",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_testing_component_tests_rntl_flutter_test",
-      "community": 630,
+      "community": 54,
       "norm_label": "component tests (rntl / flutter_test)"
     },
     {
@@ -42413,7 +42423,7 @@
       "source_location": "L152",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_testing_integration_tests",
-      "community": 630,
+      "community": 54,
       "norm_label": "integration tests"
     },
     {
@@ -42423,7 +42433,7 @@
       "source_location": "L168",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_testing_e2e_tests",
-      "community": 630,
+      "community": 54,
       "norm_label": "e2e tests"
     },
     {
@@ -68513,7 +68523,7 @@
       "source_location": "L134",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_common_error_codes_and_fixes",
-      "community": 94,
+      "community": 549,
       "norm_label": "common error codes and fixes"
     },
     {
@@ -68523,7 +68533,7 @@
       "source_location": "L136",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_expression_syntax_errors",
-      "community": 94,
+      "community": 549,
       "norm_label": "expression syntax errors"
     },
     {
@@ -68533,7 +68543,7 @@
       "source_location": "L152",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_undefined_action_inputs_outputs",
-      "community": 94,
+      "community": 549,
       "norm_label": "undefined action inputs/outputs"
     },
     {
@@ -68543,7 +68553,7 @@
       "source_location": "L172",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_yaml_type_errors",
-      "community": 94,
+      "community": 549,
       "norm_label": "yaml type errors"
     },
     {
@@ -68553,7 +68563,7 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_deprecated_action_versions",
-      "community": 94,
+      "community": 549,
       "norm_label": "deprecated action versions"
     },
     {
@@ -68563,7 +68573,7 @@
       "source_location": "L206",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_missing_permissions_declarations",
-      "community": 94,
+      "community": 549,
       "norm_label": "missing permissions declarations"
     },
     {
@@ -68573,7 +68583,7 @@
       "source_location": "L217",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_shellcheck_issues_in_run_blocks",
-      "community": 94,
+      "community": 549,
       "norm_label": "shellcheck issues in run: blocks"
     },
     {
@@ -68583,7 +68593,7 @@
       "source_location": "L235",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_context_object_property_access",
-      "community": 94,
+      "community": 549,
       "norm_label": "context/object property access"
     },
     {
@@ -102638,6 +102648,16 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": ".claude/memory/MEMORY.md",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "claude_memory_memory",
+      "target": "claude_memory_skill_loader_bang_backtick",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": ".claude/memory/MEMORY.md",
       "source_location": "L13",
       "weight": 1.0,
       "source": "claude_memory_memory",
@@ -115288,7 +115308,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "skills/condense-harness-prompts/best-practices/commands.md",
-      "source_location": "L95",
+      "source_location": "L97",
       "weight": 1.0,
       "source": "skills_condense_harness_prompts_best_practices_commands_best_practices_commands_claude_commands_name_md",
       "target": "skills_condense_harness_prompts_best_practices_commands_invariants_never_violate_when_compressing",
@@ -165796,5 +165816,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "292502002fdbab938164b805574fd13b7779769d"
+  "built_at_commit": "051e8766ec5bab2c52c2a6c8e4313c65f91a4c3a"
 }
