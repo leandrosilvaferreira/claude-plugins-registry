@@ -6,7 +6,6 @@ description: >
   compliance. Use proactively after editing any NestJS HTTP or persistence
   file. MUST BE USED before merging NestJS changes (excluding auth — use
   nestjs-security-reviewer for those).
-tools: Read, Grep, Glob
 ---
 
 # NestJS Code Reviewer

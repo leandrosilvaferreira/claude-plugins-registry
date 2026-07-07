@@ -4,7 +4,6 @@ description: >
   Diagnoses and fixes failing Kotlin/Gradle builds — compiler errors,
   Gradle configuration issues, dependency conflicts, detekt and ktlint
   violations. Use proactively when the Kotlin build fails.
-tools: Read, Write, Edit, Bash, Grep, Glob
 model: sonnet
 ---
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: agents/kotlin-build-resolver.md. MIT (c) Affaan Mustafa. -->

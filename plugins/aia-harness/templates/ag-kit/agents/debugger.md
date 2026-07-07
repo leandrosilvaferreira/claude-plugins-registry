@@ -4,7 +4,6 @@ description: >
   Finds the root cause of bugs, crashes, and flaky behavior through
   systematic, evidence-based investigation. Use proactively when a test
   fails or a defect is reported, before attempting a fix.
-tools: Read, Grep, Glob, Edit, Bash
 model: sonnet
 ---
 <!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/agent/debugger.md. MIT (c) vudovn. -->

@@ -11,6 +11,7 @@
 /** @typedef {{ name: string, whenToUse: string }} AgentMeta */
 
 import { skillsForProfile } from "../data/skill-map.mjs";
+import { agentsWorkflowBlock } from "./claude-md-agents.mjs";
 
 /**
  * Max sub-domains surfaced by the harness: both the root architecture map and
@@ -30,14 +31,6 @@ export const FIXED_RULES_MARKER =
   "<!-- aia-harness:fixed — non-negotiable; do not edit, reorder, or remove during enrichment -->";
 
 /**
- * Marker comment placed in the superpowers-bridge subsection so `/doctor` and
- * `/scan` can detect a root CLAUDE.md that predates the bridge (whole-file drift
- * is unreliable — enrichment always makes CLAUDE.md differ).
- */
-export const AGENT_ROUTING_MARKER =
-  "<!-- aia-harness:agent-routing — superpowers→specialist bridge; do not remove -->";
-
-/**
  * Sentinel comment marking the behavioral guidelines section. Like
  * FIXED_RULES_MARKER, it is not an AI-ENRICH comment so enrichment leaves it
  * intact. `doctor` greps for `aia-harness:behavioral` to confirm the block
@@ -51,71 +44,16 @@ export const BEHAVIORAL_MARKER =
  * Lives in its own `## Behavioral guidelines` section (guarded by
  * BEHAVIORAL_MARKER) placed between `## Conventions` and `## Engineering rules`
  * so it is distinct from project-specific conventions (enrichable) and from
- * technical non-negotiables.
+ * technical non-negotiables. Deliberately compact — CLAUDE.md loads every
+ * session, so each principle is one dense bullet, not a subsection.
  */
 export const BEHAVIORAL_GUIDELINES_BLOCK = `## Behavioral guidelines
 ${BEHAVIORAL_MARKER}
 
-### 1. Think Before Coding
-
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
-
-Before implementing:
-
-- State your assumptions explicitly. If uncertain, ask.
-- If multiple interpretations exist, present them - don't pick silently.
-- If a simpler approach exists, say so. Push back when warranted.
-- If something is unclear, stop. Name what's confusing. Ask.
-
-### 2. Simplicity First
-
-**Minimum code that solves the problem. Nothing speculative.**
-
-- No features beyond what was asked.
-- No abstractions for single-use code.
-- No "flexibility" or "configurability" that wasn't requested.
-- No error handling for impossible scenarios.
-- If you write 200 lines and it could be 50, rewrite it.
-
-Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
-
-### 3. Surgical Changes
-
-**Touch only what you must. Clean up only your own mess.**
-
-When editing existing code:
-
-- Don't "improve" adjacent code, comments, or formatting.
-- Don't refactor things that aren't broken.
-- Match existing style, even if you'd do it differently.
-- If you notice unrelated dead code, mention it - don't delete it.
-
-When your changes create orphans:
-
-- Remove imports/variables/functions that YOUR changes made unused.
-- Don't remove pre-existing dead code unless asked.
-
-The test: Every changed line should trace directly to the user's request.
-
-### 4. Goal-Driven Execution
-
-**Define success criteria. Loop until verified.**
-
-Transform tasks into verifiable goals:
-
-- "Add validation" → "Write tests for invalid inputs, then make them pass"
-- "Fix the bug" → "Write a test that reproduces it, then make it pass"
-- "Refactor X" → "Ensure tests pass before and after"
-
-For multi-step tasks, state a brief plan:
-
-\`\`\`
-1. [Step] → verify: [check]
-2. [Step] → verify: [check]
-3. [Step] → verify: [check]
-\`\`\`
-
-Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+1. **Think before coding** — state assumptions explicitly; if multiple interpretations exist, present them instead of picking silently; say so when a simpler approach exists; if something is unclear, stop and ask.
+2. **Simplicity first** — minimum code that solves the problem. No speculative features, no abstractions for single-use code, no unrequested configurability, no error handling for impossible scenarios. If 200 lines could be 50, rewrite.
+3. **Surgical changes** — touch only what the request requires; match existing style; don't refactor, reformat, or "improve" adjacent code. Remove orphans *your* change created; leave pre-existing dead code alone (mention it, don't delete it). Every changed line should trace directly to the user's request.
+4. **Goal-driven execution** — turn tasks into verifiable goals ("fix the bug" → "write a test that reproduces it, then make it pass"). For multi-step work, state a brief plan with a verify check per step, then loop until verified.
 `;
 
 /**
@@ -203,154 +141,6 @@ export function skillsBlock(profile) {
 }
 
 /**
- * Coarse routing role for an agent name, used to build the superpowers bridge.
- * Returns null for agents that don't map to a generic superpowers role.
- * @param {string} name
- * @returns {{ role: string, superpowersGeneric: string } | null}
- */
-export function routingRole(name) {
-  if (name.endsWith("-build-resolver"))
-    return { role: "Fix a failing build", superpowersGeneric: "general-purpose" };
-  if (name.endsWith("-reviewer"))
-    return { role: "Review / audit changed code", superpowersGeneric: "general-purpose" };
-  /** @type {Record<string,string>} */
-  const exact = {
-    "backend-specialist": "Backend / API / server-side / domain logic",
-    "frontend-specialist": "UI / components / styling / pages",
-    "database-architect": "Schema / migration / query / data modeling",
-    "test-engineer": "Unit / integration tests",
-    "qa-automation-engineer": "E2E / QA automation",
-    debugger: "Bug / crash / root-cause analysis",
-    "explorer-agent": "Explore / map an unfamiliar codebase",
-    "code-archaeologist": "Understand legacy code before changing it",
-    orchestrator: "Multi-domain feature — subdelegates to specialists",
-    "performance-optimizer": "Performance profiling / optimization",
-    "devops-engineer": "Deploy / CI/CD / infra",
-    "security-auditor": "Security audit / defensive review",
-    "penetration-tester": "Offensive security / pentest",
-    "mobile-developer": "Mobile (React Native / Flutter)",
-    "documentation-writer": "Documentation (only when explicitly requested)",
-  };
-  return exact[name] ? { role: exact[name], superpowersGeneric: "general-purpose" } : null;
-}
-
-/** Priority order for the agents table — most-used roles first. */
-const AGENT_ORDER = [
-  "orchestrator",
-  "code-reviewer",
-  "security-reviewer",
-  "go-reviewer",
-  "rust-reviewer",
-  "typescript-reviewer",
-  "react-reviewer",
-  "vue-reviewer",
-  "java-reviewer",
-  "kotlin-reviewer",
-  "php-reviewer",
-  "python-reviewer",
-  "django-reviewer",
-  "fastapi-reviewer",
-  "csharp-reviewer",
-  "cpp-reviewer",
-  "flutter-reviewer",
-  "go-build-resolver",
-  "rust-build-resolver",
-  "react-build-resolver",
-  "java-build-resolver",
-  "kotlin-build-resolver",
-  "django-build-resolver",
-  "dart-build-resolver",
-  "cpp-build-resolver",
-  "qa-automation-engineer",
-  "test-engineer",
-  "database-architect",
-  "devops-engineer",
-  "backend-specialist",
-  "frontend-specialist",
-  "seo-specialist",
-  "mobile-developer",
-  "game-developer",
-  "performance-optimizer",
-  "product-manager",
-  "product-owner",
-  "project-planner",
-  "code-archaeologist",
-  "debugger",
-  "explorer-agent",
-  "documentation-writer",
-  "penetration-tester",
-  "security-auditor",
-];
-
-/**
- * Renders the "## Workflow & Agents" section. Returns "" if no agents selected.
- * @param {AgentMeta[]} agents
- * @returns {string}
- */
-export function agentsWorkflowBlock(agents) {
-  if (!agents.length) return "";
-  const sorted = [...agents].sort((a, b) => {
-    const ai = AGENT_ORDER.indexOf(a.name);
-    const bi = AGENT_ORDER.indexOf(b.name);
-    if (ai === -1 && bi === -1) return a.name.localeCompare(b.name);
-    if (ai === -1) return 1;
-    if (bi === -1) return -1;
-    return ai - bi;
-  });
-  const rows = sorted.map((a) => `| \`${a.name}\` | ${a.whenToUse} |`).join("\n");
-
-  // Group agents by unique role label; preserve first appearance order
-  /** @type {Map<string, string[]>} */
-  const roleToAgents = new Map();
-  sorted.forEach((a) => {
-    const r = routingRole(a.name);
-    if (r) {
-      if (!roleToAgents.has(r.role)) {
-        roleToAgents.set(r.role, []);
-      }
-      const agents = roleToAgents.get(r.role);
-      if (agents) agents.push(a.name);
-    }
-  });
-
-  const bridgeRows = Array.from(roleToAgents.entries())
-    .map(([role, names]) => `| ${role} | ${names.map((n) => `\`${n}\``).join(" / ")} |`)
-    .join("\n");
-
-  const bridge = bridgeRows
-    ? `
-### Superpowers → Project Specialists (mandatory bridging)
-${AGENT_ROUTING_MARKER}
-
-Superpowers skills (\`dispatching-parallel-agents\`, \`subagent-driven-development\`,
-\`executing-plans\`, \`systematic-debugging\`) show \`general-purpose\` as the default
-\`subagent_type\` in their examples. **Never dispatch \`general-purpose\` (or a generic
-implementer) when a specialist below covers the domain** — pass the specialist's exact
-name as \`subagent_type\` instead.
-
-> Basis: superpowers itself states "User's explicit instructions (CLAUDE.md) — highest
-> priority." This section applies that priority over the agent types its examples suggest.
-> The normal flow is unchanged (brainstorming → writing-plans → subagent-driven-development);
-> only the dispatched \`subagent_type\` changes.
-
-| When superpowers would use \`general-purpose\` for… | Dispatch instead |
-|---|---|
-${bridgeRows}
-`
-    : "";
-
-  return `## Workflow & Agents
-
-For every non-trivial implementation: invoke \`superpowers:subagent-driven-development\`.
-When dispatching subagents, you MUST use the matching specialist agent from the table below — never the generic agent when a specialist is listed. Cross-reference the task type with the "When to use" column and pass the exact name as \`subagent_type\`.
-
-| Agent | When to use |
-|---|---|
-${rows}
-${bridge}`;
-}
-
-/**
  * @param {ProjectProfile} profile
  * @returns {string}
  */
@@ -431,7 +221,7 @@ Domain-specific guidance lives in nested CLAUDE.md files (loaded on demand):
 ${domainMap}
 
 ## Conventions
-<!-- AI-ENRICH: detect project-specific patterns from source files; replace the placeholder below with 4-7 concrete, project-specific conventions. Leave the "## Behavioral guidelines" and "## Engineering rules" sections untouched — those are fixed and must survive enrichment. -->
+<!-- AI-ENRICH: detect project-specific patterns from source files; replace the placeholder below with 4-7 concrete, project-specific conventions. Keep each convention to 1-2 lines; if one needs more detail, move the detail to a path-scoped rule in .claude/rules/ (paths: frontmatter) and keep a one-line pointer here — CLAUDE.md loads every session, rules load lazily. Leave the "## Behavioral guidelines" and "## Engineering rules" sections untouched — those are fixed and must survive enrichment. -->
 
 - _Project-specific conventions are added here during \`/aia-harness:init\` enrichment._
 

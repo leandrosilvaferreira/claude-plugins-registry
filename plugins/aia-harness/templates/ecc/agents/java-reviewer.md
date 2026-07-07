@@ -4,7 +4,6 @@ description: >
   Reviews Java code for Spring/Quarkus patterns, N+1 queries, transaction
   boundaries, injection misuse, and null safety. Use proactively after
   editing .java files. MUST BE USED before merging Java changes.
-tools: Read, Grep, Glob, Bash
 model: sonnet
 ---
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: agents/java-reviewer.md. MIT (c) Affaan Mustafa. -->

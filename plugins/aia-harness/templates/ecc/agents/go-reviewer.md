@@ -4,7 +4,6 @@ description: >
   Reviews Go code for idiomatic style, concurrency safety, error wrapping,
   and interface correctness. Use proactively after editing any .go file.
   MUST BE USED before merging Go changes.
-tools: Read, Grep, Glob, Bash
 model: sonnet
 ---
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: agents/go-reviewer.md. MIT (c) Affaan Mustafa. -->

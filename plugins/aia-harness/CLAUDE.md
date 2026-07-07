@@ -41,70 +41,16 @@ node bin/harness.mjs apply [dir] [--yes]     # write plan; dry-run unless --yes
                      [--only=id,id] [--force] [--tools=a,b | --no-tools]
 ```
 
+Release: see `PUBLISHING.md` (version bump + registry publish via `BUMP`/`PUSH`/`TAG` env vars + `npm run publish-registry`).
+
 ---
 
 ## Behavioral guidelines
 
-### 1. Think Before Coding
-
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
-
-Before implementing:
-
-- State your assumptions explicitly. If uncertain, ask.
-- If multiple interpretations exist, present them - don't pick silently.
-- If a simpler approach exists, say so. Push back when warranted.
-- If something is unclear, stop. Name what's confusing. Ask.
-
-### 2. Simplicity First
-
-**Minimum code that solves the problem. Nothing speculative.**
-
-- No features beyond what was asked.
-- No abstractions for single-use code.
-- No "flexibility" or "configurability" that wasn't requested.
-- No error handling for impossible scenarios.
-- If you write 200 lines and it could be 50, rewrite it.
-
-Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
-
-### 3. Surgical Changes
-
-**Touch only what you must. Clean up only your own mess.**
-
-When editing existing code:
-
-- Don't "improve" adjacent code, comments, or formatting.
-- Don't refactor things that aren't broken.
-- Match existing style, even if you'd do it differently.
-- If you notice unrelated dead code, mention it - don't delete it.
-
-When your changes create orphans:
-
-- Remove imports/variables/functions that YOUR changes made unused.
-- Don't remove pre-existing dead code unless asked.
-
-The test: Every changed line should trace directly to the user's request.
-
-### 4. Goal-Driven Execution
-
-**Define success criteria. Loop until verified.**
-
-Transform tasks into verifiable goals:
-
-- "Add validation" → "Write tests for invalid inputs, then make them pass"
-- "Fix the bug" → "Write a test that reproduces it, then make it pass"
-- "Refactor X" → "Ensure tests pass before and after"
-
-For multi-step tasks, state a brief plan:
-
-```text
-1. [Step] → verify: [check]
-2. [Step] → verify: [check]
-3. [Step] → verify: [check]
-```
-
-Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+1. **Think before coding** — state assumptions explicitly; if multiple interpretations exist, present them instead of picking silently; say so when a simpler approach exists; if something is unclear, stop and ask.
+2. **Simplicity first** — minimum code that solves the problem. No speculative features, no abstractions for single-use code, no unrequested configurability, no error handling for impossible scenarios. If 200 lines could be 50, rewrite.
+3. **Surgical changes** — touch only what the request requires; match existing style; don't refactor, reformat, or "improve" adjacent code. Remove orphans *your* change created; leave pre-existing dead code alone (mention it, don't delete it). Every changed line should trace directly to the user's request.
+4. **Goal-driven execution** — turn tasks into verifiable goals ("fix the bug" → "write a test that reproduces it, then make it pass"). For multi-step work, state a brief plan with a verify check per step, then loop until verified.
 
 ---
 
@@ -170,93 +116,13 @@ and graphify. `plugins-catalog` generates a runnable `scripts/install-plugins.mj
   - **Removing a tool from `TOOLS`**: remove its `TOOL_DEPS` entry too (orphan check enforced by tests).
   - The `ToolDef.deps` field (e.g. `["binary:rtk"]`) is documentation for humans and the `add-tools` command. The runtime uses `TOOL_DEPS[tool.id]` via `resolveDepsFromProfile`. Both must be updated together.
   - Run `npm test` after any change to either catalog — the integrity suite catches all four failure modes.
-- **Agent description standard — mandatory**: every candidate agent's routing
-  description lives in its provenance `*_AGENT_WHEN_TO_USE` map (single source of
-  truth for frontmatter + CLAUDE.md table). After adding/editing an agent, run
-  `/revise-agent-frontmatter` and `npm test`
-  (`tests/agent-frontmatter-standard.test.mjs` enforces it). See
-  `.claude/rules/agent-frontmatter-standard.md`.
-- **Safety invariants** (don't regress): consent gate before writes, diffs before overwrite, secrets only as `${ENV}` placeholders, `*.local.*` gitignored, guard hooks exit 2 / formatters fail open. The **strict Stop hook** (`verify-on-stop.mjs`, default on; `--no-strict` opts out) is the one deliberate exception to "Stop never blocks": it blocks on real lint/typecheck failures so the agent self-corrects, but stays **fail-open on infra** (missing runtime/command never blocks) and only runs when the session edited lintable code (gated by `set-files-changed.mjs`). The **large-file guard** (`large-file-warning.mjs`, always installed) is dual-mode, selected at init and threaded via `--large-files=block|advisory` (default = the detector's `profile.largeFiles.recommended`): `block` wires it under `Stop` and returns `decision:"block"` so the agent refactors files over 350 lines before finishing (a second deliberate Stop-block exception; anti-loop via `stop_hook_active`); `advisory` wires it under `PostToolUse` and injects `additionalContext` suggesting a refactor + user confirmation, never blocking. `renderSettings`/`buildPlan` choose the wiring; `/patch` and `/doctor` preserve or offer to configure the mode.
-- **Hook output schema compliance — mandatory**: every hook under `templates/hooks/` distributed to target projects must have unit tests covering **all possible output paths**, and every output must pass the validator from `lib/validate/hook-schema.mjs` matching the hook's event type. `hook-schema.mjs` validates the **full 30-event `HOOK_EVENTS` set** from `@anthropic-ai/claude-agent-sdk` — not just the subset this harness currently ships hooks for — so a future hook targeting an unused event type starts with a ready, schema-correct validator. Shapes are cross-checked at compile time against the SDK's real TypeScript declarations by `lib/validate/hook-schema-sdk-typecheck.mjs` (`npm run typecheck` fails if the SDK's declared shape drifts from what a validator checks). Order below matches the SDK's own `HOOK_EVENTS` array:
-
-  | Hook event | Validator | Exit codes | `hookSpecificOutput` fields |
-  | --- | --- | --- | --- |
-  | `PreToolUse` | `validatePreToolUseOutput` | 0 (allow/ask), 2 (block tool) | `hookEventName:"PreToolUse"`, `permissionDecision?` (`"allow"\|"deny"\|"ask"\|"defer"`), `permissionDecisionReason?`, `updatedInput?`, `additionalContext?` — `permissionDecision` is optional: a hook may emit `additionalContext` alone to inject context without a decision (hookSpecificOutput must carry at least one of the three) |
-  | `PostToolUse` | `validatePostToolUseOutput` | 0 (success), 2 (stderr to Claude) | `hookEventName:"PostToolUse"`, `additionalContext?`, `updatedToolOutput?`, `updatedMCPToolOutput?` |
-  | `PostToolUseFailure` | `validatePostToolUseFailureOutput` | 0 (success), 2 (stderr to Claude) | `hookEventName:"PostToolUseFailure"`, `additionalContext?` |
-  | `PostToolBatch` *(TS SDK)* | `validatePostToolBatchOutput` | 0 (success), 2 (stderr to Claude) | `hookEventName:"PostToolBatch"`, `additionalContext?` |
-  | `Notification` | `validateNotificationOutput` | 0 (success), 2 (stderr to user) | `hookEventName:"Notification"`, `additionalContext?` |
-  | `UserPromptSubmit` | `validateUserPromptSubmitOutput` | 0 (allow), 2 (block+erase) | `hookEventName:"UserPromptSubmit"`, `additionalContext?`, `sessionTitle?`, `suppressOriginalPrompt?` — also top-level `decision:"block"` |
-  | `UserPromptExpansion` | `validateUserPromptExpansionOutput` | 0 (success), 2 (blocking error) | `hookEventName:"UserPromptExpansion"`, `additionalContext?` |
-  | `SessionStart` | `validateSessionStartOutput` | 0 (success), 2 (stderr to user) | `hookEventName:"SessionStart"`, `additionalContext?`, `initialUserMessage?`, `sessionTitle?`, `watchPaths?` (string[]), `reloadSkills?` (boolean) |
-  | `SessionEnd` | `validateSessionEndOutput` | 0 (success), 2 (stderr to user) | none (standard only) |
-  | `Stop` | `validateStopOutput` | 0 (approve), 2 (block stop) | top-level `decision` (`"approve"\|"block"`), `reason?`; optionally `hookEventName:"Stop"`, `additionalContext?` |
-  | `StopFailure` | `validateStopFailureOutput` | 0 (success), 2 (blocking error) | none (standard only) |
-  | `SubagentStart` | `validateSubagentStartOutput` | 0 (success), 2 (stderr to Claude) | `hookEventName:"SubagentStart"`, `additionalContext?` |
-  | `SubagentStop` | `validateSubagentStopOutput` | 0 (approve), 2 (block) | same as Stop; `hookSpecificOutput.hookEventName` discriminant (if present) is `"SubagentStop"` |
-  | `PreCompact` | `validatePreCompactOutput` | 0 (success), 2 (stderr to user) | none (standard only) |
-  | `PostCompact` | `validatePostCompactOutput` | 0 (success), 2 (blocking error) | none (standard only) |
-  | `PermissionRequest` | `validatePermissionRequestOutput` | 0 (allow), 2 (deny) | `hookEventName:"PermissionRequest"`, `decision` (required object: `{behavior:"allow",updatedInput?,updatedPermissions?}` \| `{behavior:"deny",message?,interrupt?}`) |
-  | `PermissionDenied` | `validatePermissionDeniedOutput` | 0 (success), 2 (blocking error) | `hookEventName:"PermissionDenied"`, `retry?` (boolean) |
-  | `Setup` *(TS SDK)* | `validateSetupOutput` | 0 (success), 2 (stderr to user) | `hookEventName:"Setup"`, `additionalContext?` |
-  | `TeammateIdle` | `validateTeammateIdleOutput` | 0 (success), 2 (blocking error) | none (standard only) |
-  | `TaskCreated` | `validateTaskCreatedOutput` | 0 (success), 2 (blocking error) | none (standard only) |
-  | `TaskCompleted` | `validateTaskCompletedOutput` | 0 (success), 2 (blocking error) | none (standard only) |
-  | `Elicitation` | `validateElicitationOutput` | 0 (success), 2 (blocking error) | `hookEventName:"Elicitation"`, `action?` (`"accept"\|"decline"\|"cancel"`), `content?` (object) |
-  | `ElicitationResult` | `validateElicitationResultOutput` | 0 (success), 2 (blocking error) | same shape as `Elicitation` |
-  | `ConfigChange` | `validateConfigChangeOutput` | 0 (success), 2 (blocking error) | none (standard only) |
-  | `WorktreeCreate` | `validateWorktreeCreateOutput` | 0 (success), 2 (blocking error) | `hookEventName:"WorktreeCreate"`, `worktreePath` (**required** string — the only event where a hookSpecificOutput field isn't optional) |
-  | `WorktreeRemove` | `validateWorktreeRemoveOutput` | 0 (success), 2 (blocking error) | none (standard only) |
-  | `InstructionsLoaded` | `validateInstructionsLoadedOutput` | 0 (success), 2 (blocking error) | none (standard only) |
-  | `CwdChanged` | `validateCwdChangedOutput` | 0 (success), 2 (blocking error) | `hookEventName:"CwdChanged"`, `watchPaths?` (string[]) |
-  | `FileChanged` | `validateFileChangedOutput` | 0 (success), 2 (blocking error) | `hookEventName:"FileChanged"`, `watchPaths?` (string[]) |
-  | `MessageDisplay` | `validateMessageDisplayOutput` | 0 (success), 2 (blocking error) | `hookEventName:"MessageDisplay"`, `displayContent?` (string) |
-
-  Standard JSON fields (all hooks): `{ continue?: boolean, suppressOutput?: boolean, stopReason?: string, systemMessage?: string, terminalSequence?: string, reason?: string }`. Exit codes 0 and 2 are always valid; any other exit code is a bug. `hookSpecificOutput.hookEventName` is the discriminator — include it whenever emitting `hookSpecificOutput` so the runtime routes it correctly. Rows marked "blocking error" (the 16 event types not yet used by any shipped hook) don't have an independently confirmed stderr-routing target in this codebase — only that exit 0/2 are the valid codes; update the wording once a real hook exercises one.
-
-  Every hook test also asserts the raw captured stdout is byte-clean via `assertCleanStdoutJson` (`tests/hook-runner.mjs`): no leading/trailing whitespace around the JSON, and — when non-empty — an exact `JSON.stringify(JSON.parse(stdout))` round-trip. `JSON.parse` alone tolerates surrounding whitespace, so this catches stray blank lines, debug prints, or pretty-printing that would otherwise slip past schema validation unnoticed.
-
-  **Full 30-event → SDK type reference** (all exported from `@anthropic-ai/claude-agent-sdk`'s `sdk.d.ts`; the output envelope itself is `SyncHookJSONOutput`, `hookSpecificOutput?` is a discriminated union of the per-event `*HookSpecificOutput` types below):
-
-  | Event | SDK `HookInput` type | SDK `HookSpecificOutput` type |
-  | --- | --- | --- |
-  | `PreToolUse` | `PreToolUseHookInput` | `PreToolUseHookSpecificOutput` |
-  | `PostToolUse` | `PostToolUseHookInput` | `PostToolUseHookSpecificOutput` |
-  | `PostToolUseFailure` | `PostToolUseFailureHookInput` | `PostToolUseFailureHookSpecificOutput` |
-  | `PostToolBatch` | `PostToolBatchHookInput` | `PostToolBatchHookSpecificOutput` |
-  | `Notification` | `NotificationHookInput` | `NotificationHookSpecificOutput` |
-  | `UserPromptSubmit` | `UserPromptSubmitHookInput` | `UserPromptSubmitHookSpecificOutput` |
-  | `UserPromptExpansion` | `UserPromptExpansionHookInput` | `UserPromptExpansionHookSpecificOutput` |
-  | `SessionStart` | `SessionStartHookInput` | `SessionStartHookSpecificOutput` |
-  | `SessionEnd` | `SessionEndHookInput` | — (standard only) |
-  | `Stop` | `StopHookInput` | `StopHookSpecificOutput` |
-  | `StopFailure` | `StopFailureHookInput` | — (standard only) |
-  | `SubagentStart` | `SubagentStartHookInput` | `SubagentStartHookSpecificOutput` |
-  | `SubagentStop` | `SubagentStopHookInput` | `SubagentStopHookSpecificOutput` |
-  | `PreCompact` | `PreCompactHookInput` | — (standard only) |
-  | `PostCompact` | `PostCompactHookInput` | — (standard only) |
-  | `PermissionRequest` | `PermissionRequestHookInput` | `PermissionRequestHookSpecificOutput` |
-  | `PermissionDenied` | `PermissionDeniedHookInput` | `PermissionDeniedHookSpecificOutput` |
-  | `Setup` | `SetupHookInput` | `SetupHookSpecificOutput` |
-  | `TeammateIdle` | `TeammateIdleHookInput` | — (standard only) |
-  | `TaskCreated` | `TaskCreatedHookInput` | — (standard only) |
-  | `TaskCompleted` | `TaskCompletedHookInput` | — (standard only) |
-  | `Elicitation` | `ElicitationHookInput` | `ElicitationHookSpecificOutput` |
-  | `ElicitationResult` | `ElicitationResultHookInput` | `ElicitationResultHookSpecificOutput` |
-  | `ConfigChange` | `ConfigChangeHookInput` | — (standard only) |
-  | `WorktreeCreate` | `WorktreeCreateHookInput` | `WorktreeCreateHookSpecificOutput` |
-  | `WorktreeRemove` | `WorktreeRemoveHookInput` | — (standard only) |
-  | `InstructionsLoaded` | `InstructionsLoadedHookInput` | — (standard only) |
-  | `CwdChanged` | `CwdChangedHookInput` | `CwdChangedHookSpecificOutput` |
-  | `FileChanged` | `FileChangedHookInput` | `FileChangedHookSpecificOutput` |
-  | `MessageDisplay` | `MessageDisplayHookInput` | `MessageDisplayHookSpecificOutput` |
-
-  When you **create or modify** a hook under `templates/hooks/`, you **must** add or update its compliance test in `tests/hook-<name>.test.mjs`, import the matching validator, assert every branch via that validator AND `assertCleanStdoutJson`, and run `npm test` to verify before committing. When bumping the `@anthropic-ai/claude-agent-sdk` devDependency version, re-review `lib/validate/hook-schema-sdk-typecheck.mjs` — a `tsc` failure there means the SDK changed a shape one of the validators relies on.
-- **Hook cwd resolution — mandatory**: any hook that resolves a directory for
-  a command or a path check must prefer `event.cwd` over
-  `CLAUDE_PROJECT_DIR`/`process.cwd()`, except for the small set of hooks
-  that hash a *stable* session key for a shared flag file, which must keep
-  using `CLAUDE_PROJECT_DIR` alone. See `.claude/rules/hooks-cwd-resolution.md`.
+- **Agent description standard — mandatory**: every candidate agent's routing description lives in its provenance `*_AGENT_WHEN_TO_USE` map (single source of truth for frontmatter + CLAUDE.md table). After adding/editing an agent, run `/revise-agent-frontmatter` and `npm test` (`tests/agent-frontmatter-standard.test.mjs` enforces it). See `.claude/rules/agent-frontmatter-standard.md`.
+- **Safety invariants** (don't regress):
+  - Consent gate before writes; diffs before overwrite; secrets only as `${ENV}` placeholders; `*.local.*` gitignored; guard hooks exit 2 / formatters fail open.
+  - **Strict Stop hook** (`verify-on-stop.mjs`, default on; `--no-strict` opts out) — deliberate exception #1 to "Stop never blocks": blocks on real lint/typecheck failures so the agent self-corrects, but stays **fail-open on infra** (missing runtime/command never blocks) and only runs when the session edited lintable code (gated by `set-files-changed.mjs`).
+  - **Large-file guard** (`large-file-warning.mjs`, always installed) — dual-mode, selected at init and threaded via `--large-files=block|advisory` (default = the detector's `profile.largeFiles.recommended`): `block` wires it under `Stop` and returns `decision:"block"` so the agent refactors files over 350 lines before finishing (exception #2; anti-loop via `stop_hook_active`); `advisory` wires it under `PostToolUse` and injects `additionalContext` suggesting a refactor + user confirmation, never blocking. `renderSettings`/`buildPlan` choose the wiring; `/patch` and `/doctor` preserve or offer to configure the mode.
+- **Hook output schema compliance — mandatory**: every hook under `templates/hooks/` needs a compliance test in `tests/hook-<name>.test.mjs` covering **every** output branch, each asserted via the matching validator from `lib/validate/hook-schema.mjs` AND `assertCleanStdoutJson` (`tests/hook-runner.mjs`). Exit codes 0 and 2 are the only valid codes; include `hookSpecificOutput.hookEventName` whenever emitting `hookSpecificOutput`. The full 30-event schema/validator/SDK-type reference lives in `.claude/rules/hook-output-schema.md` (auto-loads when editing hooks, validators, or hook tests). When bumping `@anthropic-ai/claude-agent-sdk`, re-review `lib/validate/hook-schema-sdk-typecheck.mjs` — a `tsc` failure there means the SDK changed a shape a validator relies on.
+- **Hook cwd resolution — mandatory**: any hook that resolves a directory for a command or a path check must prefer `event.cwd` over `CLAUDE_PROJECT_DIR`/`process.cwd()`, except for the small set of hooks that hash a *stable* session key for a shared flag file, which must keep using `CLAUDE_PROJECT_DIR` alone. Full standard: `.claude/rules/hooks-cwd-resolution.md` (auto-loads when editing hooks).
 - `templates/` is excluded from lint and typecheck (it's vendored/scaffolded output, not engine code).
 
 @.claude/memory/INSTRUCTIONS.md

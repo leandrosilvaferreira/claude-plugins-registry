@@ -5,7 +5,6 @@ description: >
   CRA, and Bun — JSX compile errors, bundler config issues, missing
   @types/react, and hydration mismatches. Use proactively when the React
   build or dev server fails.
-tools: Read, Write, Edit, Bash, Grep, Glob
 model: sonnet
 ---
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: agents/react-build-resolver.md. MIT (c) Affaan Mustafa. -->

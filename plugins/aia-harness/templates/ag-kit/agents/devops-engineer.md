@@ -4,7 +4,6 @@ description: >
   Owns deployment, CI/CD pipelines, infrastructure configuration, and
   production operations. Use proactively when deploying, configuring
   servers, setting up CI, or troubleshooting production incidents.
-tools: Read, Grep, Glob, Bash, Edit, Write
 model: sonnet
 ---
 <!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/agent/devops-engineer.md. MIT (c) vudovn. -->

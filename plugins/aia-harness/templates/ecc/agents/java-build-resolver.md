@@ -5,7 +5,6 @@ description: >
   errors, dependency resolution failures, annotation processor issues, and
   Spring/Quarkus startup problems. Use proactively when `mvn compile` or
   `gradle build` fails.
-tools: Read, Write, Edit, Bash, Grep, Glob
 model: sonnet
 ---
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: agents/java-build-resolver.md. MIT (c) Affaan Mustafa. -->

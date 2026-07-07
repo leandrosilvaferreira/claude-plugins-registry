@@ -5,7 +5,6 @@ description: >
   navigation, offline support, platform APIs, and native conventions. Use
   proactively when implementing mobile-specific features, screens, or
   fixing platform-specific issues.
-tools: Read, Grep, Glob, Bash, Edit, Write
 model: sonnet
 ---
 <!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/agent/mobile-developer.md. MIT (c) vudovn. -->

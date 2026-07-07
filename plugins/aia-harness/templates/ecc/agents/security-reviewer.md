@@ -5,7 +5,6 @@ description: >
   auth, and dependency CVEs. Use proactively before any merge that touches
   auth, input handling, or secrets. MUST BE USED before shipping
   security-sensitive changes.
-tools: Read, Write, Edit, Bash, Grep, Glob
 model: sonnet
 ---
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: agents/security-reviewer.md. MIT (c) Affaan Mustafa. -->

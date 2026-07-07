@@ -5,7 +5,6 @@ description: >
   performance with accessibility and maintainability in mind. Use
   proactively when building or refactoring UI components, design systems,
   or frontend architecture.
-tools: Read, Grep, Glob, Bash, Edit, Write
 model: sonnet
 ---
 <!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/agent/frontend-specialist.md. MIT (c) vudovn. -->

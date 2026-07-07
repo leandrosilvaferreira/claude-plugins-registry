@@ -4,7 +4,6 @@ description: >
   Reviews any code change for bugs, security, error handling, and test
   coverage. Use proactively after editing any source file. MUST BE USED
   before merging a pull request.
-tools: Read, Grep, Glob, Bash, Edit, Write
 model: sonnet
 ---
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: agents/code-reviewer.md. MIT (c) Affaan Mustafa. -->

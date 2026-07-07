@@ -4,7 +4,6 @@ description: >
   Diagnoses and fixes failing Go builds — compile errors, `go vet`
   failures, module/version conflicts, and staticcheck violations. Use
   proactively when `go build` or `go test` fails.
-tools: Read, Write, Edit, Bash, Grep, Glob
 model: sonnet
 ---
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: agents/go-build-resolver.md. MIT (c) Affaan Mustafa. -->

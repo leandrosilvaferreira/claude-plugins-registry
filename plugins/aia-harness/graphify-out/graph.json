@@ -1138,7 +1138,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_data_agkit_catalog",
-      "community": 95,
+      "community": 411,
       "norm_label": "agkit-catalog.mjs"
     },
     {
@@ -1148,7 +1148,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "lib_data_agkit_catalog_agkit_commands",
-      "community": 95,
+      "community": 411,
       "norm_label": "agkit_commands"
     },
     {
@@ -1158,7 +1158,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "lib_data_agkit_catalog_agkit_common",
-      "community": 95,
+      "community": 411,
       "norm_label": "agkit_common"
     },
     {
@@ -1168,7 +1168,7 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "lib_data_agkit_catalog_web",
-      "community": 95,
+      "community": 411,
       "norm_label": "web"
     },
     {
@@ -1178,7 +1178,7 @@
       "source_location": "L78",
       "_origin": "ast",
       "id": "lib_data_agkit_catalog_backend",
-      "community": 95,
+      "community": 411,
       "norm_label": "backend"
     },
     {
@@ -1188,7 +1188,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "lib_data_agkit_catalog_mobile",
-      "community": 95,
+      "community": 411,
       "norm_label": "mobile"
     },
     {
@@ -1198,7 +1198,7 @@
       "source_location": "L85",
       "_origin": "ast",
       "id": "lib_data_agkit_catalog_games",
-      "community": 95,
+      "community": 411,
       "norm_label": "games"
     },
     {
@@ -1208,7 +1208,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "lib_data_agkit_catalog_agkit_by_stack",
-      "community": 95,
+      "community": 411,
       "norm_label": "agkit_by_stack"
     },
     {
@@ -1218,7 +1218,7 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "lib_data_agkit_catalog_stackkeys",
-      "community": 95,
+      "community": 411,
       "norm_label": "stackkeys()"
     },
     {
@@ -1228,7 +1228,7 @@
       "source_location": "L136",
       "_origin": "ast",
       "id": "lib_data_agkit_catalog_merge",
-      "community": 95,
+      "community": 411,
       "norm_label": "merge()"
     },
     {
@@ -1238,7 +1238,7 @@
       "source_location": "L144",
       "_origin": "ast",
       "id": "lib_data_agkit_catalog_freeze",
-      "community": 95,
+      "community": 411,
       "norm_label": "freeze()"
     },
     {
@@ -1248,7 +1248,7 @@
       "source_location": "L154",
       "_origin": "ast",
       "id": "lib_data_agkit_catalog_commonsets",
-      "community": 95,
+      "community": 411,
       "norm_label": "commonsets()"
     },
     {
@@ -1258,7 +1258,7 @@
       "source_location": "L211",
       "_origin": "ast",
       "id": "lib_data_agkit_catalog_selectagkitassets",
-      "community": 95,
+      "community": 411,
       "norm_label": "selectagkitassets()"
     },
     {
@@ -1268,7 +1268,7 @@
       "source_location": "L225",
       "_origin": "ast",
       "id": "lib_data_agkit_catalog_allagkitassets",
-      "community": 95,
+      "community": 411,
       "norm_label": "allagkitassets()"
     },
     {
@@ -1298,7 +1298,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "lib_data_asset_catalog_resolveagentwhentouse",
-      "community": 41,
+      "community": 210,
       "norm_label": "resolveagentwhentouse()"
     },
     {
@@ -1428,7 +1428,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_data_github_pm_catalog",
-      "community": 41,
+      "community": 528,
       "norm_label": "github-pm-catalog.mjs"
     },
     {
@@ -1438,7 +1438,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "lib_data_github_pm_catalog_plugin_root",
-      "community": 41,
+      "community": 528,
       "norm_label": "plugin_root"
     },
     {
@@ -1448,7 +1448,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "lib_data_github_pm_catalog_t",
-      "community": 41,
+      "community": 528,
       "norm_label": "t"
     },
     {
@@ -1458,7 +1458,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "lib_data_github_pm_catalog_github_pm_artifacts",
-      "community": 41,
+      "community": 528,
       "norm_label": "github_pm_artifacts"
     },
     {
@@ -1468,7 +1468,7 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "lib_data_github_pm_catalog_selectgithubpmassets",
-      "community": 41,
+      "community": 528,
       "norm_label": "selectgithubpmassets()"
     },
     {
@@ -1478,7 +1478,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_data_languages",
-      "community": 308,
+      "community": 95,
       "norm_label": "languages.mjs"
     },
     {
@@ -1488,7 +1488,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "lib_data_languages_extension_languages",
-      "community": 308,
+      "community": 95,
       "norm_label": "extension_languages"
     },
     {
@@ -1498,7 +1498,7 @@
       "source_location": "L102",
       "_origin": "ast",
       "id": "lib_data_languages_classify",
-      "community": 308,
+      "community": 95,
       "norm_label": "classify()"
     },
     {
@@ -1738,7 +1738,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_data_testing_catalog",
-      "community": 308,
+      "community": 560,
       "norm_label": "testing-catalog.mjs"
     },
     {
@@ -1748,7 +1748,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "lib_data_testing_catalog_e2e_frameworks",
-      "community": 308,
+      "community": 560,
       "norm_label": "e2e_frameworks"
     },
     {
@@ -1758,7 +1758,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "lib_data_testing_catalog_jsinstall",
-      "community": 308,
+      "community": 560,
       "norm_label": "jsinstall()"
     },
     {
@@ -1768,7 +1768,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "lib_data_testing_catalog_jskey",
-      "community": 308,
+      "community": 560,
       "norm_label": "jskey()"
     },
     {
@@ -1778,7 +1778,7 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "lib_data_testing_catalog_recommendtesting",
-      "community": 308,
+      "community": 560,
       "norm_label": "recommendtesting()"
     },
     {
@@ -1788,7 +1788,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_data_tools_catalog",
-      "community": 41,
+      "community": 95,
       "norm_label": "tools-catalog.mjs"
     },
     {
@@ -1798,7 +1798,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "lib_data_tools_catalog_vendorhookcommand",
-      "community": 41,
+      "community": 95,
       "norm_label": "vendorhookcommand()"
     },
     {
@@ -1808,7 +1808,7 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "lib_data_tools_catalog_tools",
-      "community": 46,
+      "community": 41,
       "norm_label": "tools"
     },
     {
@@ -1818,7 +1818,7 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "lib_data_tools_catalog_gettool",
-      "community": 41,
+      "community": 95,
       "norm_label": "gettool()"
     },
     {
@@ -1828,7 +1828,7 @@
       "source_location": "L129",
       "_origin": "ast",
       "id": "lib_data_tools_catalog_selecttools",
-      "community": 41,
+      "community": 95,
       "norm_label": "selecttools()"
     },
     {
@@ -1838,7 +1838,7 @@
       "source_location": "L139",
       "_origin": "ast",
       "id": "lib_data_tools_catalog_toolsettingshooks",
-      "community": 41,
+      "community": 95,
       "norm_label": "toolsettingshooks()"
     },
     {
@@ -1908,7 +1908,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_detect_commands",
-      "community": 48,
+      "community": 630,
       "norm_label": "commands.mjs"
     },
     {
@@ -1918,7 +1918,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "lib_detect_commands_jsrunner",
-      "community": 48,
+      "community": 630,
       "norm_label": "jsrunner()"
     },
     {
@@ -1928,7 +1928,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "lib_detect_commands_jscommands",
-      "community": 48,
+      "community": 630,
       "norm_label": "jscommands()"
     },
     {
@@ -1938,7 +1938,7 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "lib_detect_commands_phpcommands",
-      "community": 48,
+      "community": 630,
       "norm_label": "phpcommands()"
     },
     {
@@ -1948,7 +1948,7 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "lib_detect_commands_genericcommands",
-      "community": 48,
+      "community": 630,
       "norm_label": "genericcommands()"
     },
     {
@@ -1958,7 +1958,7 @@
       "source_location": "L222",
       "_origin": "ast",
       "id": "lib_detect_commands_javacommands",
-      "community": 48,
+      "community": 630,
       "norm_label": "javacommands()"
     },
     {
@@ -1968,7 +1968,7 @@
       "source_location": "L255",
       "_origin": "ast",
       "id": "lib_detect_commands_gocommands",
-      "community": 48,
+      "community": 630,
       "norm_label": "gocommands()"
     },
     {
@@ -1978,7 +1978,7 @@
       "source_location": "L279",
       "_origin": "ast",
       "id": "lib_detect_commands_detectcommands",
-      "community": 48,
+      "community": 630,
       "norm_label": "detectcommands()"
     },
     {
@@ -2118,7 +2118,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_detect_language",
-      "community": 308,
+      "community": 95,
       "norm_label": "language.mjs"
     },
     {
@@ -2128,7 +2128,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "lib_detect_language_detectlanguages",
-      "community": 308,
+      "community": 95,
       "norm_label": "detectlanguages()"
     },
     {
@@ -2328,7 +2328,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_detect_testing",
-      "community": 308,
+      "community": 560,
       "norm_label": "testing.mjs"
     },
     {
@@ -2338,7 +2338,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "lib_detect_testing_test_file_matchers",
-      "community": 308,
+      "community": 560,
       "norm_label": "test_file_matchers"
     },
     {
@@ -2348,7 +2348,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "lib_detect_testing_ecosystemkey",
-      "community": 308,
+      "community": 560,
       "norm_label": "ecosystemkey()"
     },
     {
@@ -2358,7 +2358,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "lib_detect_testing_detecttesting",
-      "community": 308,
+      "community": 560,
       "norm_label": "detecttesting()"
     },
     {
@@ -2442,6 +2442,46 @@
       "norm_label": "stampprovenance()"
     },
     {
+      "label": "claude-md-agents.mjs",
+      "file_type": "code",
+      "source_file": "lib/generate/claude-md-agents.mjs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "lib_generate_claude_md_agents",
+      "community": 103,
+      "norm_label": "claude-md-agents.mjs"
+    },
+    {
+      "label": "routingRole()",
+      "file_type": "code",
+      "source_file": "lib/generate/claude-md-agents.mjs",
+      "source_location": "L25",
+      "_origin": "ast",
+      "id": "lib_generate_claude_md_agents_routingrole",
+      "community": 103,
+      "norm_label": "routingrole()"
+    },
+    {
+      "label": "AGENT_ORDER",
+      "file_type": "code",
+      "source_file": "lib/generate/claude-md-agents.mjs",
+      "source_location": "L52",
+      "_origin": "ast",
+      "id": "lib_generate_claude_md_agents_agent_order",
+      "community": 103,
+      "norm_label": "agent_order"
+    },
+    {
+      "label": "agentsWorkflowBlock()",
+      "file_type": "code",
+      "source_file": "lib/generate/claude-md-agents.mjs",
+      "source_location": "L104",
+      "_origin": "ast",
+      "id": "lib_generate_claude_md_agents_agentsworkflowblock",
+      "community": 103,
+      "norm_label": "agentsworkflowblock()"
+    },
+    {
       "label": "claude-md.mjs",
       "file_type": "code",
       "source_file": "lib/generate/claude-md.mjs",
@@ -2455,7 +2495,7 @@
       "label": "ROOT_FIXED_RULES",
       "file_type": "code",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L127",
+      "source_location": "L65",
       "_origin": "ast",
       "id": "lib_generate_claude_md_root_fixed_rules",
       "community": 103,
@@ -2465,7 +2505,7 @@
       "label": "codeReviewRule()",
       "file_type": "code",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L142",
+      "source_location": "L80",
       "_origin": "ast",
       "id": "lib_generate_claude_md_codereviewrule",
       "community": 103,
@@ -2475,17 +2515,17 @@
       "label": "DOMAIN_FIXED_RULES",
       "file_type": "code",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L154",
+      "source_location": "L92",
       "_origin": "ast",
       "id": "lib_generate_claude_md_domain_fixed_rules",
-      "community": 103,
+      "community": 95,
       "norm_label": "domain_fixed_rules"
     },
     {
       "label": "fixedRulesBlock()",
       "file_type": "code",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L166",
+      "source_location": "L104",
       "_origin": "ast",
       "id": "lib_generate_claude_md_fixedrulesblock",
       "community": 103,
@@ -2495,57 +2535,27 @@
       "label": "commandsBlock()",
       "file_type": "code",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L174",
+      "source_location": "L112",
       "_origin": "ast",
       "id": "lib_generate_claude_md_commandsblock",
-      "community": 103,
+      "community": 46,
       "norm_label": "commandsblock()"
     },
     {
       "label": "skillsBlock()",
       "file_type": "code",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L198",
+      "source_location": "L136",
       "_origin": "ast",
       "id": "lib_generate_claude_md_skillsblock",
       "community": 103,
       "norm_label": "skillsblock()"
     },
     {
-      "label": "routingRole()",
-      "file_type": "code",
-      "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L211",
-      "_origin": "ast",
-      "id": "lib_generate_claude_md_routingrole",
-      "community": 103,
-      "norm_label": "routingrole()"
-    },
-    {
-      "label": "AGENT_ORDER",
-      "file_type": "code",
-      "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L238",
-      "_origin": "ast",
-      "id": "lib_generate_claude_md_agent_order",
-      "community": 103,
-      "norm_label": "agent_order"
-    },
-    {
-      "label": "agentsWorkflowBlock()",
-      "file_type": "code",
-      "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L290",
-      "_origin": "ast",
-      "id": "lib_generate_claude_md_agentsworkflowblock",
-      "community": 103,
-      "norm_label": "agentsworkflowblock()"
-    },
-    {
       "label": "stackLine()",
       "file_type": "code",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L357",
+      "source_location": "L147",
       "_origin": "ast",
       "id": "lib_generate_claude_md_stackline",
       "community": 103,
@@ -2555,7 +2565,7 @@
       "label": "renderRootClaudeMd()",
       "file_type": "code",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L379",
+      "source_location": "L169",
       "_origin": "ast",
       "id": "lib_generate_claude_md_renderrootclaudemd",
       "community": 103,
@@ -2565,7 +2575,7 @@
       "label": "renderDomainClaudeMd()",
       "file_type": "code",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L451",
+      "source_location": "L241",
       "_origin": "ast",
       "id": "lib_generate_claude_md_renderdomainclaudemd",
       "community": 103,
@@ -2828,7 +2838,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_generate_settings",
-      "community": 103,
+      "community": 95,
       "norm_label": "settings.mjs"
     },
     {
@@ -2838,7 +2848,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "lib_generate_settings_permprefix",
-      "community": 103,
+      "community": 95,
       "norm_label": "permprefix()"
     },
     {
@@ -2848,7 +2858,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "lib_generate_settings_hookcmd",
-      "community": 103,
+      "community": 95,
       "norm_label": "hookcmd()"
     },
     {
@@ -2858,7 +2868,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "lib_generate_settings_rendersettings",
-      "community": 103,
+      "community": 95,
       "norm_label": "rendersettings()"
     },
     {
@@ -3128,7 +3138,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "lib_util_frontmatter_yaml",
-      "community": 560,
+      "community": 210,
       "norm_label": "frontmatter-yaml.mjs"
     },
     {
@@ -3138,7 +3148,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "lib_util_frontmatter_yaml_needsquote",
-      "community": 560,
+      "community": 210,
       "norm_label": "needsquote()"
     },
     {
@@ -3148,7 +3158,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "lib_util_frontmatter_yaml_quoteifneeded",
-      "community": 560,
+      "community": 210,
       "norm_label": "quoteifneeded()"
     },
     {
@@ -3158,7 +3168,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "lib_util_frontmatter_yaml_parsefrontmatter",
-      "community": 228,
+      "community": 210,
       "norm_label": "parsefrontmatter()"
     },
     {
@@ -3168,7 +3178,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "lib_util_frontmatter_yaml_foldbody",
-      "community": 560,
+      "community": 210,
       "norm_label": "foldbody()"
     },
     {
@@ -3178,7 +3188,7 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "lib_util_frontmatter_yaml_renderfrontmatter",
-      "community": 228,
+      "community": 210,
       "norm_label": "renderfrontmatter()"
     },
     {
@@ -3418,7 +3428,7 @@
       "source_location": "L159",
       "_origin": "ast",
       "id": "lib_validate_hook_schema_core_validateuserpromptsubmitoutput",
-      "community": 87,
+      "community": 441,
       "norm_label": "validateuserpromptsubmitoutput()"
     },
     {
@@ -3448,7 +3458,7 @@
       "source_location": "L268",
       "_origin": "ast",
       "id": "lib_validate_hook_schema_core_validatesubagentstartoutput",
-      "community": 528,
+      "community": 17,
       "norm_label": "validatesubagentstartoutput"
     },
     {
@@ -3478,7 +3488,7 @@
       "source_location": "L293",
       "_origin": "ast",
       "id": "lib_validate_hook_schema_core_validatesessionstartoutput",
-      "community": 87,
+      "community": 187,
       "norm_label": "validatesessionstartoutput()"
     },
     {
@@ -3808,7 +3818,7 @@
       "source_location": "L157",
       "_origin": "ast",
       "id": "lib_validate_hook_schema_helpers_checkstringarrayfield",
-      "community": 87,
+      "community": 187,
       "norm_label": "checkstringarrayfield()"
     },
     {
@@ -5638,7 +5648,7 @@
       "source_location": "L450",
       "_origin": "ast",
       "id": "skills_condense_harness_prompts_lib_condense_cmdfrontmatter",
-      "community": 66,
+      "community": 88,
       "norm_label": "cmdfrontmatter()"
     },
     {
@@ -8638,7 +8648,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_agkit_catalog_test",
-      "community": 95,
+      "community": 411,
       "norm_label": "agkit-catalog.test.mjs"
     },
     {
@@ -8648,7 +8658,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "tests_agkit_catalog_test_profile",
-      "community": 95,
+      "community": 411,
       "norm_label": "profile()"
     },
     {
@@ -8748,7 +8758,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_catalog_github_pm_test",
-      "community": 41,
+      "community": 528,
       "norm_label": "catalog-github-pm.test.mjs"
     },
     {
@@ -8758,7 +8768,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "tests_catalog_github_pm_test_profile",
-      "community": 41,
+      "community": 528,
       "norm_label": "profile()"
     },
     {
@@ -9028,7 +9038,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_detect_testing_test",
-      "community": 308,
+      "community": 560,
       "norm_label": "detect-testing.test.mjs"
     },
     {
@@ -9038,7 +9048,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "tests_detect_testing_test_fix",
-      "community": 308,
+      "community": 560,
       "norm_label": "fix"
     },
     {
@@ -9118,7 +9128,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_ecc_plan_apply_test",
-      "community": 35,
+      "community": 308,
       "norm_label": "ecc-plan-apply.test.mjs"
     },
     {
@@ -9128,7 +9138,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "tests_ecc_plan_apply_test_root",
-      "community": 35,
+      "community": 308,
       "norm_label": "root"
     },
     {
@@ -9138,7 +9148,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "tests_ecc_plan_apply_test_fix",
-      "community": 35,
+      "community": 308,
       "norm_label": "fix"
     },
     {
@@ -9148,7 +9158,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "tests_ecc_plan_apply_test_has_ecc",
-      "community": 35,
+      "community": 308,
       "norm_label": "has_ecc"
     },
     {
@@ -9158,7 +9168,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "tests_ecc_plan_apply_test_has_adianti",
-      "community": 35,
+      "community": 308,
       "norm_label": "has_adianti"
     },
     {
@@ -10233,7 +10243,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_frontmatter_yaml_test",
-      "community": 228,
+      "community": 210,
       "norm_label": "frontmatter-yaml.test.mjs"
     },
     {
@@ -10253,7 +10263,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_graphify_git_hooks_test",
-      "community": 48,
+      "community": 526,
       "norm_label": "graphify-git-hooks.test.mjs"
     },
     {
@@ -10263,7 +10273,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "tests_graphify_git_hooks_test_root",
-      "community": 48,
+      "community": 526,
       "norm_label": "root"
     },
     {
@@ -10273,7 +10283,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "tests_graphify_git_hooks_test_git_hooks_tmpl",
-      "community": 48,
+      "community": 526,
       "norm_label": "git_hooks_tmpl"
     },
     {
@@ -10283,7 +10293,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "tests_graphify_git_hooks_test_skill_tmpl",
-      "community": 48,
+      "community": 526,
       "norm_label": "skill_tmpl"
     },
     {
@@ -10293,7 +10303,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "tests_graphify_git_hooks_test_has_skill_tmpl",
-      "community": 48,
+      "community": 526,
       "norm_label": "has_skill_tmpl"
     },
     {
@@ -10303,7 +10313,7 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "tests_graphify_git_hooks_test_withtmpdir",
-      "community": 48,
+      "community": 526,
       "norm_label": "withtmpdir()"
     },
     {
@@ -10313,7 +10323,7 @@
       "source_location": "L134",
       "_origin": "ast",
       "id": "tests_graphify_git_hooks_test_makeprofile",
-      "community": 48,
+      "community": 526,
       "norm_label": "makeprofile()"
     },
     {
@@ -10323,7 +10333,7 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "tests_graphify_git_hooks_test_has_graphify_tmpl",
-      "community": 48,
+      "community": 526,
       "norm_label": "has_graphify_tmpl"
     },
     {
@@ -10333,7 +10343,7 @@
       "source_location": "L460",
       "_origin": "ast",
       "id": "tests_graphify_git_hooks_test_settingscontentfor",
-      "community": 48,
+      "community": 526,
       "norm_label": "settingscontentfor()"
     },
     {
@@ -10343,7 +10353,7 @@
       "source_location": "L472",
       "_origin": "ast",
       "id": "tests_graphify_git_hooks_test_pretooluse",
-      "community": 48,
+      "community": 526,
       "norm_label": "pretooluse()"
     },
     {
@@ -10353,7 +10363,7 @@
       "source_location": "L481",
       "_origin": "ast",
       "id": "tests_graphify_git_hooks_test_orientgroups",
-      "community": 48,
+      "community": 526,
       "norm_label": "orientgroups()"
     },
     {
@@ -11183,7 +11193,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_hook_validate_settings_schema_test",
-      "community": 411,
+      "community": 96,
       "norm_label": "hook-validate-settings-schema.test.mjs"
     },
     {
@@ -11193,7 +11203,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_hook_validate_settings_schema_test_root",
-      "community": 411,
+      "community": 96,
       "norm_label": "root"
     },
     {
@@ -11203,7 +11213,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "tests_hook_validate_settings_schema_test_hook",
-      "community": 411,
+      "community": 96,
       "norm_label": "hook"
     },
     {
@@ -11213,7 +11223,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "tests_hook_validate_settings_schema_test_minimal_schema",
-      "community": 411,
+      "community": 96,
       "norm_label": "minimal_schema"
     },
     {
@@ -11223,7 +11233,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "tests_hook_validate_settings_schema_test_strict_schema",
-      "community": 411,
+      "community": 96,
       "norm_label": "strict_schema"
     },
     {
@@ -11233,7 +11243,7 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "tests_hook_validate_settings_schema_test_mksettingsdir",
-      "community": 411,
+      "community": 96,
       "norm_label": "mksettingsdir()"
     },
     {
@@ -11243,7 +11253,7 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "tests_hook_validate_settings_schema_test_writeschema",
-      "community": 411,
+      "community": 96,
       "norm_label": "writeschema()"
     },
     {
@@ -11253,7 +11263,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "tests_hook_validate_settings_schema_test_freshcachepath",
-      "community": 411,
+      "community": 96,
       "norm_label": "freshcachepath()"
     },
     {
@@ -11333,7 +11343,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_hook_verify_on_stop_test",
-      "community": 67,
+      "community": 17,
       "norm_label": "hook-verify-on-stop.test.mjs"
     },
     {
@@ -11343,7 +11353,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "tests_hook_verify_on_stop_test_root",
-      "community": 67,
+      "community": 17,
       "norm_label": "root"
     },
     {
@@ -11353,7 +11363,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "tests_hook_verify_on_stop_test_hook",
-      "community": 67,
+      "community": 17,
       "norm_label": "hook"
     },
     {
@@ -11503,7 +11513,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_hook_worktree_subagent_ctx_test",
-      "community": 528,
+      "community": 17,
       "norm_label": "hook-worktree-subagent-ctx.test.mjs"
     },
     {
@@ -11513,7 +11523,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "tests_hook_worktree_subagent_ctx_test_root",
-      "community": 528,
+      "community": 17,
       "norm_label": "root"
     },
     {
@@ -11523,7 +11533,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "tests_hook_worktree_subagent_ctx_test_hook",
-      "community": 528,
+      "community": 17,
       "norm_label": "hook"
     },
     {
@@ -11533,7 +11543,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_hook_worktree_subagent_ctx_test_run",
-      "community": 528,
+      "community": 17,
       "norm_label": "run()"
     },
     {
@@ -11543,7 +11553,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "tests_hook_worktree_subagent_ctx_test_assertsilent",
-      "community": 528,
+      "community": 17,
       "norm_label": "assertsilent()"
     },
     {
@@ -11663,7 +11673,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_plan_github_pm_test",
-      "community": 308,
+      "community": 35,
       "norm_label": "plan-github-pm.test.mjs"
     },
     {
@@ -11673,7 +11683,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "tests_plan_github_pm_test_root",
-      "community": 308,
+      "community": 35,
       "norm_label": "root"
     },
     {
@@ -11683,7 +11693,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "tests_plan_github_pm_test_fix",
-      "community": 308,
+      "community": 35,
       "norm_label": "fix"
     },
     {
@@ -11873,7 +11883,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_set_files_changed_test",
-      "community": 96,
+      "community": 614,
       "norm_label": "set-files-changed.test.mjs"
     },
     {
@@ -11883,7 +11893,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "tests_set_files_changed_test_root",
-      "community": 96,
+      "community": 614,
       "norm_label": "root"
     },
     {
@@ -11893,7 +11903,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "tests_set_files_changed_test_hook",
-      "community": 96,
+      "community": 614,
       "norm_label": "hook"
     },
     {
@@ -11903,7 +11913,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "tests_set_files_changed_test_flagpath",
-      "community": 96,
+      "community": 614,
       "norm_label": "flagpath()"
     },
     {
@@ -11913,7 +11923,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "tests_set_files_changed_test_run",
-      "community": 96,
+      "community": 614,
       "norm_label": "run()"
     },
     {
@@ -11923,7 +11933,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "tests_set_files_changed_test_runcapture",
-      "community": 96,
+      "community": 614,
       "norm_label": "runcapture()"
     },
     {
@@ -11933,7 +11943,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_settings_strict_test",
-      "community": 103,
+      "community": 95,
       "norm_label": "settings-strict.test.mjs"
     },
     {
@@ -11943,7 +11953,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "tests_settings_strict_test_profile",
-      "community": 103,
+      "community": 95,
       "norm_label": "profile()"
     },
     {
@@ -11953,7 +11963,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "tests_settings_strict_test_hooktarget",
-      "community": 103,
+      "community": 95,
       "norm_label": "hooktarget()"
     },
     {
@@ -11963,7 +11973,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "tests_settings_strict_test_posttoolusecommands",
-      "community": 103,
+      "community": 95,
       "norm_label": "posttoolusecommands()"
     },
     {
@@ -11973,7 +11983,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "tests_settings_strict_test_stopcommands",
-      "community": 103,
+      "community": 95,
       "norm_label": "stopcommands()"
     },
     {
@@ -11983,7 +11993,7 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "tests_settings_strict_test_postcommands",
-      "community": 103,
+      "community": 95,
       "norm_label": "postcommands()"
     },
     {
@@ -11993,7 +12003,7 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "tests_settings_strict_test_allexecformargs",
-      "community": 103,
+      "community": 95,
       "norm_label": "allexecformargs()"
     },
     {
@@ -12003,7 +12013,7 @@
       "source_location": "L220",
       "_origin": "ast",
       "id": "tests_settings_strict_test_groupswithmatcher",
-      "community": 103,
+      "community": 95,
       "norm_label": "groupswithmatcher()"
     },
     {
@@ -12093,7 +12103,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_testing_catalog_test",
-      "community": 308,
+      "community": 560,
       "norm_label": "testing-catalog.test.mjs"
     },
     {
@@ -12103,7 +12113,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "tests_testing_catalog_test_profile",
-      "community": 308,
+      "community": 560,
       "norm_label": "profile()"
     },
     {
@@ -12143,7 +12153,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_tools_catalog_test",
-      "community": 41,
+      "community": 95,
       "norm_label": "tools-catalog.test.mjs"
     },
     {
@@ -12153,7 +12163,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "tests_tools_catalog_test_profile",
-      "community": 41,
+      "community": 95,
       "norm_label": "profile()"
     },
     {
@@ -12163,7 +12173,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_tools_plan_apply_test",
-      "community": 35,
+      "community": 643,
       "norm_label": "tools-plan-apply.test.mjs"
     },
     {
@@ -12173,7 +12183,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "tests_tools_plan_apply_test_root",
-      "community": 35,
+      "community": 643,
       "norm_label": "root"
     },
     {
@@ -12183,7 +12193,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "tests_tools_plan_apply_test_fix",
-      "community": 35,
+      "community": 643,
       "norm_label": "fix"
     },
     {
@@ -12193,7 +12203,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "tests_tools_plan_apply_test_has_tools",
-      "community": 35,
+      "community": 643,
       "norm_label": "has_tools"
     },
     {
@@ -12223,7 +12233,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_unit_test",
-      "community": 103,
+      "community": 95,
       "norm_label": "unit.test.mjs"
     },
     {
@@ -12233,7 +12243,7 @@
       "source_location": "L87",
       "_origin": "ast",
       "id": "tests_unit_test_minimalrootprofile",
-      "community": 103,
+      "community": 95,
       "norm_label": "minimalrootprofile()"
     },
     {
@@ -12243,7 +12253,7 @@
       "source_location": "L209",
       "_origin": "ast",
       "id": "tests_unit_test_minimalprofile",
-      "community": 103,
+      "community": 95,
       "norm_label": "minimalprofile()"
     },
     {
@@ -13107,6 +13117,26 @@
       "norm_label": "agent routing-description standard"
     },
     {
+      "label": "hook-output-schema.md",
+      "file_type": "document",
+      "source_file": ".claude/rules/hook-output-schema.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "claude_rules_hook_output_schema",
+      "community": 657,
+      "norm_label": "hook-output-schema.md"
+    },
+    {
+      "label": "Hook output schema \u2014 full 30-event reference",
+      "file_type": "document",
+      "source_file": ".claude/rules/hook-output-schema.md",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "claude_rules_hook_output_schema_hook_output_schema_full_30_event_reference",
+      "community": 657,
+      "norm_label": "hook output schema \u2014 full 30-event reference"
+    },
+    {
       "label": "hooks-cross-platform.md",
       "file_type": "document",
       "source_file": ".claude/rules/hooks-cross-platform.md",
@@ -13230,7 +13260,7 @@
       "label": "Hooks \u2014 cwd resolution standard (event.cwd vs CLAUDE_PROJECT_DIR vs process.cwd())",
       "file_type": "document",
       "source_file": ".claude/rules/hooks-cwd-resolution.md",
-      "source_location": "L1",
+      "source_location": "L9",
       "_origin": "ast",
       "id": "claude_rules_hooks_cwd_resolution_hooks_cwd_resolution_standard_event_cwd_vs_claude_project_dir_vs_process_cwd",
       "community": 303,
@@ -13240,7 +13270,7 @@
       "label": "Objective",
       "file_type": "document",
       "source_file": ".claude/rules/hooks-cwd-resolution.md",
-      "source_location": "L3",
+      "source_location": "L11",
       "_origin": "ast",
       "id": "claude_rules_hooks_cwd_resolution_objective",
       "community": 303,
@@ -13250,7 +13280,7 @@
       "label": "The three values, and what each actually tracks",
       "file_type": "document",
       "source_file": ".claude/rules/hooks-cwd-resolution.md",
-      "source_location": "L15",
+      "source_location": "L23",
       "_origin": "ast",
       "id": "claude_rules_hooks_cwd_resolution_the_three_values_and_what_each_actually_tracks",
       "community": 303,
@@ -13260,7 +13290,7 @@
       "label": "Two purposes \u2014 resolve them differently, never merge them",
       "file_type": "document",
       "source_file": ".claude/rules/hooks-cwd-resolution.md",
-      "source_location": "L23",
+      "source_location": "L31",
       "_origin": "ast",
       "id": "claude_rules_hooks_cwd_resolution_two_purposes_resolve_them_differently_never_merge_them",
       "community": 303,
@@ -13270,7 +13300,7 @@
       "label": "Which one do you have? A quick test",
       "file_type": "document",
       "source_file": ".claude/rules/hooks-cwd-resolution.md",
-      "source_location": "L57",
+      "source_location": "L65",
       "_origin": "ast",
       "id": "claude_rules_hooks_cwd_resolution_which_one_do_you_have_a_quick_test",
       "community": 303,
@@ -13280,7 +13310,7 @@
       "label": "Canonical examples in this codebase",
       "file_type": "document",
       "source_file": ".claude/rules/hooks-cwd-resolution.md",
-      "source_location": "L63",
+      "source_location": "L71",
       "_origin": "ast",
       "id": "claude_rules_hooks_cwd_resolution_canonical_examples_in_this_codebase",
       "community": 303,
@@ -13290,7 +13320,7 @@
       "label": "Forbidden",
       "file_type": "document",
       "source_file": ".claude/rules/hooks-cwd-resolution.md",
-      "source_location": "L70",
+      "source_location": "L78",
       "_origin": "ast",
       "id": "claude_rules_hooks_cwd_resolution_forbidden",
       "community": 303,
@@ -13300,7 +13330,7 @@
       "label": "Acceptance criteria",
       "file_type": "document",
       "source_file": ".claude/rules/hooks-cwd-resolution.md",
-      "source_location": "L77",
+      "source_location": "L85",
       "_origin": "ast",
       "id": "claude_rules_hooks_cwd_resolution_acceptance_criteria",
       "community": 303,
@@ -17870,57 +17900,17 @@
       "label": "Behavioral guidelines",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L46",
-      "_origin": "ast",
-      "id": "claude_behavioral_guidelines",
-      "community": 620,
-      "norm_label": "behavioral guidelines"
-    },
-    {
-      "label": "1. Think Before Coding",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
       "source_location": "L48",
       "_origin": "ast",
-      "id": "claude_1_think_before_coding",
-      "community": 620,
-      "norm_label": "1. think before coding"
-    },
-    {
-      "label": "2. Simplicity First",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L59",
-      "_origin": "ast",
-      "id": "claude_2_simplicity_first",
-      "community": 620,
-      "norm_label": "2. simplicity first"
-    },
-    {
-      "label": "3. Surgical Changes",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L71",
-      "_origin": "ast",
-      "id": "claude_3_surgical_changes",
-      "community": 620,
-      "norm_label": "3. surgical changes"
-    },
-    {
-      "label": "4. Goal-Driven Execution",
-      "file_type": "document",
-      "source_file": "CLAUDE.md",
-      "source_location": "L89",
-      "_origin": "ast",
-      "id": "claude_4_goal_driven_execution",
-      "community": 620,
-      "norm_label": "4. goal-driven execution"
+      "id": "claude_behavioral_guidelines",
+      "community": 466,
+      "norm_label": "behavioral guidelines"
     },
     {
       "label": "Surface (slash commands)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L111",
+      "source_location": "L57",
       "_origin": "ast",
       "id": "claude_surface_slash_commands",
       "community": 466,
@@ -17930,7 +17920,7 @@
       "label": "Architecture: the scan \u2192 plan \u2192 apply pipeline",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L121",
+      "source_location": "L67",
       "_origin": "ast",
       "id": "claude_architecture_the_scan_plan_apply_pipeline",
       "community": 466,
@@ -17940,7 +17930,7 @@
       "label": "Vendoring (ECC + tools)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L138",
+      "source_location": "L84",
       "_origin": "ast",
       "id": "claude_vendoring_ecc_tools",
       "community": 466,
@@ -17950,7 +17940,7 @@
       "label": "Conventions",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L154",
+      "source_location": "L100",
       "_origin": "ast",
       "id": "claude_conventions",
       "community": 466,
@@ -17960,7 +17950,7 @@
       "label": "graphify",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L265",
+      "source_location": "L131",
       "_origin": "ast",
       "id": "claude_graphify",
       "community": 466,
@@ -29473,7 +29463,7 @@
       "source_location": "L222",
       "_origin": "ast",
       "id": "templates_ag_kit_agents_mobile_developer_quick_reference",
-      "community": 619,
+      "community": 72,
       "norm_label": "quick reference"
     },
     {
@@ -29483,7 +29473,7 @@
       "source_location": "L224",
       "_origin": "ast",
       "id": "templates_ag_kit_agents_mobile_developer_touch_targets",
-      "community": 619,
+      "community": 72,
       "norm_label": "touch targets"
     },
     {
@@ -29493,7 +29483,7 @@
       "source_location": "L232",
       "_origin": "ast",
       "id": "templates_ag_kit_agents_mobile_developer_flatlist_react_native",
-      "community": 619,
+      "community": 72,
       "norm_label": "flatlist (react native)"
     },
     {
@@ -29503,7 +29493,7 @@
       "source_location": "L247",
       "_origin": "ast",
       "id": "templates_ag_kit_agents_mobile_developer_listview_builder_flutter",
-      "community": 619,
+      "community": 72,
       "norm_label": "listview.builder (flutter)"
     },
     {
@@ -41613,7 +41603,7 @@
       "source_location": "L186",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_navigation_5_modal_navigation",
-      "community": 630,
+      "community": 42,
       "norm_label": "5. modal navigation"
     },
     {
@@ -41623,7 +41613,7 @@
       "source_location": "L188",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_navigation_modal_vs_push",
-      "community": 630,
+      "community": 42,
       "norm_label": "modal vs push"
     },
     {
@@ -41633,7 +41623,7 @@
       "source_location": "L206",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_navigation_modal_types",
-      "community": 630,
+      "community": 42,
       "norm_label": "modal types"
     },
     {
@@ -41643,7 +41633,7 @@
       "source_location": "L215",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_navigation_modal_dismissal",
-      "community": 630,
+      "community": 42,
       "norm_label": "modal dismissal"
     },
     {
@@ -41653,7 +41643,7 @@
       "source_location": "L230",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_navigation_6_deep_linking",
-      "community": 42,
+      "community": 642,
       "norm_label": "6. deep linking"
     },
     {
@@ -41663,7 +41653,7 @@
       "source_location": "L232",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_navigation_why_deep_links_from_day_one",
-      "community": 42,
+      "community": 642,
       "norm_label": "why deep links from day one"
     },
     {
@@ -41673,7 +41663,7 @@
       "source_location": "L250",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_navigation_url_structure",
-      "community": 42,
+      "community": 642,
       "norm_label": "url structure"
     },
     {
@@ -41683,7 +41673,7 @@
       "source_location": "L268",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_navigation_deep_link_navigation_rules",
-      "community": 42,
+      "community": 642,
       "norm_label": "deep link navigation rules"
     },
     {
@@ -41793,7 +41783,7 @@
       "source_location": "L430",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_navigation_10_navigation_checklist",
-      "community": 629,
+      "community": 641,
       "norm_label": "10. navigation checklist"
     },
     {
@@ -41803,7 +41793,7 @@
       "source_location": "L432",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_navigation_before_navigation_architecture",
-      "community": 629,
+      "community": 641,
       "norm_label": "before navigation architecture"
     },
     {
@@ -41813,7 +41803,7 @@
       "source_location": "L440",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_navigation_before_every_screen",
-      "community": 629,
+      "community": 641,
       "norm_label": "before every screen"
     },
     {
@@ -41823,7 +41813,7 @@
       "source_location": "L448",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_navigation_before_release",
-      "community": 629,
+      "community": 641,
       "norm_label": "before release"
     },
     {
@@ -42393,7 +42383,7 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_testing_3_what_to_test_at_each_level",
-      "community": 54,
+      "community": 619,
       "norm_label": "3. what to test at each level"
     },
     {
@@ -42403,7 +42393,7 @@
       "source_location": "L118",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_testing_unit_tests_jest",
-      "community": 54,
+      "community": 619,
       "norm_label": "unit tests (jest)"
     },
     {
@@ -42413,7 +42403,7 @@
       "source_location": "L135",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_testing_component_tests_rntl_flutter_test",
-      "community": 54,
+      "community": 619,
       "norm_label": "component tests (rntl / flutter_test)"
     },
     {
@@ -42423,7 +42413,7 @@
       "source_location": "L152",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_testing_integration_tests",
-      "community": 54,
+      "community": 619,
       "norm_label": "integration tests"
     },
     {
@@ -42433,7 +42423,7 @@
       "source_location": "L168",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_testing_e2e_tests",
-      "community": 54,
+      "community": 619,
       "norm_label": "e2e tests"
     },
     {
@@ -43993,7 +43983,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_1_fitts_law_for_touch",
-      "community": 7,
+      "community": 549,
       "norm_label": "1. fitts' law for touch"
     },
     {
@@ -44003,7 +43993,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_the_fundamental_difference",
-      "community": 7,
+      "community": 549,
       "norm_label": "the fundamental difference"
     },
     {
@@ -44013,7 +44003,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_fitts_law_formula_adapted",
-      "community": 7,
+      "community": 549,
       "norm_label": "fitts' law formula adapted"
     },
     {
@@ -44023,7 +44013,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_minimum_touch_target_sizes",
-      "community": 7,
+      "community": 549,
       "norm_label": "minimum touch target sizes"
     },
     {
@@ -44033,7 +44023,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_visual_size_vs_hit_area",
-      "community": 7,
+      "community": 549,
       "norm_label": "visual size vs hit area"
     },
     {
@@ -44043,7 +44033,7 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_application_rules",
-      "community": 7,
+      "community": 549,
       "norm_label": "application rules"
     },
     {
@@ -44053,7 +44043,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_2_thumb_zone_anatomy",
-      "community": 7,
+      "community": 620,
       "norm_label": "2. thumb zone anatomy"
     },
     {
@@ -44063,7 +44053,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_one_handed_phone_usage",
-      "community": 7,
+      "community": 620,
       "norm_label": "one-handed phone usage"
     },
     {
@@ -44073,7 +44063,7 @@
       "source_location": "L108",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_thumb_arc_right_handed_user",
-      "community": 7,
+      "community": 620,
       "norm_label": "thumb arc (right-handed user)"
     },
     {
@@ -44083,7 +44073,7 @@
       "source_location": "L127",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_placement_guidelines",
-      "community": 7,
+      "community": 620,
       "norm_label": "placement guidelines"
     },
     {
@@ -44093,7 +44083,7 @@
       "source_location": "L139",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_large_phone_considerations_6",
-      "community": 7,
+      "community": 620,
       "norm_label": "large phone considerations (>6\")"
     },
     {
@@ -44143,7 +44133,7 @@
       "source_location": "L201",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_4_gesture_psychology",
-      "community": 7,
+      "community": 629,
       "norm_label": "4. gesture psychology"
     },
     {
@@ -44153,7 +44143,7 @@
       "source_location": "L203",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_gesture_discoverability_problem",
-      "community": 7,
+      "community": 629,
       "norm_label": "gesture discoverability problem"
     },
     {
@@ -44163,7 +44153,7 @@
       "source_location": "L219",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_common_gesture_conventions",
-      "community": 7,
+      "community": 629,
       "norm_label": "common gesture conventions"
     },
     {
@@ -44173,7 +44163,7 @@
       "source_location": "L231",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_gesture_affordance_design",
-      "community": 7,
+      "community": 629,
       "norm_label": "gesture affordance design"
     },
     {
@@ -44183,7 +44173,7 @@
       "source_location": "L248",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_platform_gesture_differences",
-      "community": 7,
+      "community": 629,
       "norm_label": "platform gesture differences"
     },
     {
@@ -44253,7 +44243,7 @@
       "source_location": "L334",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_6_mobile_cognitive_load",
-      "community": 7,
+      "community": 635,
       "norm_label": "6. mobile cognitive load"
     },
     {
@@ -44263,7 +44253,7 @@
       "source_location": "L336",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_how_mobile_differs_from_desktop",
-      "community": 7,
+      "community": 635,
       "norm_label": "how mobile differs from desktop"
     },
     {
@@ -44273,7 +44263,7 @@
       "source_location": "L346",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_reducing_mobile_cognitive_load",
-      "community": 7,
+      "community": 635,
       "norm_label": "reducing mobile cognitive load"
     },
     {
@@ -44283,7 +44273,7 @@
       "source_location": "L368",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_miller_s_law_for_mobile",
-      "community": 7,
+      "community": 635,
       "norm_label": "miller's law for mobile"
     },
     {
@@ -44293,7 +44283,7 @@
       "source_location": "L379",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_hick_s_law_for_mobile",
-      "community": 7,
+      "community": 635,
       "norm_label": "hick's law for mobile"
     },
     {
@@ -46093,7 +46083,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_vulnerability_scanner_skill_5_risk_prioritization",
-      "community": 614,
+      "community": 553,
       "norm_label": "5. risk prioritization"
     },
     {
@@ -46103,7 +46093,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_vulnerability_scanner_skill_cvss_context",
-      "community": 614,
+      "community": 553,
       "norm_label": "cvss + context"
     },
     {
@@ -46113,7 +46103,7 @@
       "source_location": "L135",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_vulnerability_scanner_skill_prioritization_decision_tree",
-      "community": 614,
+      "community": 553,
       "norm_label": "prioritization decision tree"
     },
     {
@@ -50593,7 +50583,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "templates_ecc_rules_common_coding_style",
-      "community": 267,
+      "community": 415,
       "norm_label": "coding-style.md"
     },
     {
@@ -50883,7 +50873,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "templates_ecc_rules_common_patterns_common_patterns",
-      "community": 214,
+      "community": 638,
       "norm_label": "common patterns"
     },
     {
@@ -50893,7 +50883,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "templates_ecc_rules_common_patterns_skeleton_projects",
-      "community": 214,
+      "community": 638,
       "norm_label": "skeleton projects"
     },
     {
@@ -50903,7 +50893,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "templates_ecc_rules_common_patterns_design_patterns",
-      "community": 214,
+      "community": 638,
       "norm_label": "design patterns"
     },
     {
@@ -50913,7 +50903,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "templates_ecc_rules_common_patterns_repository_pattern",
-      "community": 214,
+      "community": 638,
       "norm_label": "repository pattern"
     },
     {
@@ -50923,7 +50913,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "templates_ecc_rules_common_patterns_api_response_format",
-      "community": 214,
+      "community": 638,
       "norm_label": "api response format"
     },
     {
@@ -51753,7 +51743,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "templates_ecc_rules_dart_coding_style",
-      "community": 267,
+      "community": 415,
       "norm_label": "coding-style.md"
     },
     {
@@ -53063,7 +53053,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "templates_ecc_rules_kotlin_hooks",
-      "community": 553,
+      "community": 647,
       "norm_label": "hooks.md"
     },
     {
@@ -53073,7 +53063,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "templates_ecc_rules_kotlin_hooks_kotlin_hooks",
-      "community": 553,
+      "community": 647,
       "norm_label": "kotlin hooks"
     },
     {
@@ -53083,7 +53073,7 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "templates_ecc_rules_kotlin_hooks_posttooluse_hooks",
-      "community": 553,
+      "community": 647,
       "norm_label": "posttooluse hooks"
     },
     {
@@ -54063,7 +54053,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "templates_ecc_rules_react_coding_style",
-      "community": 267,
+      "community": 415,
       "norm_label": "coding-style.md"
     },
     {
@@ -55273,7 +55263,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "templates_ecc_rules_typescript_coding_style",
-      "community": 267,
+      "community": 415,
       "norm_label": "coding-style.md"
     },
     {
@@ -64513,7 +64503,7 @@
       "source_location": "L131",
       "_origin": "ast",
       "id": "templates_ecc_skills_react_patterns_skill_forms",
-      "community": 253,
+      "community": 652,
       "norm_label": "forms"
     },
     {
@@ -64523,7 +64513,7 @@
       "source_location": "L133",
       "_origin": "ast",
       "id": "templates_ecc_skills_react_patterns_skill_react_19_form_actions_preferred_for_new_code",
-      "community": 253,
+      "community": 652,
       "norm_label": "react 19 form actions (preferred for new code)"
     },
     {
@@ -64533,7 +64523,7 @@
       "source_location": "L161",
       "_origin": "ast",
       "id": "templates_ecc_skills_react_patterns_skill_controlled_inputs",
-      "community": 253,
+      "community": 652,
       "norm_label": "controlled inputs"
     },
     {
@@ -64543,7 +64533,7 @@
       "source_location": "L165",
       "_origin": "ast",
       "id": "templates_ecc_skills_react_patterns_skill_complex_forms",
-      "community": 253,
+      "community": 652,
       "norm_label": "complex forms"
     },
     {
@@ -64693,7 +64683,7 @@
       "source_location": "L274",
       "_origin": "ast",
       "id": "templates_ecc_skills_react_patterns_skill_examples",
-      "community": 645,
+      "community": 253,
       "norm_label": "examples"
     },
     {
@@ -64703,7 +64693,7 @@
       "source_location": "L276",
       "_origin": "ast",
       "id": "templates_ecc_skills_react_patterns_skill_custom_hook_for_debounced_search",
-      "community": 645,
+      "community": 253,
       "norm_label": "custom hook for debounced search"
     },
     {
@@ -64713,7 +64703,7 @@
       "source_location": "L305",
       "_origin": "ast",
       "id": "templates_ecc_skills_react_patterns_skill_optimistic_ui_with_react_19_useoptimistic",
-      "community": 645,
+      "community": 253,
       "norm_label": "optimistic ui with react 19 `useoptimistic`"
     },
     {
@@ -64723,7 +64713,7 @@
       "source_location": "L335",
       "_origin": "ast",
       "id": "templates_ecc_skills_react_patterns_skill_splitting_context_to_avoid_render_cascades",
-      "community": 645,
+      "community": 253,
       "norm_label": "splitting context to avoid render cascades"
     },
     {
@@ -68523,7 +68513,7 @@
       "source_location": "L134",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_common_error_codes_and_fixes",
-      "community": 549,
+      "community": 94,
       "norm_label": "common error codes and fixes"
     },
     {
@@ -68533,7 +68523,7 @@
       "source_location": "L136",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_expression_syntax_errors",
-      "community": 549,
+      "community": 94,
       "norm_label": "expression syntax errors"
     },
     {
@@ -68543,7 +68533,7 @@
       "source_location": "L152",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_undefined_action_inputs_outputs",
-      "community": 549,
+      "community": 94,
       "norm_label": "undefined action inputs/outputs"
     },
     {
@@ -68553,7 +68543,7 @@
       "source_location": "L172",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_yaml_type_errors",
-      "community": 549,
+      "community": 94,
       "norm_label": "yaml type errors"
     },
     {
@@ -68563,7 +68553,7 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_deprecated_action_versions",
-      "community": 549,
+      "community": 94,
       "norm_label": "deprecated action versions"
     },
     {
@@ -68573,7 +68563,7 @@
       "source_location": "L206",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_missing_permissions_declarations",
-      "community": 549,
+      "community": 94,
       "norm_label": "missing permissions declarations"
     },
     {
@@ -68583,7 +68573,7 @@
       "source_location": "L217",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_shellcheck_issues_in_run_blocks",
-      "community": 549,
+      "community": 94,
       "norm_label": "shellcheck issues in run: blocks"
     },
     {
@@ -68593,7 +68583,7 @@
       "source_location": "L235",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_context_object_property_access",
-      "community": 549,
+      "community": 94,
       "norm_label": "context/object property access"
     },
     {
@@ -69543,7 +69533,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_dependency_management_reference",
-      "community": 526,
+      "community": 645,
       "norm_label": "dependency management reference"
     },
     {
@@ -69553,7 +69543,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_dependabot",
-      "community": 526,
+      "community": 645,
       "norm_label": "dependabot"
     },
     {
@@ -69563,7 +69553,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_basic_configuration",
-      "community": 526,
+      "community": 645,
       "norm_label": "basic configuration"
     },
     {
@@ -69573,7 +69563,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_package_ecosystems",
-      "community": 526,
+      "community": 645,
       "norm_label": "package ecosystems"
     },
     {
@@ -69583,7 +69573,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_ecosystem_hygiene_only_declare_what_the_repo_actually_has",
-      "community": 526,
+      "community": 645,
       "norm_label": "ecosystem hygiene \u2014 only declare what the repo actually has"
     },
     {
@@ -69593,7 +69583,7 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_grouping_dependencies",
-      "community": 526,
+      "community": 645,
       "norm_label": "grouping dependencies"
     },
     {
@@ -69603,7 +69593,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_commit_message_prefixes",
-      "community": 526,
+      "community": 645,
       "norm_label": "commit message prefixes"
     },
     {
@@ -69613,7 +69603,7 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_multiple_ecosystems",
-      "community": 526,
+      "community": 645,
       "norm_label": "multiple ecosystems"
     },
     {
@@ -69623,7 +69613,7 @@
       "source_location": "L147",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_ignoring_dependencies",
-      "community": 526,
+      "community": 645,
       "norm_label": "ignoring dependencies"
     },
     {
@@ -69633,7 +69623,7 @@
       "source_location": "L161",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_reviewers_and_assignees",
-      "community": 526,
+      "community": 645,
       "norm_label": "reviewers and assignees"
     },
     {
@@ -69643,7 +69633,7 @@
       "source_location": "L175",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_renovate",
-      "community": 526,
+      "community": 645,
       "norm_label": "renovate"
     },
     {
@@ -69653,7 +69643,7 @@
       "source_location": "L177",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_basic_configuration_177",
-      "community": 526,
+      "community": 645,
       "norm_label": "basic configuration"
     },
     {
@@ -69663,7 +69653,7 @@
       "source_location": "L187",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_extended_configuration",
-      "community": 526,
+      "community": 645,
       "norm_label": "extended configuration"
     },
     {
@@ -69673,7 +69663,7 @@
       "source_location": "L205",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_auto_merge_configuration_recommended",
-      "community": 526,
+      "community": 645,
       "norm_label": "auto-merge configuration (recommended)"
     },
     {
@@ -69683,7 +69673,7 @@
       "source_location": "L230",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_lock_file_maintenance",
-      "community": 526,
+      "community": 645,
       "norm_label": "lock file maintenance"
     },
     {
@@ -69693,7 +69683,7 @@
       "source_location": "L245",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_grouping_rules",
-      "community": 526,
+      "community": 645,
       "norm_label": "grouping rules"
     },
     {
@@ -69703,7 +69693,7 @@
       "source_location": "L266",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_security_updates",
-      "community": 526,
+      "community": 645,
       "norm_label": "security updates"
     },
     {
@@ -69713,7 +69703,7 @@
       "source_location": "L280",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_php_composer_configuration",
-      "community": 526,
+      "community": 645,
       "norm_label": "php/composer configuration"
     },
     {
@@ -69723,7 +69713,7 @@
       "source_location": "L300",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_go_configuration",
-      "community": 526,
+      "community": 645,
       "norm_label": "go configuration"
     },
     {
@@ -69733,7 +69723,7 @@
       "source_location": "L317",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_auto_merge_workflow",
-      "community": 526,
+      "community": 645,
       "norm_label": "auto-merge workflow"
     },
     {
@@ -69743,7 +69733,7 @@
       "source_location": "L319",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_auto_merge_decision_matrix",
-      "community": 526,
+      "community": 645,
       "norm_label": "auto-merge decision matrix"
     },
     {
@@ -69753,7 +69743,7 @@
       "source_location": "L327",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_renovate_vs_dependabot_auto_merge",
-      "community": 526,
+      "community": 645,
       "norm_label": "renovate vs dependabot auto-merge"
     },
     {
@@ -69763,7 +69753,7 @@
       "source_location": "L338",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_github_actions_auto_merge_dependabot_only",
-      "community": 526,
+      "community": 645,
       "norm_label": "github actions auto-merge (dependabot only)"
     },
     {
@@ -69773,7 +69763,7 @@
       "source_location": "L391",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_github_actions_auto_merge_merge_queue",
-      "community": 526,
+      "community": 645,
       "norm_label": "github actions auto-merge (merge queue)"
     },
     {
@@ -69783,7 +69773,7 @@
       "source_location": "L434",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_branch_protection_configuration",
-      "community": 526,
+      "community": 645,
       "norm_label": "branch protection configuration"
     },
     {
@@ -69793,7 +69783,7 @@
       "source_location": "L436",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_required_status_checks_critical",
-      "community": 526,
+      "community": 645,
       "norm_label": "required status checks - critical"
     },
     {
@@ -69803,7 +69793,7 @@
       "source_location": "L461",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_bypass_permissions_for_auto_merge",
-      "community": 526,
+      "community": 645,
       "norm_label": "bypass permissions for auto-merge"
     },
     {
@@ -69813,7 +69803,7 @@
       "source_location": "L479",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_code_owner_reviews_avoid_with_auto_merge",
-      "community": 526,
+      "community": 645,
       "norm_label": "code owner reviews - avoid with auto-merge"
     },
     {
@@ -69823,7 +69813,7 @@
       "source_location": "L497",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_merge_strategy_requirements",
-      "community": 526,
+      "community": 645,
       "norm_label": "merge strategy requirements"
     },
     {
@@ -69833,7 +69823,7 @@
       "source_location": "L509",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_strict_status_checks",
-      "community": 526,
+      "community": 645,
       "norm_label": "strict status checks"
     },
     {
@@ -69843,7 +69833,7 @@
       "source_location": "L520",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_troubleshooting_auto_merge",
-      "community": 526,
+      "community": 645,
       "norm_label": "troubleshooting auto-merge"
     },
     {
@@ -69853,7 +69843,7 @@
       "source_location": "L522",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_pr_shows_blocked_despite_passing_checks",
-      "community": 526,
+      "community": 645,
       "norm_label": "pr shows blocked despite passing checks"
     },
     {
@@ -69863,7 +69853,7 @@
       "source_location": "L554",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_workflow_not_triggering",
-      "community": 526,
+      "community": 645,
       "norm_label": "workflow not triggering"
     },
     {
@@ -69873,7 +69863,7 @@
       "source_location": "L571",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_ci_cannot_push_to_protected_branch",
-      "community": 526,
+      "community": 645,
       "norm_label": "ci cannot push to protected branch"
     },
     {
@@ -69883,7 +69873,7 @@
       "source_location": "L587",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_auto_merge_enabled_by_wrong_actor",
-      "community": 526,
+      "community": 645,
       "norm_label": "auto-merge enabled by wrong actor"
     },
     {
@@ -69893,7 +69883,7 @@
       "source_location": "L595",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_merge_method_mismatch_in_auto_merge_workflow",
-      "community": 526,
+      "community": 645,
       "norm_label": "merge method mismatch in auto-merge workflow"
     },
     {
@@ -69903,7 +69893,7 @@
       "source_location": "L615",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_github_actor_unreliable_for_bot_detection",
-      "community": 526,
+      "community": 645,
       "norm_label": "`github.actor` unreliable for bot detection"
     },
     {
@@ -69913,7 +69903,7 @@
       "source_location": "L630",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_gitleaks_fails_on_dependabot_renovate_prs",
-      "community": 526,
+      "community": 645,
       "norm_label": "gitleaks fails on dependabot/renovate prs"
     },
     {
@@ -69923,7 +69913,7 @@
       "source_location": "L649",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_pre_existing_prs_don_t_auto_merge",
-      "community": 526,
+      "community": 645,
       "norm_label": "pre-existing prs don't auto-merge"
     },
     {
@@ -69933,7 +69923,7 @@
       "source_location": "L660",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_github_token_cannot_modify_workflow_files",
-      "community": 526,
+      "community": 645,
       "norm_label": "github_token cannot modify workflow files"
     },
     {
@@ -69943,7 +69933,7 @@
       "source_location": "L682",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_comparison_dependabot_vs_renovate",
-      "community": 526,
+      "community": 645,
       "norm_label": "comparison: dependabot vs renovate"
     },
     {
@@ -69953,7 +69943,7 @@
       "source_location": "L698",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_when_to_use_dependabot",
-      "community": 526,
+      "community": 645,
       "norm_label": "when to use dependabot"
     },
     {
@@ -69963,7 +69953,7 @@
       "source_location": "L704",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_when_to_use_renovate",
-      "community": 526,
+      "community": 645,
       "norm_label": "when to use renovate"
     },
     {
@@ -69973,7 +69963,7 @@
       "source_location": "L713",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_best_practices",
-      "community": 526,
+      "community": 645,
       "norm_label": "best practices"
     },
     {
@@ -83352,7 +83342,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L199",
+      "source_location": "L137",
       "weight": 1.0,
       "source": "lib_generate_claude_md_skillsblock",
       "target": "lib_data_skill_map_skillsforprofile"
@@ -86295,30 +86285,106 @@
       "confidence_score": 1.0
     },
     {
-      "relation": "contains",
+      "relation": "imports_from",
+      "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L238",
+      "source_location": "L14",
       "weight": 1.0,
       "source": "lib_generate_claude_md",
-      "target": "lib_generate_claude_md_agent_order",
+      "target": "lib_generate_claude_md_agents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/generate/claude-md-agents.mjs",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "lib_generate_claude_md_agents",
+      "target": "lib_generate_claude_md_agents_agent_order",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/generate/claude-md-agents.mjs",
+      "source_location": "L104",
+      "weight": 1.0,
+      "source": "lib_generate_claude_md_agents",
+      "target": "lib_generate_claude_md_agents_agentsworkflowblock",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/generate/claude-md-agents.mjs",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "lib_generate_claude_md_agents",
+      "target": "lib_generate_claude_md_agents_routingrole",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/claude-md.test.mjs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "tests_claude_md_test",
+      "target": "lib_generate_claude_md_agents",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/claude-md.test.mjs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "tests_claude_md_test",
+      "target": "lib_generate_claude_md_agents_routingrole",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "lib/generate/claude-md.mjs",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "lib_generate_claude_md",
+      "target": "lib_generate_claude_md_agents_agentsworkflowblock",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/generate/claude-md.mjs",
+      "source_location": "L181",
+      "weight": 1.0,
+      "source": "lib_generate_claude_md_renderrootclaudemd",
+      "target": "lib_generate_claude_md_agents_agentsworkflowblock"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/claude-md.test.mjs",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "tests_claude_md_test",
+      "target": "lib_generate_claude_md_agents_agentsworkflowblock",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L290",
-      "weight": 1.0,
-      "source": "lib_generate_claude_md",
-      "target": "lib_generate_claude_md_agentsworkflowblock",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L142",
+      "source_location": "L80",
       "weight": 1.0,
       "source": "lib_generate_claude_md",
       "target": "lib_generate_claude_md_codereviewrule",
@@ -86328,7 +86394,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L174",
+      "source_location": "L112",
       "weight": 1.0,
       "source": "lib_generate_claude_md",
       "target": "lib_generate_claude_md_commandsblock",
@@ -86338,7 +86404,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L154",
+      "source_location": "L92",
       "weight": 1.0,
       "source": "lib_generate_claude_md",
       "target": "lib_generate_claude_md_domain_fixed_rules",
@@ -86348,7 +86414,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L166",
+      "source_location": "L104",
       "weight": 1.0,
       "source": "lib_generate_claude_md",
       "target": "lib_generate_claude_md_fixedrulesblock",
@@ -86358,7 +86424,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L451",
+      "source_location": "L241",
       "weight": 1.0,
       "source": "lib_generate_claude_md",
       "target": "lib_generate_claude_md_renderdomainclaudemd",
@@ -86368,7 +86434,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L379",
+      "source_location": "L169",
       "weight": 1.0,
       "source": "lib_generate_claude_md",
       "target": "lib_generate_claude_md_renderrootclaudemd",
@@ -86378,7 +86444,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L127",
+      "source_location": "L65",
       "weight": 1.0,
       "source": "lib_generate_claude_md",
       "target": "lib_generate_claude_md_root_fixed_rules",
@@ -86388,17 +86454,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L211",
-      "weight": 1.0,
-      "source": "lib_generate_claude_md",
-      "target": "lib_generate_claude_md_routingrole",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L198",
+      "source_location": "L136",
       "weight": 1.0,
       "source": "lib_generate_claude_md",
       "target": "lib_generate_claude_md_skillsblock",
@@ -86408,7 +86464,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L357",
+      "source_location": "L147",
       "weight": 1.0,
       "source": "lib_generate_claude_md",
       "target": "lib_generate_claude_md_stackline",
@@ -86444,17 +86500,6 @@
       "source_location": "L5",
       "weight": 1.0,
       "source": "lib_render",
-      "target": "lib_generate_claude_md",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/claude-md.test.mjs",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "tests_claude_md_test",
       "target": "lib_generate_claude_md",
       "confidence_score": 1.0
     },
@@ -86507,7 +86552,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L407",
+      "source_location": "L197",
       "weight": 1.0,
       "source": "lib_generate_claude_md_renderrootclaudemd",
       "target": "lib_generate_claude_md_codereviewrule",
@@ -86540,7 +86585,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L482",
+      "source_location": "L272",
       "weight": 1.0,
       "source": "lib_generate_claude_md_renderdomainclaudemd",
       "target": "lib_generate_claude_md_fixedrulesblock",
@@ -86551,7 +86596,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L439",
+      "source_location": "L229",
       "weight": 1.0,
       "source": "lib_generate_claude_md_renderrootclaudemd",
       "target": "lib_generate_claude_md_fixedrulesblock",
@@ -86562,7 +86607,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L424",
+      "source_location": "L214",
       "weight": 1.0,
       "source": "lib_generate_claude_md_renderrootclaudemd",
       "target": "lib_generate_claude_md_commandsblock",
@@ -86628,7 +86673,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L390",
+      "source_location": "L180",
       "weight": 1.0,
       "source": "lib_generate_claude_md_renderrootclaudemd",
       "target": "lib_generate_claude_md_skillsblock",
@@ -86646,44 +86691,11 @@
       "confidence_score": 1.0
     },
     {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/claude-md.test.mjs",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "tests_claude_md_test",
-      "target": "lib_generate_claude_md_routingrole",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L391",
-      "weight": 1.0,
-      "source": "lib_generate_claude_md_renderrootclaudemd",
-      "target": "lib_generate_claude_md_agentsworkflowblock",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/claude-md.test.mjs",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "tests_claude_md_test",
-      "target": "lib_generate_claude_md_agentsworkflowblock",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L415",
+      "source_location": "L205",
       "weight": 1.0,
       "source": "lib_generate_claude_md_renderrootclaudemd",
       "target": "lib_generate_claude_md_stackline",
@@ -102817,6 +102829,16 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": ".claude/rules/hook-output-schema.md",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "claude_rules_hook_output_schema",
+      "target": "claude_rules_hook_output_schema_hook_output_schema_full_30_event_reference",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": ".claude/rules/hooks-cross-platform.md",
       "source_location": "L8",
       "weight": 1.0,
@@ -102928,7 +102950,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": ".claude/rules/hooks-cwd-resolution.md",
-      "source_location": "L1",
+      "source_location": "L9",
       "weight": 1.0,
       "source": "claude_rules_hooks_cwd_resolution",
       "target": "claude_rules_hooks_cwd_resolution_hooks_cwd_resolution_standard_event_cwd_vs_claude_project_dir_vs_process_cwd",
@@ -102938,7 +102960,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": ".claude/rules/hooks-cwd-resolution.md",
-      "source_location": "L77",
+      "source_location": "L85",
       "weight": 1.0,
       "source": "claude_rules_hooks_cwd_resolution_hooks_cwd_resolution_standard_event_cwd_vs_claude_project_dir_vs_process_cwd",
       "target": "claude_rules_hooks_cwd_resolution_acceptance_criteria",
@@ -102948,7 +102970,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": ".claude/rules/hooks-cwd-resolution.md",
-      "source_location": "L63",
+      "source_location": "L71",
       "weight": 1.0,
       "source": "claude_rules_hooks_cwd_resolution_hooks_cwd_resolution_standard_event_cwd_vs_claude_project_dir_vs_process_cwd",
       "target": "claude_rules_hooks_cwd_resolution_canonical_examples_in_this_codebase",
@@ -102958,7 +102980,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": ".claude/rules/hooks-cwd-resolution.md",
-      "source_location": "L70",
+      "source_location": "L78",
       "weight": 1.0,
       "source": "claude_rules_hooks_cwd_resolution_hooks_cwd_resolution_standard_event_cwd_vs_claude_project_dir_vs_process_cwd",
       "target": "claude_rules_hooks_cwd_resolution_forbidden",
@@ -102968,7 +102990,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": ".claude/rules/hooks-cwd-resolution.md",
-      "source_location": "L3",
+      "source_location": "L11",
       "weight": 1.0,
       "source": "claude_rules_hooks_cwd_resolution_hooks_cwd_resolution_standard_event_cwd_vs_claude_project_dir_vs_process_cwd",
       "target": "claude_rules_hooks_cwd_resolution_objective",
@@ -102978,7 +103000,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": ".claude/rules/hooks-cwd-resolution.md",
-      "source_location": "L15",
+      "source_location": "L23",
       "weight": 1.0,
       "source": "claude_rules_hooks_cwd_resolution_hooks_cwd_resolution_standard_event_cwd_vs_claude_project_dir_vs_process_cwd",
       "target": "claude_rules_hooks_cwd_resolution_the_three_values_and_what_each_actually_tracks",
@@ -102988,7 +103010,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": ".claude/rules/hooks-cwd-resolution.md",
-      "source_location": "L23",
+      "source_location": "L31",
       "weight": 1.0,
       "source": "claude_rules_hooks_cwd_resolution_hooks_cwd_resolution_standard_event_cwd_vs_claude_project_dir_vs_process_cwd",
       "target": "claude_rules_hooks_cwd_resolution_two_purposes_resolve_them_differently_never_merge_them",
@@ -102998,7 +103020,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": ".claude/rules/hooks-cwd-resolution.md",
-      "source_location": "L57",
+      "source_location": "L65",
       "weight": 1.0,
       "source": "claude_rules_hooks_cwd_resolution_hooks_cwd_resolution_standard_event_cwd_vs_claude_project_dir_vs_process_cwd",
       "target": "claude_rules_hooks_cwd_resolution_which_one_do_you_have_a_quick_test",
@@ -107338,7 +107360,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L121",
+      "source_location": "L67",
       "weight": 1.0,
       "source": "claude_md_claude_claude",
       "target": "claude_architecture_the_scan_plan_apply_pipeline",
@@ -107348,7 +107370,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L46",
+      "source_location": "L48",
       "weight": 1.0,
       "source": "claude_md_claude_claude",
       "target": "claude_behavioral_guidelines",
@@ -107378,7 +107400,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L154",
+      "source_location": "L100",
       "weight": 1.0,
       "source": "claude_md_claude_claude",
       "target": "claude_conventions",
@@ -107388,7 +107410,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L265",
+      "source_location": "L131",
       "weight": 1.0,
       "source": "claude_md_claude_claude",
       "target": "claude_graphify",
@@ -107398,7 +107420,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L111",
+      "source_location": "L57",
       "weight": 1.0,
       "source": "claude_md_claude_claude",
       "target": "claude_surface_slash_commands",
@@ -107418,47 +107440,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "CLAUDE.md",
-      "source_location": "L48",
-      "weight": 1.0,
-      "source": "claude_behavioral_guidelines",
-      "target": "claude_1_think_before_coding",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L59",
-      "weight": 1.0,
-      "source": "claude_behavioral_guidelines",
-      "target": "claude_2_simplicity_first",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L71",
-      "weight": 1.0,
-      "source": "claude_behavioral_guidelines",
-      "target": "claude_3_surgical_changes",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L89",
-      "weight": 1.0,
-      "source": "claude_behavioral_guidelines",
-      "target": "claude_4_goal_driven_execution",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "CLAUDE.md",
-      "source_location": "L138",
+      "source_location": "L84",
       "weight": 1.0,
       "source": "claude_architecture_the_scan_plan_apply_pipeline",
       "target": "claude_vendoring_ecc_tools",
@@ -165816,5 +165798,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "051e8766ec5bab2c52c2a6c8e4313c65f91a4c3a"
+  "built_at_commit": "2434dba6460628cc4a087145225d0f8204a0c037"
 }

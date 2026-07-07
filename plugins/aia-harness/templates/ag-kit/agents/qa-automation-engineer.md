@@ -4,7 +4,6 @@ description: >
   Writes and maintains E2E tests (Playwright/Cypress) and CI/CD quality
   gates. Use proactively after new user flows are implemented or when E2E
   coverage is missing for a critical path.
-tools: Read, Grep, Glob, Bash, Edit, Write, CodebaseQuery, Bash
 model: sonnet
 ---
 <!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/agent/qa-automation-engineer.md. MIT (c) vudovn. -->

@@ -4,7 +4,6 @@ description: >
   Implements game mechanics, physics, AI, and rendering for Unity, Godot,
   Phaser, or Bevy projects. Use proactively when building game systems,
   scenes, or solving engine-specific performance and behavior problems.
-tools: Read, Write, Edit, Bash, Grep, Glob
 model: sonnet
 ---
 <!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/agent/game-developer.md. MIT (c) vudovn. -->

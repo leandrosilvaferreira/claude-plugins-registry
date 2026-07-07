@@ -5,7 +5,6 @@ description: >
   safety violations, pubspec dependency conflicts, build_runner failures,
   and platform-specific (Android/iOS/web) build errors. Use proactively
   when `flutter build` or `dart analyze` reports errors.
-tools: Read, Write, Edit, Bash, Grep, Glob
 model: sonnet
 ---
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: agents/dart-build-resolver.md. MIT (c) Affaan Mustafa. -->

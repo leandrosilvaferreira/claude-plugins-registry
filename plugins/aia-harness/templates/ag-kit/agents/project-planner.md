@@ -5,7 +5,6 @@ description: >
   acceptance criteria. Use proactively when starting a new feature,
   sprint, or significant refactor that needs a structured plan before
   implementation begins.
-tools: Read, Grep, Glob, Bash
 model: sonnet
 ---
 <!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/agent/project-planner.md. MIT (c) vudovn. -->

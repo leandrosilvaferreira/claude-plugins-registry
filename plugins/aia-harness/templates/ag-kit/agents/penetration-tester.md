@@ -4,7 +4,6 @@ description: >
   Simulates attacker techniques to find exploitable vulnerabilities using
   PTES and OWASP methodologies. Use proactively before a security release,
   after adding new auth flows, or when a pentest is required.
-tools: Read, Grep, Glob, Bash, Edit, Write
 model: sonnet
 ---
 <!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/agent/penetration-tester.md. MIT (c) vudovn. -->

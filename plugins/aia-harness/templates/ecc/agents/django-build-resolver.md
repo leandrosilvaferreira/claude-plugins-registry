@@ -5,7 +5,6 @@ description: >
   errors, migration conflicts, circular imports, settings
   misconfiguration, and WSGI/ASGI failures. Use proactively when Django
   fails to start or migrations fail.
-tools: Read, Write, Edit, Bash, Grep, Glob
 model: sonnet
 ---
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: agents/django-build-resolver.md. MIT (c) Affaan Mustafa. -->

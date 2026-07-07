@@ -1,3 +1,11 @@
+---
+paths:
+  - "hooks/**"
+  - ".claude/hooks/**"
+  - "templates/hooks/**"
+  - "tests/hook-*"
+---
+
 # Hooks — cwd resolution standard (event.cwd vs CLAUDE_PROJECT_DIR vs process.cwd())
 
 ## Objective

@@ -155,7 +155,7 @@ for the user's platform and stop — do not execute the following steps.
    **Pass 3 — Synthesize and rewrite.** Using data from passes 1 and 2, edit the root `CLAUDE.md`:
 
    1. Rewrite the root `## Architecture map`: one line per relevant module/directory, describing **responsibility + relationships** (e.g. "protected by middleware X", "consumes service Y via lib/Z"). Omit obvious directories (`node_modules`, `dist`, `.git`). Max 15 entries.
-   2. Rewrite the root `## Conventions`: 4–7 **project-specific** conventions detected from the source — concrete and actionable, not generic. Replace only the placeholder line under `## Conventions`. **Do not touch `## Engineering rules`** (the `aia-harness:fixed` section) — those non-negotiable rules stay verbatim; never move, reword, or drop them.
+   2. Rewrite the root `## Conventions`: 4–7 **project-specific** conventions detected from the source — concrete and actionable, not generic. Keep each convention to 1–2 lines; when one needs deeper detail, write the detail as a path-scoped rule under `.claude/rules/` (`paths:` frontmatter) and leave a one-line pointer in `CLAUDE.md` — the root file loads every session, rules load lazily. Replace only the placeholder line under `## Conventions`. **Do not touch `## Engineering rules`** (the `aia-harness:fixed` section) — those non-negotiable rules stay verbatim; never move, reword, or drop them.
    3. Remove every `<!-- AI-ENRICH: ... -->` comment from the root `CLAUDE.md` you touched, but **keep every `aia-harness:fixed` marker** so the protected rules stay flagged for future audits.
    4. Show a diff of the root `CLAUDE.md` versus the skeleton. Wait for explicit user approval before writing with `Edit`.
 

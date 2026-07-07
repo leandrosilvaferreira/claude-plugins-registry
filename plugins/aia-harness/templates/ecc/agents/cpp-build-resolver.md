@@ -5,7 +5,6 @@ description: >
   linker failures (undefined references, multiple definitions), template
   instantiation errors, and missing includes. Use proactively when the
   CMake or compiler step fails.
-tools: Read, Write, Edit, Bash, Grep, Glob
 model: sonnet
 ---
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: agents/cpp-build-resolver.md. MIT (c) Affaan Mustafa. -->

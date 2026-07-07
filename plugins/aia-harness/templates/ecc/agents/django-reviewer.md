@@ -5,7 +5,6 @@ description: >
   mark_safe misuse, migration correctness, and DRF serializer patterns.
   Use proactively after editing Django views, models, or serializers. MUST
   BE USED before merging Django changes.
-tools: Read, Grep, Glob, Bash
 model: sonnet
 ---
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: agents/django-reviewer.md. MIT (c) Affaan Mustafa. -->

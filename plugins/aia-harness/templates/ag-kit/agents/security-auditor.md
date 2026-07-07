@@ -5,7 +5,6 @@ description: >
   recommendations using defense-in-depth principles. Use proactively
   before a major release or after architectural changes that touch auth,
   data handling, or trust boundaries.
-tools: Read, Grep, Glob, Bash, Edit, Write
 model: sonnet
 ---
 <!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/agent/security-auditor.md. MIT (c) vudovn. -->

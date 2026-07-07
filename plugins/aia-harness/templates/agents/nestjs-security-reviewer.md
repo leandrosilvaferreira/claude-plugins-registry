@@ -5,7 +5,6 @@ description: >
   guards, input handling, CORS, and env/secret exposure. Use proactively
   after any change to auth, users, config/env files, or a new endpoint.
   MUST BE USED before merging auth or security-sensitive NestJS changes.
-tools: Read, Grep, Glob
 ---
 
 # NestJS Security Reviewer

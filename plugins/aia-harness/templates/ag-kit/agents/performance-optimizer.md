@@ -5,7 +5,6 @@ description: >
   usage, poor Core Web Vitals, and database query inefficiency. Use
   proactively after profiling reveals a bottleneck or when response times
   degrade.
-tools: Read, Grep, Glob, Bash, Edit, Write
 model: sonnet
 ---
 <!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/agent/performance-optimizer.md. MIT (c) vudovn. -->

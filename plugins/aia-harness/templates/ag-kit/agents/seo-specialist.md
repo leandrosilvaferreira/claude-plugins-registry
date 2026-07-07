@@ -5,7 +5,6 @@ description: >
   visibility for traditional and AI-powered search engines. Use
   proactively when adding or modifying public-facing pages that need
   search visibility.
-tools: Read, Grep, Glob, Bash, Write
 model: sonnet
 ---
 <!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/agent/seo-specialist.md. MIT (c) vudovn. -->

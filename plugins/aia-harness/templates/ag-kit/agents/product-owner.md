@@ -5,7 +5,6 @@ description: >
   defines acceptance criteria for existing stories before implementation
   begins. Use when a story needs clear acceptance criteria before
   development starts.
-tools: Read, Grep, Glob, Bash
 model: sonnet
 ---
 <!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/agent/product-owner.md. MIT (c) vudovn. -->
