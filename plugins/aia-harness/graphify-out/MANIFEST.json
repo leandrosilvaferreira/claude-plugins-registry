@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   ".claude-plugin/plugin.json": {
-    "mtime": 1783365948.1383622,
-    "ast_hash": "6b8642f13f0a7b5f406cbae00e3e4742",
+    "mtime": 1783400367.3837047,
+    "ast_hash": "f00f5a8a40c9075829891eeca5263e07",
     "semantic_hash": ""
   },
   ".claude/hooks/eslint-fix.mjs": {
@@ -360,8 +360,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1783365948.1384401,
-    "ast_hash": "0a7e8bc60a4c168cc5bd915cb7af56f2",
+    "mtime": 1783400367.383876,
+    "ast_hash": "fe38fb8388277722ca1e0ce7ae261dcc",
     "semantic_hash": ""
   },
   "scripts/agkit-source.json": {

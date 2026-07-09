@@ -155,7 +155,14 @@ ${bridgeRows}
 
   return `## Workflow & Agents
 
-For every non-trivial implementation: invoke \`superpowers:subagent-driven-development\`.
+Invoke \`superpowers:subagent-driven-development\` for **non-trivial** implementation — trigger it when the request meets **≥2** of:
+- touches **3+ files** or **2+ domains/layers** (UI + agent, API + DB…)
+- is a **new feature / epic / cross-cutting refactor** (not a one-line or single-function change)
+- needs a **multi-step plan** or ordered tasks, each with its own verification
+- has **unclear scope or root cause** and needs exploration before coding
+
+Skip it — implement inline — for typo/copy fixes, single-function edits, config tweaks, or one-file bugs with an obvious cause.
+
 When dispatching subagents, you MUST use the matching specialist agent from the table below — never the generic agent when a specialist is listed. Cross-reference the task type with the "When to use" column and pass the exact name as \`subagent_type\`.
 
 | Agent | When to use |

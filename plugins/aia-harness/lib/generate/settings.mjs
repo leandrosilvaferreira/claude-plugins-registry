@@ -182,7 +182,11 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
     // Default reasoning effort to MAX. `effortLevel` in settings.json only
     // persists up to "xhigh"; `max` is session-only, so it's set via the env
     // var Claude Code reads for the same purpose.
-    env: { CLAUDE_CODE_EFFORT_LEVEL: "max", CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING: "1" },
+    env: {
+      CLAUDE_CODE_EFFORT_LEVEL: "max",
+      CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING: "1",
+      CAVEMAN_DEFAULT_MODE: "ultra",
+    },
     showClearContextOnPlanAccept: true,
     autoMemoryEnabled: true,
     skipDangerousModePermissionPrompt: true,
