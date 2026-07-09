@@ -19,6 +19,8 @@ import {
   checkObjectField,
   checkEnumField,
   parseStdout,
+  parseOutput,
+  requireObject,
   makeContextValidator,
 } from "./hook-schema-helpers.mjs";
 
@@ -86,9 +88,28 @@ export function validateElicitationResultOutput(stdout, exitCode) {
  * @param {string} stdout @param {number} exitCode @returns {ValidationResult}
  */
 export function validateWorktreeCreateOutput(stdout, exitCode) {
-  const r = parseStdout(stdout, exitCode);
-  if (!r.ok) return r.result;
-  const { obj } = r;
+  if (exitCode !== 0 && exitCode !== 2) {
+    return { valid: false, errors: [`exit code must be 0 or 2, got ${exitCode}`] };
+  }
+  if (exitCode === 2) return { valid: true, errors: [] };
+
+  const { parsed, parseError } = parseOutput(stdout);
+  if (parseError) {
+    // "type":"command" hooks (the only kind this harness ships) print the
+    // worktree path as a BARE string on stdout, not JSON — confirmed by the
+    // WorktreeCreateHookSpecificOutput doc comment in the installed
+    // @anthropic-ai/claude-agent-sdk sdk.d.ts ("Command hooks print the path
+    // on stdout instead") and independently by the compiled binary's embedded
+    // error string. parseOutput() already treats genuinely empty/whitespace
+    // stdout as `parseError: null` above, so reaching this branch means real,
+    // non-empty, non-JSON content — that bare path.
+    return { valid: true, errors: [] };
+  }
+  if (parsed === null) return { valid: true, errors: [] };
+  const objErr = requireObject(parsed);
+  if (objErr) return { valid: false, errors: [objErr] };
+
+  const obj = /** @type {Record<string, any>} */ (parsed);
   /** @type {string[]} */
   const errors = [];
   if ("hookSpecificOutput" in obj) {

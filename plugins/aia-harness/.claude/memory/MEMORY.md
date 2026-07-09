@@ -20,3 +20,5 @@
 - [command-skill-same-name-collision](command-skill-same-name-collision.md) — command+skill com mesmo nome + Skill tool call literal de dentro do command = loop infinito (resolve pro command, não pro skill); Read direto do SKILL.md em vez de Skill tool
 - [worktree-session-title-hook](worktree-session-title-hook.md) — sessionTitle só existe em SessionStart + UserPromptSubmit (não WorktreeCreate/CwdChanged); WebFetch da doc oficial informa isso errado
 - [skill-loader-bang-backtick](skill-loader-bang-backtick.md) — loader de skill/command executa bang-crase em qualquer lugar do .md, até dentro de fence — quebra load inteiro
+- [hook-stdin-null-crash](hook-stdin-null-crash.md) — idiom JSON.parse(readStdin()||"{}") não trata `null` literal — crasha exit 1; gap repo-wide, não de 1 hook só
+- [cpsync-dereference-not-recursive](cpsync-dereference-not-recursive.md) — fs.cpSync dereference:true só desreferencia o src de topo, não symlink aninhado na árvore — confirmado empírico Node 24, não confiar no nome da opção

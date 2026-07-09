@@ -188,23 +188,12 @@ graphify .
 
 **No API key needed for source code indexing.** graphify indexes source code via AST extraction without any LLM API key — that is the primary objective. A `GEMINI_API_KEY` / `GOOGLE_API_KEY` is only needed for semantic extraction of docs, papers, and images. If graphify prints a warning about a missing API key, ignore it and continue — the source code graph will be fully built.
 
-Commit the produced graph:
-
-```bash
-git add graphify-out/
-git commit -m "chore: add graphify code graph"
-```
-
-**IMPORTANT — what to commit vs ignore:**
-
-- `graphify-out/graph.json` ✅ commit — full graph, team sharing
-- `graphify-out/graph.html` ✅ commit — browser visualization
-- `graphify-out/GRAPH_REPORT.md` ✅ commit — architecture insights
-- `graphify-out/manifest.json` ✅ commit — portable (relative paths), enables incremental updates
-- `graphify-out/cost.json` ❌ already gitignored — local API cost tracker
-- `graphify-out/cache/` ❌ already gitignored — regenerable, keeps repo smaller
-
-Do NOT add a `graphify-out/` entry to `.gitignore` — only the specific files above are ignored.
+**`graphify-out/` is a local artifact — never commit it.** `apply` already adds a
+blanket `graphify-out/` entry to `.gitignore` (not just `cost.json`/`cache/`): every
+teammate builds and rebuilds their own graph locally, kept current automatically by
+the `.git/hooks/post-commit` / `post-checkout` hooks installed offline by this command,
+plus `graphify update .`. Do NOT `git add graphify-out/` and do NOT remove or narrow
+that `.gitignore` entry.
 
 **NOTE:** Do NOT run `graphify install --project` or `graphify hook install`. The
 harness already wired everything they would install — the `/graphify` skill

@@ -102,6 +102,13 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
           { type: "command", ...hookCmd("validate-settings-schema.mjs"), timeout: 30 },
         ],
       },
+      {
+        // Idempotent re-seed safety net: fires on every EnterWorktree call,
+        // including entry into a worktree that already existed before this
+        // hook was configured. worktree-create.mjs stays silent on this path.
+        matcher: "EnterWorktree",
+        hooks: [{ type: "command", ...hookCmd("worktree-create.mjs"), timeout: 60 }],
+      },
     ],
     SessionStart: [
       {
@@ -133,6 +140,18 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
           { type: "command", ...hookCmd("sql-idempotent-review.mjs"), timeout: 15 },
         ],
       },
+    ],
+    // Replaces Claude Code's native `git worktree add` entirely once configured
+    // (also disables native .worktreeinclude processing — worktree-create.mjs
+    // reimplements that copy). Must print the created worktree's absolute path
+    // as a bare string on stdout (command-hook contract, not JSON).
+    WorktreeCreate: [
+      { hooks: [{ type: "command", ...hookCmd("worktree-create.mjs"), timeout: 30 }] },
+    ],
+    // Replaces Claude Code's native worktree cleanup. Removes the worktree
+    // checkout only — never deletes the branch (destructive, out of scope).
+    WorktreeRemove: [
+      { hooks: [{ type: "command", ...hookCmd("worktree-remove.mjs"), timeout: 15 }] },
     ],
   };
 

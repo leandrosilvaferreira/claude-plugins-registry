@@ -108,6 +108,8 @@ export const PROJECT_HOOK_FILES = [
   "worktree-session-ctx.mjs",
   "worktree-prompt-ctx.mjs",
   "worktree-write-guard.mjs",
+  "worktree-create.mjs",
+  "worktree-remove.mjs",
   "check-deps-on-start.mjs",
   "validate-settings-schema.mjs",
 ];

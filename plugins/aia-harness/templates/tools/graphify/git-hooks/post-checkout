@@ -2,39 +2,48 @@
 // graphify-checkout-hook-start
 // Auto-rebuilds the knowledge graph (code only) when switching branches.
 // Installed by: graphify hook install
+// Loads core modules via dynamic import() rather than CommonJS require or a static
+// import statement: this file lands at <target-root>/.git/hooks/post-checkout with no
+// extension, so Node resolves its module system from the target project's own
+// package.json "type" field. Dynamic import() is valid whether that resolves to CJS
+// or ESM; CommonJS-style loading throws ReferenceError under "type": "module", and a
+// static import statement throws a SyntaxError under the CJS default — only dynamic
+// import() works both ways.
 
-const { spawnSync, spawn } = require('node:child_process')
-const { existsSync } = require('node:fs')
-const { join } = require('node:path')
-const { homedir } = require('node:os')
+// Only run on branch switches, not plain file checkouts — cheap check first,
+// before paying for any module import (file checkouts fire this hook far more
+// often than branch switches).
+if (process.argv[4] !== '1') process.exit(0)
 
-const branchSwitch = process.argv[4]
+Promise.all([
+  import('node:child_process'),
+  import('node:fs'),
+  import('node:path'),
+  import('node:os'),
+]).then(([{ spawnSync, spawn }, { existsSync }, { join }, { homedir }]) => {
+  // Only run if graphify-out/ exists (graph has been built before)
+  if (!existsSync('graphify-out')) process.exit(0)
 
-// Only run on branch switches, not file checkouts
-if (branchSwitch !== '1') process.exit(0)
+  // Skip during rebase/merge/cherry-pick
+  const gitDir = spawnSync('git', ['rev-parse', '--git-dir'], { encoding: 'utf8', windowsHide: true }).stdout?.trim()
+  if (gitDir) {
+    if (existsSync(join(gitDir, 'rebase-merge'))) process.exit(0)
+    if (existsSync(join(gitDir, 'rebase-apply'))) process.exit(0)
+    if (existsSync(join(gitDir, 'MERGE_HEAD'))) process.exit(0)
+    if (existsSync(join(gitDir, 'CHERRY_PICK_HEAD'))) process.exit(0)
+  }
 
-// Only run if graphify-out/ exists (graph has been built before)
-if (!existsSync('graphify-out')) process.exit(0)
-
-// Skip during rebase/merge/cherry-pick
-const gitDir = spawnSync('git', ['rev-parse', '--git-dir'], { encoding: 'utf8', windowsHide: true }).stdout?.trim()
-if (gitDir) {
-  if (existsSync(join(gitDir, 'rebase-merge'))) process.exit(0)
-  if (existsSync(join(gitDir, 'rebase-apply'))) process.exit(0)
-  if (existsSync(join(gitDir, 'MERGE_HEAD'))) process.exit(0)
-  if (existsSync(join(gitDir, 'CHERRY_PICK_HEAD'))) process.exit(0)
-}
-
-// Run graphify update in background — don't block git
-// Prepend $HOME/.local/bin so uv-installed graphify is found in non-interactive shells
-process.stdout.write('[graphify] Branch switched — launching background rebuild\n')
-const uvBin = join(homedir(), '.local', 'bin')
-const child = spawn('graphify', ['update', '.'], {
-  detached: true,
-  stdio: 'ignore',
-  windowsHide: true,
-  env: { ...process.env, PYTHONHASHSEED: '0', PATH: `${uvBin}${process.platform === 'win32' ? ';' : ':'}${process.env.PATH || ''}` },
-})
-child.on('error', () => {}) // silently skip if graphify not on PATH
-child.unref()
+  // Run graphify update in background — don't block git
+  // Prepend $HOME/.local/bin so uv-installed graphify is found in non-interactive shells
+  process.stdout.write('[graphify] Branch switched — launching background rebuild\n')
+  const uvBin = join(homedir(), '.local', 'bin')
+  const child = spawn('graphify', ['update', '.'], {
+    detached: true,
+    stdio: 'ignore',
+    windowsHide: true,
+    env: { ...process.env, PYTHONHASHSEED: '0', PATH: `${uvBin}${process.platform === 'win32' ? ';' : ':'}${process.env.PATH || ''}` },
+  })
+  child.on('error', () => {}) // silently skip if graphify not on PATH
+  child.unref()
+}).catch(() => {}) // never block a checkout on hook plumbing failures
 // graphify-checkout-hook-end

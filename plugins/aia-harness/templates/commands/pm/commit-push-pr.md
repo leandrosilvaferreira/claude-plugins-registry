@@ -47,3 +47,6 @@ Use the `github-pm` skill to execute this workflow:
    ```
 
 6. Report the PR URL. Suggest: "Run `/pm:code-review-pr <PR>` to start the review."
+
+7. Ask the user: "Do you want to merge this PR now? (`/pm:pr-merge <N>`)"
+   If yes → run the `/pm:pr-merge <N>` workflow with `<N>` = the PR number from step 5.
