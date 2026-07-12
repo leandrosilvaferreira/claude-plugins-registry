@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   ".claude-plugin/plugin.json": {
-    "mtime": 1783563607.7921011,
-    "ast_hash": "ab02efbe29bd159832d1e1856481307b",
+    "mtime": 1783579356.2784417,
+    "ast_hash": "2720f990f3bcd58232017a92ca912f35",
     "semantic_hash": ""
   },
   ".claude/hooks/eslint-fix.mjs": {
@@ -25,8 +25,8 @@
     "semantic_hash": ""
   },
   ".claude/hooks/large-file-warning.mjs": {
-    "mtime": 1782924889.1231835,
-    "ast_hash": "61959493225bdf7d35c2f127ce7a7b9e",
+    "mtime": 1783816054.23885,
+    "ast_hash": "0c216a64513f69190873fcf4d92bca4a",
     "semantic_hash": ""
   },
   ".claude/hooks/typecheck-on-edit.mjs": {
@@ -35,8 +35,8 @@
     "semantic_hash": ""
   },
   ".claude/hooks/validate-settings-schema.mjs": {
-    "mtime": 1782592526.0931962,
-    "ast_hash": "9ed8831c9c99a94bfbb5ca1dfd085021",
+    "mtime": 1783816054.2422013,
+    "ast_hash": "48cdb475d8257dd4601e5a6f6e822278",
     "semantic_hash": ""
   },
   ".claude/hooks/validate-template-frontmatter.mjs": {
@@ -50,8 +50,8 @@
     "semantic_hash": ""
   },
   ".claude/settings.json": {
-    "mtime": 1783563269.5041585,
-    "ast_hash": "d3f670ce817cff5ef6b696d491179849",
+    "mtime": 1783816054.247933,
+    "ast_hash": "fc2116652f1034faefc65abf95ae2b44",
     "semantic_hash": ""
   },
   ".claude/skills/plugin-settings/examples/read-settings-hook.sh": {
@@ -150,8 +150,8 @@
     "semantic_hash": ""
   },
   "lib/data/project-catalog.mjs": {
-    "mtime": 1783578968.7130759,
-    "ast_hash": "474484af6b9c38feb8318e0e0acce897",
+    "mtime": 1783816054.2491653,
+    "ast_hash": "bc452c2afa219a58f9ffc54878ee67c0",
     "semantic_hash": ""
   },
   "lib/data/skill-map.mjs": {
@@ -280,13 +280,13 @@
     "semantic_hash": ""
   },
   "lib/generate/settings.mjs": {
-    "mtime": 1783578968.713783,
-    "ast_hash": "57de4d125ab3f920874df32014518564",
+    "mtime": 1783816054.2518373,
+    "ast_hash": "8cd00431c54a98b090c09104191fcd98",
     "semantic_hash": ""
   },
   "lib/generate/verify.mjs": {
-    "mtime": 1782924889.1275344,
-    "ast_hash": "a3bf9136f3342bf73e235a9d8c8dd19c",
+    "mtime": 1783816054.2549822,
+    "ast_hash": "ec5d85d86747164325d8007f499c168e",
     "semantic_hash": ""
   },
   "lib/github-pm/transform.mjs": {
@@ -360,8 +360,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1783570507.6063163,
-    "ast_hash": "bda89801e1c3e0262bc869dc063c7cc4",
+    "mtime": 1783579356.2786107,
+    "ast_hash": "fd2eed9415c688494d2bc2f985ea1e8c",
     "semantic_hash": ""
   },
   "scripts/agkit-source.json": {
@@ -535,13 +535,13 @@
     "semantic_hash": ""
   },
   "templates/hooks/large-file-warning.mjs": {
-    "mtime": 1782924889.128953,
-    "ast_hash": "61959493225bdf7d35c2f127ce7a7b9e",
+    "mtime": 1783816054.2612276,
+    "ast_hash": "0c216a64513f69190873fcf4d92bca4a",
     "semantic_hash": ""
   },
   "templates/hooks/memory-stop.mjs": {
-    "mtime": 1782591969.2432356,
-    "ast_hash": "389312ec4d852cc7bd244f338e22c558",
+    "mtime": 1783816054.2625759,
+    "ast_hash": "5c9c0edc6c9f1948fcb39b3e04ac41d8",
     "semantic_hash": ""
   },
   "templates/hooks/phpstan-on-edit.mjs": {
@@ -555,18 +555,18 @@
     "semantic_hash": ""
   },
   "templates/hooks/set-files-changed.mjs": {
-    "mtime": 1781772642.9701724,
-    "ast_hash": "fb66c44871dffc15463d5c5dc3175dd5",
+    "mtime": 1783816054.264451,
+    "ast_hash": "1fe580ca31375a9ce4fc53c37c0e41d2",
     "semantic_hash": ""
   },
   "templates/hooks/sql-idempotent-review.mjs": {
-    "mtime": 1782924889.1297069,
-    "ast_hash": "9dede78f74be34c28029b68539697e45",
+    "mtime": 1783816054.266031,
+    "ast_hash": "491e4a93a061db2d4f2a175ad5e78069",
     "semantic_hash": ""
   },
   "templates/hooks/validate-settings-schema.mjs": {
-    "mtime": 1782592343.8415442,
-    "ast_hash": "9ed8831c9c99a94bfbb5ca1dfd085021",
+    "mtime": 1783816054.2669673,
+    "ast_hash": "48cdb475d8257dd4601e5a6f6e822278",
     "semantic_hash": ""
   },
   "templates/hooks/verify-on-stop.mjs": {
@@ -575,8 +575,8 @@
     "semantic_hash": ""
   },
   "templates/hooks/worktree-prompt-ctx.mjs": {
-    "mtime": 1783055385.7124634,
-    "ast_hash": "d2e496d6af90d7e7aa154de1a54e9c1c",
+    "mtime": 1783816054.2684803,
+    "ast_hash": "f5f3e3e23691f7e0fb332267a06a29cf",
     "semantic_hash": ""
   },
   "templates/hooks/worktree-session-ctx.mjs": {
@@ -940,13 +940,13 @@
     "semantic_hash": ""
   },
   "tests/hook-large-file-warning.test.mjs": {
-    "mtime": 1783015188.4966135,
-    "ast_hash": "102aee4dae7e190b78b2b6f6ea47d734",
+    "mtime": 1783816054.2696395,
+    "ast_hash": "ca0149fa95e6fec800a34a68b57e7700",
     "semantic_hash": ""
   },
   "tests/hook-memory-stop.test.mjs": {
-    "mtime": 1783015032.7888577,
-    "ast_hash": "0706559ec3bea5f5c1529c8e338a13d3",
+    "mtime": 1783816054.27066,
+    "ast_hash": "e9f18ff38167d6d8f24b4eb8c7d76caa",
     "semantic_hash": ""
   },
   "tests/hook-phpstan-on-edit.test.mjs": {
@@ -975,13 +975,13 @@
     "semantic_hash": ""
   },
   "tests/hook-sql-idempotent-review.test.mjs": {
-    "mtime": 1783015225.7229722,
-    "ast_hash": "3853c6354105c93cb826913d17c0f2c4",
+    "mtime": 1783816054.2726982,
+    "ast_hash": "0bb25bc8f8b3567cda7a519816be7a11",
     "semantic_hash": ""
   },
   "tests/hook-validate-settings-schema.test.mjs": {
-    "mtime": 1783015263.523346,
-    "ast_hash": "6b7b129a79b228bb8112cae546dae9a7",
+    "mtime": 1783816054.2753894,
+    "ast_hash": "1954341481f8a009cf4419c5fd21b527",
     "semantic_hash": ""
   },
   "tests/hook-validate-template-frontmatter.test.mjs": {
@@ -995,8 +995,8 @@
     "semantic_hash": ""
   },
   "tests/hook-worktree-prompt-ctx.test.mjs": {
-    "mtime": 1783055592.828159,
-    "ast_hash": "fef6e968ea81b3d232e422d34d372895",
+    "mtime": 1783816054.2767932,
+    "ast_hash": "eae5e98935f454b1459958372a5b6d8b",
     "semantic_hash": ""
   },
   "tests/hook-worktree-session-ctx.test.mjs": {
@@ -1047,11 +1047,6 @@
   "tests/render-testing.test.mjs": {
     "mtime": 1781827114.8367484,
     "ast_hash": "cb6a5dba729a7348860252d52fae0458",
-    "semantic_hash": ""
-  },
-  "tests/set-files-changed.test.mjs": {
-    "mtime": 1783015175.3208206,
-    "ast_hash": "79ad9479a54371d80852267e4f502b45",
     "semantic_hash": ""
   },
   "tests/settings-strict.test.mjs": {
@@ -1105,13 +1100,13 @@
     "semantic_hash": ""
   },
   "tests/verify-hook.test.mjs": {
-    "mtime": 1783015101.9497797,
-    "ast_hash": "546d0eb8e718dc35ae259f46b10c07a2",
+    "mtime": 1783816054.279353,
+    "ast_hash": "34768461b4b91087f465752bdba17bc6",
     "semantic_hash": ""
   },
   "tests/verify.test.mjs": {
-    "mtime": 1782924889.1332235,
-    "ast_hash": "c2539786a508b88b0079ca40c1409297",
+    "mtime": 1783816054.280926,
+    "ast_hash": "0ea48a22d2351c58b6a5bf7676d3ad21",
     "semantic_hash": ""
   },
   "tsconfig.json": {
@@ -1210,8 +1205,8 @@
     "semantic_hash": ""
   },
   ".claude/rules/hooks-cross-platform.md": {
-    "mtime": 1782589610.187505,
-    "ast_hash": "941be7ac7ef8a471f0ec1fbc8328b725",
+    "mtime": 1783816054.2444065,
+    "ast_hash": "e415d427bb93d0ddd401afd6cdf23ced",
     "semantic_hash": ""
   },
   ".claude/rules/scripts-cross-platform.md": {
@@ -3545,8 +3540,8 @@
     "semantic_hash": ""
   },
   ".claude/rules/hooks-cwd-resolution.md": {
-    "mtime": 1783399133.728102,
-    "ast_hash": "88a773673316767370bff06099ccc634",
+    "mtime": 1783816054.2467895,
+    "ast_hash": "3d2ed05f1677769609163c5a358cf8e8",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-07-01-guard-main-branch-cwd-fix.md": {
@@ -3772,6 +3767,26 @@
   "docs/superpowers/plans/2026-07-08-worktree-dependency-seeding.md": {
     "mtime": 1783578968.71238,
     "ast_hash": "74b7f4340e427eb43c14629f8d5cf1cc",
+    "semantic_hash": ""
+  },
+  ".claude/hooks/session-scratch.mjs": {
+    "mtime": 1783816054.240716,
+    "ast_hash": "9dc08dc8954895302df9a18e9b7fa3a9",
+    "semantic_hash": ""
+  },
+  "templates/hooks/session-scratch.mjs": {
+    "mtime": 1783816054.2632186,
+    "ast_hash": "9dc08dc8954895302df9a18e9b7fa3a9",
+    "semantic_hash": ""
+  },
+  "tests/hook-set-files-changed.test.mjs": {
+    "mtime": 1783816054.2710404,
+    "ast_hash": "ffe2eefe10d6e96d10931d568b2d6694",
+    "semantic_hash": ""
+  },
+  "tests/session-scratch.test.mjs": {
+    "mtime": 1783816054.2781162,
+    "ast_hash": "fe3d8f60d82ac475fdae98c20b374919",
     "semantic_hash": ""
   }
 }

@@ -26,12 +26,17 @@
       "Bash(git switch:*)",
       "Bash(git checkout:*)",
       "Bash(gh pr:*)",
-      "Bash(gh issue:*)"
+      "Bash(gh issue:*)",
+      "Write(//private/tmp/**)",
+      "Edit(//private/tmp/**)",
+      "Write(//tmp/**)",
+      "Edit(//tmp/**)"
     ],
     "deny": [
       "Read(./.claude/settings.local.json)",
       "Read(./**/*.local.json)"
-    ]
+    ],
+    "additionalDirectories": ["/tmp", "/private/tmp"]
   },
   "hooks": {
     "PreToolUse": [

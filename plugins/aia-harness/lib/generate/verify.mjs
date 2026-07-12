@@ -36,18 +36,20 @@ export function renderVerifyOnStop(profile) {
  * or command never blocks. Re-run /aia-harness:doctor to audit.
  */
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
-import { createHash } from "node:crypto";
 import { execSync } from "node:child_process";
+import { sessionScratchDir } from "./session-scratch.mjs";
 
 const COMMANDS = ${JSON.stringify(cmds)};
 const projectDir = process.env.CLAUDE_PROJECT_DIR || process.cwd();
 const LINTABLE = /\\.(js|jsx|ts|tsx|mjs|cjs|vue|svelte|php)$/;
 
+let event = {};
+try { event = JSON.parse(fs.readFileSync(0, "utf8") || "{}"); } catch (e) { process.exit(0); }
+const sessionId = typeof event?.session_id === "string" ? event.session_id : "nosession";
+
 function flagFile() {
-  const h = createHash("sha1").update(projectDir).digest("hex").slice(0, 12);
-  return path.join(os.tmpdir(), "aia-harness-changed-" + h);
+  return path.join(sessionScratchDir(sessionId), "files-changed");
 }
 function clearFlag() {
   try { fs.rmSync(flagFile(), { force: true }); } catch (e) { /* ignore */ }
@@ -56,9 +58,6 @@ function approve() {
   process.stdout.write(JSON.stringify({ decision: "approve" }));
   process.exit(0);
 }
-
-let event = {};
-try { event = JSON.parse(fs.readFileSync(0, "utf8") || "{}"); } catch (e) { process.exit(0); }
 
 // Anti-loop: a stop already triggered by a previous block must be allowed.
 if (event && event.stop_hook_active) { clearFlag(); approve(); }

@@ -2,13 +2,14 @@
 /**
  * PostToolUse hook (strict mode): record files Claude edits this session so the
  * strict Stop hook (verify-on-stop.mjs) only runs lint/typecheck when code
- * actually changed. Appends the edited path to a per-project session flag-file
- * under the OS temp dir. Never blocks: any failure exits 0.
+ * actually changed. Appends the edited path to this session's scratch dir
+ * (see session-scratch.mjs) — never a shared per-project file, so parallel
+ * sessions/worktrees of the same project never mix each other's edited paths
+ * (see .claude/rules/hooks-cwd-resolution.md). Never blocks: any failure exits 0.
  */
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
-import { createHash } from "node:crypto";
+import { sessionScratchDir } from "./session-scratch.mjs";
 
 /** @returns {string} */
 function readStdin() {
@@ -30,9 +31,8 @@ try {
 const file = event?.tool_input?.file_path ?? event?.tool_input?.path;
 if (!file || typeof file !== "string") process.exit(0);
 
-const projectDir = process.env.CLAUDE_PROJECT_DIR ?? process.cwd();
-const h = createHash("sha1").update(projectDir).digest("hex").slice(0, 12);
-const flag = path.join(os.tmpdir(), `aia-harness-changed-${h}`);
+const sessionId = typeof event.session_id === "string" ? event.session_id : "nosession";
+const flag = path.join(sessionScratchDir(sessionId), "files-changed");
 
 try {
   fs.appendFileSync(flag, file + "\n");

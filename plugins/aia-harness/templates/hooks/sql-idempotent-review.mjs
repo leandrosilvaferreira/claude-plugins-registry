@@ -26,9 +26,8 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import os from "node:os";
-import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
+import { sessionScratchDir } from "./session-scratch.mjs";
 
 /** @returns {string} */
 function readStdin() {
@@ -48,18 +47,19 @@ try {
 }
 
 const projectDir = process.env.CLAUDE_PROJECT_DIR ?? process.cwd();
-const projHash = createHash("sha1").update(projectDir).digest("hex").slice(0, 12);
-const NOTIFIED_FLAG = path.join(os.tmpdir(), `aia-harness-sql-notified-${projHash}`);
+const sessionId = typeof event.session_id === "string" ? event.session_id : "nosession";
+const NOTIFIED_FLAG = path.join(sessionScratchDir(sessionId), "sql-notified");
 
 /**
  * Best-effort: record that `absPath` has already been surfaced to the agent
- * this session, so the Stop-mode sweep never double-blocks on it.
+ * this session, so the Stop-mode sweep never double-blocks on it. The flag
+ * file is already session-scoped (see session-scratch.mjs), so each row only
+ * needs the path — no session prefix required.
  * @param {string} absPath
  */
 function markNotified(absPath) {
-  const sessionId = typeof event.session_id === "string" ? event.session_id : "nosession";
   try {
-    fs.appendFileSync(NOTIFIED_FLAG, `${sessionId}\t${absPath}\n`);
+    fs.appendFileSync(NOTIFIED_FLAG, `${absPath}\n`);
   } catch {
     // Best-effort; a missed write only means the Stop sweep may re-notify.
   }
@@ -138,7 +138,7 @@ function postToolUse() {
   markNotified(abs);
 }
 
-/** @returns {Set<string>} keys already notified this session, "sessionId\tabsPath" */
+/** @returns {Set<string>} absPaths already notified this session (bare paths — the file itself is session-scoped) */
 function readNotifiedSet() {
   try {
     const raw = fs.readFileSync(NOTIFIED_FLAG, "utf8");
@@ -175,9 +175,8 @@ function blockOnStop() {
     .map((line) => path.join(execDir, line.slice(3).trim()))
     .filter((abs) => path.extname(abs).toLowerCase() === ".sql");
 
-  const sessionId = typeof event.session_id === "string" ? event.session_id : "nosession";
   const notified = readNotifiedSet();
-  const fresh = [...new Set(candidates)].filter((abs) => !notified.has(`${sessionId}\t${abs}`));
+  const fresh = [...new Set(candidates)].filter((abs) => !notified.has(abs));
   if (fresh.length === 0) return;
 
   for (const abs of fresh) markNotified(abs);

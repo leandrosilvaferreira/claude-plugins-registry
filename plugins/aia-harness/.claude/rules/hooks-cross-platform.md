@@ -48,7 +48,10 @@ Go/Rust bin  →  not for hooks. Use only for distributed CLIs (e.g. rtk).
 - Validate every output path against the matching validator in [lib/validate/hook-schema.mjs](lib/validate/hook-schema.mjs) for the hook's event type; cover **all branches**, not just the happy path.
 - Add `tests/hook-<name>.test.mjs` importing the validator and asserting every output branch.
 - Keep `npm run lint` and `npm run typecheck` clean (JSDoc + `checkJs`). Pre-existing errors are not an excuse to add more.
-- Use `os.homedir()`, `os.tmpdir()`, and `path.join()` for every path, home, and temp reference.
+- Use `os.homedir()` and `path.join()` for every path and home-directory reference.
+- **For session-transient state a hook writes and later reads back (flag files, dedup markers, per-session caches): use `sessionScratchDir(sessionId)` from `templates/hooks/session-scratch.mjs`, never raw `os.tmpdir()`.** A raw `os.tmpdir()` write falls outside Claude Code's pre-authorized per-session scratchpad and can trigger a mid-session permission prompt; worse, if the state is keyed by a project-directory hash instead of the session id, **parallel sessions of the same project silently share the file** — see `.claude/rules/hooks-cwd-resolution.md`'s Purpose B section for the concrete bug this caused. `sessionScratchDir()` is permission-free (it resolves inside Claude Code's own scratchpad) and inherently unique per session — no hash needed.
+- Raw `os.tmpdir()` remains correct only for state that is deliberately **not** session-scoped and whose cross-session/cross-process sharing is harmless or desired — e.g. a content-addressed cache of external, non-project-specific data, or an intentional single global lock serializing unrelated background work. Any such use must carry a comment explaining why it is safe to share, matching the existing exceptions actually in this codebase (a downloaded-schema cache keyed by content, not by session — though even that one migrated to the session scratch dir in this project for consistency; see git history).
+- **Narrow exception — read-only discovery of Claude Code's own scratchpad:** `templates/hooks/session-scratch.mjs` searches `os.tmpdir()` and the literal `"/tmp"` for Claude Code's pre-existing per-session scratchpad directory (never a location this project creates or writes to directly). The literal is required because macOS's `os.tmpdir()` returns a per-process `$TMPDIR` under `/var/folders/...` — a Darwin-specific redirection — which does NOT match Claude Code's actual scratchpad root (`/private/tmp/claude-<uid>/...`); `/tmp` is a stable symlink to `/private/tmp` on macOS, so searching it (never writing to it) finds the real location. Harmless no-op elsewhere: on Linux `/tmp` typically equals `os.tmpdir()` already (redundant scan); on Windows it resolves to a nonexistent path and fails closed via the existing try/catch. This exception is scoped to that one search list in that one file — it does not license any other file to hardcode a temp path as a write target.
 - **MANDATORY** — every `spawn` / `exec` / `execFile` / `fork` call inside a hook **must** pass `windowsHide: true` in its options. Issue [#19012](https://github.com/anthropics/claude-code/issues/19012): without it, spawning Node.js (or any console app) flashes a console window on Windows. The option is a no-op on macOS/Linux, so always set it — no condition.
 - To run an npm-installed tool (eslint, prettier, tsc) from a hook on Windows, invoke its JS entrypoint directly via `node`, never the `node_modules/.bin` shim.
 
@@ -56,7 +59,7 @@ Go/Rust bin  →  not for hooks. Use only for distributed CLIs (e.g. rtk).
 
 - Don't author a hook in anything but `.mjs` — no `.sh`, `.bat`, `.ps1`, `.py`, or any platform-specific shell, under any condition.
 - Don't use shell form (`command: "node \"...\""`) — quoting and shell availability break on Windows.
-- Don't hardcode `$HOME` / `%USERPROFILE%`, `/tmp` / `$env:TEMP`, or `/` / `\\` path separators.
+- Don't hardcode `$HOME` / `%USERPROFILE%`, `/tmp` / `$env:TEMP`, or `/` / `\\` path separators — except the one documented, read-only search-candidate exception in `templates/hooks/session-scratch.mjs` above (never for a write target).
 - Don't ship a Python hook at all — App Execution Alias stubs shadow `python.exe`/`python3.exe` on stock Windows and redirect to the Microsoft Store. (Python's `python` vs `python3` split and UV dependency are extra reasons; the rule is simply: rewrite it as `.mjs`.)
 - Don't reference `npm`, `npx`, `eslint`, or any `.cmd`/`.bat` shim as the exec-form `command` — those are not real executables and can't be spawned without a shell.
 - Don't assume `jq`. Parse JSON in Node, not with an external binary.
@@ -132,8 +135,8 @@ A `"shell"` field can force PowerShell on Windows — Windows-only, avoid in thi
 ## Acceptance criteria
 
 - The hook is `.mjs` and wired via exec form (`node` + `args`) with `$CLAUDE_PROJECT_DIR`.
-- No `.sh`/`.bat`/`.ps1`, no shell form, no hardcoded paths, home, or temp.
-- All path/home/temp access goes through `path.join` / `os.homedir` / `os.tmpdir`.
+- No `.sh`/`.bat`/`.ps1`, no shell form, no hardcoded paths, home, or temp, except the one documented search-candidate exception in `session-scratch.mjs` (read-only discovery, never a write target).
+- All other path/home access goes through `path.join` / `os.homedir`; session-transient temp state goes through `sessionScratchDir()`, not raw `os.tmpdir()` (narrow exceptions per Mandatory rules).
 - Every output branch passes the matching `hook-schema.mjs` validator.
 - `tests/hook-<name>.test.mjs` asserts every branch; `npm test` is green.
 - No dependency on `jq`, `python`, npm shims, or any platform-specific binary.

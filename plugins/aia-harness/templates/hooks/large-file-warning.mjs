@@ -19,9 +19,8 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import os from "node:os";
-import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
+import { sessionScratchDir } from "./session-scratch.mjs";
 
 const MAX_LINES = 350;
 
@@ -149,7 +148,6 @@ try {
 }
 
 const projectDir = process.env.CLAUDE_PROJECT_DIR ?? process.cwd();
-const projHash = createHash("sha1").update(projectDir).digest("hex").slice(0, 12);
 const execDir = (typeof event.cwd === "string" && event.cwd && event.cwd) || projectDir;
 
 /** Shared DDD-aligned extraction guidance. */
@@ -175,17 +173,18 @@ function advisory() {
   const lines = countLines(abs);
   if (lines == null || lines <= MAX_LINES) return;
 
-  // De-dup: notify at most once per (session, file).
+  // De-dup: notify at most once per (session, file). The scratch dir is
+  // itself session-scoped, so the file no longer needs a session prefix —
+  // see templates/hooks/session-scratch.mjs.
   const sessionId = typeof event.session_id === "string" ? event.session_id : "nosession";
-  const notifiedFlag = path.join(os.tmpdir(), `aia-harness-largefile-notified-${projHash}`);
-  const key = `${sessionId}\t${abs}`;
+  const notifiedFlag = path.join(sessionScratchDir(sessionId), "largefile-notified");
   try {
-    if (fs.readFileSync(notifiedFlag, "utf8").split(/\r?\n/).includes(key)) return;
+    if (fs.readFileSync(notifiedFlag, "utf8").split(/\r?\n/).includes(abs)) return;
   } catch {
     // No flag yet — first notice this session.
   }
   try {
-    fs.appendFileSync(notifiedFlag, key + "\n");
+    fs.appendFileSync(notifiedFlag, abs + "\n");
   } catch {
     // Best-effort; a missed de-dup only repeats the (harmless) advice.
   }
@@ -211,7 +210,8 @@ function blockOnStop() {
 
   /** @type {string[]} */
   let candidates = [];
-  const flag = path.join(os.tmpdir(), `aia-harness-changed-${projHash}`);
+  const sessionId = typeof event.session_id === "string" ? event.session_id : "nosession";
+  const flag = path.join(sessionScratchDir(sessionId), "files-changed");
 
   // Primary: session-tracked files recorded by set-files-changed.mjs.
   try {

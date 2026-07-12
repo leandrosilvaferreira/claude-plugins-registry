@@ -12,9 +12,8 @@
  * Never blocks — always exits 0. Fails open on any error.
  */
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
-import { createHash } from "node:crypto";
+import { sessionScratchDir } from "./session-scratch.mjs";
 
 /** @returns {string} */
 function readStdin() {
@@ -37,10 +36,10 @@ try {
 if (event?.stop_hook_active) process.exit(0);
 
 const projectDir = process.env.CLAUDE_PROJECT_DIR ?? process.cwd();
+const sessionId = typeof event?.session_id === "string" ? event.session_id : "nosession";
 
 // Read the session flag file populated by set-files-changed.mjs (one path per line).
-const h = createHash("sha1").update(projectDir).digest("hex").slice(0, 12);
-const flag = path.join(os.tmpdir(), `aia-harness-changed-${h}`);
+const flag = path.join(sessionScratchDir(sessionId), "files-changed");
 
 let raw = "";
 try {

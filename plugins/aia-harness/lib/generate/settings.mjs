@@ -75,6 +75,19 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
   ])
     allow.add(`Bash(${g}:*)`);
 
+  // Defense-in-depth for sessionScratchDir()'s fallback path (used when the
+  // real Claude Code scratchpad can't be located — see
+  // templates/hooks/session-scratch.mjs and .claude/rules/hooks-cross-platform.md).
+  // The primary fix is resolving the pre-authorized scratchpad itself; this
+  // covers the degraded case so it still never interrupts the session.
+  for (const p of [
+    "Write(//private/tmp/**)",
+    "Edit(//private/tmp/**)",
+    "Write(//tmp/**)",
+    "Edit(//tmp/**)",
+  ])
+    allow.add(p);
+
   /** @type {Record<string, any[]>} */
   const hooks = {
     PreToolUse: [
@@ -218,6 +231,8 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
         "Read(./**/.env.*)",
         "Read(./secrets/**)",
       ],
+      // Covers sessionScratchDir()'s fallback path — see the allow-list comment above.
+      additionalDirectories: ["/tmp", "/private/tmp"],
     },
     hooks,
   };

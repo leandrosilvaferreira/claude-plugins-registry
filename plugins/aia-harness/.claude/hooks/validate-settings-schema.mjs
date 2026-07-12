@@ -11,19 +11,20 @@
  * Schema URL and cache path are env-overridable (used in tests):
  *   SETTINGS_SCHEMA_URL   — default: https://www.schemastore.org/claude-code-settings.json
  *                           If not starting with "http", treated as a local file path.
- *   SETTINGS_SCHEMA_CACHE — default: os.tmpdir()/aia-validate-settings-schema.json
+ *   SETTINGS_SCHEMA_CACHE — default: <this session's scratch dir>/settings-schema-cache.json
+ *                           (see session-scratch.mjs). The cache no longer survives
+ *                           across sessions — a deliberate trade for never touching
+ *                           raw os.tmpdir(); see .claude/rules/hooks-cross-platform.md.
  *
  * @hook PostToolUse
  */
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
+import { sessionScratchDir } from "./session-scratch.mjs";
 
 // ── Configuration (env-overridable for testing) ───────────────────────────────
 const SCHEMA_URL =
   process.env.SETTINGS_SCHEMA_URL ?? "https://www.schemastore.org/claude-code-settings.json";
-const CACHE_FILE =
-  process.env.SETTINGS_SCHEMA_CACHE ?? path.join(os.tmpdir(), "aia-validate-settings-schema.json");
 const TTL_MS = 24 * 60 * 60 * 1000;
 
 // ── Stdin parse ───────────────────────────────────────────────────────────────
@@ -65,6 +66,10 @@ try {
 }
 
 // ── Load schema ───────────────────────────────────────────────────────────────
+const sessionId = typeof event?.session_id === "string" ? event.session_id : "nosession";
+const CACHE_FILE =
+  process.env.SETTINGS_SCHEMA_CACHE ??
+  path.join(sessionScratchDir(sessionId), "settings-schema-cache.json");
 const schema = await loadSchema();
 if (!schema) process.exit(0);
 
