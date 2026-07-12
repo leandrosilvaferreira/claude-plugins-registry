@@ -6,7 +6,7 @@
 import path from "node:path";
 import { exists, listDirs, readText } from "../util/fs.mjs";
 import { getTool } from "../data/asset-catalog.mjs";
-import { renderGraphifyignore } from "../generate/misc.mjs";
+import { renderGraphifyignore, renderGraphifyClaudeMdSection } from "../generate/misc.mjs";
 
 /** @typedef {import('../profile.mjs').ProjectProfile} ProjectProfile */
 /** @typedef {(a: any) => void} AddFn */
@@ -208,6 +208,22 @@ export function addToolArtifacts(add, toolsRoot, toolIds, profile) {
           copyFrom: skillDir,
         });
       }
+      // Nested .claude/CLAUDE.md section wiring the /graphify trigger. Merged
+      // in place (mergeStrategy "merge-section") so it lands whether the file
+      // is missing, or already exists with unrelated hand-written sections.
+      const claudeMdSection = renderGraphifyClaudeMdSection();
+      add({
+        id: "claude-md:graphify-skill",
+        relPath: ".claude/CLAUDE.md",
+        title: "Nested CLAUDE.md — graphify skill trigger",
+        category: "claude-md",
+        rationale:
+          "Wires the /graphify trigger into .claude/CLAUDE.md (auto-loaded every session).",
+        contextCost: Math.ceil(claudeMdSection.length / 4),
+        defaultSelected: true,
+        mergeStrategy: "merge-section",
+        content: claudeMdSection,
+      });
       // Cross-platform PreToolUse orientation hook (node, no python3/sh). Wired in
       // settings.json by buildPlan when graphify is selected; copied here.
       const orientHook = path.join(toolsRoot, "graphify", "hooks", "graphify-orient.mjs");

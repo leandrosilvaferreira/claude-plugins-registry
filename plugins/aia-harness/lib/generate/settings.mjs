@@ -204,13 +204,9 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
   }
 
   const settings = {
+    $schema: "https://json.schemastore.org/claude-code-settings.json",
     // Default model: Opus for planning, Sonnet for execution.
     model: "opusplan",
-    // Bypass permission prompts at the project level. Must be top-level so that
-    // this project settings object does not lose the flag when it shadows the
-    // global `permissions` object entirely (which would strip any `defaultMode`
-    // nested inside global permissions).
-    defaultMode: "bypassPermissions",
     // Default reasoning effort to MAX. `effortLevel` in settings.json only
     // persists up to "xhigh"; `max` is session-only, so it's set via the env
     // var Claude Code reads for the same purpose.
@@ -223,6 +219,12 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
     autoMemoryEnabled: true,
     skipDangerousModePermissionPrompt: true,
     permissions: {
+      // Bypass permission prompts at the project level. Per the official schema
+      // (json.schemastore.org/claude-code-settings.json), defaultMode is only
+      // ever recognized nested here — there is no top-level `defaultMode` field
+      // (the top level allows unknown keys, so a top-level one is silently inert
+      // rather than a validation error).
+      defaultMode: "bypassPermissions",
       allow: [...allow].sort(),
       deny: [
         "Read(./.env)",

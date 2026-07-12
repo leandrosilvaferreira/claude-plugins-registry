@@ -22,3 +22,4 @@
 - [skill-loader-bang-backtick](skill-loader-bang-backtick.md) — loader de skill/command executa bang-crase em qualquer lugar do .md, até dentro de fence — quebra load inteiro
 - [hook-stdin-null-crash](hook-stdin-null-crash.md) — idiom JSON.parse(readStdin()||"{}") não trata `null` literal — crasha exit 1; gap repo-wide, não de 1 hook só
 - [cpsync-dereference-not-recursive](cpsync-dereference-not-recursive.md) — fs.cpSync dereference:true só desreferencia o src de topo, não symlink aninhado na árvore — confirmado empírico Node 24, não confiar no nome da opção
+- [graphify-skill-vendor-path](graphify-skill-vendor-path.md) — skill graphify vendorizado vai em templates/tools/graphify/skills/graphify/, não templates/skills/ — hardcoded em vendored-artifacts.mjs, sem sync script

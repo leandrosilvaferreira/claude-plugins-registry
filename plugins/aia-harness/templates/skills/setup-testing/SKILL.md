@@ -62,7 +62,7 @@ After confirmed green output, in the project's `CLAUDE.md`:
 2. **Add** immediately below the `## Canonical commands` block a note about the configured test stack and the coverage rule:
 
    ```markdown
-   > **Tests:** `{framework}` — run `{test-command}`. Write unit tests for **every** new function or module added; never declare work complete without tests passing.
+   > **Tests:** `{framework}` — run `{test-command}`. Test what can break (business rules, branching logic, bug regressions); skip trivial/presentational code. Rubric: `.claude/rules/05-testing.md`.
    ```
 
    Replace `{framework}` and `{test-command}` with the actual project values.

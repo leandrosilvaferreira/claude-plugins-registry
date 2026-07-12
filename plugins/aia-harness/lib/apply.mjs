@@ -110,6 +110,54 @@ export function mergeSettingsHooks(existingJson, incomingJson) {
   return JSON.stringify(merged, null, 2) + "\n";
 }
 
+/**
+ * Append any line present in `incoming` but missing (exact trimmed match) from
+ * `existing`, preserving existing content/order/user edits untouched. Used for
+ * line-list manifests (e.g. `.worktreeinclude`) so a tool installed *after* the
+ * file already exists (e.g. graphify added via `/add-tools` post-`/init`) still
+ * gets its required line patched in on the next `apply`, without clobbering
+ * anything the user added by hand.
+ * @param {string} existingContent
+ * @param {string} incomingContent
+ * @returns {string}
+ */
+export function mergeLines(existingContent, incomingContent) {
+  const existingSet = new Set(existingContent.split(/\r?\n/).map((l) => l.trim()));
+  const missing = incomingContent
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter((l) => l !== "" && !existingSet.has(l));
+  if (missing.length === 0) return existingContent;
+  const base = existingContent.endsWith("\n") ? existingContent : `${existingContent}\n`;
+  return base + missing.join("\n") + "\n";
+}
+
+/**
+ * Ensure a single top-level (`# `) markdown section from `incoming` is present
+ * and current inside `existing`, touching no other section. If a section with
+ * the same `# ` header already exists, its block is replaced in place;
+ * otherwise the incoming block is appended. Used so a vendored tool (e.g.
+ * graphify) can keep its trigger section current in a shared, hand-editable
+ * file (`.claude/CLAUDE.md`) across re-applies without clobbering sibling
+ * sections a user wrote by hand.
+ * @param {string} existingContent
+ * @param {string} incomingContent  Exactly one `# `-headed section.
+ * @returns {string}
+ */
+export function mergeMarkdownSection(existingContent, incomingContent) {
+  const header = (incomingContent.match(/^# .+$/m) || [])[0];
+  if (!header) return existingContent;
+  const incomingBlock = incomingContent.trim();
+  if (!existingContent.trim()) return incomingBlock + "\n";
+
+  const blocks = existingContent.split(/(?=^# .+$)/m).filter((b) => b.trim() !== "");
+  const idx = blocks.findIndex((b) => b.split("\n")[0] === header);
+  if (idx === -1) blocks.push(incomingBlock);
+  else blocks[idx] = incomingBlock;
+
+  return blocks.map((b) => b.trim()).join("\n\n") + "\n";
+}
+
 const GITIGNORE_HEADER = "# aia-harness";
 
 /**
@@ -220,6 +268,34 @@ export function applyPlan(plan, root, opts = {}) {
             });
             continue;
           }
+          if (content === cur) {
+            result.skipped.push(`${a.relPath} (identical after merge)`);
+            continue;
+          }
+          // fall through to write
+        } else if (a.mergeStrategy === "merge-lines") {
+          if (cur == null) {
+            result.errors.push({
+              path: a.relPath,
+              error: "could not read existing file for merge",
+            });
+            continue;
+          }
+          content = mergeLines(cur, content);
+          if (content === cur) {
+            result.skipped.push(`${a.relPath} (identical after merge)`);
+            continue;
+          }
+          // fall through to write
+        } else if (a.mergeStrategy === "merge-section") {
+          if (cur == null) {
+            result.errors.push({
+              path: a.relPath,
+              error: "could not read existing file for merge",
+            });
+            continue;
+          }
+          content = mergeMarkdownSection(cur, content);
           if (content === cur) {
             result.skipped.push(`${a.relPath} (identical after merge)`);
             continue;

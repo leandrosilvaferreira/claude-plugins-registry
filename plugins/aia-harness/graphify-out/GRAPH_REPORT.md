@@ -1,16 +1,16 @@
-# Graph Report - aia_harness  (2026-07-11)
+# Graph Report - aia_harness  (2026-07-12)
 
 ## Corpus Check
-- 746 files · ~620,757 words
+- 753 files · ~661,228 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 7949 nodes · 8686 edges · 640 communities (599 shown, 41 thin omitted)
+- 8513 nodes · 9268 edges · 764 communities (724 shown, 40 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 5 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `9e1993ce`
+- Built from commit: `a710e129`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -479,7 +479,9 @@
 - [[_COMMUNITY_Community 464|Community 464]]
 - [[_COMMUNITY_Community 465|Community 465]]
 - [[_COMMUNITY_Community 466|Community 466]]
+- [[_COMMUNITY_Community 467|Community 467]]
 - [[_COMMUNITY_Community 468|Community 468]]
+- [[_COMMUNITY_Community 469|Community 469]]
 - [[_COMMUNITY_Community 470|Community 470]]
 - [[_COMMUNITY_Community 471|Community 471]]
 - [[_COMMUNITY_Community 472|Community 472]]
@@ -538,6 +540,8 @@
 - [[_COMMUNITY_Community 525|Community 525]]
 - [[_COMMUNITY_Community 526|Community 526]]
 - [[_COMMUNITY_Community 527|Community 527]]
+- [[_COMMUNITY_Community 528|Community 528]]
+- [[_COMMUNITY_Community 529|Community 529]]
 - [[_COMMUNITY_Community 530|Community 530]]
 - [[_COMMUNITY_Community 531|Community 531]]
 - [[_COMMUNITY_Community 532|Community 532]]
@@ -557,6 +561,7 @@
 - [[_COMMUNITY_Community 546|Community 546]]
 - [[_COMMUNITY_Community 547|Community 547]]
 - [[_COMMUNITY_Community 548|Community 548]]
+- [[_COMMUNITY_Community 549|Community 549]]
 - [[_COMMUNITY_Community 550|Community 550]]
 - [[_COMMUNITY_Community 551|Community 551]]
 - [[_COMMUNITY_Community 552|Community 552]]
@@ -600,6 +605,7 @@
 - [[_COMMUNITY_Community 617|Community 617]]
 - [[_COMMUNITY_Community 618|Community 618]]
 - [[_COMMUNITY_Community 619|Community 619]]
+- [[_COMMUNITY_Community 620|Community 620]]
 - [[_COMMUNITY_Community 621|Community 621]]
 - [[_COMMUNITY_Community 622|Community 622]]
 - [[_COMMUNITY_Community 623|Community 623]]
@@ -614,22 +620,140 @@
 - [[_COMMUNITY_Community 632|Community 632]]
 - [[_COMMUNITY_Community 633|Community 633]]
 - [[_COMMUNITY_Community 634|Community 634]]
+- [[_COMMUNITY_Community 635|Community 635]]
 - [[_COMMUNITY_Community 636|Community 636]]
 - [[_COMMUNITY_Community 637|Community 637]]
-- [[_COMMUNITY_Community 639|Community 639]]
+- [[_COMMUNITY_Community 638|Community 638]]
 - [[_COMMUNITY_Community 641|Community 641]]
 - [[_COMMUNITY_Community 642|Community 642]]
 - [[_COMMUNITY_Community 644|Community 644]]
-- [[_COMMUNITY_Community 645|Community 645]]
+- [[_COMMUNITY_Community 646|Community 646]]
 - [[_COMMUNITY_Community 647|Community 647]]
+- [[_COMMUNITY_Community 649|Community 649]]
+- [[_COMMUNITY_Community 650|Community 650]]
+- [[_COMMUNITY_Community 651|Community 651]]
+- [[_COMMUNITY_Community 652|Community 652]]
+- [[_COMMUNITY_Community 653|Community 653]]
 - [[_COMMUNITY_Community 657|Community 657]]
+- [[_COMMUNITY_Community 658|Community 658]]
+- [[_COMMUNITY_Community 659|Community 659]]
+- [[_COMMUNITY_Community 660|Community 660]]
+- [[_COMMUNITY_Community 661|Community 661]]
+- [[_COMMUNITY_Community 662|Community 662]]
+- [[_COMMUNITY_Community 663|Community 663]]
+- [[_COMMUNITY_Community 664|Community 664]]
+- [[_COMMUNITY_Community 665|Community 665]]
+- [[_COMMUNITY_Community 666|Community 666]]
+- [[_COMMUNITY_Community 667|Community 667]]
+- [[_COMMUNITY_Community 668|Community 668]]
+- [[_COMMUNITY_Community 669|Community 669]]
+- [[_COMMUNITY_Community 670|Community 670]]
+- [[_COMMUNITY_Community 671|Community 671]]
+- [[_COMMUNITY_Community 672|Community 672]]
+- [[_COMMUNITY_Community 673|Community 673]]
+- [[_COMMUNITY_Community 674|Community 674]]
+- [[_COMMUNITY_Community 675|Community 675]]
+- [[_COMMUNITY_Community 676|Community 676]]
+- [[_COMMUNITY_Community 677|Community 677]]
+- [[_COMMUNITY_Community 678|Community 678]]
+- [[_COMMUNITY_Community 679|Community 679]]
+- [[_COMMUNITY_Community 680|Community 680]]
+- [[_COMMUNITY_Community 681|Community 681]]
+- [[_COMMUNITY_Community 682|Community 682]]
+- [[_COMMUNITY_Community 683|Community 683]]
+- [[_COMMUNITY_Community 684|Community 684]]
+- [[_COMMUNITY_Community 685|Community 685]]
+- [[_COMMUNITY_Community 686|Community 686]]
+- [[_COMMUNITY_Community 687|Community 687]]
+- [[_COMMUNITY_Community 688|Community 688]]
+- [[_COMMUNITY_Community 689|Community 689]]
+- [[_COMMUNITY_Community 690|Community 690]]
+- [[_COMMUNITY_Community 691|Community 691]]
+- [[_COMMUNITY_Community 692|Community 692]]
+- [[_COMMUNITY_Community 693|Community 693]]
+- [[_COMMUNITY_Community 694|Community 694]]
+- [[_COMMUNITY_Community 695|Community 695]]
+- [[_COMMUNITY_Community 696|Community 696]]
+- [[_COMMUNITY_Community 697|Community 697]]
+- [[_COMMUNITY_Community 698|Community 698]]
+- [[_COMMUNITY_Community 699|Community 699]]
+- [[_COMMUNITY_Community 700|Community 700]]
+- [[_COMMUNITY_Community 701|Community 701]]
+- [[_COMMUNITY_Community 702|Community 702]]
+- [[_COMMUNITY_Community 703|Community 703]]
+- [[_COMMUNITY_Community 704|Community 704]]
+- [[_COMMUNITY_Community 705|Community 705]]
+- [[_COMMUNITY_Community 706|Community 706]]
+- [[_COMMUNITY_Community 707|Community 707]]
+- [[_COMMUNITY_Community 708|Community 708]]
+- [[_COMMUNITY_Community 709|Community 709]]
+- [[_COMMUNITY_Community 710|Community 710]]
+- [[_COMMUNITY_Community 711|Community 711]]
+- [[_COMMUNITY_Community 712|Community 712]]
+- [[_COMMUNITY_Community 713|Community 713]]
+- [[_COMMUNITY_Community 714|Community 714]]
+- [[_COMMUNITY_Community 715|Community 715]]
+- [[_COMMUNITY_Community 716|Community 716]]
+- [[_COMMUNITY_Community 717|Community 717]]
+- [[_COMMUNITY_Community 718|Community 718]]
+- [[_COMMUNITY_Community 719|Community 719]]
+- [[_COMMUNITY_Community 720|Community 720]]
+- [[_COMMUNITY_Community 721|Community 721]]
+- [[_COMMUNITY_Community 722|Community 722]]
+- [[_COMMUNITY_Community 723|Community 723]]
+- [[_COMMUNITY_Community 724|Community 724]]
+- [[_COMMUNITY_Community 725|Community 725]]
+- [[_COMMUNITY_Community 726|Community 726]]
+- [[_COMMUNITY_Community 727|Community 727]]
+- [[_COMMUNITY_Community 728|Community 728]]
+- [[_COMMUNITY_Community 729|Community 729]]
+- [[_COMMUNITY_Community 730|Community 730]]
+- [[_COMMUNITY_Community 731|Community 731]]
+- [[_COMMUNITY_Community 732|Community 732]]
+- [[_COMMUNITY_Community 733|Community 733]]
+- [[_COMMUNITY_Community 734|Community 734]]
+- [[_COMMUNITY_Community 735|Community 735]]
+- [[_COMMUNITY_Community 736|Community 736]]
+- [[_COMMUNITY_Community 737|Community 737]]
+- [[_COMMUNITY_Community 738|Community 738]]
+- [[_COMMUNITY_Community 739|Community 739]]
+- [[_COMMUNITY_Community 740|Community 740]]
+- [[_COMMUNITY_Community 741|Community 741]]
+- [[_COMMUNITY_Community 742|Community 742]]
+- [[_COMMUNITY_Community 743|Community 743]]
+- [[_COMMUNITY_Community 744|Community 744]]
+- [[_COMMUNITY_Community 745|Community 745]]
+- [[_COMMUNITY_Community 746|Community 746]]
+- [[_COMMUNITY_Community 747|Community 747]]
+- [[_COMMUNITY_Community 748|Community 748]]
+- [[_COMMUNITY_Community 749|Community 749]]
+- [[_COMMUNITY_Community 750|Community 750]]
+- [[_COMMUNITY_Community 751|Community 751]]
+- [[_COMMUNITY_Community 752|Community 752]]
+- [[_COMMUNITY_Community 753|Community 753]]
+- [[_COMMUNITY_Community 754|Community 754]]
+- [[_COMMUNITY_Community 755|Community 755]]
+- [[_COMMUNITY_Community 756|Community 756]]
+- [[_COMMUNITY_Community 757|Community 757]]
+- [[_COMMUNITY_Community 758|Community 758]]
+- [[_COMMUNITY_Community 759|Community 759]]
+- [[_COMMUNITY_Community 760|Community 760]]
+- [[_COMMUNITY_Community 761|Community 761]]
+- [[_COMMUNITY_Community 762|Community 762]]
+- [[_COMMUNITY_Community 763|Community 763]]
+- [[_COMMUNITY_Community 764|Community 764]]
+- [[_COMMUNITY_Community 765|Community 765]]
+- [[_COMMUNITY_Community 766|Community 766]]
+- [[_COMMUNITY_Community 767|Community 767]]
+- [[_COMMUNITY_Community 768|Community 768]]
+- [[_COMMUNITY_Community 769|Community 769]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `assertCleanStdoutJson()` - 52 edges
-2. `buildPlan()` - 40 edges
-3. `scanProject()` - 33 edges
+2. `scanProject()` - 33 edges
+3. `buildPlan()` - 33 edges
 4. `sessionScratchDir()` - 27 edges
-5. `runHook()` - 25 edges
+5. `runHook()` - 26 edges
 6. `Examples` - 24 edges
 7. `validatePreToolUseOutput()` - 23 edges
 8. `readText()` - 22 edges
@@ -643,15 +767,15 @@
   skills/revise-agent-routing-workflow/lib/revise-agent-routing.mjs → lib/util/fs.mjs
 - `cmdCheck()` --calls--> `checkAgentDescription()`  [INFERRED]
   skills/revise-agent-routing-workflow/lib/revise-agent-routing.mjs → lib/validate/agent-description.mjs
-- `cmdFrontmatter()` --calls--> `detectAssetType()`  [INFERRED]
-  skills/condense-harness-prompts/lib/condense.mjs → lib/validate/frontmatter.mjs
-- `cmdFrontmatter()` --calls--> `validateFrontmatter()`  [INFERRED]
-  skills/condense-harness-prompts/lib/condense.mjs → lib/validate/frontmatter.mjs
+- `writeFlag()` --calls--> `sessionScratchDir()`  [EXTRACTED]
+  tests/hook-large-file-warning.test.mjs → templates/hooks/session-scratch.mjs
+- `notifiedFlag()` --calls--> `sessionScratchDir()`  [EXTRACTED]
+  tests/hook-sql-idempotent-review.test.mjs → templates/hooks/session-scratch.mjs
 
 ## Import Cycles
 - None detected.
 
-## Communities (640 total, 41 thin omitted)
+## Communities (764 total, 40 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.11
@@ -686,8 +810,8 @@ Cohesion: 0.04
 Nodes (47): 10. Quick Reference Card, 1. Fitts' Law for Touch, 2. Thumb Zone Anatomy, 3. Touch vs Click Psychology, 4. Gesture Psychology, 5. Haptic Feedback Patterns, 6. Mobile Cognitive Load, 7. Touch Accessibility (+39 more)
 
 ### Community 8 - "Community 8"
-Cohesion: 0.04
-Nodes (46): 1. The Mobile Performance Mindset, 2. React Native Performance, 3. Flutter Performance, 4. Animation Performance (Both Platforms), 5. Memory Management, 6. Battery Optimization, 7. Network Performance, 8. Performance Testing (+38 more)
+Cohesion: 0.09
+Nodes (23): 1. The Mobile Performance Mindset, 5. Memory Management, 6. Battery Optimization, 7. Network Performance, 8. Performance Testing, 9. Quick Reference Card, Animation Targets, Background Task Guidelines (+15 more)
 
 ### Community 9 - "Community 9"
 Cohesion: 0.04
@@ -702,8 +826,8 @@ Cohesion: 0.05
 Nodes (43): 1. Request Analysis, 2. Agent Selection Matrix, 3. Automatic Routing Protocol, 4. Response Format, Case 1: Generic Question, Case 2: Extremely Vague Request, Case 3: Contradictory Patterns, COMPLEX (Orchestrator required) (+35 more)
 
 ### Community 12 - "Community 12"
-Cohesion: 0.08
-Nodes (25): 10. iOS Checklist, 1. Human Interface Guidelines Philosophy, 4. iOS Layout & Spacing, 6. iOS Components, 7. iOS Specific Patterns, 8. SF Symbols, Before Every iOS Screen, Before iOS Release (+17 more)
+Cohesion: 0.05
+Nodes (44): 10. iOS Checklist, 1. Human Interface Guidelines Philosophy, 2. iOS Typography, 3. iOS Color System, 4. iOS Layout & Spacing, 5. iOS Navigation Patterns, 6. iOS Components, 7. iOS Specific Patterns (+36 more)
 
 ### Community 13 - "Community 13"
 Cohesion: 0.11
@@ -794,15 +918,15 @@ Cohesion: 0.06
 Nodes (33): agents, author, Best Practices, commands, Common Validation Errors, Complete Field Reference, Complete Plugin, Component Path Fields (+25 more)
 
 ### Community 35 - "Community 35"
-Cohesion: 0.08
-Nodes (32): MCP_CATALOG, recommendedMcp(), marketplaceRepo(), MARKETPLACES, PLUGIN_SUGGESTIONS, suggestPlugins(), renderMcp(), renderMemoryInstructions() (+24 more)
+Cohesion: 0.20
+Nodes (13): MCP_CATALOG, recommendedMcp(), marketplaceRepo(), MARKETPLACES, PLUGIN_SUGGESTIONS, suggestPlugins(), renderMcp(), LSP_SERVERS (+5 more)
 
 ### Community 36 - "Community 36"
 Cohesion: 0.06
 Nodes (33): 1. Blast Radius Analysis (Primary Use), 2. Risk-Scored Change Analysis, 3. Dead Code Detection, 4. Refactoring Preview, 5. Architecture Visualization, 6. Wiki Generation, Alternatives Comparison, Best Practices (+25 more)
 
 ### Community 37 - "Community 37"
-Cohesion: 0.06
+Cohesion: 0.05
 Nodes (20): Memory index, Dead ends — don't retry these (confirmed, not just "untested"), Acceptance criteria, Caveats, Forbidden, Hooks — cross-platform `.mjs` standard, Mandatory rules, Objective (+12 more)
 
 ### Community 38 - "Community 38"
@@ -818,8 +942,8 @@ Cohesion: 0.06
 Nodes (30): Agents, Auto-Discovery Mechanism, Best Practices, ${CLAUDE_PLUGIN_ROOT}, Commands, Common Patterns, Component Files, Component Organization (+22 more)
 
 ### Community 41 - "Community 41"
-Cohesion: 0.12
-Nodes (24): allEccAssets(), ECC_BY_STACK, ECC_COMMON, selectEccAssets(), GITHUB_PM_ARTIFACTS, PLUGIN_ROOT, selectGitHubPMAssets(), T (+16 more)
+Cohesion: 0.09
+Nodes (34): AGKIT_BY_STACK, AGKIT_COMMANDS, AGKIT_COMMON, allAgkitAssets(), BACKEND, commonSets(), freeze(), GAMES (+26 more)
 
 ### Community 42 - "Community 42"
 Cohesion: 0.06
@@ -898,8 +1022,8 @@ Cohesion: 0.07
 Nodes (27): API Resources, Caching, Configuration and Environments, Controllers -> Services -> Actions, Custom Casts and Value Objects, Eager Loading to Avoid N+1, Eloquent Model Patterns, Events, Jobs, and Queues (+19 more)
 
 ### Community 61 - "Community 61"
-Cohesion: 0.07
-Nodes (28): Archived Repos — Handle Dependabot/Renovate PRs with Care, Auto-Approve Race Condition with Copilot Reviewer, Auto-detect Merge Strategy, Auto-merge & Auto-approve Guide, Batch Auto-merge for Multiple PRs, Branch Protection for Auto-merge, Canonical Auto-merge Workflow Template, CI Annotations — Always Check Before Declaring a PR Clean (+20 more)
+Cohesion: 0.09
+Nodes (22): Archived Repos — Handle Dependabot/Renovate PRs with Care, Auto-Approve Race Condition with Copilot Reviewer, Auto-detect Merge Strategy, Auto-merge & Auto-approve Guide, Batch Auto-merge for Multiple PRs, Branch Protection for Auto-merge, Canonical Auto-merge Workflow Template, CI Annotations — Always Check Before Declaring a PR Clean (+14 more)
 
 ### Community 62 - "Community 62"
 Cohesion: 0.07
@@ -919,11 +1043,11 @@ Nodes (27): Anti-pattern: `permissions: read-all`, Auto-Merge Compatibility, Bra
 
 ### Community 66 - "Community 66"
 Cohesion: 0.13
-Nodes (19): hasFrontmatter, normalizeFragmentLines(), output, ROOT, templatesDir, type, detectAssetType(), normalizeToolsValue() (+11 more)
+Nodes (20): hasFrontmatter, normalizeFragmentLines(), output, ROOT, templatesDir, type, detectAssetType(), normalizeToolsValue() (+12 more)
 
 ### Community 67 - "Community 67"
-Cohesion: 0.11
-Nodes (17): validateStopOutput(), assertBlock(), assertSilentStop(), HOOK, notifiedFlag(), ROOT, writeFlag(), assertSilentApprove() (+9 more)
+Cohesion: 0.18
+Nodes (11): validateStopOutput(), assertSilentApprove(), assertSystemMessage(), flagPath(), HOOK, ROOT, writeFlag(), assertApproveEmpty() (+3 more)
 
 ### Community 68 - "Community 68"
 Cohesion: 0.08
@@ -959,7 +1083,7 @@ Nodes (24): For /graphify add and --watch, For /graphify query, For the commit h
 
 ### Community 76 - "Community 76"
 Cohesion: 0.08
-Nodes (23): For /graphify add and --watch, For /graphify query, For the commit hook and native CLAUDE.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands, Part A - Structural extraction for code files (+15 more)
+Nodes (24): For /graphify add and --watch, For /graphify query, For the commit hook and native CLAUDE.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands, Part A - Structural extraction for code files (+16 more)
 
 ### Community 77 - "Community 77"
 Cohesion: 0.08
@@ -1007,7 +1131,7 @@ Nodes (43): PERMISSION_REQUEST_BEHAVIORS, validateNotificationOutput, validatePe
 
 ### Community 88 - "Community 88"
 Cohesion: 0.16
-Nodes (21): arrEq(), cmdCommit(), cmdEnumerate(), cmdFrontmatter(), countBullets(), counter(), extractCodeBlocks(), extractHeadings() (+13 more)
+Nodes (20): arrEq(), cmdCommit(), cmdEnumerate(), countBullets(), counter(), extractCodeBlocks(), extractHeadings(), extractInlineCodes() (+12 more)
 
 ### Community 89 - "Community 89"
 Cohesion: 0.09
@@ -1030,16 +1154,16 @@ Cohesion: 0.09
 Nodes (21): Alternatives to GoogleTest, Basic Unit Test (gtest), Best Practices, C++ Testing (Agent Skill), CMake/CTest Quickstart, Code Examples, Common Pitfalls, Core Concepts (+13 more)
 
 ### Community 94 - "Community 94"
-Cohesion: 0.09
-Nodes (22): actionlint - GitHub Actions Workflow Linter, CI Integration Patterns, Combined with Other Linters, Command-Line Usage, Configuration File, Configuration for Common Project Types, Custom actions not recognized, Direct Run in CI (+14 more)
+Cohesion: 0.07
+Nodes (30): actionlint - GitHub Actions Workflow Linter, CI Integration Patterns, Combined with Other Linters, Command-Line Usage, Common Error Codes and Fixes, Configuration File, Configuration for Common Project Types, Context/Object Property Access (+22 more)
 
 ### Community 95 - "Community 95"
-Cohesion: 0.11
-Nodes (11): classify(), EXTENSION_LANGUAGES, getTool(), selectTools(), toolSettingsHooks(), vendorHookCommand(), detectLanguages(), DOMAIN_FIXED_RULES (+3 more)
+Cohesion: 0.13
+Nodes (7): classify(), EXTENSION_LANGUAGES, detectLanguages(), DOMAIN_FIXED_RULES, hookCmd(), permPrefix(), renderSettings()
 
 ### Community 96 - "Community 96"
-Cohesion: 0.11
-Nodes (14): validatePostToolUseOutput, assertAdvise(), assertSilentAdvise(), assertFindings(), assertSkip(), HOOK, phpEvent, ROOT (+6 more)
+Cohesion: 0.08
+Nodes (24): validatePostToolUseOutput, assertFindings(), assertSkip(), HOOK, phpEvent, ROOT, assertBlockStop(), assertReview() (+16 more)
 
 ### Community 97 - "Community 97"
 Cohesion: 0.10
@@ -1066,8 +1190,8 @@ Cohesion: 0.10
 Nodes (19): Advanced Plugin Example, agents/orchestration/deployment-orchestrator.md, .claude-plugin/plugin.json, commands/ci/build.md, Configuration Management, Directory Structure, File Contents, hooks/hooks.json (+11 more)
 
 ### Community 103 - "Community 103"
-Cohesion: 0.18
-Nodes (13): skillsForProfile(), AGENT_ORDER, agentsWorkflowBlock(), routingRole(), codeReviewRule(), fixedRulesBlock(), renderDomainClaudeMd(), renderRootClaudeMd() (+5 more)
+Cohesion: 0.15
+Nodes (16): skillsForProfile(), AGENT_ORDER, agentsWorkflowBlock(), routingRole(), codeReviewRule(), fixedRulesBlock(), renderDomainClaudeMd(), renderRootClaudeMd() (+8 more)
 
 ### Community 104 - "Community 104"
 Cohesion: 0.10
@@ -1194,8 +1318,8 @@ Cohesion: 0.12
 Nodes (16): Architecture, `blockOnStop()` branch (new), Cross-platform compliance, Design: sql-idempotent-review Stop mode (catch externally-generated SQL), File change summary, File locations, Goals, Logic flow (+8 more)
 
 ### Community 135 - "Community 135"
-Cohesion: 0.16
-Nodes (13): buildHook(), CC_BLOCK, DART_BLOCK, GO_BLOCK, JS_BLOCK, PHP_BLOCK, PYTHON_BLOCK, renderFormatOnEdit() (+5 more)
+Cohesion: 0.17
+Nodes (12): buildHook(), CC_BLOCK, DART_BLOCK, GO_BLOCK, JS_BLOCK, PHP_BLOCK, PYTHON_BLOCK, renderFormatOnEdit() (+4 more)
 
 ### Community 136 - "Community 136"
 Cohesion: 0.12
@@ -1402,8 +1526,8 @@ Cohesion: 0.14
 Nodes (13): 1. Detector — `lib/detect/hook-hygiene.mjs` (new), 2. Wiring into scan — `lib/detect/index.mjs`, 3. Scan report + `--json`, 4. Doctor audit + guided fix — `commands/doctor.md`, 5. Tests — `tests/detect-hook-hygiene.test.mjs` (new), 6. `mergeSettingsHooks` dedup-key normalization — `lib/apply.mjs`, Architecture, Data flow (+5 more)
 
 ### Community 187 - "Community 187"
-Cohesion: 0.29
-Nodes (7): Build Commands by Framework, 🔴 BUILD VERIFICATION (MANDATORY Before "Done"), Common Build Errors to Watch For, 📱 Emulator Quick Commands (All Platforms), Mandatory Build Checklist, What to Check After Build, Why This Is Non-Negotiable
+Cohesion: 0.12
+Nodes (15): File Structure, Global Constraints, Hooks Session-Scratchpad Migration Implementation Plan, Self-Review Notes (completed during planning, kept for the record), Task 10: Update the governing rule docs, Task 11: Sync this repo's own dogfooded hooks + settings.json + final full verification, Task 1: `session-scratch.mjs` — the shared resolver, Task 2: Migrate `set-files-changed.mjs` (+ add its missing compliance test) (+7 more)
 
 ### Community 188 - "Community 188"
 Cohesion: 0.14
@@ -1494,8 +1618,8 @@ Cohesion: 0.20
 Nodes (7): After publishing, Bump type guide, Non-interactive (CI / scripts), Publishing to the Registry, Quick release, Registry location, What the script does
 
 ### Community 210 - "Community 210"
-Cohesion: 0.19
-Nodes (15): resolveAgentWhenToUse(), resolveCanonicalDescription(), cleanAgentMarkdown(), provenanceComment(), removeSection(), splitFrontmatter(), stampProvenance(), applyCanonicalDescription() (+7 more)
+Cohesion: 0.15
+Nodes (18): resolveAgentWhenToUse(), resolveCanonicalDescription(), cleanAgentMarkdown(), provenanceComment(), removeSection(), splitFrontmatter(), stampProvenance(), needsQuote() (+10 more)
 
 ### Community 211 - "Community 211"
 Cohesion: 0.15
@@ -1551,7 +1675,7 @@ Nodes (12): Auto-merge Not Working, Auto-merge Setup, GitHub Actions Failing, Gi
 
 ### Community 224 - "Community 224"
 Cohesion: 0.11
-Nodes (18): autoMemoryEnabled, defaultMode, env, CAVEMAN_DEFAULT_MODE, CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING, CLAUDE_CODE_EFFORT_LEVEL, hooks, PostToolUse (+10 more)
+Nodes (18): autoMemoryEnabled, env, CAVEMAN_DEFAULT_MODE, CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING, CLAUDE_CODE_EFFORT_LEVEL, hooks, PostToolUse, PreToolUse (+10 more)
 
 ### Community 225 - "Community 225"
 Cohesion: 0.17
@@ -1566,8 +1690,8 @@ Cohesion: 0.17
 Nodes (11): 1. `lib/data/skill-map.mjs` (NOVO), 2. `lib/generate/claude-md.mjs` — extensões, 3. `commands/init.md` — step 7.5 (NOVO), Arquivos afetados, Componentes, Decisões de design, Design: CLAUDE.md AI Enrichment + Stack-Aware Skills Block, Fora de escopo (+3 more)
 
 ### Community 228 - "Community 228"
-Cohesion: 0.14
-Nodes (26): AGENT_TOOL_DROP, CLAUDE_AGENT_TOOLS, cleanAgentMarkdown(), cleanCommandMarkdown(), cleanScript(), cleanSkillMarkdown(), mapAgentTools(), provenanceComment() (+18 more)
+Cohesion: 0.18
+Nodes (23): AGENT_TOOL_DROP, CLAUDE_AGENT_TOOLS, cleanAgentMarkdown(), cleanCommandMarkdown(), cleanScript(), cleanSkillMarkdown(), mapAgentTools(), provenanceComment() (+15 more)
 
 ### Community 229 - "Community 229"
 Cohesion: 0.17
@@ -1659,7 +1783,7 @@ Nodes (11): Avoid `any`, Console.log, Error Handling, Immutability, Input Valida
 
 ### Community 253 - "Community 253"
 Cohesion: 0.11
-Nodes (19): Accessibility-First Composition, Avoiding Render Cascades, Complex forms, Controlled inputs, Data Fetching Decision Matrix, Forms, Hooks Discipline, Lists (+11 more)
+Nodes (19): Accessibility-First Composition, Avoiding Render Cascades, Custom hook for debounced search, Data Fetching Decision Matrix, Examples, Hooks Discipline, Lists, Optimistic UI with React 19 `useOptimistic` (+11 more)
 
 ### Community 254 - "Community 254"
 Cohesion: 0.18
@@ -1671,11 +1795,11 @@ Nodes (11): Actions & Security Hardening (apply alongside branch protection), De
 
 ### Community 256 - "Community 256"
 Cohesion: 0.05
-Nodes (35): advisory(), blockOnStop(), countLines(), DDD_HINTS, event, IGNORED_DIRS, isSourceFile(), SOURCE_EXTS (+27 more)
+Nodes (36): advisory(), blockOnStop(), countLines(), DDD_HINTS, event, IGNORED_DIRS, isSourceFile(), SOURCE_EXTS (+28 more)
 
 ### Community 257 - "Community 257"
-Cohesion: 0.33
-Nodes (6): 5. iOS Navigation Patterns, Gestures, Modal Presentations, Navigation Bar Guidelines, Navigation Types, Tab Bar Guidelines
+Cohesion: 0.22
+Nodes (5): additionalContext, event, graphifyOutDir, SOURCE_EXT_RE, SOURCE_EXTS
 
 ### Community 258 - "Community 258"
 Cohesion: 0.20
@@ -1790,8 +1914,8 @@ Cohesion: 0.22
 Nodes (8): File Map, Format-on-Edit Hook — Language-Aware Generation, Global Constraints, Self-Review, Task 1: Create `lib/generate/format-hook.mjs`, Task 2: Wire generated hook into `lib/plan.mjs`, Task 3: Tests for `lib/generate/format-hook.mjs`, Task 4: Wire plan + delete static file
 
 ### Community 286 - "Community 286"
-Cohesion: 0.31
-Nodes (3): renderVerifyOnStop(), flagPath(), genHook()
+Cohesion: 0.08
+Nodes (27): selectGitHubPMAssets(), getTool(), selectTools(), toolSettingsHooks(), vendorHookCommand(), renderGraphifyClaudeMdSection(), renderGraphifyignore(), renderRules() (+19 more)
 
 ### Community 287 - "Community 287"
 Cohesion: 0.22
@@ -1815,7 +1939,7 @@ Nodes (8): Best Practices, Common Commands, Directory Structure, Key Concepts, S
 
 ### Community 292 - "Community 292"
 Cohesion: 0.22
-Nodes (9): 10. Anti-Patterns, 4. Attack Surface Mapping, 7. Scanning Methodology, Phase-Based Approach, Prioritization Matrix, 📋 Reference Files, 🔧 Runtime Scripts, Vulnerability Scanner (+1 more)
+Nodes (9): 10. Anti-Patterns, 5. Risk Prioritization, 7. Scanning Methodology, CVSS + Context, Phase-Based Approach, Prioritization Decision Tree, 📋 Reference Files, 🔧 Runtime Scripts (+1 more)
 
 ### Community 293 - "Community 293"
 Cohesion: 0.22
@@ -1878,8 +2002,8 @@ Cohesion: 0.22
 Nodes (8): graphify reference: extra exports and benchmark, Step 6b - Wiki (only if --wiki flag), Step 7 - Neo4j export (only if --neo4j or --neo4j-push flag), Step 7a - FalkorDB export (only if --falkordb or --falkordb-push flag), Step 7b - SVG export (only if --svg flag), Step 7c - GraphML export (only if --graphml flag), Step 7d - MCP server (only if --mcp flag), Step 8 - Token reduction benchmark (only if total_words > 5000)
 
 ### Community 308 - "Community 308"
-Cohesion: 0.09
-Nodes (34): FRAMEWORKS, CONTAINER_DIRS, detectArchitecture(), kindFor(), LAYER_DIRS, singular(), detectExistingHarness(), collectDeps() (+26 more)
+Cohesion: 0.08
+Nodes (41): FRAMEWORKS, CONTAINER_DIRS, detectArchitecture(), kindFor(), LAYER_DIRS, singular(), detectCommands(), genericCommands() (+33 more)
 
 ### Community 309 - "Community 309"
 Cohesion: 0.25
@@ -2050,8 +2174,8 @@ Cohesion: 0.25
 Nodes (7): autoload, psr-4, name, App\\, require, adianti/framework, php
 
 ### Community 351 - "Community 351"
-Cohesion: 0.40
-Nodes (5): 2. iOS Typography, Dynamic Type Support (MANDATORY), Font Weight Usage, iOS Type Scale (Dynamic Type), SF Pro Font Family
+Cohesion: 0.06
+Nodes (32): description, type, description, type, description, type, description, type (+24 more)
 
 ### Community 352 - "Community 352"
 Cohesion: 0.29
@@ -2174,8 +2298,8 @@ Cohesion: 0.52
 Nodes (6): fail(), header(), info(), pass(), verify-github-project.sh script, warn()
 
 ### Community 383 - "Community 383"
-Cohesion: 0.50
-Nodes (4): 3. iOS Color System, Dark Mode Considerations, System Accent Colors, System Colors (Semantic)
+Cohesion: 0.12
+Nodes (16): 1. `templates/rules/05-testing.md` — rewrite as the rubric (single source of truth), 2. `lib/generate/claude-md.mjs` — `ROOT_FIXED_RULES[1]`, 3. `lib/generate/rules.mjs` — generated `.claude/rules/testing.md` body, 4. `templates/skills/setup-testing/SKILL.md` — step 7 note, 5. `templates/skills/test-triage/SKILL.md` — NEW first-party skill, 6. `lib/data/project-catalog.mjs` — register the skill, Appendix A — approved `05-testing.md` content, Appendix B — proposed `test-triage/SKILL.md` content (+8 more)
 
 ### Community 384 - "Community 384"
 Cohesion: 0.29
@@ -2186,8 +2310,8 @@ Cohesion: 0.29
 Nodes (6): Constraints belong in the schema, DTOs are zod schemas, Global pipe, Schema accuracy feeds Swagger, Validation — Zod, Where to validate
 
 ### Community 386 - "Community 386"
-Cohesion: 0.29
-Nodes (4): additionalContext, event, SOURCE_EXT_RE, SOURCE_EXTS
+Cohesion: 0.22
+Nodes (5): additionalContext, event, graphifyOutDir, SOURCE_EXT_RE, SOURCE_EXTS
 
 ### Community 387 - "Community 387"
 Cohesion: 0.33
@@ -2286,8 +2410,8 @@ Cohesion: 0.33
 Nodes (5): API Response Pattern, C# Patterns, Dependency Injection, Options Pattern, Repository Pattern
 
 ### Community 411 - "Community 411"
-Cohesion: 0.21
-Nodes (13): AGKIT_BY_STACK, AGKIT_COMMANDS, AGKIT_COMMON, allAgkitAssets(), BACKEND, commonSets(), freeze(), GAMES (+5 more)
+Cohesion: 0.05
+Nodes (44): Auto-merge Configuration (Recommended), Auto-merge Decision Matrix, Auto-merge Enabled by Wrong Actor, Auto-merge Workflow, Basic Configuration, Basic Configuration, Best Practices, Branch Protection Configuration (+36 more)
 
 ### Community 412 - "Community 412"
 Cohesion: 0.33
@@ -2350,8 +2474,8 @@ Cohesion: 0.33
 Nodes (5): Acceptance criteria, Code Quality, Do, Don't, Objective
 
 ### Community 427 - "Community 427"
-Cohesion: 0.33
-Nodes (5): Acceptance criteria, Do, Don't, Objective, Testing
+Cohesion: 0.20
+Nodes (9): Acceptance, Frontend, Graphify — if `graphify-out/` exists, How, Objective, Objective signals — decide + prioritize, Skip it — no logic to break, Test it — real logic + stakes (+1 more)
 
 ### Community 428 - "Community 428"
 Cohesion: 0.33
@@ -2406,8 +2530,8 @@ Cohesion: 0.33
 Nodes (5): dependsOn, $schema, tasks, build, test
 
 ### Community 441 - "Community 441"
-Cohesion: 0.50
-Nodes (4): 9. iOS Accessibility, Dynamic Type Scaling, Reduce Motion, VoiceOver Requirements
+Cohesion: 0.22
+Nodes (9): 2. React Native Performance, Animation Performance, FlashList: The Better Option, FlatList Optimization Checklist, Memory Leak Prevention, React Native Performance Checklist, Reanimated for Complex Animations, 🚫 The #1 AI Mistake: ScrollView for Lists (+1 more)
 
 ### Community 442 - "Community 442"
 Cohesion: 0.40
@@ -2418,8 +2542,8 @@ Cohesion: 0.40
 Nodes (4): Audit checklist (report each, with file:line evidence), Output format, Vendor provenance auditor, What "vendored" means here
 
 ### Community 444 - "Community 444"
-Cohesion: 0.40
-Nodes (3): event, s, SOURCE_EXTS
+Cohesion: 0.22
+Nodes (9): 3. Flutter Performance, Dispose Pattern, Flutter Performance Checklist, Image Optimization, ListView Optimization, Riverpod/Provider Best Practices, Targeted State Management, 🚫 The #1 AI Mistake: setState Overuse (+1 more)
 
 ### Community 445 - "Community 445"
 Cohesion: 0.40
@@ -2501,9 +2625,17 @@ Nodes (5): Basic Parametrization, Multiple Parameters, Parametrization, Parametr
 Cohesion: 0.20
 Nodes (9): Architecture: the scan → plan → apply pipeline, Behavioral guidelines, Codebase Profile, Commands, Conventions, graphify, Surface (slash commands), Vendoring (ECC + tools) (+1 more)
 
+### Community 467 - "Community 467"
+Cohesion: 0.22
+Nodes (9): properties, description, items, type, $ref, description, type, hooks (+1 more)
+
 ### Community 468 - "Community 468"
 Cohesion: 0.40
 Nodes (3): event, lines, result
+
+### Community 469 - "Community 469"
+Cohesion: 0.29
+Nodes (7): Build Commands by Framework, 🔴 BUILD VERIFICATION (MANDATORY Before "Done"), Common Build Errors to Watch For, 📱 Emulator Quick Commands (All Platforms), Mandatory Build Checklist, What to Check After Build, Why This Is Non-Negotiable
 
 ### Community 470 - "Community 470"
 Cohesion: 0.40
@@ -2600,6 +2732,10 @@ Nodes (4): Conventions, NestJS Generate Test, Template, What to test
 ### Community 493 - "Community 493"
 Cohesion: 0.50
 Nodes (3): How to audit, Manifest check, What you audit
+
+### Community 495 - "Community 495"
+Cohesion: 0.67
+Nodes (3): 4. Attack Surface Mapping, Prioritization Matrix, What to Map
 
 ### Community 496 - "Community 496"
 Cohesion: 0.50
@@ -2723,11 +2859,19 @@ Nodes (12): ECC_DIR, fetchRaw(), fetchTree(), get(), HERE, main(), PATCHES_DIR, 
 
 ### Community 526 - "Community 526"
 Cohesion: 0.08
-Nodes (22): applyPlan(), ensureGitignore(), mergeSettingsHooks(), writeFile(), FIX, HAS_ADIANTI, HAS_ECC, ROOT (+14 more)
+Nodes (24): applyPlan(), ensureGitignore(), mergeLines(), mergeMarkdownSection(), mergeSettingsHooks(), writeFile(), FIX, HAS_ADIANTI (+16 more)
 
 ### Community 527 - "Community 527"
 Cohesion: 0.40
 Nodes (5): 4. Client-Side Data Fetching (MEDIUM-HIGH), Deduplicate global event listeners, localStorage: version + minimize, Passive listeners for scroll, SWR / TanStack Query for deduplication
+
+### Community 528 - "Community 528"
+Cohesion: 0.25
+Nodes (8): default, description, type, properties, autoMemoryEnabled, $schema, description, type
+
+### Community 529 - "Community 529"
+Cohesion: 0.25
+Nodes (7): 1. Collect changed symbols, 2. Score each symbol, 3. Output the triage table, 4. Act, Test triage — what to test among your changes, With graphify (`graphify-out/graph.json` exists), Without graphify
 
 ### Community 530 - "Community 530"
 Cohesion: 0.50
@@ -2781,6 +2925,10 @@ Nodes (3): 2025 Key Changes, 2. OWASP Top 10:2025, Risk Categories
 Cohesion: 0.67
 Nodes (3): 3. Supply Chain Security (A03), Attack Surface, Defense Principles
 
+### Community 549 - "Community 549"
+Cohesion: 0.25
+Nodes (8): $defs, hookCommand, permissionRule, anyOf, description, examples, pattern, type
+
 ### Community 550 - "Community 550"
 Cohesion: 0.67
 Nodes (3): 6. Exceptional Conditions (A10 - New), Fail-Open vs Fail-Closed, What to Check
@@ -2794,8 +2942,8 @@ Cohesion: 0.67
 Nodes (3): 9. Cloud Security Considerations, Cloud-Specific Checks, Shared Responsibility
 
 ### Community 553 - "Community 553"
-Cohesion: 0.67
-Nodes (3): 5. Risk Prioritization, CVSS + Context, Prioritization Decision Tree
+Cohesion: 0.33
+Nodes (3): GITHUB_PM_ARTIFACTS, PLUGIN_ROOT, T
 
 ### Community 555 - "Community 555"
 Cohesion: 0.67
@@ -2826,8 +2974,8 @@ Cohesion: 0.50
 Nodes (3): graphify, subagent-driven-development, uncle-bob-craft
 
 ### Community 614 - "Community 614"
-Cohesion: 0.25
-Nodes (8): Common Error Codes and Fixes, Context/Object Property Access, Deprecated Action Versions, Expression Syntax Errors, Missing Permissions Declarations, ShellCheck Issues in run: Blocks, Undefined Action Inputs/Outputs, YAML Type Errors
+Cohesion: 0.29
+Nodes (6): additionalProperties, allowTrailingCommas, description, $id, $schema, type
 
 ### Community 615 - "Community 615"
 Cohesion: 0.33
@@ -2848,6 +2996,10 @@ Nodes (15): Clean Agile, Clean Architecture, Component design (summary), Depende
 ### Community 619 - "Community 619"
 Cohesion: 0.29
 Nodes (6): Global Constraints, Task 1: Fix `validateWorktreeCreateOutput` to accept the command-hook bare-path stdout contract, Task 2: `worktree-create.mjs` hook (WorktreeCreate + PostToolUse:EnterWorktree), Task 3: `worktree-remove.mjs` hook (WorktreeRemove), Task 4: Register the catalog entries, wire settings.json, verify full suite, Worktree Dependency Seeding Implementation Plan
+
+### Community 620 - "Community 620"
+Cohesion: 0.33
+Nodes (6): Force Push + Stale Review Dismissal Interaction, Merge Queue Behavior and Pitfalls, Multi-PR Workflow Pattern, Sequential Processing, Troubleshooting Merge Queue Issues, Verifying a PR Actually Merged (enqueue ≠ merged)
 
 ### Community 621 - "Community 621"
 Cohesion: 0.40
@@ -2878,8 +3030,8 @@ Cohesion: 0.40
 Nodes (5): Composition Recipes, Compound components (shared state via Context), Named slots, Render prop / function-as-child, Slot via `children`
 
 ### Community 630 - "Community 630"
-Cohesion: 0.46
-Nodes (7): detectCommands(), genericCommands(), goCommands(), javaCommands(), jsCommands(), jsRunner(), phpCommands()
+Cohesion: 0.40
+Nodes (5): 4. Animation Performance (Both Platforms), Animation Timing Guide, GPU vs CPU Animation, Spring Physics, The 60fps Imperative
 
 ### Community 631 - "Community 631"
 Cohesion: 0.25
@@ -2897,6 +3049,10 @@ Nodes (6): Estimation, Mentoring and collaboration, Professionalism, Sustainable
 Cohesion: 0.33
 Nodes (6): Estimation, Mentoring and collaboration, Professionalism, Sustainable pace, Tests as a requirement, The Clean Coder — Deep Reference
 
+### Community 635 - "Community 635"
+Cohesion: 0.29
+Nodes (7): description, examples, items, type, minLength, type, claudeMdExcludes
+
 ### Community 636 - "Community 636"
 Cohesion: 0.40
 Nodes (5): Agile values (manifesto), Clean Agile — Deep Reference, Iron Cross (four supporting values), Practices, Relationship to craft
@@ -2905,38 +3061,506 @@ Nodes (5): Agile values (manifesto), Clean Agile — Deep Reference, Iron Cross 
 Cohesion: 0.40
 Nodes (5): Cargo cult and misuse, Design Patterns — Use vs Misuse, Good signals, When not to use a pattern, When to use a pattern
 
-### Community 639 - "Community 639"
-Cohesion: 0.50
-Nodes (4): 1. Render is a Pure Function of Props and State, 2. Side Effects Outside Render, 3. Composition Over Inheritance, Core Principles
+### Community 638 - "Community 638"
+Cohesion: 0.33
+Nodes (6): default, description, examples, minimum, type, cleanupPeriodDays
 
 ### Community 641 - "Community 641"
-Cohesion: 0.50
-Nodes (4): Custom hook for debounced search, Examples, Optimistic UI with React 19 `useOptimistic`, Splitting context to avoid render cascades
+Cohesion: 0.40
+Nodes (5): description, examples, minLength, type, apiKeyHelper
 
 ### Community 642 - "Community 642"
 Cohesion: 0.50
 Nodes (4): Examples, Form submission with MSW and userEvent, Testing a Suspense boundary, Testing an error boundary
 
-### Community 645 - "Community 645"
-Cohesion: 0.05
-Nodes (44): Auto-merge Configuration (Recommended), Auto-merge Decision Matrix, Auto-merge Enabled by Wrong Actor, Auto-merge Workflow, Basic Configuration, Basic Configuration, Best Practices, Branch Protection Configuration (+36 more)
+### Community 646 - "Community 646"
+Cohesion: 0.40
+Nodes (5): default, description, enum, type, autoUpdatesChannel
+
+### Community 647 - "Community 647"
+Cohesion: 0.40
+Nodes (5): description, examples, minLength, type, awsAuthRefresh
+
+### Community 649 - "Community 649"
+Cohesion: 0.50
+Nodes (4): 1. Render is a Pure Function of Props and State, 2. Side Effects Outside Render, 3. Composition Over Inheritance, Core Principles
+
+### Community 650 - "Community 650"
+Cohesion: 0.50
+Nodes (4): Complex forms, Controlled inputs, Forms, React 19 form actions (preferred for new code)
+
+### Community 651 - "Community 651"
+Cohesion: 0.40
+Nodes (5): description, examples, minLength, type, awsCredentialExport
+
+### Community 652 - "Community 652"
+Cohesion: 0.40
+Nodes (5): hookMatcher, additionalProperties, description, required, type
+
+### Community 653 - "Community 653"
+Cohesion: 0.40
+Nodes (5): default, description, examples, type, env
+
+### Community 658 - "Community 658"
+Cohesion: 0.50
+Nodes (4): description, enum, type, ANTHROPIC_BEDROCK_SERVICE_TIER
+
+### Community 659 - "Community 659"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CCR_FORCE_BUNDLE
+
+### Community 660 - "Community 660"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_AGENT_SDK_DISABLE_BUILTIN_AGENTS
+
+### Community 661 - "Community 661"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_AGENT_SDK_MCP_NO_PREFIX
+
+### Community 662 - "Community 662"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_AUTO_BACKGROUND_TASKS
+
+### Community 663 - "Community 663"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_AX_SCREEN_READER
+
+### Community 664 - "Community 664"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR
+
+### Community 665 - "Community 665"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_ACCESSIBILITY
+
+### Community 666 - "Community 666"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD
+
+### Community 667 - "Community 667"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_ALT_SCREEN_FULL_REPAINT
+
+### Community 668 - "Community 668"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_ALWAYS_ENABLE_EFFORT
+
+### Community 669 - "Community 669"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_ARTIFACT_AUTO_OPEN
+
+### Community 670 - "Community 670"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_ATTRIBUTION_HEADER
+
+### Community 671 - "Community 671"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_AUTO_CONNECT_IDE
+
+### Community 672 - "Community 672"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_CHILD_SESSION
+
+### Community 673 - "Community 673"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DEBUG_LOG_LEVEL
+
+### Community 674 - "Community 674"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_1M_CONTEXT
+
+### Community 675 - "Community 675"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING
+
+### Community 676 - "Community 676"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_ADVISOR_TOOL
+
+### Community 677 - "Community 677"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_AGENT_VIEW
+
+### Community 678 - "Community 678"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN
+
+### Community 679 - "Community 679"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_ARTIFACT
+
+### Community 680 - "Community 680"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_ATTACHMENTS
+
+### Community 681 - "Community 681"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_AUTO_MEMORY
+
+### Community 682 - "Community 682"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_BACKGROUND_TASKS
+
+### Community 683 - "Community 683"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_BG_SHELL_PRESSURE_REAP
+
+### Community 684 - "Community 684"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_BUNDLED_SKILLS
+
+### Community 685 - "Community 685"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_CLAUDE_MDS
+
+### Community 686 - "Community 686"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_CRON
+
+### Community 687 - "Community 687"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS
+
+### Community 688 - "Community 688"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_FAST_MODE
+
+### Community 689 - "Community 689"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY
+
+### Community 690 - "Community 690"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_FILE_CHECKPOINTING
+
+### Community 691 - "Community 691"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_GIT_INSTRUCTIONS
+
+### Community 692 - "Community 692"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_LEGACY_MODEL_REMAP
+
+### Community 693 - "Community 693"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_MOUSE_CLICKS
+
+### Community 694 - "Community 694"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_MOUSE
+
+### Community 695 - "Community 695"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC
+
+### Community 696 - "Community 696"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_NONSTREAMING_FALLBACK
+
+### Community 697 - "Community 697"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL
+
+### Community 698 - "Community 698"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_POLICY_SKILLS
+
+### Community 699 - "Community 699"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_TERMINAL_TITLE
+
+### Community 700 - "Community 700"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_THINKING
+
+### Community 701 - "Community 701"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_VIRTUAL_SCROLL
+
+### Community 702 - "Community 702"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_DISABLE_WORKFLOWS
+
+### Community 703 - "Community 703"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_EFFORT_LEVEL
+
+### Community 704 - "Community 704"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_ENABLE_AUTO_MODE
+
+### Community 705 - "Community 705"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_ENABLE_AWAY_SUMMARY
+
+### Community 706 - "Community 706"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_ENABLE_BACKGROUND_PLUGIN_REFRESH
+
+### Community 707 - "Community 707"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_ENABLE_FEEDBACK_SURVEY_FOR_OTEL
+
+### Community 708 - "Community 708"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_ENABLE_FINE_GRAINED_TOOL_STREAMING
+
+### Community 709 - "Community 709"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY
+
+### Community 710 - "Community 710"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_ENABLE_PROMPT_SUGGESTION
+
+### Community 711 - "Community 711"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_ENABLE_TASKS
+
+### Community 712 - "Community 712"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_ENABLE_TELEMETRY
+
+### Community 713 - "Community 713"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_ENHANCED_TELEMETRY_BETA
+
+### Community 714 - "Community 714"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS
+
+### Community 715 - "Community 715"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_FORCE_SESSION_PERSISTENCE
+
+### Community 716 - "Community 716"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_FORCE_STRIKETHROUGH
+
+### Community 717 - "Community 717"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDE_CODE_FORCE_SYNC_OUTPUT
+
+### Community 718 - "Community 718"
+Cohesion: 0.50
+Nodes (4): description, enum, type, CLAUDECODE
+
+### Community 720 - "Community 720"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_API_KEY
+
+### Community 721 - "Community 721"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_AUTH_TOKEN
+
+### Community 722 - "Community 722"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_AWS_API_KEY
+
+### Community 723 - "Community 723"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_AWS_BASE_URL
+
+### Community 724 - "Community 724"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_AWS_WORKSPACE_ID
+
+### Community 725 - "Community 725"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_BASE_URL
+
+### Community 726 - "Community 726"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_BEDROCK_BASE_URL
+
+### Community 727 - "Community 727"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_BEDROCK_MANTLE_BASE_URL
+
+### Community 728 - "Community 728"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_BETAS
+
+### Community 729 - "Community 729"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_CUSTOM_HEADERS
+
+### Community 730 - "Community 730"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_CUSTOM_MODEL_OPTION
+
+### Community 731 - "Community 731"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_CUSTOM_MODEL_OPTION_DESCRIPTION
+
+### Community 732 - "Community 732"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_CUSTOM_MODEL_OPTION_NAME
+
+### Community 733 - "Community 733"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_CUSTOM_MODEL_OPTION_SUPPORTED_CAPABILITIES
+
+### Community 734 - "Community 734"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_DEFAULT_FABLE_MODEL
+
+### Community 735 - "Community 735"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_DEFAULT_FABLE_MODEL_DESCRIPTION
+
+### Community 736 - "Community 736"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_DEFAULT_HAIKU_MODEL
+
+### Community 737 - "Community 737"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_DEFAULT_HAIKU_MODEL_DESCRIPTION
+
+### Community 738 - "Community 738"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_DEFAULT_HAIKU_MODEL_NAME
+
+### Community 739 - "Community 739"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_DEFAULT_HAIKU_MODEL_SUPPORTED_CAPABILITIES
+
+### Community 740 - "Community 740"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_DEFAULT_OPUS_MODEL
+
+### Community 741 - "Community 741"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_DEFAULT_OPUS_MODEL_DESCRIPTION
+
+### Community 742 - "Community 742"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_DEFAULT_OPUS_MODEL_NAME
+
+### Community 743 - "Community 743"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_DEFAULT_OPUS_MODEL_SUPPORTED_CAPABILITIES
+
+### Community 744 - "Community 744"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_DEFAULT_SONNET_MODEL
+
+### Community 745 - "Community 745"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_DEFAULT_SONNET_MODEL_NAME
+
+### Community 746 - "Community 746"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_DEFAULT_SONNET_MODEL_SUPPORTED_CAPABILITIES
+
+### Community 747 - "Community 747"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_FOUNDRY_API_KEY
+
+### Community 748 - "Community 748"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_FOUNDRY_BASE_URL
+
+### Community 749 - "Community 749"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_FOUNDRY_RESOURCE
+
+### Community 750 - "Community 750"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_SMALL_FAST_MODEL_AWS_REGION
+
+### Community 751 - "Community 751"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_SMALL_FAST_MODEL
+
+### Community 752 - "Community 752"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_VERTEX_BASE_URL
+
+### Community 753 - "Community 753"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_VERTEX_PROJECT_ID
+
+### Community 754 - "Community 754"
+Cohesion: 0.67
+Nodes (3): description, type, ANTHROPIC_WORKSPACE_ID
+
+### Community 755 - "Community 755"
+Cohesion: 0.67
+Nodes (3): description, type, API_FORCE_IDLE_TIMEOUT
+
+### Community 756 - "Community 756"
+Cohesion: 0.67
+Nodes (3): description, type, AWS_BEARER_TOKEN_BEDROCK
+
+### Community 757 - "Community 757"
+Cohesion: 0.67
+Nodes (3): description, type, AWS_REGION
+
+### Community 758 - "Community 758"
+Cohesion: 0.67
+Nodes (3): description, type, BASH_DEFAULT_TIMEOUT_MS
+
+### Community 759 - "Community 759"
+Cohesion: 0.67
+Nodes (3): description, type, BASH_MAX_OUTPUT_LENGTH
+
+### Community 760 - "Community 760"
+Cohesion: 0.67
+Nodes (3): description, type, BETA_TRACING_ENDPOINT
+
+### Community 761 - "Community 761"
+Cohesion: 0.67
+Nodes (3): description, type, CLAUDE_AUTOCOMPACT_PCT_OVERRIDE
+
+### Community 762 - "Community 762"
+Cohesion: 0.67
+Nodes (3): description, type, CLAUDE_CLIENT_PRESENCE_FILE
+
+### Community 763 - "Community 763"
+Cohesion: 0.67
+Nodes (3): description, type, CLAUDE_CODE_API_KEY_HELPER_TTL_MS
+
+### Community 764 - "Community 764"
+Cohesion: 0.67
+Nodes (3): description, type, CLAUDE_CODE_AUTO_COMPACT_WINDOW
+
+### Community 765 - "Community 765"
+Cohesion: 0.67
+Nodes (3): description, type, CLAUDE_CODE_CLIENT_CERT
+
+### Community 766 - "Community 766"
+Cohesion: 0.67
+Nodes (3): description, type, CLAUDE_CODE_CLIENT_KEY_PASSPHRASE
+
+### Community 767 - "Community 767"
+Cohesion: 0.67
+Nodes (3): description, type, CLAUDE_CODE_DEBUG_LOGS_DIR
+
+### Community 768 - "Community 768"
+Cohesion: 0.67
+Nodes (3): description, type, CLAUDE_CODE_EXIT_AFTER_STOP_DELAY
+
+### Community 769 - "Community 769"
+Cohesion: 0.67
+Nodes (3): description, type, CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS
 
 ## Knowledge Gaps
-- **5300 isolated node(s):** `event`, `eslintBin`, `event`, `command`, `event` (+5295 more)
+- **5699 isolated node(s):** `event`, `eslintBin`, `event`, `graphifyOutDir`, `SOURCE_EXTS` (+5694 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **41 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **40 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `renderVerifyOnStop()` connect `Community 286` to `Community 35`?**
+- **Why does `properties` connect `Community 351` to `Community 653`, `Community 658`, `Community 659`, `Community 660`, `Community 661`, `Community 662`, `Community 663`, `Community 664`, `Community 665`, `Community 666`, `Community 667`, `Community 668`, `Community 669`, `Community 670`, `Community 671`, `Community 672`, `Community 673`, `Community 674`, `Community 675`, `Community 676`, `Community 677`, `Community 678`, `Community 679`, `Community 680`, `Community 681`, `Community 682`, `Community 683`, `Community 684`, `Community 685`, `Community 686`, `Community 687`, `Community 688`, `Community 689`, `Community 690`, `Community 691`, `Community 692`, `Community 693`, `Community 694`, `Community 695`, `Community 696`, `Community 697`, `Community 698`, `Community 699`, `Community 700`, `Community 701`, `Community 702`, `Community 703`, `Community 704`, `Community 705`, `Community 706`, `Community 707`, `Community 708`, `Community 709`, `Community 710`, `Community 711`, `Community 712`, `Community 713`, `Community 714`, `Community 715`, `Community 716`, `Community 717`, `Community 718`, `Community 720`, `Community 721`, `Community 722`, `Community 723`, `Community 724`, `Community 725`, `Community 726`, `Community 727`, `Community 728`, `Community 729`, `Community 730`, `Community 731`, `Community 732`, `Community 733`, `Community 734`, `Community 735`, `Community 736`, `Community 737`, `Community 738`, `Community 739`, `Community 740`, `Community 741`, `Community 742`, `Community 743`, `Community 744`, `Community 745`, `Community 746`, `Community 747`, `Community 748`, `Community 749`, `Community 750`, `Community 751`, `Community 752`, `Community 753`, `Community 754`, `Community 755`, `Community 756`, `Community 757`, `Community 758`, `Community 759`, `Community 760`, `Community 761`, `Community 762`, `Community 763`, `Community 764`, `Community 765`, `Community 766`, `Community 767`, `Community 768`, `Community 769`?**
   _High betweenness centrality (0.004) - this node is a cross-community bridge._
-- **Why does `sessionScratchDir()` connect `Community 256` to `Community 96`, `Community 67`, `Community 17`, `Community 281`, `Community 286`?**
-  _High betweenness centrality (0.003) - this node is a cross-community bridge._
-- **Why does `React Testing` connect `Community 144` to `Community 642`, `Community 643`?**
+- **Why does `assertCleanStdoutJson()` connect `Community 17` to `Community 96`, `Community 256`, `Community 67`, `Community 167`?**
   _High betweenness centrality (0.002) - this node is a cross-community bridge._
+- **Why does `renderSettings()` connect `Community 95` to `Community 96`, `Community 286`?**
+  _High betweenness centrality (0.001) - this node is a cross-community bridge._
 - **What connects `event`, `eslintBin`, `event` to the rest of the system?**
-  _5324 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _5723 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.1111111111111111 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**

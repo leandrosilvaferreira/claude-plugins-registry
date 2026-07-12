@@ -29,6 +29,7 @@ export const PROJECT_COMMON = {
     "lint-fix",
     "pre-commit-verify",
     "setup-testing",
+    "test-triage",
     "goal-builder",
     "uncle-bob-craft",
   ],

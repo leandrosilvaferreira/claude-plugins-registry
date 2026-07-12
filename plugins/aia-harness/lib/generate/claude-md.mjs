@@ -42,10 +42,10 @@ export const BEHAVIORAL_MARKER =
 /**
  * Behavioral guidelines shipped in every generated root CLAUDE.md.
  * Lives in its own `## Behavioral guidelines` section (guarded by
- * BEHAVIORAL_MARKER) placed between `## Conventions` and `## Engineering rules`
- * so it is distinct from project-specific conventions (enrichable) and from
- * technical non-negotiables. Deliberately compact — CLAUDE.md loads every
- * session, so each principle is one dense bullet, not a subsection.
+ * BEHAVIORAL_MARKER) placed right after the intro blockquote, before
+ * `## Stack` — first thing the agent reads after the title. Deliberately
+ * compact — CLAUDE.md loads every session, so each principle is one dense
+ * bullet, not a subsection.
  */
 export const BEHAVIORAL_GUIDELINES_BLOCK = `## Behavioral guidelines
 ${BEHAVIORAL_MARKER}
@@ -64,7 +64,7 @@ ${BEHAVIORAL_MARKER}
  */
 export const ROOT_FIXED_RULES = [
   "Match the style of surrounding code; do not introduce new patterns unprompted.",
-  "Write unit tests for every new function or module added.",
+  "Test what can break — business rules, branching logic, money/security/auth, bug regressions; skip trivial getters, wrappers, config, presentational UI (rubric: `.claude/rules/05-testing.md`).",
   "Run the lint + test commands above before claiming work is complete.",
   "Never commit secrets; keep them in gitignored env files (`.env`/`.env.local`) — `.claude/settings.local.json` is only for MCP-server credentials referenced by `.mcp.json`.",
   'Fix every compilation/syntax/lint error found during a session — regardless of whether you edited the file. Never leave the build broken or label errors "pre-existing, not related".',
@@ -201,6 +201,7 @@ export function renderRootClaudeMd(profile, agents = []) {
 > Project memory for Claude Code. Keep this file short and high-signal —
 > bloated memory gets ignored. Put hard guarantees in hooks, not prose.
 
+${BEHAVIORAL_GUIDELINES_BLOCK}
 ## Stack
 ${stackLine(profile)}
 
@@ -225,7 +226,6 @@ ${domainMap}
 
 - _Project-specific conventions are added here during \`/aia-harness:init\` enrichment._
 
-${BEHAVIORAL_GUIDELINES_BLOCK}
 ${fixedRulesBlock("Engineering rules", engineeringRules)}
 @.claude/memory/INSTRUCTIONS.md
 @.claude/memory/MEMORY.md

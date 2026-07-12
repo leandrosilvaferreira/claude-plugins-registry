@@ -64,14 +64,18 @@ export function renderLspJson(profile) {
 }
 
 /**
+ * @param {boolean} [hasGraphify]
  * @returns {string}
  */
-export function renderWorktreeInclude() {
-  return `# Files copied into every new worktree (aia-harness)
-.claude/settings.local.json
-.env
-.env.local
-`;
+export function renderWorktreeInclude(hasGraphify = false) {
+  const lines = [
+    "# Files copied into every new worktree (aia-harness)",
+    ".claude/settings.local.json",
+    ".env",
+    ".env.local",
+  ];
+  if (hasGraphify) lines.push("graphify-out/graph.json");
+  return lines.join("\n") + "\n";
 }
 
 /**
@@ -127,6 +131,22 @@ for (const p of plugins) {
   spawnSync("claude", ["plugin", "install", p.name + "@" + p.marketplace], { stdio: "inherit", shell: true, windowsHide: true });
 }
 console.log("Done. Restart Claude Code to load the new plugins.");
+`;
+}
+
+/**
+ * Nested `.claude/CLAUDE.md` section wiring the vendored graphify skill's
+ * `/graphify` trigger. Applied via `mergeStrategy: "merge-section"` so
+ * re-applying keeps it current without touching sibling sections a user
+ * wrote by hand in the same file.
+ * @returns {string}
+ */
+export function renderGraphifyClaudeMdSection() {
+  return `# graphify
+
+- **graphify** (\`.claude/skills/graphify/SKILL.md\`) - any input to knowledge graph. Trigger: \`/graphify\`
+
+When the user types \`/graphify\`, use the installed graphify skill or instructions before doing anything else.
 `;
 }
 

@@ -3,18 +3,10 @@
  * @module plan
  */
 import path from "node:path";
-import { renderRootClaudeMd, renderDomainClaudeMd, DOMAIN_LIMIT } from "./generate/claude-md.mjs";
 import { renderRules } from "./generate/rules.mjs";
 import { renderSettings, renderSettingsLocal } from "./generate/settings.mjs";
 import { renderVerifyOnStop } from "./generate/verify.mjs";
 import { renderMcp } from "./generate/mcp.mjs";
-import { renderMemoryInstructions } from "./generate/memory.mjs";
-import {
-  renderStrategies,
-  renderLspJson,
-  renderWorktreeInclude,
-  renderPluginsInstallScript,
-} from "./generate/misc.mjs";
 import { exists } from "./util/fs.mjs";
 import {
   selectEccAssets,
@@ -27,13 +19,14 @@ import {
   resolveAgentWhenToUse,
   selectGitHubPMAssets,
 } from "./data/asset-catalog.mjs";
-import { suggestPlugins } from "./data/plugins-catalog.mjs";
 import { addHookArtifacts } from "./plan/hook-artifacts.mjs";
 import {
   addEccArtifacts,
   addAgkitArtifacts,
   addToolArtifacts,
 } from "./plan/vendored-artifacts.mjs";
+import { addClaudeMdArtifacts } from "./plan/claude-md-artifacts.mjs";
+import { addDocsArtifacts } from "./plan/docs-artifacts.mjs";
 
 /**
  * @typedef {Object} Artifact
@@ -48,7 +41,7 @@ import {
  * @property {string|null} content   Inline content, or null when copyFrom is set.
  * @property {string|null} copyFrom  Absolute source path to copy, or null.
  * @property {boolean} exists        Whether the target already exists.
- * @property {'merge-hooks'} [mergeStrategy]  When set, merge hook arrays into existing file instead of skip/replace.
+ * @property {'merge-hooks'|'merge-lines'|'merge-section'} [mergeStrategy]  When set, merge into an existing file instead of skip/replace: "merge-hooks" unions hook arrays (JSON); "merge-lines" appends any canonical line missing from the existing file; "merge-section" replaces (or appends) one top-level `# ` markdown section in place, leaving sibling sections untouched.
  */
 
 /**
@@ -61,14 +54,6 @@ import {
 
 // verify-on-stop.mjs is added separately: strict mode generates its content; non-strict copies the reminder.
 // The static hook list lives in project-catalog.mjs (PROJECT_HOOK_FILES).
-
-/**
- * @param {string} s
- * @returns {number}
- */
-function estTokens(s) {
-  return Math.ceil(s.length / 4);
-}
 
 /**
  * @param {import('./profile.mjs').ProjectProfile} profile
@@ -133,59 +118,8 @@ export function buildPlan(profile, ctx) {
       .map((n) => ({ name: n, whenToUse: resolveAgentWhenToUse(n) })),
   ].filter((m, i, arr) => arr.findIndex((x) => x.name === m.name) === i);
 
-  // --- CLAUDE.md + memory ---
-  const rootMd = renderRootClaudeMd(profile, agentMetas);
-  add({
-    id: "claude-md-root",
-    relPath: "CLAUDE.md",
-    title: "Root CLAUDE.md",
-    category: "claude-md",
-    rationale: "Project memory: stack + canonical commands, loaded every session.",
-    contextCost: estTokens(rootMd),
-    defaultSelected: true,
-    content: rootMd,
-  });
-
-  const memInstructions = renderMemoryInstructions();
-  add({
-    id: "claude-md:memory-instructions",
-    relPath: ".claude/memory/INSTRUCTIONS.md",
-    title: "Memory instructions",
-    category: "claude-md",
-    rationale:
-      "Auto-loaded via @ import in CLAUDE.md — drives autonomous session-learning capture.",
-    contextCost: estTokens(memInstructions),
-    defaultSelected: true,
-    content: memInstructions,
-  });
-
-  // memory-index uses a non-prefixed ID intentionally: it is user-owned data (grows each session)
-  // and must NOT be matched by /patch --force (which would erase accumulated project learnings).
-  // doctor still detects it as missing via artifact.exists check.
-  add({
-    id: "memory-index",
-    relPath: ".claude/memory/MEMORY.md",
-    title: "Memory index (MEMORY.md)",
-    category: "claude-md",
-    rationale:
-      "Auto-loaded via @ import in CLAUDE.md — index of project learnings (created empty, grows over time).",
-    contextCost: 0,
-    defaultSelected: true,
-    content: "# Memory index\n\n",
-  });
-
-  for (const d of profile.architecture.domains.slice(0, DOMAIN_LIMIT)) {
-    add({
-      id: `claude-md:${d.path}`,
-      relPath: `${d.path}/CLAUDE.md`,
-      title: `CLAUDE.md — ${d.path}`,
-      category: "claude-md",
-      rationale: `Domain guidance for ${d.path} (lazy-loaded).`,
-      contextCost: 0,
-      defaultSelected: true,
-      content: renderDomainClaudeMd(profile, d),
-    });
-  }
+  // --- CLAUDE.md + memory (delegated) ---
+  addClaudeMdArtifacts(add, profile, agentMetas);
 
   // --- Rules (generated) ---
   for (const r of renderRules(profile)) {
@@ -309,58 +243,8 @@ export function buildPlan(profile, ctx) {
     });
   }
 
-  // --- Docs, LSP, worktree, scripts ---
-  add({
-    id: "strategies",
-    relPath: "docs/harness/strategies.md",
-    title: "Harness strategies doc",
-    category: "docs",
-    rationale: "Lint / compile / language-server / test strategy reference.",
-    contextCost: 0,
-    defaultSelected: true,
-    content: renderStrategies(profile),
-  });
-
-  const lsp = renderLspJson(profile);
-  if (lsp) {
-    add({
-      id: "lsp",
-      relPath: ".lsp.json",
-      title: ".lsp.json (language server)",
-      category: "lsp",
-      rationale: "Language server config (best-effort; opt-in).",
-      contextCost: 0,
-      defaultSelected: false,
-      content: lsp,
-    });
-  }
-
-  if (profile.vcs.isGit) {
-    add({
-      id: "worktree",
-      relPath: ".worktreeinclude",
-      title: ".worktreeinclude",
-      category: "worktree",
-      rationale: "Copy local settings/env into new git worktrees.",
-      contextCost: 0,
-      defaultSelected: true,
-      content: renderWorktreeInclude(),
-    });
-  }
-
-  const pluginSuggestions = suggestPlugins(profile);
-  if (pluginSuggestions.length > 0) {
-    add({
-      id: "install-plugins",
-      relPath: "scripts/install-plugins.mjs",
-      title: "Plugin installer (runnable)",
-      category: "script",
-      rationale: `Runnable installer for ${pluginSuggestions.length} suggested plugin(s) — idempotent; run with -y.`,
-      contextCost: 0,
-      defaultSelected: true,
-      content: renderPluginsInstallScript(pluginSuggestions),
-    });
-  }
+  // --- Docs, LSP, worktree, scripts (delegated) ---
+  addDocsArtifacts(add, profile, toolIds);
 
   // --- Vendored assets (ECC, ag-kit, tools) — delegated ---
   addEccArtifacts(add, eccRoot, ecc);

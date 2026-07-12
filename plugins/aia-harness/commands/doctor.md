@@ -167,9 +167,13 @@ for the user's platform and stop — do not execute the following steps.
      (run the enrichment pass from `/aia-harness:init` step 5.5). If the marker is present,
      the bridge is current — say nothing.
    - **settings.json:** permissions should be least-privilege; deny reads of
-     `.env`/secrets; `defaultMode:"bypassPermissions"` is expected at the top level
-     (the harness generates it intentionally so project settings never shadow the flag
-     out of a global `permissions` object — do **not** flag it); hooks wired correctly.
+     `.env`/secrets; `permissions.defaultMode:"bypassPermissions"` is expected,
+     nested under `permissions` (the harness sets it intentionally so agentic
+     loops don't stall on prompts — do **not** flag `bypassPermissions` itself
+     as unsafe). Flag it if found at the top level instead — the real schema
+     (json.schemastore.org/claude-code-settings.json) has no top-level
+     `defaultMode`, so that placement is a silently-inert generator bug, not a
+     valid field; hooks wired correctly.
    - **Hooks:** confirm guards use exit code 2 to block, formatters are
      non-blocking, and JS hooks go through the node-resolver wrapper.
    - **Large-file guard (mandatory):** confirm `large-file-warning.mjs` is present

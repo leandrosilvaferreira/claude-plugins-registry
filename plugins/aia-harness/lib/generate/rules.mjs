@@ -58,12 +58,12 @@ Report the actual command output. Do not assert success without running them.
     title: "Unit tests",
     content: ruleDoc(
       ["**/*"],
-      `# Unit tests
+      `# Testing
 
-For every new function, class, or module added:
-- Write at least one unit test covering the happy path.
-- Write edge-case tests for non-trivial logic.
-- Use the project's existing test framework and conventions.
+Test what can break, not every function. Full rubric: \`.claude/rules/05-testing.md\`.
+
+- Test: business rules, branching logic (CC ≥ 2), money/security/auth, algorithms, edge cases, bug regressions.
+- Skip (or integration-only): trivial getters/wrappers, pass-through, config, presentational UI, generated code.
 ${c.test ? `- Run \`${c.test}\` before claiming done.` : "- Run the project's test command before claiming done."}
 `,
     ),
