@@ -30,6 +30,15 @@ import { isCheckDue, compareVersions } from "./update-check-logic.mjs";
 
 const PLUGIN_NAME = "aia-harness";
 const TTL_MS = 24 * 60 * 60 * 1000;
+/**
+ * Retry window after a failed attempt. A failure must not cost the full TTL:
+ * being offline for one session start would otherwise leave the plugin stale
+ * for a whole day, and the failure is invisible (the hook is fail-open by
+ * design, so nothing surfaces). Short enough to recover within the same
+ * working session, long enough that a permanently broken `claude` CLI isn't
+ * re-probed on every single session start.
+ */
+const RETRY_MS = 60 * 60 * 1000;
 const CLAUDE_BIN = process.env.AIA_UPDATE_CHECK_CLAUDE_BIN || "claude";
 const MARKETPLACE_HOME = process.env.AIA_UPDATE_CHECK_MARKETPLACE_HOME || os.homedir();
 
@@ -43,7 +52,7 @@ function runClaude(args) {
 
 /**
  * @param {string} cacheFile
- * @returns {{lastCheckedAt?: string, lastKnownVersion?: string}}
+ * @returns {{lastCheckedAt?: string, lastKnownVersion?: string, lastAttemptFailed?: boolean}}
  */
 function readCache(cacheFile) {
   try {
@@ -56,7 +65,7 @@ function readCache(cacheFile) {
 
 /**
  * @param {string} cacheFile
- * @param {{lastCheckedAt: string, lastKnownVersion?: string}} data
+ * @param {{lastCheckedAt: string, lastKnownVersion?: string, lastAttemptFailed?: boolean}} data
  */
 function writeCache(cacheFile, data) {
   try {
@@ -75,7 +84,7 @@ function main() {
 
   const cache = readCache(cacheFile);
 
-  if (!isCheckDue(cache.lastCheckedAt, Date.now(), TTL_MS)) {
+  if (!isCheckDue(cache.lastCheckedAt, Date.now(), cache.lastAttemptFailed ? RETRY_MS : TTL_MS)) {
     process.exit(0);
   }
 
@@ -136,9 +145,13 @@ function main() {
     }
     process.exit(0);
   } catch {
+    // Mark the attempt as failed so the next session retries on RETRY_MS
+    // instead of waiting out the full TTL. Success paths omit the flag, which
+    // clears it.
     writeCache(cacheFile, {
       lastCheckedAt: new Date().toISOString(),
       lastKnownVersion: cache.lastKnownVersion,
+      lastAttemptFailed: true,
     });
     process.exit(0);
   }

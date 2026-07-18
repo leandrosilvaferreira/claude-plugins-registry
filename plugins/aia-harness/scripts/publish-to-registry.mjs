@@ -12,7 +12,8 @@
  */
 
 import { execFileSync } from "node:child_process";
-import { cpSync, existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { homedir } from "node:os";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createInterface } from "node:readline";
@@ -160,7 +161,34 @@ log(`Plugin SHA: ${pluginSha}`);
 // ── step 3: sync plugin → registry ────────────────────────────────────────
 
 log("Syncing plugin files to registry...");
-const SYNC_EXCLUDES = ["node_modules", ".git", ".DS_Store"];
+// Consumer-facing package boundary. Claude Code has no plugin.json files/ignore
+// allowlist (confirmed against the manifest schema — code.claude.com/docs/en/plugins-reference)
+// and copies whatever directory the marketplace source points at verbatim
+// (code.claude.com/docs/en/plugin-marketplaces), so this list IS the packaging
+// step. Everything here is this repo's own dev-only tooling: never imported by
+// bin/, lib/, commands/, agents/, skills/, hooks/, or templates/ at runtime —
+// verified by grepping every runtime source tree for a reference before adding
+// an entry. `.claude/` is additionally confirmed inert to installers even if
+// shipped (Claude Code only ever reads a plugin's settings from
+// `<plugin-root>/settings.json`, not a nested `.claude/settings.json`), but is
+// excluded anyway so a consumer's install doesn't carry this maintainer's own
+// dev harness config.
+const SYNC_EXCLUDES = [
+  "node_modules",
+  ".git",
+  ".DS_Store",
+  ".claude",
+  "graphify-out",
+  "tests",
+  "docs",
+  "skills-lock.json",
+  "tsconfig.json",
+  "eslint.config.mjs",
+  ".prettierrc.json",
+  "PUBLISHING.md",
+  "package.json",
+  "package-lock.json",
+];
 rmSync(PLUGIN_DEST, { recursive: true, force: true });
 cpSync(PLUGIN_DIR, PLUGIN_DEST, {
   recursive: true,
@@ -237,12 +265,39 @@ if (bumpType !== "skip") {
 
 // ── step 7: push ──────────────────────────────────────────────────────────
 
+/**
+ * Drop this machine's own update-check throttle after a release.
+ *
+ * The SessionStart update hook only re-checks every 24h, so without this the
+ * maintainer's own machine keeps running the previous version for up to a day
+ * after publishing it — the one machine that most needs to see the release
+ * immediately is the last to get it. Only called after a successful push,
+ * since the local marketplace clone pulls from the remote: clearing before the
+ * push would just make the next check re-confirm the old version and re-arm
+ * the 24h window.
+ *
+ * Best-effort — a failure here must never fail an otherwise-successful publish.
+ */
+function clearLocalUpdateCheckThrottle() {
+  try {
+    const dataDir = resolve(homedir(), ".claude", "plugins", "data");
+    if (!existsSync(dataDir)) return;
+    for (const entry of readdirSync(dataDir)) {
+      if (!entry.startsWith("aia-harness-")) continue;
+      rmSync(resolve(dataDir, entry, "update-check.json"), { force: true });
+    }
+  } catch {
+    /* non-fatal: worst case this machine waits out the normal 24h window */
+  }
+}
+
 const shouldPush = await ask("\nPush both repos to GitHub? [Y/n] ", process.env.PUSH ?? "");
 if (!/^n$/i.test(shouldPush)) {
   log("Pushing plugin repo...");
   git(["push", "--follow-tags"]);
   log("Pushing registry...");
   git(["push"], REGISTRY_DIR);
+  clearLocalUpdateCheckThrottle();
   log(`\n✔  aia-harness@${newVersion} is live!`);
   log(
     "   https://github.com/leandrosilvaferreira/claude-plugins-registry/tree/main/plugins/aia-harness",
