@@ -39,6 +39,13 @@ const TTL_MS = 24 * 60 * 60 * 1000;
  * re-probed on every single session start.
  */
 const RETRY_MS = 60 * 60 * 1000;
+/**
+ * Claude Code's own documented grace period between marking a superseded
+ * version directory `.orphaned_at` and deleting it. Mirrored here rather than
+ * chosen: it is what keeps sessions already running from an older version from
+ * having their files pulled out from under them.
+ */
+const ORPHAN_GRACE_MS = 7 * 24 * 60 * 60 * 1000;
 const CLAUDE_BIN = process.env.AIA_UPDATE_CHECK_CLAUDE_BIN || "claude";
 const MARKETPLACE_HOME = process.env.AIA_UPDATE_CHECK_MARKETPLACE_HOME || os.homedir();
 
@@ -76,6 +83,62 @@ function writeCache(cacheFile, data) {
   }
 }
 
+/**
+ * Finish the cleanup Claude Code already schedules but doesn't carry out.
+ *
+ * On update, Claude Code writes a `.orphaned_at` marker (epoch ms) into the
+ * superseded version's directory and, per the plugins reference, "the previous
+ * version directory is marked as orphaned and removed automatically 7 days
+ * later. The grace period lets concurrent Claude Code sessions that already
+ * loaded the old version keep running without errors." In practice the deletion
+ * does not happen — a long-standing, widely reported bug (anthropics/claude-code
+ * #16453, #37865, #47966, #51536) — so directories accumulate indefinitely:
+ * 10 versions / 2.0GB for this plugin alone on the author's machine.
+ *
+ * This deletes ONLY directories Claude Code itself marked as orphaned whose
+ * grace period has already elapsed. It deliberately does not invent its own
+ * retention rule: an earlier "keep the newest two" version of this function
+ * would have deleted a directory a still-running session was pinned to, which
+ * is the exact failure the grace period exists to prevent. There is no
+ * sanctioned command to do this (`claude plugin gc` was requested and closed
+ * not-planned; `claude plugin prune` only handles dependencies), but deleting
+ * from this cache by hand is explicitly endorsed by Anthropic's own
+ * troubleshooting guidance.
+ *
+ * @param {string} installPath  installPath reported by `claude plugin list`.
+ */
+function pruneExpiredOrphans(installPath) {
+  if (!installPath) return;
+  const versionsDir = path.dirname(installPath);
+  // Only ever act inside this plugin's own versions directory — a malformed or
+  // unexpected installPath must not redirect a recursive delete elsewhere.
+  if (path.basename(versionsDir) !== PLUGIN_NAME) return;
+
+  /** @type {string[]} */
+  let entries;
+  try {
+    entries = fs.readdirSync(versionsDir);
+  } catch {
+    return;
+  }
+
+  for (const entry of entries) {
+    // Per entry, not around the loop: on Windows a directory held open by
+    // another process fails with EBUSY/EPERM, and aborting there would leave
+    // every remaining expired orphan behind.
+    try {
+      const dir = path.join(versionsDir, entry);
+      // Absent marker throws → not orphaned by Claude Code → never touched.
+      const orphanedAt = Number(fs.readFileSync(path.join(dir, ".orphaned_at"), "utf8").trim());
+      if (!Number.isFinite(orphanedAt)) continue;
+      if (Date.now() - orphanedAt < ORPHAN_GRACE_MS) continue;
+      fs.rmSync(dir, { recursive: true, force: true });
+    } catch {
+      continue;
+    }
+  }
+}
+
 function main() {
   const cacheFile = process.env.AIA_UPDATE_CHECK_CACHE_FILE || process.argv[2];
   if (!cacheFile || cacheFile.includes("${")) {
@@ -102,6 +165,14 @@ function main() {
 
     const marketplace = installed.id.slice(`${PLUGIN_NAME}@`.length);
     const installedVersion = String(installed.version);
+    const installedPath = typeof installed.installPath === "string" ? installed.installPath : "";
+
+    // Before any network work, and outside the update branch. Sweeping expired
+    // orphans is a purely local operation: orphans age out on their own
+    // schedule whether or not a new version exists, and an offline machine —
+    // where everything below this line throws — is exactly where stale
+    // directories would otherwise pile up untouched.
+    pruneExpiredOrphans(installedPath);
 
     runClaude(["plugin", "marketplace", "update", marketplace]);
 
