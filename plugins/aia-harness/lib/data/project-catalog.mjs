@@ -106,6 +106,7 @@ export const PROJECT_HOOK_FILES = [
   "rtk-hook.mjs",
   "large-file-warning.mjs",
   "guard-main-branch.mjs",
+  "subagent-model-guard.mjs",
   "memory-stop.mjs",
   "sql-idempotent-review.mjs",
   "worktree-subagent-ctx.mjs",

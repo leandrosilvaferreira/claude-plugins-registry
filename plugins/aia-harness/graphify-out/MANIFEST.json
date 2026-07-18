@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   ".claude-plugin/plugin.json": {
-    "mtime": 1783816504.9844136,
-    "ast_hash": "c1e92ea539657cc19a1312965885f7e6",
+    "mtime": 1783874033.5975645,
+    "ast_hash": "d9409a28841ee1a9eeeef9a67455a0e9",
     "semantic_hash": ""
   },
   ".claude/hooks/eslint-fix.mjs": {
@@ -40,8 +40,8 @@
     "semantic_hash": ""
   },
   ".claude/settings.json": {
-    "mtime": 1783870167.9532125,
-    "ast_hash": "ccdea099eacf02fefbff4c79c943cbea",
+    "mtime": 1784408369.1472335,
+    "ast_hash": "0ec5200f76ff24c4fc2f388561ab2b4c",
     "semantic_hash": ""
   },
   ".claude/skills/plugin-settings/examples/read-settings-hook.sh": {
@@ -140,8 +140,8 @@
     "semantic_hash": ""
   },
   "lib/data/project-catalog.mjs": {
-    "mtime": 1783872551.4333138,
-    "ast_hash": "c9565408eae431cea6ff4b1a6ec61938",
+    "mtime": 1784409778.9053936,
+    "ast_hash": "2c12bbd3f2bdb4941522b45c702701fb",
     "semantic_hash": ""
   },
   "lib/data/skill-map.mjs": {
@@ -240,8 +240,8 @@
     "semantic_hash": ""
   },
   "lib/generate/claude-md.mjs": {
-    "mtime": 1783872490.0043018,
-    "ast_hash": "b5dfae253705519d0ae9463a62bb2d7b",
+    "mtime": 1784409778.9067633,
+    "ast_hash": "f47dcda8133118f8bb8c9e5457dfa609",
     "semantic_hash": ""
   },
   "lib/generate/format-hook.mjs": {
@@ -270,8 +270,8 @@
     "semantic_hash": ""
   },
   "lib/generate/settings.mjs": {
-    "mtime": 1783870111.3181305,
-    "ast_hash": "1a14a3ef955cc892124b7bd9c63b8d05",
+    "mtime": 1784409778.9074688,
+    "ast_hash": "3ad9ac6936e8c723883260e325712eaa",
     "semantic_hash": ""
   },
   "lib/generate/verify.mjs": {
@@ -350,8 +350,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1783816504.9847698,
-    "ast_hash": "d224733036cd792c1fcb7297499edc8e",
+    "mtime": 1783874033.5977473,
+    "ast_hash": "7912bc6bd1b4ea948c90e3709e6c2883",
     "semantic_hash": ""
   },
   "scripts/agkit-source.json": {
@@ -1040,8 +1040,8 @@
     "semantic_hash": ""
   },
   "tests/settings-strict.test.mjs": {
-    "mtime": 1783870118.7972083,
-    "ast_hash": "f72cb2dad9713011d093f20d997ae931",
+    "mtime": 1784409778.9102738,
+    "ast_hash": "f37e5a019a2104abada67c590b0ae1c4",
     "semantic_hash": ""
   },
   "tests/setup-testing-skill.test.mjs": {
@@ -1085,8 +1085,8 @@
     "semantic_hash": ""
   },
   "tests/unit.test.mjs": {
-    "mtime": 1783864319.5530815,
-    "ast_hash": "c3f888bcbc7dfb1aec50d085e530ba1f",
+    "mtime": 1784409778.9109955,
+    "ast_hash": "9efe2e4e310575a99b82c76457de8c1a",
     "semantic_hash": ""
   },
   "tests/verify-hook.test.mjs": {
@@ -3170,8 +3170,8 @@
     "semantic_hash": ""
   },
   "templates/rules/07-subagent-dispatch.md": {
-    "mtime": 1782685323.7901235,
-    "ast_hash": "8f7c7ea6be44bcdebdef04c5d25a36f1",
+    "mtime": 1784409778.9091585,
+    "ast_hash": "d07ee7fdee49958e0d13bee4c966a74f",
     "semantic_hash": ""
   },
   "templates/rules/cpp/coding-standards.md": {
@@ -3720,8 +3720,8 @@
     "semantic_hash": ""
   },
   "lib/generate/claude-md-agents.mjs": {
-    "mtime": 1783563130.5331695,
-    "ast_hash": "2ceb8f6f0c8b4e7ce6955bfc69f84371",
+    "mtime": 1784409778.9059978,
+    "ast_hash": "7aec4775bf2771217221c018303468f8",
     "semantic_hash": ""
   },
   "templates/hooks/worktree-create.mjs": {
@@ -3822,6 +3822,16 @@
   "templates/skills/test-triage/SKILL.md": {
     "mtime": 1783872562.0001986,
     "ast_hash": "1dbc6824d0c807c67fc95c21664cb338",
+    "semantic_hash": ""
+  },
+  "templates/hooks/subagent-model-guard.mjs": {
+    "mtime": 1784409778.9081457,
+    "ast_hash": "0a366a1d189f9fcfff12c42d0864255e",
+    "semantic_hash": ""
+  },
+  "tests/hook-subagent-model-guard.test.mjs": {
+    "mtime": 1784409778.9097056,
+    "ast_hash": "f99bebe6a22081d0e57bc597bf0c6902",
     "semantic_hash": ""
   }
 }

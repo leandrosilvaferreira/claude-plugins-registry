@@ -96,6 +96,10 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
         hooks: [{ type: "command", ...hookCmd("guard-main-branch.mjs"), timeout: 10 }],
       },
       {
+        matcher: "Agent",
+        hooks: [{ type: "command", ...hookCmd("subagent-model-guard.mjs"), timeout: 10 }],
+      },
+      {
         // secret-scan blocks secrets before they land; worktree-write-guard asks
         // for confirmation when the target file is outside the active worktree.
         matcher: "Edit|Write|MultiEdit",

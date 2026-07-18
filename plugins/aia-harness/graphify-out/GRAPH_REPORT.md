@@ -1,16 +1,16 @@
-# Graph Report - aia_harness  (2026-07-12)
+# Graph Report - aia_harness  (2026-07-18)
 
 ## Corpus Check
-- 753 files · ~661,228 words
+- 755 files · ~663,565 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 8513 nodes · 9268 edges · 764 communities (724 shown, 40 thin omitted)
+- 8524 nodes · 9287 edges · 772 communities (732 shown, 40 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 5 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `a710e129`
+- Built from commit: `702e86c7`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -624,16 +624,22 @@
 - [[_COMMUNITY_Community 636|Community 636]]
 - [[_COMMUNITY_Community 637|Community 637]]
 - [[_COMMUNITY_Community 638|Community 638]]
+- [[_COMMUNITY_Community 639|Community 639]]
 - [[_COMMUNITY_Community 641|Community 641]]
 - [[_COMMUNITY_Community 642|Community 642]]
 - [[_COMMUNITY_Community 644|Community 644]]
+- [[_COMMUNITY_Community 645|Community 645]]
 - [[_COMMUNITY_Community 646|Community 646]]
 - [[_COMMUNITY_Community 647|Community 647]]
+- [[_COMMUNITY_Community 648|Community 648]]
 - [[_COMMUNITY_Community 649|Community 649]]
 - [[_COMMUNITY_Community 650|Community 650]]
 - [[_COMMUNITY_Community 651|Community 651]]
 - [[_COMMUNITY_Community 652|Community 652]]
 - [[_COMMUNITY_Community 653|Community 653]]
+- [[_COMMUNITY_Community 654|Community 654]]
+- [[_COMMUNITY_Community 655|Community 655]]
+- [[_COMMUNITY_Community 656|Community 656]]
 - [[_COMMUNITY_Community 657|Community 657]]
 - [[_COMMUNITY_Community 658|Community 658]]
 - [[_COMMUNITY_Community 659|Community 659]]
@@ -747,18 +753,19 @@
 - [[_COMMUNITY_Community 767|Community 767]]
 - [[_COMMUNITY_Community 768|Community 768]]
 - [[_COMMUNITY_Community 769|Community 769]]
+- [[_COMMUNITY_Community 770|Community 770]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `assertCleanStdoutJson()` - 52 edges
+1. `assertCleanStdoutJson()` - 55 edges
 2. `scanProject()` - 33 edges
 3. `buildPlan()` - 33 edges
 4. `sessionScratchDir()` - 27 edges
-5. `runHook()` - 26 edges
-6. `Examples` - 24 edges
-7. `validatePreToolUseOutput()` - 23 edges
+5. `runHook()` - 27 edges
+6. `validatePreToolUseOutput()` - 26 edges
+7. `Examples` - 24 edges
 8. `readText()` - 22 edges
-9. `🪐 aia-harness` - 21 edges
-10. `validateStopOutput()` - 20 edges
+9. `runHookRaw()` - 21 edges
+10. `🪐 aia-harness` - 21 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `cmdList()` --calls--> `parseFrontmatter()`  [INFERRED]
@@ -767,15 +774,15 @@
   skills/revise-agent-routing-workflow/lib/revise-agent-routing.mjs → lib/util/fs.mjs
 - `cmdCheck()` --calls--> `checkAgentDescription()`  [INFERRED]
   skills/revise-agent-routing-workflow/lib/revise-agent-routing.mjs → lib/validate/agent-description.mjs
+- `notifiedFlag()` --calls--> `sessionScratchDir()`  [EXTRACTED]
+  tests/hook-large-file-warning.test.mjs → templates/hooks/session-scratch.mjs
 - `writeFlag()` --calls--> `sessionScratchDir()`  [EXTRACTED]
   tests/hook-large-file-warning.test.mjs → templates/hooks/session-scratch.mjs
-- `notifiedFlag()` --calls--> `sessionScratchDir()`  [EXTRACTED]
-  tests/hook-sql-idempotent-review.test.mjs → templates/hooks/session-scratch.mjs
 
 ## Import Cycles
 - None detected.
 
-## Communities (764 total, 40 thin omitted)
+## Communities (772 total, 40 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.11
@@ -806,12 +813,12 @@ Cohesion: 0.04
 Nodes (46): 1. THE MODERN CLICHÉ SCAN (ANTI-SAFE HARBOR), 2. TOPOLOGICAL HYPOTHESIS, 🚫 ABSOLUTE RULE: NO STANDARD/CLICHÉ DESIGNS, Architecture Decisions, ⚠️ ASK BEFORE ASSUMING (Context-Aware), Code Quality, Common Anti-Patterns You Avoid, Component Design Decisions (+38 more)
 
 ### Community 7 - "Community 7"
-Cohesion: 0.04
-Nodes (47): 10. Quick Reference Card, 1. Fitts' Law for Touch, 2. Thumb Zone Anatomy, 3. Touch vs Click Psychology, 4. Gesture Psychology, 5. Haptic Feedback Patterns, 6. Mobile Cognitive Load, 7. Touch Accessibility (+39 more)
+Cohesion: 0.08
+Nodes (26): 3. Touch vs Click Psychology, 4. Gesture Psychology, 6. Mobile Cognitive Load, 7. Touch Accessibility, 8. Emotion in Touch, 9. Touch Psychology Checklist, Accessible Touch Patterns, Before Every Screen (+18 more)
 
 ### Community 8 - "Community 8"
-Cohesion: 0.09
-Nodes (23): 1. The Mobile Performance Mindset, 5. Memory Management, 6. Battery Optimization, 7. Network Performance, 8. Performance Testing, 9. Quick Reference Card, Animation Targets, Background Task Guidelines (+15 more)
+Cohesion: 0.04
+Nodes (46): 1. The Mobile Performance Mindset, 2. React Native Performance, 3. Flutter Performance, 4. Animation Performance (Both Platforms), 5. Memory Management, 6. Battery Optimization, 7. Network Performance, 8. Performance Testing (+38 more)
 
 ### Community 9 - "Community 9"
 Cohesion: 0.04
@@ -847,7 +854,7 @@ Nodes (24): COMMON_ENVELOPE_SHAPE, CWD_CHANGED_SHAPE, ELICITATION_RESULT_SHAPE, 
 
 ### Community 17 - "Community 17"
 Cohesion: 0.05
-Nodes (60): validatePreToolUseOutput(), validateSubagentStartOutput, assertContext(), assertPassThrough(), HOOK, ROOT, SESSION_EVENT, assertInjects() (+52 more)
+Nodes (51): validatePreToolUseOutput(), validateSubagentStartOutput, assertInjects(), assertSilent(), HOOK, ROOT, assertDenyPermission(), assertPassThrough() (+43 more)
 
 ### Community 18 - "Community 18"
 Cohesion: 0.05
@@ -866,8 +873,8 @@ Cohesion: 0.05
 Nodes (38): 10. Quick Reference, 1. Mobile Color Fundamentals, 2. OLED Considerations, 3. Dark Mode Design, 4. Outdoor Visibility, 5. Semantic Colors, 6. Dynamic Color (Android), 7. Color Accessibility (+30 more)
 
 ### Community 22 - "Community 22"
-Cohesion: 0.05
-Nodes (38): 10. Quick Reference, 1. Mobile Typography Fundamentals, 2. System Fonts, 3. Type Scale, 4. Dynamic Type / Text Scaling, 5. Typography Accessibility, 6. Dark Mode Typography, 7. Typography Anti-Patterns (+30 more)
+Cohesion: 0.06
+Nodes (30): 10. Quick Reference, 1. Mobile Typography Fundamentals, 2. System Fonts, 3. Type Scale, 4. Dynamic Type / Text Scaling, 7. Typography Anti-Patterns, 8. Font Loading & Performance, 9. Typography Checklist (+22 more)
 
 ### Community 23 - "Community 23"
 Cohesion: 0.05
@@ -1022,8 +1029,8 @@ Cohesion: 0.07
 Nodes (27): API Resources, Caching, Configuration and Environments, Controllers -> Services -> Actions, Custom Casts and Value Objects, Eager Loading to Avoid N+1, Eloquent Model Patterns, Events, Jobs, and Queues (+19 more)
 
 ### Community 61 - "Community 61"
-Cohesion: 0.09
-Nodes (22): Archived Repos — Handle Dependabot/Renovate PRs with Care, Auto-Approve Race Condition with Copilot Reviewer, Auto-detect Merge Strategy, Auto-merge & Auto-approve Guide, Batch Auto-merge for Multiple PRs, Branch Protection for Auto-merge, Canonical Auto-merge Workflow Template, CI Annotations — Always Check Before Declaring a PR Clean (+14 more)
+Cohesion: 0.07
+Nodes (28): Archived Repos — Handle Dependabot/Renovate PRs with Care, Auto-Approve Race Condition with Copilot Reviewer, Auto-detect Merge Strategy, Auto-merge & Auto-approve Guide, Batch Auto-merge for Multiple PRs, Branch Protection for Auto-merge, Canonical Auto-merge Workflow Template, CI Annotations — Always Check Before Declaring a PR Clean (+20 more)
 
 ### Community 62 - "Community 62"
 Cohesion: 0.07
@@ -1154,16 +1161,16 @@ Cohesion: 0.09
 Nodes (21): Alternatives to GoogleTest, Basic Unit Test (gtest), Best Practices, C++ Testing (Agent Skill), CMake/CTest Quickstart, Code Examples, Common Pitfalls, Core Concepts (+13 more)
 
 ### Community 94 - "Community 94"
-Cohesion: 0.07
-Nodes (30): actionlint - GitHub Actions Workflow Linter, CI Integration Patterns, Combined with Other Linters, Command-Line Usage, Common Error Codes and Fixes, Configuration File, Configuration for Common Project Types, Context/Object Property Access (+22 more)
+Cohesion: 0.09
+Nodes (22): actionlint - GitHub Actions Workflow Linter, CI Integration Patterns, Combined with Other Linters, Command-Line Usage, Configuration File, Configuration for Common Project Types, Custom actions not recognized, Direct Run in CI (+14 more)
 
 ### Community 95 - "Community 95"
 Cohesion: 0.13
 Nodes (7): classify(), EXTENSION_LANGUAGES, detectLanguages(), DOMAIN_FIXED_RULES, hookCmd(), permPrefix(), renderSettings()
 
 ### Community 96 - "Community 96"
-Cohesion: 0.08
-Nodes (24): validatePostToolUseOutput, assertFindings(), assertSkip(), HOOK, phpEvent, ROOT, assertBlockStop(), assertReview() (+16 more)
+Cohesion: 0.10
+Nodes (26): validatePostToolUseOutput, assertAdvise(), assertBlock(), assertSilentAdvise(), assertSilentStop(), HOOK, notifiedFlag(), ROOT (+18 more)
 
 ### Community 97 - "Community 97"
 Cohesion: 0.10
@@ -1783,7 +1790,7 @@ Nodes (11): Avoid `any`, Console.log, Error Handling, Immutability, Input Valida
 
 ### Community 253 - "Community 253"
 Cohesion: 0.11
-Nodes (19): Accessibility-First Composition, Avoiding Render Cascades, Custom hook for debounced search, Data Fetching Decision Matrix, Examples, Hooks Discipline, Lists, Optimistic UI with React 19 `useOptimistic` (+11 more)
+Nodes (19): Accessibility-First Composition, Avoiding Render Cascades, Complex forms, Controlled inputs, Data Fetching Decision Matrix, Forms, Hooks Discipline, Lists (+11 more)
 
 ### Community 254 - "Community 254"
 Cohesion: 0.18
@@ -1795,7 +1802,7 @@ Nodes (11): Actions & Security Hardening (apply alongside branch protection), De
 
 ### Community 256 - "Community 256"
 Cohesion: 0.05
-Nodes (36): advisory(), blockOnStop(), countLines(), DDD_HINTS, event, IGNORED_DIRS, isSourceFile(), SOURCE_EXTS (+28 more)
+Nodes (34): advisory(), blockOnStop(), countLines(), DDD_HINTS, event, IGNORED_DIRS, isSourceFile(), SOURCE_EXTS (+26 more)
 
 ### Community 257 - "Community 257"
 Cohesion: 0.22
@@ -1939,7 +1946,7 @@ Nodes (8): Best Practices, Common Commands, Directory Structure, Key Concepts, S
 
 ### Community 292 - "Community 292"
 Cohesion: 0.22
-Nodes (9): 10. Anti-Patterns, 5. Risk Prioritization, 7. Scanning Methodology, CVSS + Context, Phase-Based Approach, Prioritization Decision Tree, 📋 Reference Files, 🔧 Runtime Scripts (+1 more)
+Nodes (9): 10. Anti-Patterns, 4. Attack Surface Mapping, 7. Scanning Methodology, Phase-Based Approach, Prioritization Matrix, 📋 Reference Files, 🔧 Runtime Scripts, Vulnerability Scanner (+1 more)
 
 ### Community 293 - "Community 293"
 Cohesion: 0.22
@@ -2410,8 +2417,8 @@ Cohesion: 0.33
 Nodes (5): API Response Pattern, C# Patterns, Dependency Injection, Options Pattern, Repository Pattern
 
 ### Community 411 - "Community 411"
-Cohesion: 0.05
-Nodes (44): Auto-merge Configuration (Recommended), Auto-merge Decision Matrix, Auto-merge Enabled by Wrong Actor, Auto-merge Workflow, Basic Configuration, Basic Configuration, Best Practices, Branch Protection Configuration (+36 more)
+Cohesion: 0.08
+Nodes (25): Auto-merge Configuration (Recommended), Auto-merge Decision Matrix, Auto-merge Workflow, Basic Configuration, Best Practices, Branch Protection Configuration, Bypass Permissions for Auto-merge, Code Owner Reviews - AVOID with Auto-merge (+17 more)
 
 ### Community 412 - "Community 412"
 Cohesion: 0.33
@@ -2530,8 +2537,8 @@ Cohesion: 0.33
 Nodes (5): dependsOn, $schema, tasks, build, test
 
 ### Community 441 - "Community 441"
-Cohesion: 0.22
-Nodes (9): 2. React Native Performance, Animation Performance, FlashList: The Better Option, FlatList Optimization Checklist, Memory Leak Prevention, React Native Performance Checklist, Reanimated for Complex Animations, 🚫 The #1 AI Mistake: ScrollView for Lists (+1 more)
+Cohesion: 0.20
+Nodes (8): assertPassesRealSchema(), freshCachePath(), HOOK, MINIMAL_SCHEMA, mkSettingsDir(), REAL_SCHEMA_PATH, ROOT, STRICT_SCHEMA
 
 ### Community 442 - "Community 442"
 Cohesion: 0.40
@@ -2542,8 +2549,8 @@ Cohesion: 0.40
 Nodes (4): Audit checklist (report each, with file:line evidence), Output format, Vendor provenance auditor, What "vendored" means here
 
 ### Community 444 - "Community 444"
-Cohesion: 0.22
-Nodes (9): 3. Flutter Performance, Dispose Pattern, Flutter Performance Checklist, Image Optimization, ListView Optimization, Riverpod/Provider Best Practices, Targeted State Management, 🚫 The #1 AI Mistake: setState Overuse (+1 more)
+Cohesion: 0.20
+Nodes (10): Auto-merge Enabled by Wrong Actor, CI Cannot Push to Protected Branch, `github.actor` Unreliable for Bot Detection, GITHUB_TOKEN Cannot Modify Workflow Files, Gitleaks Fails on Dependabot/Renovate PRs, Merge Method Mismatch in Auto-merge Workflow, PR Shows BLOCKED Despite Passing Checks, Pre-existing PRs Don't Auto-merge (+2 more)
 
 ### Community 445 - "Community 445"
 Cohesion: 0.40
@@ -2734,8 +2741,8 @@ Cohesion: 0.50
 Nodes (3): How to audit, Manifest check, What you audit
 
 ### Community 495 - "Community 495"
-Cohesion: 0.67
-Nodes (3): 4. Attack Surface Mapping, Prioritization Matrix, What to Map
+Cohesion: 0.22
+Nodes (9): Basic Configuration, Commit Message Prefixes, Dependabot, Ecosystem Hygiene — Only Declare What the Repo Actually Has, Grouping Dependencies, Ignoring Dependencies, Multiple Ecosystems, Package Ecosystems (+1 more)
 
 ### Community 496 - "Community 496"
 Cohesion: 0.50
@@ -2874,8 +2881,8 @@ Cohesion: 0.25
 Nodes (7): 1. Collect changed symbols, 2. Score each symbol, 3. Output the triage table, 4. Act, Test triage — what to test among your changes, With graphify (`graphify-out/graph.json` exists), Without graphify
 
 ### Community 530 - "Community 530"
-Cohesion: 0.50
-Nodes (3): Rule, Subagent Dispatch, Superpowers bridging
+Cohesion: 0.40
+Nodes (4): Dispatch mechanics, Rule, Subagent Dispatch, Superpowers bridging
 
 ### Community 531 - "Community 531"
 Cohesion: 0.50
@@ -2998,8 +3005,8 @@ Cohesion: 0.29
 Nodes (6): Global Constraints, Task 1: Fix `validateWorktreeCreateOutput` to accept the command-hook bare-path stdout contract, Task 2: `worktree-create.mjs` hook (WorktreeCreate + PostToolUse:EnterWorktree), Task 3: `worktree-remove.mjs` hook (WorktreeRemove), Task 4: Register the catalog entries, wire settings.json, verify full suite, Worktree Dependency Seeding Implementation Plan
 
 ### Community 620 - "Community 620"
-Cohesion: 0.33
-Nodes (6): Force Push + Stale Review Dismissal Interaction, Merge Queue Behavior and Pitfalls, Multi-PR Workflow Pattern, Sequential Processing, Troubleshooting Merge Queue Issues, Verifying a PR Actually Merged (enqueue ≠ merged)
+Cohesion: 0.25
+Nodes (8): Common Error Codes and Fixes, Context/Object Property Access, Deprecated Action Versions, Expression Syntax Errors, Missing Permissions Declarations, ShellCheck Issues in run: Blocks, Undefined Action Inputs/Outputs, YAML Type Errors
 
 ### Community 621 - "Community 621"
 Cohesion: 0.40
@@ -3030,8 +3037,8 @@ Cohesion: 0.40
 Nodes (5): Composition Recipes, Compound components (shared state via Context), Named slots, Render prop / function-as-child, Slot via `children`
 
 ### Community 630 - "Community 630"
-Cohesion: 0.40
-Nodes (5): 4. Animation Performance (Both Platforms), Animation Timing Guide, GPU vs CPU Animation, Spring Physics, The 60fps Imperative
+Cohesion: 0.29
+Nodes (5): assertContext(), assertPassThrough(), HOOK, ROOT, SESSION_EVENT
 
 ### Community 631 - "Community 631"
 Cohesion: 0.25
@@ -3065,6 +3072,10 @@ Nodes (5): Cargo cult and misuse, Design Patterns — Use vs Misuse, Good signal
 Cohesion: 0.33
 Nodes (6): default, description, examples, minimum, type, cleanupPeriodDays
 
+### Community 639 - "Community 639"
+Cohesion: 0.33
+Nodes (6): 1. Fitts' Law for Touch, Application Rules, Fitts' Law Formula Adapted, Minimum Touch Target Sizes, The Fundamental Difference, Visual Size vs Hit Area
+
 ### Community 641 - "Community 641"
 Cohesion: 0.40
 Nodes (5): description, examples, minLength, type, apiKeyHelper
@@ -3072,6 +3083,10 @@ Nodes (5): description, examples, minLength, type, apiKeyHelper
 ### Community 642 - "Community 642"
 Cohesion: 0.50
 Nodes (4): Examples, Form submission with MSW and userEvent, Testing a Suspense boundary, Testing an error boundary
+
+### Community 645 - "Community 645"
+Cohesion: 0.33
+Nodes (6): 5. Haptic Feedback Patterns, Android Haptic Types, Haptic Intensity Mapping, Haptic Usage Guidelines, iOS Haptic Types, Why Haptics Matter
 
 ### Community 646 - "Community 646"
 Cohesion: 0.40
@@ -3081,13 +3096,17 @@ Nodes (5): default, description, enum, type, autoUpdatesChannel
 Cohesion: 0.40
 Nodes (5): description, examples, minLength, type, awsAuthRefresh
 
+### Community 648 - "Community 648"
+Cohesion: 0.40
+Nodes (5): 2. Thumb Zone Anatomy, Large Phone Considerations (>6"), One-Handed Phone Usage, Placement Guidelines, Thumb Arc (Right-Handed User)
+
 ### Community 649 - "Community 649"
 Cohesion: 0.50
 Nodes (4): 1. Render is a Pure Function of Props and State, 2. Side Effects Outside Render, 3. Composition Over Inheritance, Core Principles
 
 ### Community 650 - "Community 650"
 Cohesion: 0.50
-Nodes (4): Complex forms, Controlled inputs, Forms, React 19 form actions (preferred for new code)
+Nodes (4): 5. Typography Accessibility, Contrast Requirements (WCAG), Line Height for Accessibility, Minimum Sizes
 
 ### Community 651 - "Community 651"
 Cohesion: 0.40
@@ -3100,6 +3119,18 @@ Nodes (5): hookMatcher, additionalProperties, description, required, type
 ### Community 653 - "Community 653"
 Cohesion: 0.40
 Nodes (5): default, description, examples, type, env
+
+### Community 654 - "Community 654"
+Cohesion: 0.50
+Nodes (4): 6. Dark Mode Typography, Color Adjustments, Dark Mode Hierarchy, Weight in Dark Mode
+
+### Community 655 - "Community 655"
+Cohesion: 0.50
+Nodes (4): 10. Quick Reference Card, Haptic Selection, Thumb Zone Actions, Touch Target Sizes
+
+### Community 656 - "Community 656"
+Cohesion: 0.50
+Nodes (4): Custom hook for debounced search, Examples, Optimistic UI with React 19 `useOptimistic`, Splitting context to avoid render cascades
 
 ### Community 658 - "Community 658"
 Cohesion: 0.50
@@ -3545,8 +3576,12 @@ Nodes (3): description, type, CLAUDE_CODE_EXIT_AFTER_STOP_DELAY
 Cohesion: 0.67
 Nodes (3): description, type, CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS
 
+### Community 770 - "Community 770"
+Cohesion: 0.67
+Nodes (3): 5. Risk Prioritization, CVSS + Context, Prioritization Decision Tree
+
 ## Knowledge Gaps
-- **5699 isolated node(s):** `event`, `eslintBin`, `event`, `graphifyOutDir`, `SOURCE_EXTS` (+5694 more)
+- **5702 isolated node(s):** `event`, `eslintBin`, `event`, `graphifyOutDir`, `SOURCE_EXTS` (+5697 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **40 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -3554,13 +3589,13 @@ Nodes (3): description, type, CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `properties` connect `Community 351` to `Community 653`, `Community 658`, `Community 659`, `Community 660`, `Community 661`, `Community 662`, `Community 663`, `Community 664`, `Community 665`, `Community 666`, `Community 667`, `Community 668`, `Community 669`, `Community 670`, `Community 671`, `Community 672`, `Community 673`, `Community 674`, `Community 675`, `Community 676`, `Community 677`, `Community 678`, `Community 679`, `Community 680`, `Community 681`, `Community 682`, `Community 683`, `Community 684`, `Community 685`, `Community 686`, `Community 687`, `Community 688`, `Community 689`, `Community 690`, `Community 691`, `Community 692`, `Community 693`, `Community 694`, `Community 695`, `Community 696`, `Community 697`, `Community 698`, `Community 699`, `Community 700`, `Community 701`, `Community 702`, `Community 703`, `Community 704`, `Community 705`, `Community 706`, `Community 707`, `Community 708`, `Community 709`, `Community 710`, `Community 711`, `Community 712`, `Community 713`, `Community 714`, `Community 715`, `Community 716`, `Community 717`, `Community 718`, `Community 720`, `Community 721`, `Community 722`, `Community 723`, `Community 724`, `Community 725`, `Community 726`, `Community 727`, `Community 728`, `Community 729`, `Community 730`, `Community 731`, `Community 732`, `Community 733`, `Community 734`, `Community 735`, `Community 736`, `Community 737`, `Community 738`, `Community 739`, `Community 740`, `Community 741`, `Community 742`, `Community 743`, `Community 744`, `Community 745`, `Community 746`, `Community 747`, `Community 748`, `Community 749`, `Community 750`, `Community 751`, `Community 752`, `Community 753`, `Community 754`, `Community 755`, `Community 756`, `Community 757`, `Community 758`, `Community 759`, `Community 760`, `Community 761`, `Community 762`, `Community 763`, `Community 764`, `Community 765`, `Community 766`, `Community 767`, `Community 768`, `Community 769`?**
-  _High betweenness centrality (0.004) - this node is a cross-community bridge._
-- **Why does `assertCleanStdoutJson()` connect `Community 17` to `Community 96`, `Community 256`, `Community 67`, `Community 167`?**
-  _High betweenness centrality (0.002) - this node is a cross-community bridge._
-- **Why does `renderSettings()` connect `Community 95` to `Community 96`, `Community 286`?**
+  _High betweenness centrality (0.003) - this node is a cross-community bridge._
+- **Why does `sessionScratchDir()` connect `Community 256` to `Community 96`, `Community 67`, `Community 441`, `Community 17`, `Community 281`?**
+  _High betweenness centrality (0.001) - this node is a cross-community bridge._
+- **Why does `assertCleanStdoutJson()` connect `Community 96` to `Community 256`, `Community 67`, `Community 167`, `Community 17`, `Community 630`, `Community 441`?**
   _High betweenness centrality (0.001) - this node is a cross-community bridge._
 - **What connects `event`, `eslintBin`, `event` to the rest of the system?**
-  _5723 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _5726 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.1111111111111111 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**

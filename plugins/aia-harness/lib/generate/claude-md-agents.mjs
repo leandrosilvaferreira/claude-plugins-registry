@@ -165,6 +165,8 @@ Skip it — implement inline — for typo/copy fixes, single-function edits, con
 
 When dispatching subagents, you MUST use the matching specialist agent from the table below — never the generic agent when a specialist is listed. Cross-reference the task type with the "When to use" column and pass the exact name as \`subagent_type\`.
 
+Model dispatch: an agent's frontmatter \`model\` wins; a generic dispatch or a project/user agent with no \`model\` in frontmatter is force-set to \`sonnet\` by a PreToolUse hook, so it never silently inherits this session's model — except namespaced plugin agents (\`plugin:name\`), left unrewritten since their frontmatter isn't reliably hook-resolvable. Pass \`model\` explicitly yourself for those, or to override for complex work: \`haiku\` for search/exploration, \`sonnet\` for implementation, \`opus\` for architectural judgment — cheapest tier that fits.
+
 | Agent | When to use |
 |---|---|
 ${rows}

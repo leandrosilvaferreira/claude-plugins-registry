@@ -727,7 +727,7 @@
       "label": "deny",
       "file_type": "code",
       "source_file": ".claude/settings.json",
-      "source_location": "L35",
+      "source_location": "L46",
       "_origin": "ast",
       "id": "claude_settings_permissions_deny",
       "community": 224,
@@ -737,7 +737,7 @@
       "label": "additionalDirectories",
       "file_type": "code",
       "source_file": ".claude/settings.json",
-      "source_location": "L39",
+      "source_location": "L50",
       "_origin": "ast",
       "id": "claude_settings_permissions_additionaldirectories",
       "community": 224,
@@ -747,7 +747,7 @@
       "label": "hooks",
       "file_type": "code",
       "source_file": ".claude/settings.json",
-      "source_location": "L41",
+      "source_location": "L55",
       "_origin": "ast",
       "id": "claude_settings_hooks",
       "community": 224,
@@ -757,7 +757,7 @@
       "label": "PreToolUse",
       "file_type": "code",
       "source_file": ".claude/settings.json",
-      "source_location": "L42",
+      "source_location": "L56",
       "_origin": "ast",
       "id": "claude_settings_hooks_pretooluse",
       "community": 224,
@@ -767,7 +767,7 @@
       "label": "PostToolUse",
       "file_type": "code",
       "source_file": ".claude/settings.json",
-      "source_location": "L70",
+      "source_location": "L84",
       "_origin": "ast",
       "id": "claude_settings_hooks_posttooluse",
       "community": 224,
@@ -777,7 +777,7 @@
       "label": "Stop",
       "file_type": "code",
       "source_file": ".claude/settings.json",
-      "source_location": "L101",
+      "source_location": "L115",
       "_origin": "ast",
       "id": "claude_settings_hooks_stop",
       "community": 224,
@@ -1785,7 +1785,7 @@
       "label": "projectHookCommand()",
       "file_type": "code",
       "source_file": "lib/data/project-catalog.mjs",
-      "source_location": "L129",
+      "source_location": "L130",
       "_origin": "ast",
       "id": "lib_data_project_catalog_projecthookcommand",
       "community": 41,
@@ -1795,7 +1795,7 @@
       "label": "PROJECT_HOOK_BY_STACK",
       "file_type": "code",
       "source_file": "lib/data/project-catalog.mjs",
-      "source_location": "L157",
+      "source_location": "L158",
       "_origin": "ast",
       "id": "lib_data_project_catalog_project_hook_by_stack",
       "community": 41,
@@ -1805,7 +1805,7 @@
       "label": "selectProjectHooks()",
       "file_type": "code",
       "source_file": "lib/data/project-catalog.mjs",
-      "source_location": "L170",
+      "source_location": "L171",
       "_origin": "ast",
       "id": "lib_data_project_catalog_selectprojecthooks",
       "community": 41,
@@ -1815,7 +1815,7 @@
       "label": "selectProjectAssets()",
       "file_type": "code",
       "source_file": "lib/data/project-catalog.mjs",
-      "source_location": "L197",
+      "source_location": "L198",
       "_origin": "ast",
       "id": "lib_data_project_catalog_selectprojectassets",
       "community": 41,
@@ -1825,7 +1825,7 @@
       "label": "PROJECT_AGENT_WHEN_TO_USE",
       "file_type": "code",
       "source_file": "lib/data/project-catalog.mjs",
-      "source_location": "L218",
+      "source_location": "L219",
       "_origin": "ast",
       "id": "lib_data_project_catalog_project_agent_when_to_use",
       "community": 41,
@@ -1835,7 +1835,7 @@
       "label": "allProjectAssets()",
       "file_type": "code",
       "source_file": "lib/data/project-catalog.mjs",
-      "source_location": "L229",
+      "source_location": "L230",
       "_origin": "ast",
       "id": "lib_data_project_catalog_allprojectassets",
       "community": 41,
@@ -2645,7 +2645,7 @@
       "label": "ROOT_FIXED_RULES",
       "file_type": "code",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L65",
+      "source_location": "L66",
       "_origin": "ast",
       "id": "lib_generate_claude_md_root_fixed_rules",
       "community": 103,
@@ -2655,7 +2655,7 @@
       "label": "codeReviewRule()",
       "file_type": "code",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L80",
+      "source_location": "L81",
       "_origin": "ast",
       "id": "lib_generate_claude_md_codereviewrule",
       "community": 103,
@@ -2665,7 +2665,7 @@
       "label": "DOMAIN_FIXED_RULES",
       "file_type": "code",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L92",
+      "source_location": "L93",
       "_origin": "ast",
       "id": "lib_generate_claude_md_domain_fixed_rules",
       "community": 95,
@@ -2675,7 +2675,7 @@
       "label": "fixedRulesBlock()",
       "file_type": "code",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L104",
+      "source_location": "L105",
       "_origin": "ast",
       "id": "lib_generate_claude_md_fixedrulesblock",
       "community": 103,
@@ -2685,7 +2685,7 @@
       "label": "commandsBlock()",
       "file_type": "code",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L112",
+      "source_location": "L113",
       "_origin": "ast",
       "id": "lib_generate_claude_md_commandsblock",
       "community": 46,
@@ -2695,7 +2695,7 @@
       "label": "skillsBlock()",
       "file_type": "code",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L136",
+      "source_location": "L137",
       "_origin": "ast",
       "id": "lib_generate_claude_md_skillsblock",
       "community": 103,
@@ -2705,7 +2705,7 @@
       "label": "stackLine()",
       "file_type": "code",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L147",
+      "source_location": "L148",
       "_origin": "ast",
       "id": "lib_generate_claude_md_stackline",
       "community": 103,
@@ -2715,7 +2715,7 @@
       "label": "renderRootClaudeMd()",
       "file_type": "code",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L169",
+      "source_location": "L170",
       "_origin": "ast",
       "id": "lib_generate_claude_md_renderrootclaudemd",
       "community": 103,
@@ -2725,7 +2725,7 @@
       "label": "renderDomainClaudeMd()",
       "file_type": "code",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L241",
+      "source_location": "L242",
       "_origin": "ast",
       "id": "lib_generate_claude_md_renderdomainclaudemd",
       "community": 103,
@@ -3035,7 +3035,7 @@
       "label": "renderSettingsLocal()",
       "file_type": "code",
       "source_file": "lib/generate/settings.mjs",
-      "source_location": "L248",
+      "source_location": "L252",
       "_origin": "ast",
       "id": "lib_generate_settings_rendersettingslocal",
       "community": 286,
@@ -8210,6 +8210,36 @@
       "id": "templates_hooks_sql_idempotent_review_blockonstop",
       "community": 281,
       "norm_label": "blockonstop()"
+    },
+    {
+      "label": "subagent-model-guard.mjs",
+      "file_type": "code",
+      "source_file": "templates/hooks/subagent-model-guard.mjs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "templates_hooks_subagent_model_guard",
+      "community": 771,
+      "norm_label": "subagent-model-guard.mjs"
+    },
+    {
+      "label": "readStdin()",
+      "file_type": "code",
+      "source_file": "templates/hooks/subagent-model-guard.mjs",
+      "source_location": "L22",
+      "_origin": "ast",
+      "id": "templates_hooks_subagent_model_guard_readstdin",
+      "community": 771,
+      "norm_label": "readstdin()"
+    },
+    {
+      "label": "hasFrontmatterModel()",
+      "file_type": "code",
+      "source_file": "templates/hooks/subagent-model-guard.mjs",
+      "source_location": "L31",
+      "_origin": "ast",
+      "id": "templates_hooks_subagent_model_guard_hasfrontmattermodel",
+      "community": 771,
+      "norm_label": "hasfrontmattermodel()"
     },
     {
       "label": "validate-settings-schema.mjs",
@@ -15863,7 +15893,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_hook_check_deps_on_start_test",
-      "community": 17,
+      "community": 630,
       "norm_label": "hook-check-deps-on-start.test.mjs"
     },
     {
@@ -15873,7 +15903,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "tests_hook_check_deps_on_start_test_root",
-      "community": 17,
+      "community": 630,
       "norm_label": "root"
     },
     {
@@ -15883,7 +15913,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "tests_hook_check_deps_on_start_test_hook",
-      "community": 17,
+      "community": 630,
       "norm_label": "hook"
     },
     {
@@ -15893,7 +15923,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "tests_hook_check_deps_on_start_test_fakeplugin",
-      "community": 17,
+      "community": 630,
       "norm_label": "fakeplugin()"
     },
     {
@@ -15903,7 +15933,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "tests_hook_check_deps_on_start_test_assertpassthrough",
-      "community": 17,
+      "community": 630,
       "norm_label": "assertpassthrough()"
     },
     {
@@ -15913,7 +15943,7 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "tests_hook_check_deps_on_start_test_assertcontext",
-      "community": 17,
+      "community": 630,
       "norm_label": "assertcontext()"
     },
     {
@@ -15923,7 +15953,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "tests_hook_check_deps_on_start_test_session_event",
-      "community": 17,
+      "community": 630,
       "norm_label": "session_event"
     },
     {
@@ -16133,7 +16163,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_hook_large_file_warning_test",
-      "community": 17,
+      "community": 96,
       "norm_label": "hook-large-file-warning.test.mjs"
     },
     {
@@ -16143,7 +16173,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "tests_hook_large_file_warning_test_root",
-      "community": 17,
+      "community": 96,
       "norm_label": "root"
     },
     {
@@ -16153,7 +16183,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "tests_hook_large_file_warning_test_hook",
-      "community": 17,
+      "community": 96,
       "norm_label": "hook"
     },
     {
@@ -16163,7 +16193,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "tests_hook_large_file_warning_test_assertsilentstop",
-      "community": 17,
+      "community": 96,
       "norm_label": "assertsilentstop()"
     },
     {
@@ -16173,7 +16203,7 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "tests_hook_large_file_warning_test_assertblock",
-      "community": 17,
+      "community": 96,
       "norm_label": "assertblock()"
     },
     {
@@ -16183,7 +16213,7 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "tests_hook_large_file_warning_test_assertsilentadvise",
-      "community": 17,
+      "community": 96,
       "norm_label": "assertsilentadvise()"
     },
     {
@@ -16193,7 +16223,7 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "tests_hook_large_file_warning_test_assertadvise",
-      "community": 17,
+      "community": 96,
       "norm_label": "assertadvise()"
     },
     {
@@ -16203,7 +16233,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "tests_hook_large_file_warning_test_writelines",
-      "community": 17,
+      "community": 96,
       "norm_label": "writelines()"
     },
     {
@@ -16213,7 +16243,7 @@
       "source_location": "L92",
       "_origin": "ast",
       "id": "tests_hook_large_file_warning_test_writeflag",
-      "community": 17,
+      "community": 96,
       "norm_label": "writeflag()"
     },
     {
@@ -16223,7 +16253,7 @@
       "source_location": "L99",
       "_origin": "ast",
       "id": "tests_hook_large_file_warning_test_notifiedflag",
-      "community": 256,
+      "community": 96,
       "norm_label": "notifiedflag()"
     },
     {
@@ -16233,7 +16263,7 @@
       "source_location": "L103",
       "_origin": "ast",
       "id": "tests_hook_large_file_warning_test_editevent",
-      "community": 17,
+      "community": 96,
       "norm_label": "editevent()"
     },
     {
@@ -16473,7 +16503,7 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "tests_hook_runner_assertcleanstdoutjson",
-      "community": 17,
+      "community": 96,
       "norm_label": "assertcleanstdoutjson()"
     },
     {
@@ -16603,7 +16633,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "tests_hook_set_files_changed_test_assertsilent",
-      "community": 256,
+      "community": 96,
       "norm_label": "assertsilent()"
     },
     {
@@ -16717,13 +16747,83 @@
       "norm_label": "writesqlfile()"
     },
     {
+      "label": "hook-subagent-model-guard.test.mjs",
+      "file_type": "code",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_hook_subagent_model_guard_test",
+      "community": 17,
+      "norm_label": "hook-subagent-model-guard.test.mjs"
+    },
+    {
+      "label": "ROOT",
+      "file_type": "code",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L18",
+      "_origin": "ast",
+      "id": "tests_hook_subagent_model_guard_test_root",
+      "community": 17,
+      "norm_label": "root"
+    },
+    {
+      "label": "HOOK",
+      "file_type": "code",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L19",
+      "_origin": "ast",
+      "id": "tests_hook_subagent_model_guard_test_hook",
+      "community": 17,
+      "norm_label": "hook"
+    },
+    {
+      "label": "mkTmpDir()",
+      "file_type": "code",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "tests_hook_subagent_model_guard_test_mktmpdir",
+      "community": 17,
+      "norm_label": "mktmpdir()"
+    },
+    {
+      "label": "writeAgentFile()",
+      "file_type": "code",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L40",
+      "_origin": "ast",
+      "id": "tests_hook_subagent_model_guard_test_writeagentfile",
+      "community": 17,
+      "norm_label": "writeagentfile()"
+    },
+    {
+      "label": "assertPassThrough()",
+      "file_type": "code",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L88",
+      "_origin": "ast",
+      "id": "tests_hook_subagent_model_guard_test_assertpassthrough",
+      "community": 17,
+      "norm_label": "assertpassthrough()"
+    },
+    {
+      "label": "assertForcedSonnet()",
+      "file_type": "code",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L103",
+      "_origin": "ast",
+      "id": "tests_hook_subagent_model_guard_test_assertforcedsonnet",
+      "community": 17,
+      "norm_label": "assertforcedsonnet()"
+    },
+    {
       "label": "hook-validate-settings-schema.test.mjs",
       "file_type": "code",
       "source_file": "tests/hook-validate-settings-schema.test.mjs",
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_hook_validate_settings_schema_test",
-      "community": 96,
+      "community": 441,
       "norm_label": "hook-validate-settings-schema.test.mjs"
     },
     {
@@ -16733,7 +16833,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "tests_hook_validate_settings_schema_test_root",
-      "community": 96,
+      "community": 441,
       "norm_label": "root"
     },
     {
@@ -16743,7 +16843,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "tests_hook_validate_settings_schema_test_hook",
-      "community": 96,
+      "community": 441,
       "norm_label": "hook"
     },
     {
@@ -16753,7 +16853,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "tests_hook_validate_settings_schema_test_minimal_schema",
-      "community": 96,
+      "community": 441,
       "norm_label": "minimal_schema"
     },
     {
@@ -16763,7 +16863,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "tests_hook_validate_settings_schema_test_strict_schema",
-      "community": 96,
+      "community": 441,
       "norm_label": "strict_schema"
     },
     {
@@ -16773,7 +16873,7 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "tests_hook_validate_settings_schema_test_mksettingsdir",
-      "community": 96,
+      "community": 441,
       "norm_label": "mksettingsdir()"
     },
     {
@@ -16783,7 +16883,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "tests_hook_validate_settings_schema_test_writeschema",
-      "community": 96,
+      "community": 441,
       "norm_label": "writeschema()"
     },
     {
@@ -16793,7 +16893,7 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "tests_hook_validate_settings_schema_test_freshcachepath",
-      "community": 96,
+      "community": 441,
       "norm_label": "freshcachepath()"
     },
     {
@@ -16823,7 +16923,7 @@
       "source_location": "L330",
       "_origin": "ast",
       "id": "tests_hook_validate_settings_schema_test_runhookasync",
-      "community": 96,
+      "community": 441,
       "norm_label": "runhookasync()"
     },
     {
@@ -16833,7 +16933,7 @@
       "source_location": "L396",
       "_origin": "ast",
       "id": "tests_hook_validate_settings_schema_test_real_schema_path",
-      "community": 96,
+      "community": 441,
       "norm_label": "real_schema_path"
     },
     {
@@ -16843,7 +16943,7 @@
       "source_location": "L399",
       "_origin": "ast",
       "id": "tests_hook_validate_settings_schema_test_complianceprofile",
-      "community": 96,
+      "community": 441,
       "norm_label": "complianceprofile()"
     },
     {
@@ -16853,7 +16953,7 @@
       "source_location": "L421",
       "_origin": "ast",
       "id": "tests_hook_validate_settings_schema_test_assertpassesrealschema",
-      "community": 96,
+      "community": 441,
       "norm_label": "assertpassesrealschema()"
     },
     {
@@ -17590,7 +17690,7 @@
       "label": "stopCommands()",
       "file_type": "code",
       "source_file": "tests/settings-strict.test.mjs",
-      "source_location": "L93",
+      "source_location": "L103",
       "_origin": "ast",
       "id": "tests_settings_strict_test_stopcommands",
       "community": 95,
@@ -17600,7 +17700,7 @@
       "label": "postCommands()",
       "file_type": "code",
       "source_file": "tests/settings-strict.test.mjs",
-      "source_location": "L97",
+      "source_location": "L107",
       "_origin": "ast",
       "id": "tests_settings_strict_test_postcommands",
       "community": 95,
@@ -17610,7 +17710,7 @@
       "label": "allExecFormArgs()",
       "file_type": "code",
       "source_file": "tests/settings-strict.test.mjs",
-      "source_location": "L109",
+      "source_location": "L119",
       "_origin": "ast",
       "id": "tests_settings_strict_test_allexecformargs",
       "community": 95,
@@ -17620,7 +17720,7 @@
       "label": "groupsWithMatcher()",
       "file_type": "code",
       "source_file": "tests/settings-strict.test.mjs",
-      "source_location": "L220",
+      "source_location": "L230",
       "_origin": "ast",
       "id": "tests_settings_strict_test_groupswithmatcher",
       "community": 95,
@@ -17900,7 +18000,7 @@
       "label": "minimalProfile()",
       "file_type": "code",
       "source_file": "tests/unit.test.mjs",
-      "source_location": "L212",
+      "source_location": "L216",
       "_origin": "ast",
       "id": "tests_unit_test_minimalprofile",
       "community": 95,
@@ -47973,7 +48073,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_2_react_native_performance",
-      "community": 441,
+      "community": 8,
       "norm_label": "2. react native performance"
     },
     {
@@ -47983,7 +48083,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_the_1_ai_mistake_scrollview_for_lists",
-      "community": 441,
+      "community": 8,
       "norm_label": "\ud83d\udeab the #1 ai mistake: scrollview for lists"
     },
     {
@@ -47993,7 +48093,7 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_flatlist_optimization_checklist",
-      "community": 441,
+      "community": 8,
       "norm_label": "flatlist optimization checklist"
     },
     {
@@ -48003,7 +48103,7 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_why_each_optimization_matters",
-      "community": 441,
+      "community": 8,
       "norm_label": "why each optimization matters"
     },
     {
@@ -48013,7 +48113,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_flashlist_the_better_option",
-      "community": 441,
+      "community": 8,
       "norm_label": "flashlist: the better option"
     },
     {
@@ -48023,7 +48123,7 @@
       "source_location": "L144",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_animation_performance",
-      "community": 441,
+      "community": 8,
       "norm_label": "animation performance"
     },
     {
@@ -48033,7 +48133,7 @@
       "source_location": "L172",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_reanimated_for_complex_animations",
-      "community": 441,
+      "community": 8,
       "norm_label": "reanimated for complex animations"
     },
     {
@@ -48043,7 +48143,7 @@
       "source_location": "L200",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_memory_leak_prevention",
-      "community": 441,
+      "community": 8,
       "norm_label": "memory leak prevention"
     },
     {
@@ -48053,7 +48153,7 @@
       "source_location": "L228",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_react_native_performance_checklist",
-      "community": 441,
+      "community": 8,
       "norm_label": "react native performance checklist"
     },
     {
@@ -48063,7 +48163,7 @@
       "source_location": "L253",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_3_flutter_performance",
-      "community": 444,
+      "community": 8,
       "norm_label": "3. flutter performance"
     },
     {
@@ -48073,7 +48173,7 @@
       "source_location": "L255",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_the_1_ai_mistake_setstate_overuse",
-      "community": 444,
+      "community": 8,
       "norm_label": "\ud83d\udeab the #1 ai mistake: setstate overuse"
     },
     {
@@ -48083,7 +48183,7 @@
       "source_location": "L286",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_the_const_constructor_revolution",
-      "community": 444,
+      "community": 8,
       "norm_label": "the `const` constructor revolution"
     },
     {
@@ -48093,7 +48193,7 @@
       "source_location": "L316",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_targeted_state_management",
-      "community": 444,
+      "community": 8,
       "norm_label": "targeted state management"
     },
     {
@@ -48103,7 +48203,7 @@
       "source_location": "L343",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_riverpod_provider_best_practices",
-      "community": 444,
+      "community": 8,
       "norm_label": "riverpod/provider best practices"
     },
     {
@@ -48113,7 +48213,7 @@
       "source_location": "L359",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_listview_optimization",
-      "community": 444,
+      "community": 8,
       "norm_label": "listview optimization"
     },
     {
@@ -48123,7 +48223,7 @@
       "source_location": "L384",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_image_optimization",
-      "community": 444,
+      "community": 8,
       "norm_label": "image optimization"
     },
     {
@@ -48133,7 +48233,7 @@
       "source_location": "L403",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_dispose_pattern",
-      "community": 444,
+      "community": 8,
       "norm_label": "dispose pattern"
     },
     {
@@ -48143,7 +48243,7 @@
       "source_location": "L438",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_flutter_performance_checklist",
-      "community": 444,
+      "community": 8,
       "norm_label": "flutter performance checklist"
     },
     {
@@ -48153,7 +48253,7 @@
       "source_location": "L466",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_4_animation_performance_both_platforms",
-      "community": 630,
+      "community": 8,
       "norm_label": "4. animation performance (both platforms)"
     },
     {
@@ -48163,7 +48263,7 @@
       "source_location": "L468",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_the_60fps_imperative",
-      "community": 630,
+      "community": 8,
       "norm_label": "the 60fps imperative"
     },
     {
@@ -48173,7 +48273,7 @@
       "source_location": "L482",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_gpu_vs_cpu_animation",
-      "community": 630,
+      "community": 8,
       "norm_label": "gpu vs cpu animation"
     },
     {
@@ -48183,7 +48283,7 @@
       "source_location": "L496",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_animation_timing_guide",
-      "community": 630,
+      "community": 8,
       "norm_label": "animation timing guide"
     },
     {
@@ -48193,7 +48293,7 @@
       "source_location": "L506",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_performance_spring_physics",
-      "community": 630,
+      "community": 8,
       "norm_label": "spring physics"
     },
     {
@@ -48913,7 +49013,7 @@
       "source_location": "L218",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_typography_5_typography_accessibility",
-      "community": 22,
+      "community": 650,
       "norm_label": "5. typography accessibility"
     },
     {
@@ -48923,7 +49023,7 @@
       "source_location": "L220",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_typography_minimum_sizes",
-      "community": 22,
+      "community": 650,
       "norm_label": "minimum sizes"
     },
     {
@@ -48933,7 +49033,7 @@
       "source_location": "L230",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_typography_contrast_requirements_wcag",
-      "community": 22,
+      "community": 650,
       "norm_label": "contrast requirements (wcag)"
     },
     {
@@ -48943,7 +49043,7 @@
       "source_location": "L244",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_typography_line_height_for_accessibility",
-      "community": 22,
+      "community": 650,
       "norm_label": "line height for accessibility"
     },
     {
@@ -48953,7 +49053,7 @@
       "source_location": "L262",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_typography_6_dark_mode_typography",
-      "community": 22,
+      "community": 654,
       "norm_label": "6. dark mode typography"
     },
     {
@@ -48963,7 +49063,7 @@
       "source_location": "L264",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_typography_color_adjustments",
-      "community": 22,
+      "community": 654,
       "norm_label": "color adjustments"
     },
     {
@@ -48973,7 +49073,7 @@
       "source_location": "L277",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_typography_dark_mode_hierarchy",
-      "community": 22,
+      "community": 654,
       "norm_label": "dark mode hierarchy"
     },
     {
@@ -48983,7 +49083,7 @@
       "source_location": "L286",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_mobile_typography_weight_in_dark_mode",
-      "community": 22,
+      "community": 654,
       "norm_label": "weight in dark mode"
     },
     {
@@ -50083,7 +50183,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_1_fitts_law_for_touch",
-      "community": 7,
+      "community": 639,
       "norm_label": "1. fitts' law for touch"
     },
     {
@@ -50093,7 +50193,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_the_fundamental_difference",
-      "community": 7,
+      "community": 639,
       "norm_label": "the fundamental difference"
     },
     {
@@ -50103,7 +50203,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_fitts_law_formula_adapted",
-      "community": 7,
+      "community": 639,
       "norm_label": "fitts' law formula adapted"
     },
     {
@@ -50113,7 +50213,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_minimum_touch_target_sizes",
-      "community": 7,
+      "community": 639,
       "norm_label": "minimum touch target sizes"
     },
     {
@@ -50123,7 +50223,7 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_visual_size_vs_hit_area",
-      "community": 7,
+      "community": 639,
       "norm_label": "visual size vs hit area"
     },
     {
@@ -50133,7 +50233,7 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_application_rules",
-      "community": 7,
+      "community": 639,
       "norm_label": "application rules"
     },
     {
@@ -50143,7 +50243,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_2_thumb_zone_anatomy",
-      "community": 7,
+      "community": 648,
       "norm_label": "2. thumb zone anatomy"
     },
     {
@@ -50153,7 +50253,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_one_handed_phone_usage",
-      "community": 7,
+      "community": 648,
       "norm_label": "one-handed phone usage"
     },
     {
@@ -50163,7 +50263,7 @@
       "source_location": "L108",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_thumb_arc_right_handed_user",
-      "community": 7,
+      "community": 648,
       "norm_label": "thumb arc (right-handed user)"
     },
     {
@@ -50173,7 +50273,7 @@
       "source_location": "L127",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_placement_guidelines",
-      "community": 7,
+      "community": 648,
       "norm_label": "placement guidelines"
     },
     {
@@ -50183,7 +50283,7 @@
       "source_location": "L139",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_large_phone_considerations_6",
-      "community": 7,
+      "community": 648,
       "norm_label": "large phone considerations (>6\")"
     },
     {
@@ -50283,7 +50383,7 @@
       "source_location": "L260",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_5_haptic_feedback_patterns",
-      "community": 7,
+      "community": 645,
       "norm_label": "5. haptic feedback patterns"
     },
     {
@@ -50293,7 +50393,7 @@
       "source_location": "L262",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_why_haptics_matter",
-      "community": 7,
+      "community": 645,
       "norm_label": "why haptics matter"
     },
     {
@@ -50303,7 +50403,7 @@
       "source_location": "L278",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_ios_haptic_types",
-      "community": 7,
+      "community": 645,
       "norm_label": "ios haptic types"
     },
     {
@@ -50313,7 +50413,7 @@
       "source_location": "L290",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_android_haptic_types",
-      "community": 7,
+      "community": 645,
       "norm_label": "android haptic types"
     },
     {
@@ -50323,7 +50423,7 @@
       "source_location": "L301",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_haptic_usage_guidelines",
-      "community": 7,
+      "community": 645,
       "norm_label": "haptic usage guidelines"
     },
     {
@@ -50333,7 +50433,7 @@
       "source_location": "L322",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_haptic_intensity_mapping",
-      "community": 7,
+      "community": 645,
       "norm_label": "haptic intensity mapping"
     },
     {
@@ -50503,7 +50603,7 @@
       "source_location": "L507",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_10_quick_reference_card",
-      "community": 7,
+      "community": 655,
       "norm_label": "10. quick reference card"
     },
     {
@@ -50513,7 +50613,7 @@
       "source_location": "L509",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_touch_target_sizes",
-      "community": 7,
+      "community": 655,
       "norm_label": "touch target sizes"
     },
     {
@@ -50523,7 +50623,7 @@
       "source_location": "L518",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_thumb_zone_actions",
-      "community": 7,
+      "community": 655,
       "norm_label": "thumb zone actions"
     },
     {
@@ -50533,7 +50633,7 @@
       "source_location": "L526",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_mobile_design_touch_psychology_haptic_selection",
-      "community": 7,
+      "community": 655,
       "norm_label": "haptic selection"
     },
     {
@@ -52153,7 +52253,7 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_vulnerability_scanner_skill_4_attack_surface_mapping",
-      "community": 495,
+      "community": 292,
       "norm_label": "4. attack surface mapping"
     },
     {
@@ -52163,7 +52263,7 @@
       "source_location": "L102",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_vulnerability_scanner_skill_what_to_map",
-      "community": 495,
+      "community": 292,
       "norm_label": "what to map"
     },
     {
@@ -52173,7 +52273,7 @@
       "source_location": "L111",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_vulnerability_scanner_skill_prioritization_matrix",
-      "community": 495,
+      "community": 292,
       "norm_label": "prioritization matrix"
     },
     {
@@ -52183,7 +52283,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_vulnerability_scanner_skill_5_risk_prioritization",
-      "community": 292,
+      "community": 770,
       "norm_label": "5. risk prioritization"
     },
     {
@@ -52193,7 +52293,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_vulnerability_scanner_skill_cvss_context",
-      "community": 292,
+      "community": 770,
       "norm_label": "cvss + context"
     },
     {
@@ -52203,7 +52303,7 @@
       "source_location": "L135",
       "_origin": "ast",
       "id": "templates_ag_kit_skills_vulnerability_scanner_skill_prioritization_decision_tree",
-      "community": 292,
+      "community": 770,
       "norm_label": "prioritization decision tree"
     },
     {
@@ -70603,7 +70703,7 @@
       "source_location": "L131",
       "_origin": "ast",
       "id": "templates_ecc_skills_react_patterns_skill_forms",
-      "community": 650,
+      "community": 253,
       "norm_label": "forms"
     },
     {
@@ -70613,7 +70713,7 @@
       "source_location": "L133",
       "_origin": "ast",
       "id": "templates_ecc_skills_react_patterns_skill_react_19_form_actions_preferred_for_new_code",
-      "community": 650,
+      "community": 253,
       "norm_label": "react 19 form actions (preferred for new code)"
     },
     {
@@ -70623,7 +70723,7 @@
       "source_location": "L161",
       "_origin": "ast",
       "id": "templates_ecc_skills_react_patterns_skill_controlled_inputs",
-      "community": 650,
+      "community": 253,
       "norm_label": "controlled inputs"
     },
     {
@@ -70633,7 +70733,7 @@
       "source_location": "L165",
       "_origin": "ast",
       "id": "templates_ecc_skills_react_patterns_skill_complex_forms",
-      "community": 650,
+      "community": 253,
       "norm_label": "complex forms"
     },
     {
@@ -70783,7 +70883,7 @@
       "source_location": "L274",
       "_origin": "ast",
       "id": "templates_ecc_skills_react_patterns_skill_examples",
-      "community": 253,
+      "community": 656,
       "norm_label": "examples"
     },
     {
@@ -70793,7 +70893,7 @@
       "source_location": "L276",
       "_origin": "ast",
       "id": "templates_ecc_skills_react_patterns_skill_custom_hook_for_debounced_search",
-      "community": 253,
+      "community": 656,
       "norm_label": "custom hook for debounced search"
     },
     {
@@ -70803,7 +70903,7 @@
       "source_location": "L305",
       "_origin": "ast",
       "id": "templates_ecc_skills_react_patterns_skill_optimistic_ui_with_react_19_useoptimistic",
-      "community": 253,
+      "community": 656,
       "norm_label": "optimistic ui with react 19 `useoptimistic`"
     },
     {
@@ -70813,7 +70913,7 @@
       "source_location": "L335",
       "_origin": "ast",
       "id": "templates_ecc_skills_react_patterns_skill_splitting_context_to_avoid_render_cascades",
-      "community": 253,
+      "community": 656,
       "norm_label": "splitting context to avoid render cascades"
     },
     {
@@ -74613,7 +74713,7 @@
       "source_location": "L134",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_common_error_codes_and_fixes",
-      "community": 94,
+      "community": 620,
       "norm_label": "common error codes and fixes"
     },
     {
@@ -74623,7 +74723,7 @@
       "source_location": "L136",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_expression_syntax_errors",
-      "community": 94,
+      "community": 620,
       "norm_label": "expression syntax errors"
     },
     {
@@ -74633,7 +74733,7 @@
       "source_location": "L152",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_undefined_action_inputs_outputs",
-      "community": 94,
+      "community": 620,
       "norm_label": "undefined action inputs/outputs"
     },
     {
@@ -74643,7 +74743,7 @@
       "source_location": "L172",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_yaml_type_errors",
-      "community": 94,
+      "community": 620,
       "norm_label": "yaml type errors"
     },
     {
@@ -74653,7 +74753,7 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_deprecated_action_versions",
-      "community": 94,
+      "community": 620,
       "norm_label": "deprecated action versions"
     },
     {
@@ -74663,7 +74763,7 @@
       "source_location": "L206",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_missing_permissions_declarations",
-      "community": 94,
+      "community": 620,
       "norm_label": "missing permissions declarations"
     },
     {
@@ -74673,7 +74773,7 @@
       "source_location": "L217",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_shellcheck_issues_in_run_blocks",
-      "community": 94,
+      "community": 620,
       "norm_label": "shellcheck issues in run: blocks"
     },
     {
@@ -74683,7 +74783,7 @@
       "source_location": "L235",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_actionlint_guide_context_object_property_access",
-      "community": 94,
+      "community": 620,
       "norm_label": "context/object property access"
     },
     {
@@ -75353,7 +75453,7 @@
       "source_location": "L274",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_auto_merge_guide_merge_queue_behavior_and_pitfalls",
-      "community": 620,
+      "community": 61,
       "norm_label": "merge queue behavior and pitfalls"
     },
     {
@@ -75363,7 +75463,7 @@
       "source_location": "L276",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_auto_merge_guide_sequential_processing",
-      "community": 620,
+      "community": 61,
       "norm_label": "sequential processing"
     },
     {
@@ -75373,7 +75473,7 @@
       "source_location": "L284",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_auto_merge_guide_force_push_stale_review_dismissal_interaction",
-      "community": 620,
+      "community": 61,
       "norm_label": "force push + stale review dismissal interaction"
     },
     {
@@ -75383,7 +75483,7 @@
       "source_location": "L303",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_auto_merge_guide_multi_pr_workflow_pattern",
-      "community": 620,
+      "community": 61,
       "norm_label": "multi-pr workflow pattern"
     },
     {
@@ -75393,7 +75493,7 @@
       "source_location": "L329",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_auto_merge_guide_troubleshooting_merge_queue_issues",
-      "community": 620,
+      "community": 61,
       "norm_label": "troubleshooting merge queue issues"
     },
     {
@@ -75403,7 +75503,7 @@
       "source_location": "L338",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_auto_merge_guide_verifying_a_pr_actually_merged_enqueue_merged",
-      "community": 620,
+      "community": 61,
       "norm_label": "verifying a pr actually merged (enqueue = merged)"
     },
     {
@@ -75643,7 +75743,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_dependabot",
-      "community": 411,
+      "community": 495,
       "norm_label": "dependabot"
     },
     {
@@ -75653,7 +75753,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_basic_configuration",
-      "community": 411,
+      "community": 495,
       "norm_label": "basic configuration"
     },
     {
@@ -75663,7 +75763,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_package_ecosystems",
-      "community": 411,
+      "community": 495,
       "norm_label": "package ecosystems"
     },
     {
@@ -75673,7 +75773,7 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_ecosystem_hygiene_only_declare_what_the_repo_actually_has",
-      "community": 411,
+      "community": 495,
       "norm_label": "ecosystem hygiene \u2014 only declare what the repo actually has"
     },
     {
@@ -75683,7 +75783,7 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_grouping_dependencies",
-      "community": 411,
+      "community": 495,
       "norm_label": "grouping dependencies"
     },
     {
@@ -75693,7 +75793,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_commit_message_prefixes",
-      "community": 411,
+      "community": 495,
       "norm_label": "commit message prefixes"
     },
     {
@@ -75703,7 +75803,7 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_multiple_ecosystems",
-      "community": 411,
+      "community": 495,
       "norm_label": "multiple ecosystems"
     },
     {
@@ -75713,7 +75813,7 @@
       "source_location": "L147",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_ignoring_dependencies",
-      "community": 411,
+      "community": 495,
       "norm_label": "ignoring dependencies"
     },
     {
@@ -75723,7 +75823,7 @@
       "source_location": "L161",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_reviewers_and_assignees",
-      "community": 411,
+      "community": 495,
       "norm_label": "reviewers and assignees"
     },
     {
@@ -75933,7 +76033,7 @@
       "source_location": "L520",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_troubleshooting_auto_merge",
-      "community": 411,
+      "community": 444,
       "norm_label": "troubleshooting auto-merge"
     },
     {
@@ -75943,7 +76043,7 @@
       "source_location": "L522",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_pr_shows_blocked_despite_passing_checks",
-      "community": 411,
+      "community": 444,
       "norm_label": "pr shows blocked despite passing checks"
     },
     {
@@ -75953,7 +76053,7 @@
       "source_location": "L554",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_workflow_not_triggering",
-      "community": 411,
+      "community": 444,
       "norm_label": "workflow not triggering"
     },
     {
@@ -75963,7 +76063,7 @@
       "source_location": "L571",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_ci_cannot_push_to_protected_branch",
-      "community": 411,
+      "community": 444,
       "norm_label": "ci cannot push to protected branch"
     },
     {
@@ -75973,7 +76073,7 @@
       "source_location": "L587",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_auto_merge_enabled_by_wrong_actor",
-      "community": 411,
+      "community": 444,
       "norm_label": "auto-merge enabled by wrong actor"
     },
     {
@@ -75983,7 +76083,7 @@
       "source_location": "L595",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_merge_method_mismatch_in_auto_merge_workflow",
-      "community": 411,
+      "community": 444,
       "norm_label": "merge method mismatch in auto-merge workflow"
     },
     {
@@ -75993,7 +76093,7 @@
       "source_location": "L615",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_github_actor_unreliable_for_bot_detection",
-      "community": 411,
+      "community": 444,
       "norm_label": "`github.actor` unreliable for bot detection"
     },
     {
@@ -76003,7 +76103,7 @@
       "source_location": "L630",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_gitleaks_fails_on_dependabot_renovate_prs",
-      "community": 411,
+      "community": 444,
       "norm_label": "gitleaks fails on dependabot/renovate prs"
     },
     {
@@ -76013,7 +76113,7 @@
       "source_location": "L649",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_pre_existing_prs_don_t_auto_merge",
-      "community": 411,
+      "community": 444,
       "norm_label": "pre-existing prs don't auto-merge"
     },
     {
@@ -76023,7 +76123,7 @@
       "source_location": "L660",
       "_origin": "ast",
       "id": "templates_github_pm_ext_github_project_references_dependency_management_github_token_cannot_modify_workflow_files",
-      "community": 411,
+      "community": 444,
       "norm_label": "github_token cannot modify workflow files"
     },
     {
@@ -79105,6 +79205,16 @@
       "id": "templates_rules_07_subagent_dispatch_superpowers_bridging",
       "community": 530,
       "norm_label": "superpowers bridging"
+    },
+    {
+      "label": "Dispatch mechanics",
+      "file_type": "document",
+      "source_file": "templates/rules/07-subagent-dispatch.md",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "templates_rules_07_subagent_dispatch_dispatch_mechanics",
+      "community": 530,
+      "norm_label": "dispatch mechanics"
     },
     {
       "label": "coding-standards.md",
@@ -85982,7 +86092,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": ".claude/settings.json",
-      "source_location": "L41",
+      "source_location": "L55",
       "weight": 1.0,
       "source": "claude_settings",
       "target": "claude_settings_hooks",
@@ -86072,7 +86182,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": ".claude/settings.json",
-      "source_location": "L39",
+      "source_location": "L50",
       "weight": 1.0,
       "source": "claude_settings_permissions",
       "target": "claude_settings_permissions_additionaldirectories",
@@ -86102,7 +86212,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": ".claude/settings.json",
-      "source_location": "L35",
+      "source_location": "L46",
       "weight": 1.0,
       "source": "claude_settings_permissions",
       "target": "claude_settings_permissions_deny",
@@ -86112,7 +86222,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": ".claude/settings.json",
-      "source_location": "L70",
+      "source_location": "L84",
       "weight": 1.0,
       "source": "claude_settings_hooks",
       "target": "claude_settings_hooks_posttooluse",
@@ -86122,7 +86232,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": ".claude/settings.json",
-      "source_location": "L42",
+      "source_location": "L56",
       "weight": 1.0,
       "source": "claude_settings_hooks",
       "target": "claude_settings_hooks_pretooluse",
@@ -86132,7 +86242,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": ".claude/settings.json",
-      "source_location": "L101",
+      "source_location": "L115",
       "weight": 1.0,
       "source": "claude_settings_hooks",
       "target": "claude_settings_hooks_stop",
@@ -89390,7 +89500,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/data/project-catalog.mjs",
-      "source_location": "L229",
+      "source_location": "L230",
       "weight": 1.0,
       "source": "lib_data_project_catalog",
       "target": "lib_data_project_catalog_allprojectassets",
@@ -89400,7 +89510,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/data/project-catalog.mjs",
-      "source_location": "L218",
+      "source_location": "L219",
       "weight": 1.0,
       "source": "lib_data_project_catalog",
       "target": "lib_data_project_catalog_project_agent_when_to_use",
@@ -89430,7 +89540,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/data/project-catalog.mjs",
-      "source_location": "L157",
+      "source_location": "L158",
       "weight": 1.0,
       "source": "lib_data_project_catalog",
       "target": "lib_data_project_catalog_project_hook_by_stack",
@@ -89450,7 +89560,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/data/project-catalog.mjs",
-      "source_location": "L129",
+      "source_location": "L130",
       "weight": 1.0,
       "source": "lib_data_project_catalog",
       "target": "lib_data_project_catalog_projecthookcommand",
@@ -89460,7 +89570,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/data/project-catalog.mjs",
-      "source_location": "L197",
+      "source_location": "L198",
       "weight": 1.0,
       "source": "lib_data_project_catalog",
       "target": "lib_data_project_catalog_selectprojectassets",
@@ -89470,7 +89580,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/data/project-catalog.mjs",
-      "source_location": "L170",
+      "source_location": "L171",
       "weight": 1.0,
       "source": "lib_data_project_catalog",
       "target": "lib_data_project_catalog_selectprojecthooks",
@@ -89679,7 +89789,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "lib/data/project-catalog.mjs",
-      "source_location": "L183",
+      "source_location": "L184",
       "weight": 1.0,
       "source": "lib_data_project_catalog_selectprojecthooks",
       "target": "lib_data_project_catalog_projecthookcommand",
@@ -89724,7 +89834,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/data/project-catalog.mjs",
-      "source_location": "L173",
+      "source_location": "L174",
       "weight": 1.0,
       "source": "lib_data_project_catalog_selectprojecthooks",
       "target": "lib_data_stack_keys_stackkeys"
@@ -89768,7 +89878,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/data/project-catalog.mjs",
-      "source_location": "L202",
+      "source_location": "L203",
       "weight": 1.0,
       "source": "lib_data_project_catalog_selectprojectassets",
       "target": "lib_data_stack_keys_stackkeys"
@@ -89910,7 +90020,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L137",
+      "source_location": "L138",
       "weight": 1.0,
       "source": "lib_generate_claude_md_skillsblock",
       "target": "lib_data_skill_map_skillsforprofile"
@@ -90196,7 +90306,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit.test.mjs",
-      "source_location": "L209",
+      "source_location": "L213",
       "weight": 1.0,
       "source": "tests_unit_test",
       "target": "lib_data_tools_catalog",
@@ -90229,7 +90339,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit.test.mjs",
-      "source_location": "L209",
+      "source_location": "L213",
       "weight": 1.0,
       "source": "tests_unit_test",
       "target": "lib_data_tools_catalog_vendorhookcommand",
@@ -90394,7 +90504,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit.test.mjs",
-      "source_location": "L209",
+      "source_location": "L213",
       "weight": 1.0,
       "source": "tests_unit_test",
       "target": "lib_data_tools_catalog_toolsettingshooks",
@@ -92932,7 +93042,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L181",
+      "source_location": "L182",
       "weight": 1.0,
       "source": "lib_generate_claude_md_renderrootclaudemd",
       "target": "lib_generate_claude_md_agents_agentsworkflowblock"
@@ -92952,7 +93062,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L80",
+      "source_location": "L81",
       "weight": 1.0,
       "source": "lib_generate_claude_md",
       "target": "lib_generate_claude_md_codereviewrule",
@@ -92962,7 +93072,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L112",
+      "source_location": "L113",
       "weight": 1.0,
       "source": "lib_generate_claude_md",
       "target": "lib_generate_claude_md_commandsblock",
@@ -92972,7 +93082,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L92",
+      "source_location": "L93",
       "weight": 1.0,
       "source": "lib_generate_claude_md",
       "target": "lib_generate_claude_md_domain_fixed_rules",
@@ -92982,7 +93092,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L104",
+      "source_location": "L105",
       "weight": 1.0,
       "source": "lib_generate_claude_md",
       "target": "lib_generate_claude_md_fixedrulesblock",
@@ -92992,7 +93102,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L241",
+      "source_location": "L242",
       "weight": 1.0,
       "source": "lib_generate_claude_md",
       "target": "lib_generate_claude_md_renderdomainclaudemd",
@@ -93002,7 +93112,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L169",
+      "source_location": "L170",
       "weight": 1.0,
       "source": "lib_generate_claude_md",
       "target": "lib_generate_claude_md_renderrootclaudemd",
@@ -93012,7 +93122,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L65",
+      "source_location": "L66",
       "weight": 1.0,
       "source": "lib_generate_claude_md",
       "target": "lib_generate_claude_md_root_fixed_rules",
@@ -93022,7 +93132,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L136",
+      "source_location": "L137",
       "weight": 1.0,
       "source": "lib_generate_claude_md",
       "target": "lib_generate_claude_md_skillsblock",
@@ -93032,7 +93142,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L147",
+      "source_location": "L148",
       "weight": 1.0,
       "source": "lib_generate_claude_md",
       "target": "lib_generate_claude_md_stackline",
@@ -93142,7 +93252,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L197",
+      "source_location": "L198",
       "weight": 1.0,
       "source": "lib_generate_claude_md_renderrootclaudemd",
       "target": "lib_generate_claude_md_codereviewrule",
@@ -93175,7 +93285,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L272",
+      "source_location": "L273",
       "weight": 1.0,
       "source": "lib_generate_claude_md_renderdomainclaudemd",
       "target": "lib_generate_claude_md_fixedrulesblock",
@@ -93186,7 +93296,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L229",
+      "source_location": "L230",
       "weight": 1.0,
       "source": "lib_generate_claude_md_renderrootclaudemd",
       "target": "lib_generate_claude_md_fixedrulesblock",
@@ -93197,7 +93307,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L215",
+      "source_location": "L216",
       "weight": 1.0,
       "source": "lib_generate_claude_md_renderrootclaudemd",
       "target": "lib_generate_claude_md_commandsblock",
@@ -93263,7 +93373,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L180",
+      "source_location": "L181",
       "weight": 1.0,
       "source": "lib_generate_claude_md_renderrootclaudemd",
       "target": "lib_generate_claude_md_skillsblock",
@@ -93285,7 +93395,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/claude-md.mjs",
-      "source_location": "L206",
+      "source_location": "L207",
       "weight": 1.0,
       "source": "lib_generate_claude_md_renderrootclaudemd",
       "target": "lib_generate_claude_md_stackline",
@@ -93506,7 +93616,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit.test.mjs",
-      "source_location": "L288",
+      "source_location": "L292",
       "weight": 1.0,
       "source": "tests_unit_test",
       "target": "lib_generate_format_hook",
@@ -93572,7 +93682,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit.test.mjs",
-      "source_location": "L288",
+      "source_location": "L292",
       "weight": 1.0,
       "source": "tests_unit_test",
       "target": "lib_generate_format_hook_renderformatonedit",
@@ -93794,7 +93904,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit.test.mjs",
-      "source_location": "L299",
+      "source_location": "L303",
       "weight": 1.0,
       "source": "tests_unit_test",
       "target": "lib_generate_misc",
@@ -93904,7 +94014,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit.test.mjs",
-      "source_location": "L299",
+      "source_location": "L303",
       "weight": 1.0,
       "source": "tests_unit_test",
       "target": "lib_generate_misc_renderpluginsinstallscript",
@@ -94063,7 +94173,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "lib/generate/settings.mjs",
-      "source_location": "L248",
+      "source_location": "L252",
       "weight": 1.0,
       "source": "lib_generate_settings",
       "target": "lib_generate_settings_rendersettingslocal",
@@ -94107,7 +94217,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit.test.mjs",
-      "source_location": "L208",
+      "source_location": "L212",
       "weight": 1.0,
       "source": "tests_unit_test",
       "target": "lib_generate_settings",
@@ -94195,7 +94305,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit.test.mjs",
-      "source_location": "L208",
+      "source_location": "L212",
       "weight": 1.0,
       "source": "tests_unit_test",
       "target": "lib_generate_settings_rendersettings",
@@ -96477,6 +96587,39 @@
       "source_location": "L34",
       "weight": 1.0,
       "source": "tests_hook_secret_scan_test_assertblock",
+      "target": "lib_validate_hook_schema_core_validatepretooluseoutput",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "tests_hook_subagent_model_guard_test",
+      "target": "lib_validate_hook_schema_core_validatepretooluseoutput",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L106",
+      "weight": 1.0,
+      "source": "tests_hook_subagent_model_guard_test_assertforcedsonnet",
+      "target": "lib_validate_hook_schema_core_validatepretooluseoutput",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L91",
+      "weight": 1.0,
+      "source": "tests_hook_subagent_model_guard_test_assertpassthrough",
       "target": "lib_validate_hook_schema_core_validatepretooluseoutput",
       "confidence_score": 1.0
     },
@@ -99127,6 +99270,17 @@
       "source_location": "L20",
       "weight": 1.0,
       "source": "tests_hook_sql_idempotent_review_test",
+      "target": "lib_validate_hook_schema",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "tests_hook_subagent_model_guard_test",
       "target": "lib_validate_hook_schema",
       "confidence_score": 1.0
     },
@@ -104731,6 +104885,26 @@
       "weight": 1.0,
       "source": "templates_hooks_sql_idempotent_review_blockonstop",
       "target": "templates_hooks_sql_idempotent_review_readnotifiedset",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "templates/hooks/subagent-model-guard.mjs",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "templates_hooks_subagent_model_guard",
+      "target": "templates_hooks_subagent_model_guard_hasfrontmattermodel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "templates/hooks/subagent-model-guard.mjs",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "templates_hooks_subagent_model_guard",
+      "target": "templates_hooks_subagent_model_guard_readstdin",
       "confidence_score": 1.0
     },
     {
@@ -112926,6 +113100,17 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "tests_hook_subagent_model_guard_test",
+      "target": "tests_hook_runner",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "tests/hook-validate-settings-schema.test.mjs",
       "source_location": "L20",
       "weight": 1.0,
@@ -113062,6 +113247,17 @@
       "source_location": "L19",
       "weight": 1.0,
       "source": "tests_hook_sql_idempotent_review_test",
+      "target": "tests_hook_runner_runhook",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "tests_hook_subagent_model_guard_test",
       "target": "tests_hook_runner_runhook",
       "confidence_score": 1.0
     },
@@ -113249,6 +113445,17 @@
       "source_location": "L19",
       "weight": 1.0,
       "source": "tests_hook_sql_idempotent_review_test",
+      "target": "tests_hook_runner_runhookraw",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "tests_hook_subagent_model_guard_test",
       "target": "tests_hook_runner_runhookraw",
       "confidence_score": 1.0
     },
@@ -113458,6 +113665,39 @@
       "source_location": "L45",
       "weight": 1.0,
       "source": "tests_hook_sql_idempotent_review_test_reviewcontext",
+      "target": "tests_hook_runner_assertcleanstdoutjson",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "tests_hook_subagent_model_guard_test",
+      "target": "tests_hook_runner_assertcleanstdoutjson",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L109",
+      "weight": 1.0,
+      "source": "tests_hook_subagent_model_guard_test_assertforcedsonnet",
+      "target": "tests_hook_runner_assertcleanstdoutjson",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L95",
+      "weight": 1.0,
+      "source": "tests_hook_subagent_model_guard_test_assertpassthrough",
       "target": "tests_hook_runner_assertcleanstdoutjson",
       "confidence_score": 1.0
     },
@@ -113891,6 +114131,66 @@
       "weight": 1.0,
       "source": "tests_hook_sql_idempotent_review_test_assertreview",
       "target": "tests_hook_sql_idempotent_review_test_reviewcontext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L103",
+      "weight": 1.0,
+      "source": "tests_hook_subagent_model_guard_test",
+      "target": "tests_hook_subagent_model_guard_test_assertforcedsonnet",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "tests_hook_subagent_model_guard_test",
+      "target": "tests_hook_subagent_model_guard_test_assertpassthrough",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "tests_hook_subagent_model_guard_test",
+      "target": "tests_hook_subagent_model_guard_test_hook",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "tests_hook_subagent_model_guard_test",
+      "target": "tests_hook_subagent_model_guard_test_mktmpdir",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "tests_hook_subagent_model_guard_test",
+      "target": "tests_hook_subagent_model_guard_test_root",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/hook-subagent-model-guard.test.mjs",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "tests_hook_subagent_model_guard_test",
+      "target": "tests_hook_subagent_model_guard_test_writeagentfile",
       "confidence_score": 1.0
     },
     {
@@ -114590,7 +114890,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/settings-strict.test.mjs",
-      "source_location": "L109",
+      "source_location": "L119",
       "weight": 1.0,
       "source": "tests_settings_strict_test",
       "target": "tests_settings_strict_test_allexecformargs",
@@ -114600,7 +114900,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/settings-strict.test.mjs",
-      "source_location": "L220",
+      "source_location": "L230",
       "weight": 1.0,
       "source": "tests_settings_strict_test",
       "target": "tests_settings_strict_test_groupswithmatcher",
@@ -114620,7 +114920,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/settings-strict.test.mjs",
-      "source_location": "L97",
+      "source_location": "L107",
       "weight": 1.0,
       "source": "tests_settings_strict_test",
       "target": "tests_settings_strict_test_postcommands",
@@ -114650,7 +114950,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/settings-strict.test.mjs",
-      "source_location": "L93",
+      "source_location": "L103",
       "weight": 1.0,
       "source": "tests_settings_strict_test",
       "target": "tests_settings_strict_test_stopcommands",
@@ -114820,7 +115120,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/unit.test.mjs",
-      "source_location": "L212",
+      "source_location": "L216",
       "weight": 1.0,
       "source": "tests_unit_test",
       "target": "tests_unit_test_minimalprofile",
@@ -173650,6 +173950,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "templates/rules/07-subagent-dispatch.md",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "templates_rules_07_subagent_dispatch_subagent_dispatch",
+      "target": "templates_rules_07_subagent_dispatch_dispatch_mechanics",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "templates/rules/07-subagent-dispatch.md",
       "source_location": "L8",
       "weight": 1.0,
       "source": "templates_rules_07_subagent_dispatch_subagent_dispatch",
@@ -179198,5 +179508,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "a710e1296f0cb06e9309b3524e56e802f2d31c50"
+  "built_at_commit": "702e86c76b1af98c620752a9a567115c426dbba5"
 }
