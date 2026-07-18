@@ -38,6 +38,15 @@ function hookCmd(script) {
 }
 
 /**
+ * GitHub-sourced `extraKnownMarketplaces` entry.
+ * @param {string} repo  "owner/repo"
+ * @returns {{ source: { source: "github", repo: string } }}
+ */
+function ghMarketplace(repo) {
+  return { source: { source: "github", repo } };
+}
+
+/**
  * @param {ProjectProfile} profile
  * @param {Record<string, any[]>} [extraHooks]  Additional hook entries to merge by event (e.g. tool hooks).
  * @param {{ strict?: boolean, largeFiles?: "block"|"advisory" }} [opts]
@@ -239,6 +248,25 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
       ],
       // Covers sessionScratchDir()'s fallback path — see the allow-list comment above.
       additionalDirectories: ["/tmp", "/private/tmp"],
+    },
+    // Branch new worktrees from local HEAD, not origin/<default> — preserves
+    // unpushed commits (this harness's own WorktreeCreate hook assumes that).
+    worktree: {
+      baseRef: "head",
+    },
+    // Auto-enable the plugins this harness is designed to pair with, and
+    // aia-harness itself (so its own commands keep working in the target
+    // project), for anyone who opens it in Claude Code.
+    enabledPlugins: {
+      "caveman@caveman": true,
+      "ponytail@ponytail": true,
+      "superpowers@claude-plugins-official": true,
+      "aia-harness@leandro-plugins-registry": true,
+    },
+    extraKnownMarketplaces: {
+      caveman: ghMarketplace("JuliusBrussee/caveman"),
+      ponytail: ghMarketplace("DietrichGebert/ponytail"),
+      "leandro-plugins-registry": ghMarketplace("leandrosilvaferreira/claude-plugins-registry"),
     },
     hooks,
   };
