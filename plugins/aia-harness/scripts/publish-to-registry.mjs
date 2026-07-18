@@ -12,7 +12,15 @@
  */
 
 import { execFileSync } from "node:child_process";
-import { cpSync, existsSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { homedir } from "node:os";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -164,23 +172,43 @@ log("Syncing plugin files to registry...");
 // Consumer-facing package boundary. Claude Code has no plugin.json files/ignore
 // allowlist (confirmed against the manifest schema — code.claude.com/docs/en/plugins-reference)
 // and copies whatever directory the marketplace source points at verbatim
-// (code.claude.com/docs/en/plugin-marketplaces), so this list IS the packaging
-// step. Everything here is this repo's own dev-only tooling: never imported by
-// bin/, lib/, commands/, agents/, skills/, hooks/, or templates/ at runtime —
-// verified by grepping every runtime source tree for a reference before adding
-// an entry. `.claude/` is additionally confirmed inert to installers even if
-// shipped (Claude Code only ever reads a plugin's settings from
-// `<plugin-root>/settings.json`, not a nested `.claude/settings.json`), but is
-// excluded anyway so a consumer's install doesn't carry this maintainer's own
-// dev harness config.
+// (code.claude.com/docs/en/plugin-marketplaces), so this step IS the packaging.
+//
+// Two independent gates, because either alone has been observed to fail:
+//
+//   1. Only git-tracked files ship. A plain directory copy walks the working
+//      tree, so anything gitignored-but-present-on-disk leaks. This was not
+//      hypothetical: `.gitignore` has said "keep a local copy for dogfooding,
+//      but never ship it" about the root `.mcp.json` since it was written, and
+//      every release up to v0.10.1 shipped it anyway — imposing this repo's own
+//      context7/github MCP servers on every project that enabled the plugin,
+//      the exact outcome that note existed to prevent. The same path also
+//      leaked 5.8MB of `.superpowers/` review scratch, past a hand-written
+//      denylist that had been reviewed file by file. Sourcing from
+//      `git ls-files` makes the whole class impossible by construction and
+//      makes `.gitignore` authoritative over what ships: if it isn't
+//      committed, it cannot be published.
+//   2. A denylist for tracked-but-dev-only paths (tests, CI, dev config). These
+//      belong in git but not in a consumer's install. Matched per path segment,
+//      so a name here is excluded at any depth. Every entry was checked against
+//      bin/, lib/, commands/, agents/, skills/, hooks/, and templates/ for a
+//      runtime reference before being added.
+//
+// `.claude/` is additionally confirmed inert to installers even when shipped
+// (Claude Code only reads a plugin's settings from `<plugin-root>/settings.json`,
+// never a nested `.claude/settings.json`) — excluded anyway so a consumer's
+// install doesn't carry this maintainer's own dev harness config.
 const SYNC_EXCLUDES = [
   "node_modules",
   ".git",
+  ".github",
+  ".gitignore",
   ".DS_Store",
   ".claude",
   "graphify-out",
   "tests",
   "docs",
+  "CLAUDE.md",
   "skills-lock.json",
   "tsconfig.json",
   "eslint.config.mjs",
@@ -189,16 +217,31 @@ const SYNC_EXCLUDES = [
   "package.json",
   "package-lock.json",
 ];
+
+/** @param {string} rel  Repo-relative POSIX path from `git ls-files`. */
+function isPublishable(rel) {
+  if (rel.endsWith(".test.mjs")) return false;
+  return !rel.split("/").some((segment) => SYNC_EXCLUDES.includes(segment));
+}
+
+const trackedFiles = execFileSync("git", ["ls-files", "-z"], {
+  cwd: PLUGIN_DIR,
+  encoding: "utf8",
+})
+  .split("\0")
+  .filter(Boolean)
+  .filter(isPublishable);
+
 rmSync(PLUGIN_DEST, { recursive: true, force: true });
-cpSync(PLUGIN_DIR, PLUGIN_DEST, {
-  recursive: true,
-  filter: (src) => {
-    const name = src.split(/[\\/]/).pop() ?? "";
-    if (SYNC_EXCLUDES.includes(name)) return false;
-    if (name.endsWith(".test.mjs")) return false;
-    return true;
-  },
-});
+for (const rel of trackedFiles) {
+  const from = resolve(PLUGIN_DIR, rel);
+  // Tracked but deleted in the working tree: skip rather than abort the publish.
+  if (!existsSync(from)) continue;
+  const to = resolve(PLUGIN_DEST, rel);
+  mkdirSync(dirname(to), { recursive: true });
+  cpSync(from, to);
+}
+log(`   ${trackedFiles.length} tracked files packaged.`);
 
 // ── step 4: commit rsync in registry ──────────────────────────────────────
 
