@@ -103,9 +103,16 @@ function isSourceFile(absPath) {
   // TypeScript declaration files are type-only, not logic.
   if (absPath.endsWith(".d.ts")) return false;
 
-  const parts = absPath.split(path.sep);
-  for (const seg of parts.slice(0, -1)) {
+  const dirs = absPath.split(path.sep).slice(0, -1);
+  for (const seg of dirs) {
     if (IGNORED_DIRS.has(seg)) return false;
+  }
+  // Vendored hook content (scaffolded by aia-harness, not authored in the
+  // target project) lives at .claude/hooks — match the adjacent pair, not a
+  // loose "hooks" segment, so app code like src/hooks/useThing.ts is still
+  // checked normally.
+  for (let i = 0; i < dirs.length - 1; i++) {
+    if (dirs[i] === ".claude" && dirs[i + 1] === "hooks") return false;
   }
 
   const base = path.basename(absPath);

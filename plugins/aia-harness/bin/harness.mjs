@@ -6,6 +6,7 @@
  * @module bin/harness
  */
 import path from "node:path";
+import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { scanProject } from "../lib/detect/index.mjs";
 import { buildPlan } from "../lib/plan.mjs";
@@ -18,7 +19,9 @@ import {
 } from "../lib/detect/system-deps.mjs";
 
 const PLUGIN_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const VERSION = "0.1.1";
+// Single source of truth: package.json's version (bumped by scripts/publish-to-registry.mjs).
+// A hardcoded literal here previously drifted out of sync for every release.
+const VERSION = JSON.parse(readFileSync(path.join(PLUGIN_ROOT, "package.json"), "utf8")).version;
 
 /**
  * @param {string[]} argv

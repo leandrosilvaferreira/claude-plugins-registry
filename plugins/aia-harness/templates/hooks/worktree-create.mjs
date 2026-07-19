@@ -582,7 +582,15 @@ function resolveWorktreeIncludePaths(root, patterns) {
       else if (fs.existsSync(path.join(root, bare))) selected.add(bare);
       continue;
     }
-    const compiled = compilePattern(rawPattern);
+    let compiled;
+    try {
+      compiled = compilePattern(rawPattern);
+    } catch (err) {
+      process.stderr.write(
+        `worktree-create: skipping invalid .worktreeinclude pattern "${rawPattern}": ${err instanceof Error ? err.message : String(err)}\n`,
+      );
+      continue;
+    }
     if (!compiled) continue;
     for (const relEntry of tree()) {
       const isDir = relEntry.endsWith("/");
