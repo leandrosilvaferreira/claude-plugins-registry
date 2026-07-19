@@ -96,3 +96,6 @@ export {
 
 // GitHub PM (first-party + vendored) — templates/skills/github-pm/ + templates/github/ + templates/github-pm-ext/
 export { selectGitHubPMAssets } from "./github-pm-catalog.mjs";
+
+// Obsidian vault memory (first-party) — templates/hooks/ + templates/rules/ + templates/tools/obsidian/
+export { selectObsidianAssets, obsidianSettingsHooks } from "./obsidian-catalog.mjs";

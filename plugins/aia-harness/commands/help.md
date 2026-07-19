@@ -28,6 +28,7 @@ node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" version
 | Add **strategic MCP servers** (`.mcp.json`) | `/aia-harness:add-mcp` |
 | Install the **recommended marketplace plugins** for the stack | `/aia-harness:add-plugins` |
 | Install **token-economy / code-graph tools** (caveman, ponytail, rtk, graphify) | `/aia-harness:add-tools` |
+| Add **long-term memory** / a knowledge vault to this project | `/aia-harness:add-obsidian` |
 | Generate or refresh **rich intermediate CLAUDE.md** files for strategic subdirectories | `/aia-harness:revise-claude-md` |
 | **Sync agent routing** — audit `.claude/agents` frontmatter descriptions and fix stale/missing CLAUDE.md mentions | `/aia-harness:revise-agent-routing` |
 | See this help | `/aia-harness:help` |
@@ -125,6 +126,19 @@ Vendoring + wiring of rtk/worktrees is automatic; plugin/binary/package installs
 **When to use:** you want to reduce token consumption or have a code graph.
 **Writes files?** Yes — only the rtk hook in `.claude/hooks/` and claude-code-worktrees in `.claude/skills/`, wiring in `settings.json`, `.graphifyignore`. Caveman and ponytail install as user-level plugins — do **not** write to `.claude/`.
 **Parameters:** `path` (optional). Scope: `--no-tools`.
+
+### `/aia-harness:add-obsidian [path]`
+
+**What it does:** installs the Obsidian vault-as-memory pillar — a versioned
+PARA vault, the `obsidian` MCP server, 6 hooks that keep it oriented and
+synced automatically, a usage rule, and the required MCP tool permission.
+**When to use:** the project wants durable, searchable long-term memory
+(past decisions, abandoned approaches, cross-module conventions) beyond what
+CLAUDE.md/rules and git history already capture.
+**Writes files?** Yes — creates the vault folder + templates, edits
+`.mcp.json` and `.claude/settings.json` (permissions + hook wiring), copies 6
+hooks + 2 runner scripts + a rule, and merges a CLAUDE.md section.
+**Parameters:** `path` (optional). Defaults to the current directory.
 
 ### `/aia-harness:revise-claude-md [path]`
 

@@ -237,6 +237,22 @@ for the user's platform and stop — do not execute the following steps.
      If any check fails → report as missing with `apply --only=github-pm` as fix suggestion.
      If `profile.githubPM.detected` is false → skip section silently.
 
+   - **Obsidian vault:** If `.mcp.json` has a top-level `mcpServers.obsidian` key:
+     - Check: the vault folder at `mcpServers.obsidian.env.OBSIDIAN_VAULT_PATH` exists
+       with its 5 PARA subfolders (`01-projects/`, `02-areas/`, `03-knowledge/`,
+       `04-resources/`, `daily/`) plus `templates/`
+     - Check: `.claude/hooks/` has all 6 hooks (`vault-orient.mjs`, `vault-guard.mjs`,
+       `compile.mjs`, `session-log.mjs`, `vault-note-merge.mjs`, `vault-pipeline-shared.mjs`)
+     - Check: `.claude/scripts/` has both runner scripts (`compile-runner.mjs`,
+       `session-log-runner.mjs`)
+     - Check: `.claude/rules/obsidian.md` exists
+     - Check: `"mcp__obsidian"` is present in `.claude/settings.json`'s `permissions.allow`
+
+     If any check fails → report as missing, with `/aia-harness:add-obsidian`
+     (reconfigure) as the fix. Do not suggest `/aia-harness:patch` — its `obsidian`
+     category is excluded there (unsafe force-apply; see `patch.md`).
+     If `.mcp.json` has no `mcpServers.obsidian` key → skip section silently.
+
    - **Graphify git hooks:** If the plan includes `graphify-git-hook:` artifacts (check plan JSON for IDs starting with `graphify-git-hook:`), verify that the graphify git hooks are installed in the target project:
      - `.git/hooks/post-commit` contains marker `# graphify-hook-start`
      - `.git/hooks/post-checkout` contains marker `# graphify-checkout-hook-start`

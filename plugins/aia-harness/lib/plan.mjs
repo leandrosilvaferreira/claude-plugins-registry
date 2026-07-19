@@ -18,6 +18,8 @@ import {
   toolSettingsHooks,
   resolveAgentWhenToUse,
   selectGitHubPMAssets,
+  selectObsidianAssets,
+  obsidianSettingsHooks,
 } from "./data/asset-catalog.mjs";
 import { addHookArtifacts } from "./plan/hook-artifacts.mjs";
 import {
@@ -33,7 +35,7 @@ import { addDocsArtifacts } from "./plan/docs-artifacts.mjs";
  * @property {string} id
  * @property {string} relPath
  * @property {string} title
- * @property {"claude-md"|"rules"|"settings"|"mcp"|"git-hooks"|"hooks"|"skills"|"agents"|"commands"|"tools"|"worktree"|"lsp"|"docs"|"script"|"github-pm"} category
+ * @property {"claude-md"|"rules"|"settings"|"mcp"|"git-hooks"|"hooks"|"skills"|"agents"|"commands"|"tools"|"worktree"|"lsp"|"docs"|"script"|"github-pm"|"obsidian"} category
  * @property {string} rationale
  * @property {number} contextCost  Estimated tokens added to every session (0 = lazy/not loaded).
  * @property {boolean} defaultSelected
@@ -165,6 +167,23 @@ export function buildPlan(profile, ctx) {
     ];
   }
 
+  // Obsidian vault hooks (UserPromptSubmit/PreToolUse/SessionStart/SessionEnd):
+  // wired only when add-obsidian selected "obsidian-mcp" as a tool id. Merges
+  // by matcher, same fold-by-matcher logic as the extraHooks loop above (so
+  // re-apply stays idempotent via apply.mjs's mergeSettingsHooks).
+  if (toolIds.includes("obsidian-mcp")) {
+    for (const [event, entries] of Object.entries(obsidianSettingsHooks())) {
+      const base = extraHooks[event] ?? [];
+      for (const grp of entries) {
+        const m = grp.matcher ?? "";
+        const i = base.findIndex((g) => (g.matcher ?? "") === m);
+        if (i === -1) base.push(grp);
+        else base[i] = { ...base[i], hooks: [...(base[i].hooks ?? []), ...(grp.hooks ?? [])] };
+      }
+      extraHooks[event] = base;
+    }
+  }
+
   add({
     id: "settings",
     relPath: ".claude/settings.json",
@@ -262,6 +281,21 @@ export function buildPlan(profile, ctx) {
       contextCost: 0,
       defaultSelected: false,
       copyFrom: asset.copyFrom,
+    });
+  }
+
+  // --- Obsidian vault memory (opt-in; defaultSelected:false; no profile gate) ---
+  for (const asset of selectObsidianAssets()) {
+    add({
+      id: asset.id,
+      relPath: asset.dest,
+      title: asset.description,
+      category: /** @type {any} */ ("obsidian"),
+      rationale: asset.description,
+      contextCost: 0,
+      defaultSelected: false,
+      copyFrom: asset.copyFrom,
+      ...(asset.mergeStrategy ? { mergeStrategy: asset.mergeStrategy } : {}),
     });
   }
 

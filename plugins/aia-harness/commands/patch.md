@@ -45,15 +45,31 @@ Parse the JSON. Group artifact IDs by prefix into these logical categories
 | `tools` — rtk hook, graphify (caveman/ponytail are global plugins, not patched here) | starts with `tool-skill:`, `tool-hooks:`, `graphifyignore` (exact), or `graphify-orient-hook` (exact) |
 | `git-hooks` — graphify git hooks (post-commit, post-checkout) | starts with `graphify-git-hook:` |
 | `github-pm` — skill, commands, templates, workflows | starts with `github-pm:` |
+| `obsidian` — **not force-patchable here** (would corrupt CLAUDE.md and revert vault-name substitution) | starts with `obsidian:` — exclude from `--only`, see note below |
 | `docs` — harness strategies doc | `strategies` (exact) |
 | `lsp` — language server config | `lsp` (exact) |
 | `worktree` — .worktreeinclude | `worktree` (exact) |
 | `script` — install reference scripts | `install-plugins` (exact), or starts with `agkit-script:` |
 | `commands` — first-party + ag-kit commands (non-github-pm) | starts with `command:`, `agkit-command:` |
 
+> **`obsidian` is excluded from this command's force-apply mechanism.** One of its
+> artifacts (`obsidian:claude-md`) carries `mergeStrategy: "merge-section"`, and
+> `--force` (`lib/apply.mjs`) skips merge-strategy handling entirely, falling through
+> to a raw whole-file overwrite — forcing it would replace the target's entire
+> `.claude/CLAUDE.md` with just the obsidian section, destroying every other section
+> (graphify, other pillars, hand-written notes). The other 9 obsidian ids carry no
+> merge strategy either, but their vendored content still has the literal
+> `__OBSIDIAN_VAULT_DIR__` placeholder — only `/aia-harness:add-obsidian`'s own flow
+> knows how to substitute the real vault folder name, so force-applying them here
+> would silently revert a working installation back to broken placeholder-bearing
+> files. Never select `obsidian` in step 2 below — direct the user to re-run
+> `/aia-harness:add-obsidian` (its reconfigure path) instead, which handles both
+> the merge and the substitution correctly.
+
 ## 2. Ask the user which categories to patch
 
-Present only the categories that have at least one matching artifact.
+Present only the categories that have at least one matching artifact, **excluding
+`obsidian`** (see note above — it is never offered as an option here).
 Use `AskUserQuestion` with `multiSelect: true`.
 
 **`AskUserQuestion` accepts at most 4 options per question.** If there are more than 4

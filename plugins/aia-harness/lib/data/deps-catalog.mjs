@@ -52,6 +52,7 @@ export const TOOL_DEPS = {
   graphify: [{ name: "uv", level: "required" }],
   ponytail: [],
   gh: [{ name: "gh", level: "required" }],
+  "obsidian-mcp": [{ name: "uv", level: "required" }],
 };
 
 /**

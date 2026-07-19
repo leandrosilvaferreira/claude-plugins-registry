@@ -26,7 +26,7 @@
  * @typedef {Object} ToolDef
  * @property {string} id
  * @property {string} name
- * @property {"token-economy"|"code-graph"|"workflow"} category
+ * @property {"token-economy"|"code-graph"|"workflow"|"knowledge"} category
  * @property {"vendor"|"hook-wire"|"cli"|"plugin"} strategy
  * @property {string} license
  * @property {string} repo
@@ -110,6 +110,23 @@ export const TOOLS = [
     hooks: [],
     // gh has no project-level install indicator; omit detectIn
     recommended: (p) => Boolean(p.vcs),
+  },
+  {
+    id: "obsidian-mcp",
+    name: "Obsidian MCP (vault memory)",
+    category: "knowledge",
+    strategy: "cli",
+    license: "MIT",
+    repo: "Swapo-Finance/obsidian-mcp",
+    deps: ["uv"],
+    hooks: [],
+    // Hook wiring comes from obsidianSettingsHooks() (obsidian-catalog.mjs),
+    // not from here — this entry exists only so the machine dep-check
+    // (uv/uvx) reuses the existing check/resolveDepsFromProfile machinery.
+    // No detectIn: the vault folder name is a runtime user choice, so there
+    // is no fixed path to auto-detect against; /add-obsidian and doctor
+    // instead check .mcp.json's mcpServers.obsidian key directly.
+    recommended: () => false,
   },
 ];
 
