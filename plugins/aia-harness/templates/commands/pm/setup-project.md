@@ -1,6 +1,6 @@
 ---
 description: Link repo to GitHub Project and write pm-config.json
-allowed-tools: Bash(gh *), Bash(git *), Write
+allowed-tools: Bash(gh *), Bash(git *), Write, AskUserQuestion
 ---
 
 Auth status: !`gh auth status 2>&1 | head -5`
@@ -21,7 +21,9 @@ Use the `github-pm` skill to consult `references/pm-config-schema.md` for the pm
    gh project list --owner <owner> --format json --limit 20
    ```
 
-   Present to the user and ask them to select the project number.
+   Ask the user to pick one via the **AskUserQuestion** tool — one option per
+   listed project (label `#<number> <title>`); the tool's free-text "Other"
+   fallback covers a number not listed.
 
 4. Fetch IDs via GraphQL:
 

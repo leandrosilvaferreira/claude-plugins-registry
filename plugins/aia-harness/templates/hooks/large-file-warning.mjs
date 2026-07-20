@@ -89,6 +89,12 @@ const IGNORED_DIRS = new Set([
   "static",
   "public",
   "templates",
+  // aia-harness scaffolds all its artifacts under .claude/ (hooks, plus vendored
+  // runners in .claude/scripts that legitimately exceed the budget) — none of it
+  // is target-project source the user should be forced to refactor, so ignore the
+  // whole directory. Matched as an exact path segment, so app code like
+  // src/hooks/useThing.ts (no ".claude" segment) is still checked normally.
+  ".claude",
 ]);
 
 /**
@@ -106,13 +112,6 @@ function isSourceFile(absPath) {
   const dirs = absPath.split(path.sep).slice(0, -1);
   for (const seg of dirs) {
     if (IGNORED_DIRS.has(seg)) return false;
-  }
-  // Vendored hook content (scaffolded by aia-harness, not authored in the
-  // target project) lives at .claude/hooks — match the adjacent pair, not a
-  // loose "hooks" segment, so app code like src/hooks/useThing.ts is still
-  // checked normally.
-  for (let i = 0; i < dirs.length - 1; i++) {
-    if (dirs[i] === ".claude" && dirs[i + 1] === "hooks") return false;
   }
 
   const base = path.basename(absPath);

@@ -1,6 +1,6 @@
 ---
 description: Commit, push, and open PR linked to the issue
-allowed-tools: Bash(git *), Bash(gh *)
+allowed-tools: Bash(git *), Bash(gh *), AskUserQuestion
 ---
 
 Current branch: !`git branch --show-current`
@@ -12,8 +12,21 @@ Base branch: !`BASE=$(git rev-parse --abbrev-ref HEAD@{upstream} 2>/dev/null | s
 
 Use the `github-pm` skill to execute this workflow:
 
-1. MANDATORY GATE: if current branch = `main` or `master` → STOP.
-   Instruct the user to create a branch first (`/pm:worktree-new` or `git checkout -b`).
+1. Branch gate — never commit onto `main`/`master`. If the current branch is
+   `main` or `master`, automatically create a fresh branch for the pending
+   changes and switch to it before committing:
+   - Name it from the change you are about to commit (same conventional-commit
+     type + a kebab slug of the subject): `<type>/<slug>`, max 60 chars
+     (e.g. `fix/version-from-plugin-json`). If an issue number is detectable
+     from context, prefix it: `<type>/<N>-<slug>`.
+
+   ```bash
+   git checkout -b <branch>
+   ```
+
+   Then continue the workflow on this new branch (use it as `<BRANCH>` below).
+   If already on a non-main branch, use it as-is. The PR base stays the original
+   `main`/`master` via the `Base branch` value in the dynamic context above.
 
 2. Analyze `git diff HEAD` to generate a commit message (conventional commits):
    - feat: new feature
@@ -48,5 +61,7 @@ Use the `github-pm` skill to execute this workflow:
 
 6. Report the PR URL. Suggest: "Run `/pm:code-review-pr <PR>` to start the review."
 
-7. Ask the user: "Do you want to merge this PR now? (`/pm:pr-merge <N>`)"
-   If yes → run the `/pm:pr-merge <N>` workflow with `<N>` = the PR number from step 5.
+7. Ask via the **AskUserQuestion** tool whether to merge now — question
+   "Merge this PR now?", options "Merge now (`/pm:pr-merge <N>`)" and "Not yet".
+   If they choose to merge → run the `/pm:pr-merge <N>` workflow with `<N>` = the
+   PR number from step 5.

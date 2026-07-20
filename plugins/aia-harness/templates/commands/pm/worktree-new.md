@@ -16,7 +16,8 @@ Use the `github-pm` skill to execute the worktree creation workflow:
    - type: `feat` (feature/enhancement), `fix` (bug), `chore` (task), `docs`
    - Example: `feat/42-add-payment-flow`
 3. Confirm the branch name with the user via AskUserQuestion.
-4. If a worktree already exists for the slug → warn and ask if it should be reopened.
+4. If a worktree already exists for the slug → warn and ask via **AskUserQuestion**
+   whether to reopen it (options "Reopen existing" / "Pick a different name").
 5. Create the worktree:
 
    ```bash

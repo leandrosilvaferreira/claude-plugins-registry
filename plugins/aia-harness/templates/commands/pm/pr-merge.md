@@ -1,7 +1,7 @@
 ---
 description: Safely merge a PR — validates CI before merging
 argument-hint: "[pr-or-issue-number]"
-allowed-tools: Bash(gh *), Bash(git *), Bash(bash *), Bash(python3 *)
+allowed-tools: Bash(gh *), Bash(git *), Bash(bash *), Bash(python3 *), AskUserQuestion
 ---
 
 Config PM: !`cat .claude/pm-config.json 2>/dev/null || echo "NOT_FOUND"`
@@ -33,7 +33,9 @@ argument can be a PR number or an issue number.
 gh pr view $PR_NUMBER --json isDraft --jq '.isDraft'
 ```
 
-If true → ask the user if it should be marked as ready:
+If true → ask via the **AskUserQuestion** tool ("PR is a draft — mark it
+ready?", options "Mark ready" / "Keep as draft, stop"). If they choose to mark
+it ready:
 
 ```bash
 gh pr ready $PR_NUMBER
@@ -49,9 +51,9 @@ node .claude/skills/github-pm/scripts/check-pr-status.mjs $PR_NUMBER <OWNER>/<RE
 
 - Exit 0 → proceed
 - Exit 1 → BLOCK. List failures, do not merge.
-- Exit 2 → ask if waiting (`gh pr checks $PR_NUMBER --watch`), re-run gate
+- Exit 2 → ask via **AskUserQuestion** ("CI still running — wait for it?", options "Wait" / "Stop"); if Wait → `gh pr checks $PR_NUMBER --watch`, then re-run the gate
 - Exit 3 → STOP (invalid PR)
-- Exit 4 → warn "CI green but no approved review". Ask if proceeding anyway.
+- Exit 4 → warn "CI green but no approved review". Ask via **AskUserQuestion** ("Merge without an approved review?", options "Merge anyway" / "Stop") before any merge.
 
 **Step 4 — Detect merge strategy**
 
@@ -76,7 +78,7 @@ If exit ≠ 0 → report the exact error, STOP without post-merge.
 
 **Step 7 — Cleanup**
 
-- If in a worktree → ask: "Do you want to remove the worktree? (`/pm:worktree-remove`)"
+- If in a worktree → ask via **AskUserQuestion** ("Remove the worktree now?", options "Remove (`/pm:worktree-remove`)" / "Keep it")
 - If on the main checkout: `git checkout main && git pull --ff-only`
 
 CRITICAL RULES (never violate):

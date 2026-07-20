@@ -252,6 +252,9 @@ async function main() {
 
   /** @type {import("@anthropic-ai/claude-agent-sdk").Options} */
   const options = {
+    // Pin the sub-session to Sonnet: this unattended promote job must not
+    // silently run on whatever model the host CLI defaults to (could be Opus).
+    model: "sonnet",
     mcpServers: { obsidian: serverConfig },
     strictMcpConfig: true,
     // allowedTools and tools are complementary, NOT redundant — do not

@@ -1,7 +1,7 @@
 ---
 description: Work on a GitHub issue: set In Progress + worktree
 argument-hint: "[issue-number]"
-allowed-tools: Bash(gh *), Bash(git *)
+allowed-tools: Bash(gh *), Bash(git *), AskUserQuestion
 ---
 
 Issue: !`gh issue view ${ARGUMENTS:-} --json number,title,labels,body 2>/dev/null || echo "NOT_FOUND"`
@@ -34,8 +34,10 @@ Goal: generate a detailed implementation plan with technical approach,
 architecture, files to create/modify, edge cases, and execution order.
 ```
 
-The skill will produce a structured plan. Present the plan to the user and wait
-for confirmation before starting implementation.
+The skill will produce a structured plan. Present the plan to the user and ask
+for approval via the **AskUserQuestion** tool ("Proceed with this plan?",
+options "Approve — start implementation" / "Revise the plan"). Do not start
+implementation until approved.
 
 **When the user approves the plan**, use the `superpowers:writing-plans`
 skill to record the plan, then begin implementation following the order
