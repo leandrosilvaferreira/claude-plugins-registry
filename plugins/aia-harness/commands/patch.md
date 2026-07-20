@@ -56,7 +56,7 @@ Parse the JSON. Group artifact IDs by prefix into these logical categories
 > artifacts (`obsidian:claude-md`) carries `mergeStrategy: "merge-section"`, and
 > `--force` (`lib/apply.mjs`) skips merge-strategy handling entirely, falling through
 > to a raw whole-file overwrite — forcing it would replace the target's entire
-> `.claude/CLAUDE.md` with just the obsidian section, destroying every other section
+> root `CLAUDE.md` with just the obsidian section, destroying every other section
 > (graphify, other pillars, hand-written notes). The other 9 obsidian ids carry no
 > merge strategy either, but their vendored content still has the literal
 > `__OBSIDIAN_VAULT_DIR__` placeholder — only `/aia-harness:add-obsidian`'s own flow

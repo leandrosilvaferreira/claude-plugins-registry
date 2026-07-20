@@ -19,9 +19,14 @@ import {
 } from "../lib/detect/system-deps.mjs";
 
 const PLUGIN_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-// Single source of truth: package.json's version (bumped by scripts/publish-to-registry.mjs).
-// A hardcoded literal here previously drifted out of sync for every release.
-const VERSION = JSON.parse(readFileSync(path.join(PLUGIN_ROOT, "package.json"), "utf8")).version;
+// Single source of truth: plugin.json's version (bumped in lockstep with package.json
+// by scripts/publish-to-registry.mjs). Read the plugin manifest, NOT package.json:
+// package.json is deliberately excluded from what publishes to the registry, so the
+// installed plugin has no package.json — reading it there crashed every CLI invocation.
+// plugin.json always ships (it is the manifest) and carries the same version.
+const VERSION = JSON.parse(
+  readFileSync(path.join(PLUGIN_ROOT, ".claude-plugin", "plugin.json"), "utf8"),
+).version;
 
 /**
  * @param {string[]} argv

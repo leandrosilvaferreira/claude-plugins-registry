@@ -55,12 +55,12 @@ runs via `uvx`; its dependency was already satisfied when it was first set
 up), Step 4 (vault skeleton — already exists), and Step 4b (`.mcp.json`
 write — already exists, kept as-is). Go straight to Step 4c, then both Step 5
 apply calls, then Step 6 (substituting the `VAULT_DIR` value just read), then
-Step 7.
+Step 7 (isolated SDK install — idempotent, safe to re-run), then Step 8.
 
 If this is a **fresh install** (no existing `mcpServers.obsidian` key),
 proceed through every step in order: Step 2 → Step 3 (asks for and sets
 `VAULT_DIR`) → Step 4 → Step 4b → Step 4c → both Step 5 apply calls →
-Step 6 → Step 7.
+Step 6 → Step 7 → Step 8.
 
 ## Step 2: Check the `uv` dependency
 
@@ -115,8 +115,8 @@ Use AskUserQuestion:
   created at the project root and committed to git."
 - Header: "Vault folder"
 - Options:
-  - "`.vault-obsidian` (recommended)" — matches the name used by this
-    harness's own reference setup.
+  - "`vault-obsidian` (recommended)" — a plain, visible folder committed with
+    the project as its long-term memory (no leading dot, so it isn't hidden).
   - Let the user type a custom name via the free-text "Other" option.
 
 Validate whatever name is chosen against `^[A-Za-z0-9._-]{1,64}$` and reject
@@ -247,16 +247,16 @@ node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "$TARGET" --yes --tools=obsid
 
 **Do not add `--force` to this call — two distinct reasons, one per id:**
 
-- `obsidian:claude-md` targets the shared, hand-edited `.claude/CLAUDE.md` and
-  carries `mergeStrategy: "merge-section"` (`mergeMarkdownSection` in
-  `lib/apply.mjs`): it already replaces the `# obsidian-vault` block in place
-  when present — a genuine refresh, no `--force` needed — and appends it
-  otherwise, touching no sibling section. `--force` bypasses merge strategies
-  entirely and falls straight through to a raw overwrite of the whole target
-  file; on this id that would replace the target project's entire `CLAUDE.md`
-  with nothing but the obsidian section, destroying every other section it
-  has (graphify, other pillars, hand-written notes, etc.). Never force this
-  id.
+- `obsidian:claude-md` targets the root, always-loaded `CLAUDE.md` (the same
+  file the main harness writes) and carries `mergeStrategy: "merge-section"`
+  (`mergeMarkdownSection` in `lib/apply.mjs`): it already replaces the
+  `# obsidian-vault` block in place when present — a genuine refresh, no
+  `--force` needed — and appends it otherwise, touching no sibling section.
+  `--force` bypasses merge strategies entirely and falls straight through to a
+  raw overwrite of the whole target file; on this id that would replace the
+  target project's entire `CLAUDE.md` with nothing but the obsidian section,
+  destroying every other section it has (graphify, other pillars, hand-written
+  notes, etc.). Never force this id.
 - `settings` almost always already exists in a harnessed target project —
   without `--force`, a differing `settings` artifact is merged via
   `mergeStrategy: "merge-hooks"` (`mergeSettingsHooks` in `lib/apply.mjs`),
@@ -304,7 +304,7 @@ this ever looks stale):
 - `$TARGET/.claude/rules/obsidian.md`: replace every occurrence with the
   chosen name (5 occurrences; plain string replace — it's prose, not a
   regex).
-- `$TARGET/.claude/CLAUDE.md`: 1 occurrence, inside the merged obsidian-vault
+- `$TARGET/CLAUDE.md`: 1 occurrence, inside the merged obsidian-vault
   section (`` this project's long-term memory at `__OBSIDIAN_VAULT_DIR__/` ``)
   — plain string replace.
 - `$TARGET/.claude/scripts/compile-runner.mjs`: 1 occurrence
@@ -319,7 +319,7 @@ this ever looks stale):
 
 Verify with:
 ```bash
-grep -rl "__OBSIDIAN_VAULT_DIR__" "$TARGET/.claude/hooks" "$TARGET/.claude/scripts" "$TARGET/.claude/rules/obsidian.md" "$TARGET/.claude/CLAUDE.md"
+grep -rl "__OBSIDIAN_VAULT_DIR__" "$TARGET/.claude/hooks" "$TARGET/.claude/scripts" "$TARGET/.claude/rules/obsidian.md" "$TARGET/CLAUDE.md"
 ```
 Expected: no output (every occurrence substituted). If anything is still
 listed, fix it before proceeding — a leftover placeholder in a hook or
@@ -327,15 +327,58 @@ script would make it read from or write to a directory that will never
 exist; a leftover in the rule or CLAUDE.md is at minimum a confusing literal
 string shown to every future session.
 
-## Step 7: Summary
+## Step 7: Install the vault writers' SDK (isolated — optional but recommended)
+
+The two automatic writers — `session-log.mjs` (SessionEnd) and `compile.mjs`
+(SessionStart) — spawn detached runners under `.claude/scripts/` that
+`import { query } from "@anthropic-ai/claude-agent-sdk"`. Node resolves that
+bare import by walking up from the runner's **own** directory, so the SDK must
+live in a `node_modules` at or above `.claude/scripts/`. Install it **isolated
+there**, never at the project root — this keeps a non-Node project (Go, Python,
+Rust, …) clean: no root `package.json`, no root `node_modules`, nothing
+committed. (`.claude/scripts/node_modules` is the runners' own directory, so
+the existing bare import resolves with no code change; a sibling like
+`.claude/hooks/node_modules` would NOT be found — Node only searches the
+importing file's own dir and its ancestors, never a sibling.)
+
+This step is optional. Without the SDK, only those two writers no-op; the vault
+itself and every `mcp__obsidian__*` tool (manual search/read/write) work
+regardless — so never block or fail the command on it.
+
+Run it automatically only when `npm` is available (Node is already required for
+every hook, and npm ships with standard Node installs):
+
+```bash
+if command -v npm >/dev/null 2>&1; then
+  npm install --prefix "$TARGET/.claude/scripts" --no-audit --no-fund @anthropic-ai/claude-agent-sdk
+fi
+```
+
+That writes `$TARGET/.claude/scripts/node_modules/` plus a
+`.claude/scripts/package.json` and `.claude/scripts/package-lock.json` — all
+scoped to `.claude/scripts/` and all meant to stay uncommitted. Add them to the
+target's `.gitignore` idempotently (append the block only if its header is not
+already there):
+
+```bash
+if ! grep -qF "# aia-harness — obsidian vault writers (isolated npm deps)" "$TARGET/.gitignore" 2>/dev/null; then
+  printf '\n# aia-harness — obsidian vault writers (isolated npm deps)\n.claude/scripts/node_modules/\n.claude/scripts/package.json\n.claude/scripts/package-lock.json\n' >> "$TARGET/.gitignore"
+fi
+```
+
+If `npm` is not available, do not fail — note in the summary that the two
+automatic writers stay off until the user runs the install line once.
+
+## Step 8: Summary
 
 Tell the user:
 - The vault was created at `<VAULT_DIR>/` with the 5 PARA folders + templates, committed (not gitignored).
 - The `obsidian` MCP server was added to `.mcp.json`.
 - **Restart Claude Code now** — the MCP server only loads on a fresh session.
 - After restarting, `.claude/rules/obsidian.md` documents how to use the vault; the 6 hooks now keep it oriented and up to date automatically.
-- The automatic session-log/compile writers additionally require
-  `@anthropic-ai/claude-agent-sdk` to be resolvable from this project (e.g.
-  `npm install @anthropic-ai/claude-agent-sdk` if this is a Node project) —
-  without it, those two specific automated writers silently no-op, but the vault
-  itself and all `mcp__obsidian__*` tools (manual search/read/write) work regardless.
+- The automatic session-log/compile writers need `@anthropic-ai/claude-agent-sdk`.
+  Step 7 installs it **isolated** in `.claude/scripts/node_modules/` (gitignored;
+  no root `package.json`/`node_modules`, so a Go/Python/Rust project stays clean).
+  If `npm` was unavailable, those two writers stay off until you run once —
+  `npm install --prefix .claude/scripts @anthropic-ai/claude-agent-sdk` — but the
+  vault itself and all `mcp__obsidian__*` tools (manual search/read/write) work regardless.

@@ -83,7 +83,10 @@ const OBSIDIAN_ARTIFACTS = [
     id: "obsidian:claude-md",
     description: "CLAUDE.md section wiring the obsidian-vault rule trigger",
     copyFrom: path.join(TOOL_ROOT, "claude-md-section.md"),
-    dest: ".claude/CLAUDE.md",
+    // Root CLAUDE.md — the always-loaded project memory, same target the main
+    // harness writes (lib/plan/claude-md-artifacts.mjs). merge-section appends
+    // or refreshes only the obsidian-vault section, creating the file if absent.
+    dest: "CLAUDE.md",
     mergeStrategy: "merge-section",
   },
 ];
