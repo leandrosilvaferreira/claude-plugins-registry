@@ -327,9 +327,21 @@ script would make it read from or write to a directory that will never
 exist; a leftover in the rule or CLAUDE.md is at minimum a confusing literal
 string shown to every future session.
 
-## Step 7: Install the vault writers' SDK (isolated — optional but recommended)
+## Step 7: Gitignore local vault paths, then install the writers' SDK (optional)
 
-The two automatic writers — `session-log.mjs` (SessionEnd) and `compile.mjs`
+First, keep the vault's local-only paths out of git — the hooks' cross-session
+state/logs under `.claude/hooks/log/` (written by session-log/compile) and the
+writers' isolated SDK deps installed below. Append idempotently (only if the
+header is not already there):
+
+```bash
+if ! grep -qF "# aia-harness — obsidian vault: local, not committed" "$TARGET/.gitignore" 2>/dev/null; then
+  printf '\n# aia-harness — obsidian vault: local, not committed\n.claude/hooks/log/\n.claude/scripts/node_modules/\n.claude/scripts/package.json\n.claude/scripts/package-lock.json\n' >> "$TARGET/.gitignore"
+fi
+```
+
+Then install the SDK (optional but recommended). The two automatic writers —
+`session-log.mjs` (SessionEnd) and `compile.mjs`
 (SessionStart) — spawn detached runners under `.claude/scripts/` that
 `import { query } from "@anthropic-ai/claude-agent-sdk"`. Node resolves that
 bare import by walking up from the runner's **own** directory, so the SDK must
@@ -356,15 +368,7 @@ fi
 
 That writes `$TARGET/.claude/scripts/node_modules/` plus a
 `.claude/scripts/package.json` and `.claude/scripts/package-lock.json` — all
-scoped to `.claude/scripts/` and all meant to stay uncommitted. Add them to the
-target's `.gitignore` idempotently (append the block only if its header is not
-already there):
-
-```bash
-if ! grep -qF "# aia-harness — obsidian vault writers (isolated npm deps)" "$TARGET/.gitignore" 2>/dev/null; then
-  printf '\n# aia-harness — obsidian vault writers (isolated npm deps)\n.claude/scripts/node_modules/\n.claude/scripts/package.json\n.claude/scripts/package-lock.json\n' >> "$TARGET/.gitignore"
-fi
-```
+already covered by the `.gitignore` block above.
 
 If `npm` is not available, do not fail — note in the summary that the two
 automatic writers stay off until the user runs the install line once.

@@ -5,15 +5,3 @@ type: daily
 tags: []  # keywords for search and classification
 date:  # YYYY-MM-DD or most recent update
 ---
-
-## What I did
-
-## Decisions
-
-## Problems
-
-## Ideas
-
-## Related
-
-<!-- wikilinks to EXISTING related notes, one per line; leave empty if none -->
