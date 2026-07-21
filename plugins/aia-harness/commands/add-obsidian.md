@@ -329,14 +329,17 @@ string shown to every future session.
 
 ## Step 7: Gitignore local vault paths, then install the writers' SDK (optional)
 
-First, keep the vault's local-only paths out of git — the hooks' cross-session
-state/logs under `.claude/hooks/log/` (written by session-log/compile) and the
-writers' isolated SDK deps installed below. Append idempotently (only if the
-header is not already there):
+First, keep the vault's local-only paths out of git — the Obsidian desktop
+app's own per-machine config folder (`$VAULT_DIR/.obsidian/`, created only if
+the user actually opens the vault in the real Obsidian app: workspace
+layout, plugin cache, local settings — the MCP server itself never creates
+it), the hooks' cross-session state/logs under `.claude/hooks/log/` (written
+by session-log/compile), and the writers' isolated SDK deps installed below.
+Append idempotently (only if the header is not already there):
 
 ```bash
 if ! grep -qF "# aia-harness — obsidian vault: local, not committed" "$TARGET/.gitignore" 2>/dev/null; then
-  printf '\n# aia-harness — obsidian vault: local, not committed\n.claude/hooks/log/\n.claude/scripts/node_modules/\n.claude/scripts/package.json\n.claude/scripts/package-lock.json\n' >> "$TARGET/.gitignore"
+  printf '\n# aia-harness — obsidian vault: local, not committed\n%s/.obsidian/\n.claude/hooks/log/\n.claude/scripts/node_modules/\n.claude/scripts/package.json\n.claude/scripts/package-lock.json\n' "$VAULT_DIR" >> "$TARGET/.gitignore"
 fi
 ```
 
@@ -376,7 +379,7 @@ automatic writers stay off until the user runs the install line once.
 ## Step 8: Summary
 
 Tell the user:
-- The vault was created at `<VAULT_DIR>/` with the 5 PARA folders + templates, committed (not gitignored).
+- The vault was created at `<VAULT_DIR>/` with the 5 PARA folders + templates, committed (not gitignored) — except `<VAULT_DIR>/.obsidian/`, the Obsidian desktop app's own local config folder, which is gitignored.
 - The `obsidian` MCP server was added to `.mcp.json`.
 - **Restart Claude Code now** — the MCP server only loads on a fresh session.
 - After restarting, `.claude/rules/obsidian.md` documents how to use the vault; the 6 hooks now keep it oriented and up to date automatically.
