@@ -136,15 +136,15 @@ export function agentsWorkflowBlock(agents) {
 ### Superpowers → Project Specialists (mandatory bridging)
 ${AGENT_ROUTING_MARKER}
 
-Superpowers skills (\`dispatching-parallel-agents\`, \`subagent-driven-development\`,
-\`executing-plans\`, \`systematic-debugging\`) show \`general-purpose\` as the default
+Superpowers skills (\`superpowers:dispatching-parallel-agents\`, \`superpowers:subagent-driven-development\`,
+\`superpowers:executing-plans\`, \`superpowers:systematic-debugging\`) show \`general-purpose\` as the default
 \`subagent_type\` in their examples. **Never dispatch \`general-purpose\` (or a generic
 implementer) when a specialist below covers the domain** — pass the specialist's exact
 name as \`subagent_type\` instead.
 
 > Basis: superpowers itself states "User's explicit instructions (CLAUDE.md) — highest
 > priority." This section applies that priority over the agent types its examples suggest.
-> The normal flow is unchanged (brainstorming → writing-plans → subagent-driven-development);
+> The normal flow is unchanged (\`superpowers:brainstorming\` → \`superpowers:writing-plans\` → \`superpowers:subagent-driven-development\`);
 > only the dispatched \`subagent_type\` changes.
 
 | When superpowers would use \`general-purpose\` for… | Dispatch instead |

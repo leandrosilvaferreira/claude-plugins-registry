@@ -31,12 +31,6 @@ export const MARKETPLACES = [
     description: "Official Anthropic-curated marketplace.",
   },
   {
-    repo: "obra/superpowers",
-    name: "superpowers-dev",
-    description:
-      "Superpowers — core skills library (TDD, debugging, collaboration) by Jesse Vincent.",
-  },
-  {
     repo: "nextlevelbuilder/ui-ux-pro-max-skill",
     name: "ui-ux-pro-max-skill",
     description:
@@ -45,7 +39,6 @@ export const MARKETPLACES = [
 ];
 
 const OFFICIAL = "claude-plugins-official";
-const SUPERPOWERS = "superpowers-dev";
 const UIUX = "ui-ux-pro-max-skill";
 
 /** @param {ProjectProfile} p @param {string[]} langs */
@@ -128,10 +121,10 @@ export const PLUGIN_SUGGESTIONS = [
   },
   {
     name: "superpowers",
-    marketplace: SUPERPOWERS,
+    marketplace: OFFICIAL,
     purpose: "workflow",
     description:
-      "Core skills library: TDD, systematic-debugging, brainstorming, planning, worktrees, collaboration patterns (Jesse Vincent / obra).",
+      "Core skills library: TDD, systematic-debugging, brainstorming, planning, worktrees, collaboration patterns.",
   },
   {
     name: "ui-ux-pro-max",
