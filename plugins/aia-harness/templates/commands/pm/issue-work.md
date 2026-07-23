@@ -40,5 +40,10 @@ options "Approve — start implementation" / "Revise the plan"). Do not start
 implementation until approved.
 
 **When the user approves the plan**, use the `superpowers:writing-plans`
-skill to record the plan, then begin implementation following the order
-defined in the approved plan.
+skill to record the plan, then augment each task with `Files:` (paths/globs
+touched) and `Depends-on:` (task numbers, or `none`) tags. Execute the plan
+via the `superpowers:subagent-driven-development` skill using the parallel
+wave protocol in `.claude/rules/08-parallel-subagent-driven-development.md`:
+batch independent tasks — disjoint `Files`, no mutual dependency — into waves
+dispatched in parallel, and fall back to serial execution for any task left
+untagged or uncertain (no regression).

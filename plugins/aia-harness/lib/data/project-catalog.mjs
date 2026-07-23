@@ -41,6 +41,7 @@ export const PROJECT_COMMON = {
     "05-testing.md",
     "06-security.md",
     "07-subagent-dispatch.md",
+    "08-parallel-subagent-driven-development.md",
   ]),
 };
 

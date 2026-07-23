@@ -17,6 +17,14 @@ export const AGENT_ROUTING_MARKER =
   "<!-- aia-harness:agent-routing — superpowers→specialist bridge; do not remove -->";
 
 /**
+ * Marker comment placed in the parallel-wave-execution subsection so `/doctor` and
+ * `/scan` can detect a root CLAUDE.md that predates the override (whole-file drift
+ * is unreliable — enrichment always makes CLAUDE.md differ).
+ */
+export const PARALLEL_SDD_MARKER =
+  "<!-- aia-harness:parallel-sdd — parallel wave execution override; do not remove -->";
+
+/**
  * Coarse routing role for an agent name, used to build the superpowers bridge.
  * Returns null for agents that don't map to a generic superpowers role.
  * @param {string} name
@@ -150,6 +158,19 @@ name as \`subagent_type\` instead.
 | When superpowers would use \`general-purpose\` for… | Dispatch instead |
 |---|---|
 ${bridgeRows}
+
+### Parallel wave execution (subagent-driven-development)
+${PARALLEL_SDD_MARKER}
+
+Override \`superpowers:subagent-driven-development\`'s serial one-implementer-at-a-time default with
+parallel waves of independent tasks. Its "never dispatch implementers in parallel" red flag is
+superseded here because its two premises are removed: disjoint file ownership per wave, and
+controller-serialized commits instead of implementer self-commits. During planning, tag each task
+\`Files:\` / \`Depends-on:\`; batch tasks with disjoint \`Files\` and no mutual dependency into one wave,
+and dispatch their implementers in a single message using the specialist types from the table above.
+Keep the skill's implementer/reviewer prompt contracts intact — the only change is implementers do
+NOT self-commit. Untagged or uncertain tasks run serial (no regression). Full protocol:
+\`.claude/rules/08-parallel-subagent-driven-development.md\`.
 `
     : "";
 

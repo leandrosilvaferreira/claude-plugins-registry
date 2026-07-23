@@ -131,7 +131,7 @@ by-category force-overwrite.
     (`required: true`: behavioral, stack, canonical-commands, architecture-map,
     conventions, engineering-rules, memory-imports) and conditional sections
     that *do* apply to this project (`required: false`: skills, workflow-agents,
-    agent-routing — e.g. agents are installed but the `## Workflow & Agents` /
+    agent-routing, parallel-sdd — e.g. agents are installed but the `## Workflow & Agents` /
     superpowers-bridge section is gone). Frame the required ones as structural
     gaps and the conditional ones as "applies here but missing" — either way
     they're fixed the same way. Offer to restore them **once, as a group** (not

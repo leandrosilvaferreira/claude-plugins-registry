@@ -8,7 +8,7 @@
  */
 
 import { BEHAVIORAL_MARKER, FIXED_RULES_MARKER } from "./claude-md.mjs";
-import { AGENT_ROUTING_MARKER } from "./claude-md-agents.mjs";
+import { AGENT_ROUTING_MARKER, PARALLEL_SDD_MARKER } from "./claude-md-agents.mjs";
 import { GRAPHIFY_ROOT_MARKER } from "./misc.mjs";
 
 /**
@@ -90,6 +90,15 @@ export const ROOT_CLAUDE_MD_SECTIONS = [
     label: "Superpowers → Project Specialists (mandatory bridging)",
     heading: "### Superpowers → Project Specialists (mandatory bridging)",
     marker: AGENT_ROUTING_MARKER,
+    required: false,
+    source: "render",
+    fix: "force-root",
+  },
+  {
+    id: "parallel-sdd",
+    label: "Parallel wave execution (subagent-driven-development)",
+    heading: "### Parallel wave execution (subagent-driven-development)",
+    marker: PARALLEL_SDD_MARKER,
     required: false,
     source: "render",
     fix: "force-root",
