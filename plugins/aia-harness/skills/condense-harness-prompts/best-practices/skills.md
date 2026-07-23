@@ -44,12 +44,14 @@ The body loads only when the skill is invoked (not at startup) — but once load
 **Condensation target:** body under 500 lines for optimal performance.
 
 **Compress aggressively:**
+
 - Introductory/contextual prose Claude already knows
 - Obvious explanations of well-known concepts
 - Repetition across sections
 - Hedging and fillers
 
 **Mandatory to preserve:**
+
 - Every numbered workflow step
 - Code blocks (byte for byte)
 - Bash commands with exact flags

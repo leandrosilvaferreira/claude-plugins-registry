@@ -17,6 +17,8 @@ import {
   resolveDepsFromProfile,
   detectInstalledTools,
 } from "../lib/detect/system-deps.mjs";
+import { auditRootClaudeMdSections } from "../lib/generate/root-sections.mjs";
+import { exists, readText, readJson } from "../lib/util/fs.mjs";
 
 const PLUGIN_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 // Single source of truth: plugin.json's version (bumped in lockstep with package.json
@@ -184,9 +186,26 @@ function main() {
       strict,
       largeFiles,
     });
-    process.stdout.write(
-      (flags.has("json") ? JSON.stringify(plan, null, 2) : renderPlanSummary(plan)) + "\n",
-    );
+    if (flags.has("json")) {
+      const root = profile.root;
+      const freshContent = plan.artifacts.find((a) => a.id === "claude-md-root")?.content ?? "";
+      const existingContent = readText(path.join(root, "CLAUDE.md")) ?? "";
+      const installed = {
+        graphify: Boolean(
+          exists(path.join(root, ".claude", "skills", "graphify")) ||
+          exists(path.join(root, "graphify-out")) ||
+          exists(path.join(root, ".claude", "hooks", "graphify-orient.mjs")),
+        ),
+        obsidian: Boolean(
+          exists(path.join(root, ".claude", "rules", "obsidian.md")) ||
+          readJson(path.join(root, ".mcp.json"))?.mcpServers?.obsidian != null,
+        ),
+      };
+      const rootClaudeMd = auditRootClaudeMdSections({ freshContent, existingContent, installed });
+      process.stdout.write(JSON.stringify({ ...plan, rootClaudeMd }, null, 2) + "\n");
+    } else {
+      process.stdout.write(renderPlanSummary(plan) + "\n");
+    }
     return 0;
   }
 

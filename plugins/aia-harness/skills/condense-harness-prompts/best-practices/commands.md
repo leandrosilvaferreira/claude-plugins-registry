@@ -38,6 +38,7 @@ description: Create a git commit with an appropriate message based on staged cha
 The body is the full prompt sent to Claude when `/name` is invoked. It is a task instruction.
 
 **Mandatory to preserve:**
+
 - Bash blocks with exact commands and flags (`"${CLAUDE_PLUGIN_ROOT}/bin/..."`  etc.)
 - Context variables: `$1`, `$ARGUMENTS`, `${CLAUDE_PROJECT_DIR}`, `${CLAUDE_PLUGIN_ROOT}`
 - Dynamic-context injection (bang immediately followed by a backtick-delimited command, e.g. running `git status`) — injects command output into the prompt. Never render the literal pattern in any doc, including inside code fences — the loader executes it on load regardless of nesting.
@@ -50,6 +51,7 @@ The body is the full prompt sent to Claude when `/name` is invoked. It is a task
 - Absolute paths and glob patterns
 
 **Compress aggressively:**
+
 - Introductory/contextualizing prose ("This command runs...")
 - Obvious explanations of trivial steps
 - Repetition across sections
@@ -79,6 +81,7 @@ Target: `$1` if provided, else `$CLAUDE_PROJECT_DIR`.
 ```
 
 [what to do with the output]
+
 ```
 
 ## Dynamic context injection

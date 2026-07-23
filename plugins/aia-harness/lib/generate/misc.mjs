@@ -150,6 +150,46 @@ When the user types \`/graphify\`, use the installed graphify skill or instructi
 `;
 }
 
+/**
+ * Sentinel comment marking the root-CLAUDE.md graphify section, mirroring
+ * FIXED_RULES_MARKER/BEHAVIORAL_MARKER (claude-md.mjs). Lets
+ * auditRootClaudeMdSections() (generate/root-sections.mjs) detect the section
+ * in a target project's root CLAUDE.md even if the surrounding prose changed.
+ */
+export const GRAPHIFY_ROOT_MARKER =
+  "<!-- aia-harness:graphify-root — knowledge-graph usage; merged section, do not remove -->";
+
+/**
+ * Root `CLAUDE.md` section documenting the graphify knowledge graph and how to
+ * query it. Applied via `mergeStrategy: "merge-section"` so re-applying keeps it
+ * current without clobbering sibling sections. Distinct from
+ * renderGraphifyClaudeMdSection() (the short `/graphify` skill-trigger pointer in
+ * the nested `.claude/CLAUDE.md`): this is the always-loaded, richer usage guide
+ * in the project's primary memory file — a `## ` section merged into the same
+ * root `CLAUDE.md` the base harness generates. Guarded by GRAPHIFY_ROOT_MARKER,
+ * placed right under the heading. Authored as a joined line array so
+ * the many inline-code backticks and quotes stay literal (no template escaping).
+ * @returns {string}
+ */
+export function renderGraphifyRootClaudeMdSection() {
+  return (
+    [
+      "## graphify",
+      GRAPHIFY_ROOT_MARKER,
+      "",
+      "This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.",
+      "",
+      "Rules:",
+      "",
+      '- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.',
+      "- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.",
+      "- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.",
+      "- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).",
+      '- Investigating code (file search, implementations, call sites, "where is X"): alongside graphify, dispatch specialist subagents (`model: haiku`) in parallel — never one at a time, never generic-only. Cuts investigation time.',
+    ].join("\n") + "\n"
+  );
+}
+
 const GRAPHIFY_MEDIA_BLOCK = `# graphify extraction filters
 # Skip binary/media files from semantic extraction
 # (AST still processes code files normally)

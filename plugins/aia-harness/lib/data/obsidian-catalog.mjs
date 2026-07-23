@@ -89,6 +89,25 @@ const OBSIDIAN_ARTIFACTS = [
     dest: "CLAUDE.md",
     mergeStrategy: "merge-section",
   },
+  {
+    id: "obsidian:memory-instructions",
+    description:
+      "Persistent-memory Sanitation section: migrate stale entries to the vault instead of a local archive",
+    copyFrom: path.join(TOOL_ROOT, "memory-instructions-section.md"),
+    // Same target the base harness writes (lib/plan/claude-md-artifacts.mjs,
+    // id claude-md:memory-instructions) — a ## subsection of that file, not
+    // the whole thing. merge-section (now level-agnostic, lib/apply.mjs)
+    // replaces just the "## Sanitation" block by heading match, leaving
+    // "When to save" / "How to save" / "Reading memories" — and any
+    // project-specific edits already there — untouched. Unlike
+    // obsidian:claude-md above, this one is NOT safe to apply against a
+    // target that doesn't exist yet: a lone Sanitation section with no
+    // surrounding document is broken, not merely minimal. Only
+    // /aia-harness:add-obsidian's own flow applies this id, gated on the
+    // destination file already existing.
+    dest: ".claude/memory/INSTRUCTIONS.md",
+    mergeStrategy: "merge-section",
+  },
 ];
 
 /**

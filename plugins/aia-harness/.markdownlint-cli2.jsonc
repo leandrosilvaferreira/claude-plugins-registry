@@ -1,0 +1,39 @@
+{
+  // Autofix is driven by the CLI flag (`lint:fix` passes --fix), NOT set here:
+  // keeping `fix` off means `npm run lint` / CI *reports* bad markdown and fails,
+  // instead of silently fixing it in the runner and passing over a dirty repo.
+  "config": {
+    "default": true,
+    "MD013": false,
+    "MD033": false,
+    "MD024": false,
+    "MD025": false,
+    "MD040": false,
+    "MD041": false,
+    // Bold-as-step-label (`**Step B1**: ...`) is the intended style across skills,
+    // commands and specs here — it is a label, not a suppressed heading. Disabled.
+    "MD036": false,
+    // Ordered-list numbering is authored intentionally (steps that start at 4,
+    // sub-steps like `3a`, sequences that must not be reshuffled). MD029's autofix
+    // silently renumbers lists (e.g. `4.` → `1.`) — never let it rewrite ordering.
+    "MD029": false,
+    // Tables: basic formatting is enough (structure is covered by MD055/MD056).
+    // Exact column-width alignment burns agent time/tokens for no gain — disabled.
+    "MD060": false
+  },
+  "ignores": [
+    "node_modules/**",
+    ".git/**",
+    "templates/**",
+    ".superpowers/**",
+    "docs/superpowers/**",
+    ".vault-obsidian/**",
+    ".claude/skills/**",
+    ".claude/worktrees/**",
+    "graphify-out/**",
+    "tests/fixtures/**",
+    "dist/**",
+    "build/**",
+    "coverage/**"
+  ]
+}

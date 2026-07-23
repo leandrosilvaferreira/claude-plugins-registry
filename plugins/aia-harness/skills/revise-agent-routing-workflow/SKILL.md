@@ -85,18 +85,22 @@ For each agent where `ok` is `false`:
    newline), 40-600 characters.
 3. Show a diff old vs. new, scoped to whichever shape Step 1 found:
    - Flat:
+
      ```diff
      - description: <old value>
      + description: <new value>
      ```
+
    - Folded — the "old" side is the **entire** `description: >` block, from that heading
      line through its last indented continuation line, not just its first line:
+
      ```diff
      - description: >
      -   <old value, wrapped across its original continuation lines>
      + description: >
      +   <new value, re-wrapped>
      ```
+
      (If the new value happens to fit under ~72 chars, the "new" side can collapse to a
      flat `description: <new value>` line instead.)
 4. Ask for confirmation (`AskUserQuestion`, one per agent, or batched if there are many).

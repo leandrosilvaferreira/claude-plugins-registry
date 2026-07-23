@@ -80,6 +80,7 @@ The command detects the artifact type from the path (`agent` / `skill` / `comman
 | `rule` | — | — (warnings only: missing `paths`) |
 
 Report to user:
+
 - How many files were fixed and which errors were found
 - Non-blocking warnings (e.g. agent without `model`, agent without `tools`)
 - Files whose type was not recognized (skipped)

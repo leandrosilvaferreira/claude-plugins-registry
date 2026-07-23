@@ -48,11 +48,13 @@ description: Reviews code for quality, security, maintainability. Use when revie
 The agent body is its system prompt — it is the ONLY context the subagent receives (it does not inherit Claude Code's system prompt).
 
 **Compress aggressively:**
+
 - Introductory/explanatory prose
 - Repetition of rules already stated
 - Hedging, pleasantries, fillers
 
 **Mandatory to preserve:**
+
 - Every rule, restriction, or specific behavior
 - Concrete input/output examples
 - Tool names, bash commands, specific paths

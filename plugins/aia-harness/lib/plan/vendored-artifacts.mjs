@@ -6,7 +6,11 @@
 import path from "node:path";
 import { exists, listDirs, readText } from "../util/fs.mjs";
 import { getTool } from "../data/asset-catalog.mjs";
-import { renderGraphifyignore, renderGraphifyClaudeMdSection } from "../generate/misc.mjs";
+import {
+  renderGraphifyignore,
+  renderGraphifyClaudeMdSection,
+  renderGraphifyRootClaudeMdSection,
+} from "../generate/misc.mjs";
 
 /** @typedef {import('../profile.mjs').ProjectProfile} ProjectProfile */
 /** @typedef {(a: any) => void} AddFn */
@@ -223,6 +227,26 @@ export function addToolArtifacts(add, toolsRoot, toolIds, profile) {
         defaultSelected: true,
         mergeStrategy: "merge-section",
         content: claudeMdSection,
+      });
+      // Root CLAUDE.md `## graphify` section: the always-loaded knowledge-graph
+      // usage guide (query/path/explain/update + subagent fan-out). Merged in
+      // place (mergeStrategy "merge-section") into the same root CLAUDE.md the
+      // base harness generates, so it lands whether the file is missing or
+      // already has unrelated hand-written sections. NOT force-patchable — a raw
+      // overwrite would replace the whole root file with just this section
+      // (patch.md/doctor.md re-apply it via a non-force merge instead).
+      const graphifyRootSection = renderGraphifyRootClaudeMdSection();
+      add({
+        id: "claude-md:graphify-root",
+        relPath: "CLAUDE.md",
+        title: "Root CLAUDE.md — graphify knowledge-graph usage",
+        category: "claude-md",
+        rationale:
+          "Documents the graphify knowledge graph + query/update workflow in the root CLAUDE.md (auto-loaded every session).",
+        contextCost: Math.ceil(graphifyRootSection.length / 4),
+        defaultSelected: true,
+        mergeStrategy: "merge-section",
+        content: graphifyRootSection,
       });
       // Cross-platform PreToolUse orientation hook (node, no python3/sh). Wired in
       // settings.json by buildPlan when graphify is selected; copied here.

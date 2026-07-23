@@ -81,49 +81,94 @@ for the user's platform and stop — do not execute the following steps.
    category.
 
 3a. **Outdated artifacts — installed but differing from the current plugin version.**
-    Step 2 finds *missing* artifacts; this finds *stale* ones (present but out of date,
-    e.g. agents whose routing descriptions predate the best-practice update). Run a
-    dry-run apply and read the structured drift list (omitting `--yes` keeps it a dry run — no files are written):
 
-    ```bash
-    node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" --json
-    ```
+Step 2 finds *missing* artifacts; this finds *stale* ones (present but out of date,
+e.g. agents whose routing descriptions predate the best-practice update). Run a
+dry-run apply and read the structured drift list (omitting `--yes` keeps it a dry run — no files are written):
 
-    Parse `differs[]` (each `{ id, relPath, category }`). Group by `category`. For each
-    category with entries, report the count + sample `relPath`s. Of particular note:
-    - **`agents`** — installed agent files whose descriptions differ. Re-applying gives
-      the best-practice, condition-shaped "Use proactively" routing descriptions that the
-      native router and the CLAUDE.md table depend on.
+```bash
+node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" --json
+```
 
-    **IMPORTANT — exclude `claude-md` from the multi-select offered here.** The root
-    `CLAUDE.md` always appears in `differs[]` as category `claude-md` because init
-    enrichment edits `## Conventions` and `## Architecture map` — whole-file force-overwrite
-    would silently destroy that enrichment. The root file's structural integrity
-    (superpowers bridge, behavioral guidelines, fixed rules) is audited separately in step 3
-    via the `aia-harness:agent-routing`, `aia-harness:behavioral`, and `aia-harness:fixed`
-    markers — not by brute force-overwrite here.
+Parse `differs[]` (each `{ id, relPath, category }`). Group by `category`. For each
+category with entries, report the count + sample `relPath`s. Of particular note:
 
-    Use `AskUserQuestion` (multi-select, grouped by category, **omitting `claude-md`**) to
-    let the user pick which categories to refresh. For each chosen category, collect its
-    `differs[].id`s and force-overwrite ONLY those:
+- **`agents`** — installed agent files whose descriptions differ. Re-applying gives
+  the best-practice, condition-shaped "Use proactively" routing descriptions that the
+  native router and the CLAUDE.md table depend on.
+
+**IMPORTANT — exclude `claude-md` from the multi-select offered here.** The root
+`CLAUDE.md` always appears in `differs[]` as category `claude-md` because init
+enrichment edits `## Conventions` and `## Architecture map` — whole-file force-overwrite
+would silently destroy that enrichment. The root file's structural integrity (missing
+sections — superpowers bridge, behavioral guidelines, and the rest of the manifest —
+plus fixed-rules content) is audited separately in step 3 via the **Root CLAUDE.md
+section completeness** and **Fixed rules intact** checks — not by brute force-overwrite
+here.
+
+Use `AskUserQuestion` (multi-select, grouped by category, **omitting `claude-md`**) to
+let the user pick which categories to refresh. For each chosen category, collect its
+`differs[].id`s and force-overwrite ONLY those:
+
+```bash
+node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
+  --yes --force --only=<comma-joined ids>
+```
+
+`--force` is required (these files exist and differ). Files outside the selected ids
+are untouched. If the user prefers, point them at `/aia-harness:patch` for the same
+by-category force-overwrite.
+
+3. Audit each existing artifact and grade it:
+
+- **Root CLAUDE.md section completeness:** read the `rootClaudeMd` object from the
+  `plan --json` output already produced in step 2. It lists every section that
+  *should* be in this project's root `CLAUDE.md` but is absent (`missing`), plus
+  `present` / `notApplicable` (report nothing for those). For each `missing` entry,
+  act by its `fix`:
+  - **`fix: "force-root"`** — a section the base generator renders into the root
+    file is gone. This covers both the always-required structural sections
+    (`required: true`: behavioral, stack, canonical-commands, architecture-map,
+    conventions, engineering-rules, memory-imports) and conditional sections
+    that *do* apply to this project (`required: false`: skills, workflow-agents,
+    agent-routing — e.g. agents are installed but the `## Workflow & Agents` /
+    superpowers-bridge section is gone). Frame the required ones as structural
+    gaps and the conditional ones as "applies here but missing" — either way
+    they're fixed the same way. Offer to restore them **once, as a group** (not
+    one prompt per section) by force-regenerating the root file:
 
     ```bash
     node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
-      --yes --force --only=<comma-joined ids>
+      --yes --force --only=claude-md-root
     ```
 
-    `--force` is required (these files exist and differ). Files outside the selected ids
-    are untouched. If the user prefers, point them at `/aia-harness:patch` for the same
-    by-category force-overwrite.
+    Warn (as everywhere `--force` touches the root) that this overwrites the root
+    `CLAUDE.md`, so any enriched `## Conventions` / `## Architecture map` must be
+    re-enriched afterward (run `/aia-harness:init` step 5.5).
+  - **`fix: "merge:claude-md:graphify-root"`** (graphify installed but its
+    `## graphify` section is gone) — merge it back in place, **never `--force`**
+    (that would overwrite the whole root file with just this section):
 
-3. Audit each existing artifact and grade it:
-   - **Unit tests:** report `profile.testing`:
-     - If `configured` is `false`: flag the gap and recommend `/setup-testing` (suggested framework: `testing.recommended`).
-     - If `configured` is `true`: grep `CLAUDE.md` for `No unit tests yet`. If found, the note is stale — tests are already configured. Offer to replace it with the updated note (same format as `/setup-testing` step 7): `> **Tests:** \`{framework}\` — run \`{test-command}\`. Write unit tests for **every** new function or module added; never declare work complete without passing tests.` Apply with `Edit` after user approval.
-   - **CLAUDE.md files:** flag any over ~200 lines or full of generic boilerplate
+    ```bash
+    node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
+      --yes --only=claude-md:graphify-root
+    ```
+
+  - **`fix: "command:/aia-harness:add-obsidian"`** (obsidian pillar installed but
+    its `## obsidian-vault` section is gone) — tell the user to re-run
+    `/aia-harness:add-obsidian` (its artifacts aren't in the base plan, so there's
+    no `--only` id to apply here).
+
+  Apply any fix only after user approval (diff-then-approve / `AskUserQuestion`),
+  consistent with the rest of this audit. This section audits **presence** only;
+  baseline-rule *content* integrity is still covered by **Fixed rules intact** below.
+- **Unit tests:** report `profile.testing`:
+  - If `configured` is `false`: flag the gap and recommend `/setup-testing` (suggested framework: `testing.recommended`).
+  - If `configured` is `true`: grep `CLAUDE.md` for `No unit tests yet`. If found, the note is stale — tests are already configured. Offer to replace it with the updated note (same format as `/setup-testing` step 7): `> **Tests:** \`{framework}\` — run \`{test-command}\`. Write unit tests for **every** new function or module added; never declare work complete without passing tests.` Apply with `Edit` after user approval.
+- **CLAUDE.md files:** flag any over ~200 lines or full of generic boilerplate
      ("bloated memory gets ignored"). Critical rules should be near the top.
      Suggest moving domain detail into nested CLAUDE.md / `.claude/rules/`.
-   - **Un-enriched stubs:** grep every `CLAUDE.md` for leftover
+- **Un-enriched stubs:** grep every `CLAUDE.md` for leftover
      `<!-- AI-ENRICH:` markers and flag them — they mean enrichment was skipped.
      Also flag **nested domain `CLAUDE.md` files that are identical generic stubs**
      (same `## Responsibility` / `## Local conventions` boilerplate across domains);
@@ -131,42 +176,18 @@ for the user's platform and stop — do not execute the following steps.
      Compare only `## Responsibility` / `## Local conventions` — the
      `aia-harness:fixed` `## Rules` block is identical across domains **by design**,
      so do not treat it as stub duplication.
-   - **Fixed rules intact:** grep every `CLAUDE.md` for the `aia-harness:fixed`
+- **Fixed rules intact:** grep every `CLAUDE.md` for the `aia-harness:fixed`
      marker. The root file must keep its `## Engineering rules` section and each
-     domain file its `## Rules` section, both with the full baseline lines verbatim.
-     If a prior enrichment stripped or edited them (marker missing, or rules
+     domain file its `## Rules` section, both with the full baseline lines
+     verbatim — root **presence** (heading/marker entirely gone) is covered by
+     *Root CLAUDE.md section completeness* above. This bullet's job on the root
+     file is the verbatim-content check instead (a reworded or stripped line
+     under an otherwise intact heading isn't caught by presence alone); for
+     domain files it still covers both presence and content. If a prior
+     enrichment stripped or edited baseline lines (marker missing, or rules
      reworded/removed), flag it as a regression and offer to restore the exact
      baseline from the generator (`ROOT_FIXED_RULES` / `DOMAIN_FIXED_RULES`).
-   - **Behavioral guidelines intact:** grep the root `CLAUDE.md` for the
-     `aia-harness:behavioral` marker. This block (`## Behavioral guidelines`) is
-     non-negotiable and must survive enrichment. If missing (enrichment stripped it
-     or the project predates this block), flag it as a regression and offer to
-     restore it by force-regenerating the root file:
-
-     ```bash
-     node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
-       --yes --force --only=claude-md-root
-     ```
-
-     Warn the user that `--force` will overwrite the root `CLAUDE.md` — their
-     enriched `## Conventions` and `## Architecture map` sections will need to be
-     re-enriched (run the enrichment pass from `/aia-harness:init` step 5.5 after).
-   - **Superpowers agent-routing bridge (when agents are installed):** if the plan
-     includes any `agents` artifact, grep the root `CLAUDE.md` for the marker
-     `aia-harness:agent-routing`. If absent, the file predates the superpowers→specialist
-     bridge (the section that tells Claude to dispatch project specialists instead of
-     `general-purpose`). Offer to regenerate the root file:
-
-     ```bash
-     node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
-       --yes --force --only=claude-md-root
-     ```
-
-     Warn (as with the behavioral block) that `--force` overwrites the root `CLAUDE.md`,
-     so the enriched `## Conventions` / `## Architecture map` must be re-enriched after
-     (run the enrichment pass from `/aia-harness:init` step 5.5). If the marker is present,
-     the bridge is current — say nothing.
-   - **settings.json:** permissions should be least-privilege; deny reads of
+- **settings.json:** permissions should be least-privilege; deny reads of
      `.env`/secrets; `permissions.defaultMode:"bypassPermissions"` is expected,
      nested under `permissions` (the harness sets it intentionally so agentic
      loops don't stall on prompts — do **not** flag `bypassPermissions` itself
@@ -174,9 +195,9 @@ for the user's platform and stop — do not execute the following steps.
      (json.schemastore.org/claude-code-settings.json) has no top-level
      `defaultMode`, so that placement is a silently-inert generator bug, not a
      valid field; hooks wired correctly.
-   - **Hooks:** confirm guards use exit code 2 to block, formatters are
+- **Hooks:** confirm guards use exit code 2 to block, formatters are
      non-blocking, and JS hooks go through the node-resolver wrapper.
-   - **Large-file guard (mandatory):** confirm `large-file-warning.mjs` is present
+- **Large-file guard (mandatory):** confirm `large-file-warning.mjs` is present
      **and wired** in `settings.json` — under `Stop` (block mode: agent refactors
      files over 350 lines before finishing) or `PostToolUse` matcher
      `Edit|Write|MultiEdit` (advisory: suggest + confirm, never auto-block). If it
@@ -192,70 +213,74 @@ for the user's platform and stop — do not execute the following steps.
        --yes --force --only=settings,hook:large-file-warning.mjs --large-files=<mode>
      ```
 
-   - **.mcp.json:** only `${ENV}` placeholders, never literal secrets.
-   - **.gitignore:** must ignore `.claude/*.local.*`.
+- **.mcp.json:** only `${ENV}` placeholders, never literal secrets.
+- **.gitignore:** must ignore `.claude/*.local.*`.
 
-   - **docs/harness/strategies.md:** If the `strategies` artifact exists, verify it
+- **docs/harness/strategies.md:** If the `strategies` artifact exists, verify it
      was generated for the current detected stack (grep the first 10 lines for the
      project's primary language). If it looks like a placeholder or was generated for
      a different stack, flag it and offer to regenerate with:
+
      ```bash
      node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
        --yes --force --only=strategies
      ```
 
-   - **.lsp.json:** If the `lsp` artifact exists, confirm it is valid JSON and
+- **.lsp.json:** If the `lsp` artifact exists, confirm it is valid JSON and
      contains language server entries (`languageServerCommand` or similar keys).
      If malformed, flag it. If missing but the plan would generate it
      (`defaultSelected:false` for lsp), note it as optionally available.
 
-   - **.worktreeinclude:** If the `worktree` artifact exists, check it contains
+- **.worktreeinclude:** If the `worktree` artifact exists, check it contains
      `.claude/settings.json` (the key file to copy into worktrees). If missing from
      a git repo, note it as available via `apply --only=worktree`.
 
-   - **Install scripts:** If `scripts/install-plugins.mjs` exists, note it can be run
+- **Install scripts:** If `scripts/install-plugins.mjs` exists, note it can be run
      with `node scripts/install-plugins.mjs -y` to install suggested plugins.
 
-   - **Commands (ag-kit):** If the plan includes `agkit-command:` artifacts (ag-kit workflow
+- **Commands (ag-kit):** If the plan includes `agkit-command:` artifacts (ag-kit workflow
      commands under `.claude/commands/`), verify each command file exists on disk. If any are
      missing, offer to add them:
+
      ```bash
      node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
        --yes --only=<agkit-command:ids>
      ```
 
-   - **GitHub PM:** If `profile.githubPM.detected`:
-     - Check: `.claude/skills/github-pm/SKILL.md` exists
-     - Check: `.claude/commands/pm/` directory has 10 command files
-     - Check: `.github/ISSUE_TEMPLATE/` has bug.yml, feature.yml, task.yml
-     - Check: `.github/workflows/` has issue-to-project.yml, commit-to-progress.yml,
+- **GitHub PM:** If `profile.githubPM.detected`:
+  - Check: `.claude/skills/github-pm/SKILL.md` exists
+  - Check: `.claude/commands/pm/` directory has 10 command files
+  - Check: `.github/ISSUE_TEMPLATE/` has bug.yml, feature.yml, task.yml
+  - Check: `.github/workflows/` has issue-to-project.yml, commit-to-progress.yml,
        pr-to-review.yml, auto-close-issue.yml
-     - Check: `.claude/pm-config.json` exists (warn if still has REPLACE_ME placeholders)
-     - Check: `.claude/skills/github-issues/` exists (vendored)
-     - Check: `.claude/skills/github-project/` exists (vendored)
+  - Check: `.claude/pm-config.json` exists (warn if still has REPLACE_ME placeholders)
+  - Check: `.claude/skills/github-issues/` exists (vendored)
+  - Check: `.claude/skills/github-project/` exists (vendored)
 
      If any check fails → report as missing with `apply --only=github-pm` as fix suggestion.
      If `profile.githubPM.detected` is false → skip section silently.
 
-   - **Obsidian vault:** If `.mcp.json` has a top-level `mcpServers.obsidian` key:
-     - Check: the vault folder at `mcpServers.obsidian.env.OBSIDIAN_VAULT_PATH` exists
+- **Obsidian vault:** If `.mcp.json` has a top-level `mcpServers.obsidian` key:
+  - Check: the vault folder at `mcpServers.obsidian.env.OBSIDIAN_VAULT_PATH` exists
        with its 5 PARA subfolders (`01-projects/`, `02-areas/`, `03-knowledge/`,
        `04-resources/`, `daily/`) plus `templates/`
-     - Check: `.claude/hooks/` has all 6 hooks (`vault-orient.mjs`, `vault-guard.mjs`,
+  - Check: `.claude/hooks/` has all 6 hooks (`vault-orient.mjs`, `vault-guard.mjs`,
        `compile.mjs`, `session-log.mjs`, `vault-note-merge.mjs`, `vault-pipeline-shared.mjs`)
-     - Check: `.claude/scripts/` has both runner scripts (`compile-runner.mjs`,
+  - Check: `.claude/scripts/` has both runner scripts (`compile-runner.mjs`,
        `session-log-runner.mjs`)
-     - Check: `.claude/rules/obsidian.md` exists
-     - Check: `"mcp__obsidian"` is present in `.claude/settings.json`'s `permissions.allow`
+  - Check: `.claude/rules/obsidian.md` exists
+  - Check: `"mcp__obsidian"` is present in `.claude/settings.json`'s `permissions.allow`
 
      If any check fails → report as missing, with `/aia-harness:add-obsidian`
      (reconfigure) as the fix. Do not suggest `/aia-harness:patch` — its `obsidian`
      category is excluded there (unsafe force-apply; see `patch.md`).
      If `.mcp.json` has no `mcpServers.obsidian` key → skip section silently.
+     (The root `## obsidian-vault` CLAUDE.md section itself is audited by *Root
+     CLAUDE.md section completeness* above — this checks the rest of the pillar.)
 
-   - **Graphify git hooks:** If the plan includes `graphify-git-hook:` artifacts (check plan JSON for IDs starting with `graphify-git-hook:`), verify that the graphify git hooks are installed in the target project:
-     - `.git/hooks/post-commit` contains marker `# graphify-hook-start`
-     - `.git/hooks/post-checkout` contains marker `# graphify-checkout-hook-start`
+- **Graphify git hooks:** If the plan includes `graphify-git-hook:` artifacts (check plan JSON for IDs starting with `graphify-git-hook:`), verify that the graphify git hooks are installed in the target project:
+  - `.git/hooks/post-commit` contains marker `# graphify-hook-start`
+  - `.git/hooks/post-checkout` contains marker `# graphify-checkout-hook-start`
 
      If either is missing: report as missing and offer to install:
 
@@ -267,7 +292,7 @@ for the user's platform and stop — do not execute the following steps.
      Note: git hooks are local (not tracked in git) — each developer must install them.
      If graphify is not in the plan, skip this check silently.
 
-   - **Graphify orientation hook (settings.json):** If the plan includes the
+- **Graphify orientation hook (settings.json):** If the plan includes the
      `settings` artifact AND graphify is in the plan (a `tool-skill:graphify`,
      `graphify-orient-hook`, or `graphify-git-hook:` ID is present), verify the target
      `.claude/settings.json` already wires the PreToolUse orientation hook — grep its
@@ -283,7 +308,7 @@ for the user's platform and stop — do not execute the following steps.
 
      If graphify is not in the plan, skip this check silently.
 
-   - **Hook placeholder hygiene (settings.json):** Read `hookHygiene.placeholderIssues`
+- **Hook placeholder hygiene (settings.json):** Read `hookHygiene.placeholderIssues`
      from the `scan --json` output (step 1). If empty, say nothing. Otherwise, for each
      entry (`{ event, matcher, script, arg, placeholder }`), explain: exec-form hooks
      (an `args` array) spawn without a shell, so Claude Code only expands the **braced**

@@ -43,7 +43,7 @@ import { addDocsArtifacts } from "./plan/docs-artifacts.mjs";
  * @property {string|null} content   Inline content, or null when copyFrom is set.
  * @property {string|null} copyFrom  Absolute source path to copy, or null.
  * @property {boolean} exists        Whether the target already exists.
- * @property {'merge-hooks'|'merge-lines'|'merge-section'} [mergeStrategy]  When set, merge into an existing file instead of skip/replace: "merge-hooks" unions hook arrays (JSON); "merge-lines" appends any canonical line missing from the existing file; "merge-section" replaces (or appends) one top-level `# ` markdown section in place, leaving sibling sections untouched.
+ * @property {'merge-hooks'|'merge-lines'|'merge-section'} [mergeStrategy]  When set, merge into an existing file instead of skip/replace: "merge-hooks" unions hook arrays (JSON); "merge-lines" appends any canonical line missing from the existing file; "merge-section" replaces (or appends) one markdown section in place — heading level taken from the artifact's own content — leaving sibling sections untouched.
  */
 
 /**

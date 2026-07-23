@@ -1,4 +1,5 @@
-# obsidian-vault
+## obsidian-vault
+<!-- aia-harness:obsidian-root — vault memory pillar; merged section, do not remove -->
 
 - **obsidian-vault** (`.claude/rules/obsidian.md`) - this project's long-term memory at `__OBSIDIAN_VAULT_DIR__/`, MCP-only access via `mcp__obsidian__*` tools, never direct file access.
 

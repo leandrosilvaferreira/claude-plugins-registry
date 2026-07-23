@@ -51,6 +51,7 @@ that is not already in the base domains list:
 | Canonical domain name (any path segment) | `auth`, `database`, `db`, `config`, `core`, `shared`, `common`, `gateway`, `queue`, `jobs`, `billing`, `notifications`, `webhooks`, `events` |
 
 **Cap at 20 total candidates.** If more than 20 candidates found, rank and keep:
+
 1. Directories with a framework module file (highest priority)
 2. Directories matching a canonical domain name
 3. Remaining by descending source file count
@@ -109,11 +110,12 @@ If the user deselects any, remove them from the list before proceeding to Phase 
 
 Process each approved domain **in sequence** (one at a time, with diff + consent per domain).
 
-### For each domain:
+### For each domain
 
 **Read source files (up to 8, prioritized):**
 
 Read from the domain directory in this priority order — stop at 8 files total:
+
 1. Framework module/entry file (`*.module.ts`, `index.ts`, `mod.go`, `__init__.py`, `*Module.java`)
 2. Service file (`*.service.ts`, `*Service.java`, `*_service.go`, `services.py`)
 3. Controller/handler/route (`*.controller.ts`, `*Controller.java`, `*_handler.go`, `views.py`)
@@ -177,6 +179,7 @@ These must be distinct from the root CLAUDE.md conventions and specific to this 
 **Show diff and get consent:**
 
 Before writing each file:
+
 1. If the file already exists, show a unified diff (old vs. new).
    If it contains `AI-ENRICH` markers, note: "This replaces a generic skeleton."
 2. If the file does not exist, show the full generated content as a preview.
@@ -186,6 +189,7 @@ Before writing each file:
 **Quality check before writing each file:**
 
 Verify the generated content meets the acceptance criteria before showing the diff:
+
 - `## Responsibility` must name at least one thing that does NOT belong here (and where it lives)
 - `## Key patterns` must cite at least one real class/symbol/token from the source files read
 - `## Applied rules` must have at least one `@.claude/rules/X.md` reference with a condensed summary
@@ -200,6 +204,7 @@ entirely rather than leaving it empty.
 ## After all domains are processed
 
 Report a summary:
+
 - N files written
 - M files skipped (user declined)
 - List any domains where no applicable rules were found (suggest reviewing `.claude/rules/` coverage)

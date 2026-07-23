@@ -55,12 +55,14 @@ runs via `uvx`; its dependency was already satisfied when it was first set
 up), Step 4 (vault skeleton — already exists), and Step 4b (`.mcp.json`
 write — already exists, kept as-is). Go straight to Step 4c, then both Step 5
 apply calls, then Step 6 (substituting the `VAULT_DIR` value just read), then
-Step 7 (isolated SDK install — idempotent, safe to re-run), then Step 8.
+Step 7 (isolated SDK install — idempotent, safe to re-run), then Step 8
+(idempotent — re-checks and re-refreshes the memory sanitation policy on
+every reconfigure too), then Step 9.
 
 If this is a **fresh install** (no existing `mcpServers.obsidian` key),
 proceed through every step in order: Step 2 → Step 3 (asks for and sets
 `VAULT_DIR`) → Step 4 → Step 4b → Step 4c → both Step 5 apply calls →
-Step 6 → Step 7 → Step 8.
+Step 6 → Step 7 → Step 8 → Step 9.
 
 ## Step 2: Check the `uv` dependency
 
@@ -69,32 +71,38 @@ Step 6 → Step 7 → Step 8.
 already satisfied when it was first configured.
 
 Run:
+
 ```bash
 node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" check "${1:-$CLAUDE_PROJECT_DIR}" --tools=obsidian-mcp --json
 ```
 
 Parse the JSON `status` field:
+
 - `"ok"` or `"warn"`: continue to Step 3.
 - `"block"` (missing `uv`): tell the user `uv` (which provides `uvx`) is
   required to run the Obsidian MCP server, then ask via AskUserQuestion:
   "Install `uv` now?" (Yes / No). If No, stop here.
 
 If Yes, detect the platform:
+
 ```bash
 node -e "console.log(process.platform)"
 ```
 
 macOS (Homebrew available — `command -v brew >/dev/null 2>&1`):
+
 ```bash
 brew install uv
 ```
 
 macOS / Linux (no Homebrew):
+
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
 Windows (`win32`):
+
 ```bash
 winget install astral-sh.uv
 ```
@@ -212,14 +220,17 @@ node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" plan "$TARGET" --tools=obsidian-mcp
 ```
 
 From the JSON output, confirm every artifact `id` whose `category` is
-`"obsidian"` is present (10 ids: `obsidian:rule`, `obsidian:hook:vault-orient`,
+`"obsidian"` is present (11 ids: `obsidian:rule`, `obsidian:hook:vault-orient`,
 `obsidian:hook:vault-guard`, `obsidian:hook:compile`,
 `obsidian:hook:session-log`, `obsidian:hook:vault-note-merge`,
 `obsidian:hook:vault-pipeline-shared`, `obsidian:script:compile-runner`,
-`obsidian:script:session-log-runner`, `obsidian:claude-md`), plus the fixed
-id `settings`. Then run **two** separate apply calls, in this order, both
-passing `--tools=obsidian-mcp` so `buildPlan` computes the obsidian hook
-fragment into the `settings` artifact's content:
+`obsidian:script:session-log-runner`, `obsidian:claude-md`,
+`obsidian:memory-instructions`), plus the fixed id `settings`. The last one
+(`obsidian:memory-instructions`) is applied separately, in Step 8, once its
+own precondition — an existing `.claude/memory/INSTRUCTIONS.md` — has been
+checked; it is not part of either apply call below. Then run **two** separate
+apply calls, in this order, both passing `--tools=obsidian-mcp` so `buildPlan`
+computes the obsidian hook fragment into the `settings` artifact's content:
 
 **5a. The 9 plain-content artifacts — with `--force`:**
 
@@ -318,9 +329,11 @@ this ever looks stale):
   a directory that never exists.
 
 Verify with:
+
 ```bash
 grep -rl "__OBSIDIAN_VAULT_DIR__" "$TARGET/.claude/hooks" "$TARGET/.claude/scripts" "$TARGET/.claude/rules/obsidian.md" "$TARGET/CLAUDE.md"
 ```
+
 Expected: no output (every occurrence substituted). If anything is still
 listed, fix it before proceeding — a leftover placeholder in a hook or
 script would make it read from or write to a directory that will never
@@ -376,9 +389,49 @@ already covered by the `.gitignore` block above.
 If `npm` is not available, do not fail — note in the summary that the two
 automatic writers stay off until the user runs the install line once.
 
-## Step 8: Summary
+## Step 8: Adapt the persistent-memory sanitation policy (if present)
+
+**Both branches** — idempotent, safe to re-run. This is the last content
+change this command makes, once the vault itself is fully installed and
+configured; everything before it stands regardless of what this step finds.
+
+Read `$TARGET/.claude/memory/INSTRUCTIONS.md`. This file is part of the base
+harness (`/aia-harness:init`), not of this pillar — the user may have
+deselected it during init, or deleted it since, and that choice must be
+respected here.
+
+- **Does not exist** → skip this step entirely. Do not create it; move
+  straight to the summary.
+- **Exists** → this project's persistent-memory system now has somewhere to
+  send memory that no longer belongs in the always-loaded index: the vault
+  just installed, instead of a local `.claude/memory/archive/` folder it
+  would otherwise have to invent. Refresh just its "Sanitation" section to
+  route there:
+
+  ```bash
+  node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "$TARGET" --yes --tools=obsidian-mcp --only=obsidian:memory-instructions
+  ```
+
+  **Never add `--force` to this call** — same reasoning as `obsidian:claude-md`
+  in Step 5b: `obsidian:memory-instructions` carries
+  `mergeStrategy: "merge-section"` (replaces just the `## Sanitation` block by
+  heading match, leaving "When to save", "How to save", "Reading memories" —
+  and any project-specific edits already there — untouched). `--force`
+  bypasses merge strategies entirely and falls through to a raw overwrite of
+  the whole target file; on this id that would reduce the entire
+  memory-instructions file down to nothing but the Sanitation section. This
+  is also exactly why this step checks the file exists before applying,
+  instead of folding this id into one of Step 5's unconditional calls:
+  `applyPlan` only runs the merge when the destination is already on disk —
+  against a target that doesn't exist yet it falls through to creating one
+  from the incoming content as-is, which for this id would mean a new file
+  containing nothing but a lone "Sanitation" section with no "When to save" /
+  "How to save" context above it.
+
+## Step 9: Summary
 
 Tell the user:
+
 - The vault was created at `<VAULT_DIR>/` with the 5 PARA folders + templates, committed (not gitignored) — except `<VAULT_DIR>/.obsidian/`, the Obsidian desktop app's own local config folder, which is gitignored.
 - The `obsidian` MCP server was added to `.mcp.json`.
 - **Restart Claude Code now** — the MCP server only loads on a fresh session.
@@ -389,3 +442,8 @@ Tell the user:
   If `npm` was unavailable, those two writers stay off until you run once —
   `npm install --prefix .claude/scripts @anthropic-ai/claude-agent-sdk` — but the
   vault itself and all `mcp__obsidian__*` tools (manual search/read/write) work regardless.
+- If `.claude/memory/INSTRUCTIONS.md` existed, its Sanitation section now
+  migrates stale memory entries into the vault instead of a local archive
+  folder (Step 8) — nothing about persistent memory is discarded, only
+  relocated. If that file didn't exist, say nothing about it — there was
+  nothing to adapt.

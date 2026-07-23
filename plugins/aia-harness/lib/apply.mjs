@@ -133,24 +133,40 @@ export function mergeLines(existingContent, incomingContent) {
 }
 
 /**
- * Ensure a single top-level (`# `) markdown section from `incoming` is present
- * and current inside `existing`, touching no other section. If a section with
- * the same `# ` header already exists, its block is replaced in place;
- * otherwise the incoming block is appended. Used so a vendored tool (e.g.
- * graphify) can keep its trigger section current in a shared, hand-editable
- * file (`.claude/CLAUDE.md`) across re-applies without clobbering sibling
- * sections a user wrote by hand.
+ * Ensure a single markdown section from `incoming` is present and current
+ * inside `existing`, touching no other section. The level is taken from
+ * `incoming` itself (its first `#`-`######` line), so callers are not limited
+ * to top-level (`# `) sections. If a section with the same header already
+ * exists, its block is replaced in place; otherwise the incoming block is
+ * appended. Used so a vendored tool (e.g. graphify) can keep its trigger
+ * section current in a shared, hand-editable file (root `CLAUDE.md`,
+ * `.claude/CLAUDE.md`) across re-applies without clobbering sibling sections a
+ * user wrote by hand — and, at a nested level (e.g. `## `), so one subsection
+ * of a larger document (e.g. one heading inside
+ * `.claude/memory/INSTRUCTIONS.md`) can be refreshed without touching the rest.
+ *
+ * A section's block runs from its heading until the next heading of the **same
+ * or shallower** level (fewer/equal `#`), so a `## ` section being replaced
+ * never swallows a following `# ` sibling (e.g. merging a `## graphify` block
+ * into a root `CLAUDE.md` must not delete a later `# obsidian-vault` section).
+ * Deeper headings (more `#`) stay within the section, as intended.
  * @param {string} existingContent
- * @param {string} incomingContent  Exactly one `# `-headed section.
+ * @param {string} incomingContent  Exactly one heading-led section, any level `#` through `######`.
  * @returns {string}
  */
 export function mergeMarkdownSection(existingContent, incomingContent) {
-  const header = (incomingContent.match(/^# .+$/m) || [])[0];
-  if (!header) return existingContent;
+  const headerMatch = incomingContent.match(/^(#{1,6}) .+$/m);
+  if (!headerMatch) return existingContent;
+  const level = headerMatch[1];
+  const header = headerMatch[0];
   const incomingBlock = incomingContent.trim();
   if (!existingContent.trim()) return incomingBlock + "\n";
 
-  const blocks = existingContent.split(/(?=^# .+$)/m).filter((b) => b.trim() !== "");
+  // Split before every heading of the same-or-shallower level, so a shallower
+  // heading always starts a new block and can never be absorbed into (and thus
+  // deleted with) the section being replaced.
+  const splitRe = new RegExp(`(?=^#{1,${level.length}} .+$)`, "m");
+  const blocks = existingContent.split(splitRe).filter((b) => b.trim() !== "");
   const idx = blocks.findIndex((b) => b.split("\n")[0] === header);
   if (idx === -1) blocks.push(incomingBlock);
   else blocks[idx] = incomingBlock;

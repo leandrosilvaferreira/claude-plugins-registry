@@ -242,11 +242,13 @@ A faithful port of caveman-compress's `validate.py`:
 ## Relationship with caveman-compress
 
 **Does NOT reuse the compressor** (`caveman-compress.sh` nor `compress.py`):
+
 - Both call a nested `claude --print` → it hangs in this session.
 - Hardcoded model (haiku/sonnet-4-5). We want **Opus**.
 - Haiku is lossy; the goal here is **preservation** (Opus + gate).
 
 **Reuses (ported into `lib/condense.mjs`):**
+
 - `validate.py` → deterministic gate, 6 checks. Self-contained in the plugin, works for the team.
 - `compress.py` guardrails: `is_sensitive_path`, `MAX_FILE_SIZE` 500KB, skip empty, `strip_llm_wrapper`, abort if identical, fix-loop (step 5b).
 

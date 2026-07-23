@@ -35,6 +35,7 @@ Preserve the original format (list or string) when compressing.
 Rules are the type with the highest compression payoff — every token saved is repeated in every session that loads them.
 
 **Compress aggressively:**
+
 - Introductory/contextual prose
 - Explanations of why the rules exist (relevant for CLAUDE.md, not for rules)
 - Repetition across items in a list
@@ -42,6 +43,7 @@ Rules are the type with the highest compression payoff — every token saved is 
 - Any text that is not the rule itself
 
 **Mandatory to preserve:**
+
 - The concrete imperatives: "Always X", "Never Y", "When Z do W"
 - Numeric thresholds: "max 350 lines", "≥ 2 reviewers"
 - Specific tool names, commands, file patterns
@@ -70,6 +72,7 @@ paths:
 ```
 
 **BAD (verbose):**
+
 ```markdown
 When you are working on API files, please make sure that you validate all inputs
 that come into the endpoints. This is important for security. You should also use
@@ -78,6 +81,7 @@ API surface...
 ```
 
 **GOOD (imperative):**
+
 ```markdown
 - Validate all endpoint inputs
 - Standard error format: `{ error: string, code: string }`

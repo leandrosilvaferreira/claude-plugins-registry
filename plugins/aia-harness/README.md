@@ -2,7 +2,7 @@
 
 # 🪐 aia-harness
 
-### Point it at any repo. Get a complete, stack-aware Claude Code setup in minutes
+## Point it at any repo. Get a complete, stack-aware Claude Code setup in minutes
 
 *Hooks · agents · skills · rules · permissions · MCP · worktrees · per-domain memory — diagnosed, approved, and scaffolded for **your** codebase.*
 
@@ -120,6 +120,29 @@ claude plugin list   # → aia-harness@leandro-plugins-registry  ✔ enabled
 
 ```bash
 claude plugin update aia-harness@leandro-plugins-registry
+```
+
+### 💬 Prefer to paste a prompt instead of typing commands?
+
+Hand the setup to Claude in chat rather than running the CLI yourself. It's two messages, not
+one — a freshly installed plugin's commands aren't registered in the session that installed
+it, and Claude can't restart its own session or invoke `/reload-plugins` for you.
+
+**Message 1 — install the plugin** (any project, any session):
+
+```text
+Run via Bash:
+claude plugin marketplace add leandrosilvaferreira/claude-plugins-registry
+claude plugin install aia-harness
+```
+
+Then start a **new session** in the project you want to harness (or type `/reload-plugins`
+yourself — Claude can't trigger it for you).
+
+**Message 2 — scaffold the harness** (new session, inside the target project):
+
+```text
+/aia-harness:init
 ```
 
 <details>

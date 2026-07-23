@@ -71,8 +71,8 @@ for the user's platform and stop — do not execute the following steps.
    per-target — aia-harness never ships a plugin-level `.mcp.json`.
 
    **Also ask one dedicated single-select question: "Stop verification".** Phrase
-   it plainly, e.g. _"Run lint + typecheck when the agent finishes and block until
-   they pass, so it fixes its own errors? (recommended)"_ — list **"Yes,
+   it plainly, e.g. *"Run lint + typecheck when the agent finishes and block until
+   they pass, so it fixes its own errors? (recommended)"* — list **"Yes,
    recommended"** first and **"No, just remind me"** second. Do **not** mention any
    CLI flag. This maps to the strict Stop hook (default on): the generated
    `verify-on-stop.mjs` runs the detected lint/typecheck and blocks with the error
@@ -82,8 +82,8 @@ for the user's platform and stop — do not execute the following steps.
 
    **Also ask one dedicated single-select question: "Large-file guard".** The
    `large-file-warning.mjs` hook is **mandatory** (always installed) — this question
-   only picks its _mode_, never whether to install it. Phrase it plainly, e.g.
-   _"When a source file exceeds 350 lines, should the agent **block and refactor before finishing** (new project, start clean) or **only suggest and confirm** (legacy project, no auto-block)?"_ — two options:
+   only picks its *mode*, never whether to install it. Phrase it plainly, e.g.
+   *"When a source file exceeds 350 lines, should the agent **block and refactor before finishing** (new project, start clean) or **only suggest and confirm** (legacy project, no auto-block)?"* — two options:
    **"Block and refactor now"** (→ `--large-files=block`) and **"Only suggest, no block"**
    (→ `--large-files=advisory`). **Order them so the option matching the
    scan's "Large source files → recommended guard" comes first, labelled
@@ -93,8 +93,8 @@ for the user's platform and stop — do not execute the following steps.
 
    **If `profile.githubPM.detected` is true**, also offer a dedicated single-select
    question: "GitHub PM (issues, Projects v2, workflows)".
-   Phrase: _"The project uses GitHub. Install the GitHub PM pillar? (skill /pm:*, issue templates,
-   4 GitHub Actions workflows, pm-config template)"_
+   Phrase: *"The project uses GitHub. Install the GitHub PM pillar? (skill /pm:*, issue templates,
+   4 GitHub Actions workflows, pm-config template)"*
    Options: **"Yes, install"** (→ include `github-pm` category) first, **"No"** second.
    Mention: "Requires configuration via `/pm:setup-project` after installation."
    `defaultSelected: false` — always opt-in.
@@ -161,22 +161,22 @@ for the user's platform and stop — do not execute the following steps.
 
 5.6. **Intermediate CLAUDE.md (domain enrichment).** Invoke the `aia-harness:revise-claude-md` skill (Skill tool, `skill: "aia-harness:revise-claude-md"`, `args: "${1:-$CLAUDE_PROJECT_DIR}"`) to generate rich domain `CLAUDE.md` files for strategic subdirectories. This runs:
 
-   - Phase 1: maps domains (base from scan + expansion) and applicable rules; presents plan for approval.
-   - Phase 2: reads real source files + rule files per domain; generates rich `CLAUDE.md` with `## Key patterns`, `## Applied rules`, and `## Local conventions`; shows diff; writes on consent.
+- Phase 1: maps domains (base from scan + expansion) and applicable rules; presents plan for approval.
+- Phase 2: reads real source files + rule files per domain; generates rich `CLAUDE.md` with `## Key patterns`, `## Applied rules`, and `## Local conventions`; shows diff; writes on consent.
 
    If the user skips this step, the domain `CLAUDE.md` files remain as generic skeletons that can be enriched later by running `/aia-harness:revise-claude-md` directly.
 
 5.7. **Seed unit tests (if missing).** Read `profile.testing` from the JSON returned by scan/plan.
    **If `testing.configured === false` and `testing.recommended` is not null**, offer
    to configure now with `AskUserQuestion` (single-select):
-   _"This project has no unit tests. Configure now? Recommended: `<testing.recommended>`."_
+   *"This project has no unit tests. Configure now? Recommended: `<testing.recommended>`."*
    — options: **"Yes, configure"** / **"Yes, but choose another framework"** / **"No, for now"**.
 
-   - **"Yes"** → invoke the **`setup-testing`** skill via `Skill` tool with `skill: "setup-testing"`
+- **"Yes"** → invoke the **`setup-testing`** skill via `Skill` tool with `skill: "setup-testing"`
      (it installs the framework with confirmation, writes the config + 1 real test in an existing
      module, wires the `test` script and runs until green).
-   - **"Yes, but choose another"** → ask which framework and pass the choice to the skill (same `Skill` tool).
-   - **"No"** → proceed without configuring; the skill is installed for `/setup-testing` later.
+- **"Yes, but choose another"** → ask which framework and pass the choice to the skill (same `Skill` tool).
+- **"No"** → proceed without configuring; the skill is installed for `/setup-testing` later.
 
    If `testing.configured === true`, skip this step silently.
 
@@ -212,7 +212,7 @@ for the user's platform and stop — do not execute the following steps.
       - **graphify** (from the target dir): `uv tool install graphifyy` then
         `graphify install --project && graphify .`
 
-        _NOTE: git hooks (post-commit, post-checkout) already copied by harness — do not run `graphify hook install`._
+        *NOTE: git hooks (post-commit, post-checkout) already copied by harness — do not run `graphify hook install`.*
 
       This is the same set `/aia-harness:add-tools` step 3 installs — defer there for
       anything more.
