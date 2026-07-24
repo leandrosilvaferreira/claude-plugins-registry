@@ -118,6 +118,7 @@ export const PROJECT_HOOK_FILES = [
   "worktree-remove.mjs",
   "check-deps-on-start.mjs",
   "validate-settings-schema.mjs",
+  "orchestration-mode.mjs",
 ];
 
 const HOOK_DIR = "${CLAUDE_PROJECT_DIR}/.claude/hooks";

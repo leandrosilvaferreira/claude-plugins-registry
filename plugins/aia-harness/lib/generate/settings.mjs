@@ -148,8 +148,12 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
     ],
     UserPromptSubmit: [
       {
-        // Reinject compact worktree reminder on every prompt (post-compaction recovery).
-        hooks: [{ type: "command", ...hookCmd("worktree-prompt-ctx.mjs"), timeout: 10 }],
+        // Reinject compact worktree reminder on every prompt (post-compaction recovery);
+        // orchestration-mode injects the standing delegate/parallelize directive.
+        hooks: [
+          { type: "command", ...hookCmd("worktree-prompt-ctx.mjs"), timeout: 10 },
+          { type: "command", ...hookCmd("orchestration-mode.mjs"), timeout: 10 },
+        ],
       },
     ],
     SubagentStart: [
