@@ -30,7 +30,7 @@ paths:
 - Metadata: `export const metadata` or `generateMetadata()` in each `page.tsx`
 - Images: always define `width` and `height` on `<Image>` or use `fill` with a positioned container
 - Environment variables: `NEXT_PUBLIC_` only for what must reach the client; others remain server-only
-- Middleware in `middleware.ts` at the root — not inside `app/`
+- Proxy in `proxy.ts` at the root — not inside `app/` (Next 16 renamed `middleware.ts` → `proxy.ts`, function `middleware()` → `proxy()`)
 
 ## Tooling
 
