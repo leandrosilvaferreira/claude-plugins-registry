@@ -40,6 +40,12 @@
  *    is enough for idempotency.
  * 5. Appends one outcome line to .claude/hooks/log/compile.log,
  *    best-effort (create the dir if needed; never throw on a failed write).
+ * 6. Releases the project-wide compile lock compile.mjs took before spawning
+ *    this process — on every exit path, including a thrown main(). That hook
+ *    holds the lock across this whole run precisely because the window it
+ *    guards is this process's lifetime (see compile.mjs's gate 6); this is
+ *    the only place that reliably ends it, so anything that returns without
+ *    reaching the release leaves the pipeline waiting out the stale window.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -56,6 +62,7 @@ import {
   isPathOutsideAllowedFolders,
   extractToolResultErrorText,
   isRetryBudgetExhausted,
+  releaseCompileLock,
 } from "../hooks/vault-pipeline-shared.mjs";
 import { mergeIntoTemplate } from "../hooks/vault-note-merge.mjs";
 
@@ -522,4 +529,15 @@ main()
     // Swallow every error — this is a detached background worker with no
     // caller waiting on it and nothing to report a failure to.
   })
-  .finally(() => process.exit(0));
+  .finally(() => {
+    // Release the lock compile.mjs took on this process's behalf before
+    // spawning it, on every exit path — a failed run must still let the next
+    // session retry, and only a *crashed* runner should ever have to wait out
+    // the stale window. Read from argv rather than threaded out of main(),
+    // which returns early on several paths; skipped when argv is missing,
+    // since then no hook took a lock and the relative path would resolve
+    // against an unrelated directory.
+    const projectDir = process.argv[4];
+    if (projectDir) releaseCompileLock(projectDir);
+    process.exit(0);
+  });

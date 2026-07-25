@@ -32,10 +32,24 @@
  *      recompiled every time a new session starts. It is written only on
  *      success, and only by the runner (never by this hook), so a failed
  *      run retries next session.
- *   6. spawn compile-runner.mjs detached, passing the daily note's absolute
+ *   6. concurrency: the project-wide compile lock is already held by an
+ *      in-flight runner -> exit 0. Gates 1-5 are all read-only checks
+ *      against state gate 5 only writes when a run *succeeds*, so between
+ *      them and that write sits a window as long as the runner's entire LLM
+ *      sub-session. SessionStart is wired with no matcher, so it also fires
+ *      on resume/clear/compact: a /clear mid-session, or a second parallel
+ *      worktree session (compile-state.json is Purpose C — one file shared
+ *      by every worktree of the project), re-runs gates 1-5 while the first
+ *      runner is still working and every one of them opens again. Each
+ *      opening would spawn another runner promoting the same daily note into
+ *      the same PARA notes concurrently, which is how duplicate notes get
+ *      written. The lock closes that window; it is taken here and released
+ *      by the runner, so it must be the last gate, immediately before the
+ *      spawn.
+ *   7. spawn compile-runner.mjs detached, passing the daily note's absolute
  *      path, its filename, and the project dir as argv; env carries
- *      CLAUDE_INVOKED_BY.
- *   7. exit 0, no stdout.
+ *      CLAUDE_INVOKED_BY. A failed spawn releases the lock right back.
+ *   8. exit 0, no stdout.
  *
  * Fails open on every I/O / parse / spawn error — a vault hook must never
  * block a session from starting.
@@ -52,6 +66,8 @@ import {
   hasObsidianServer,
   runnerPathOverride,
   spawnDetachedRunner,
+  acquireCompileLock,
+  releaseCompileLock,
 } from "./vault-pipeline-shared.mjs";
 
 exitIfInvokedBySelf();
@@ -129,6 +145,15 @@ const runnerPath =
   runnerPathOverride(process.argv) ||
   path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "scripts", "compile-runner.mjs");
 
-spawnDetachedRunner(runnerPath, [dailyPath, dailyFilename, projectRoot], "compile");
+// Last gate, and the only one that mutates anything — see gate 6 in the doc
+// comment above for why every read-only gate before it is insufficient on its
+// own. Released by compile-runner.mjs when it finishes.
+if (!acquireCompileLock(projectRoot)) process.exit(0);
+
+if (!spawnDetachedRunner(runnerPath, [dailyPath, dailyFilename, projectRoot], "compile")) {
+  // Nothing will ever release it otherwise: the runner that would have is the
+  // process that failed to start.
+  releaseCompileLock(projectRoot);
+}
 
 process.exit(0);

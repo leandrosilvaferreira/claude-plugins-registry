@@ -136,10 +136,13 @@ export function runnerPathOverride(argv) {
 /**
  * Spawns `runnerPath` detached with the given argv, tagging its env with
  * CLAUDE_INVOKED_BY so it never re-enters the hook that spawned it. Swallows
- * every spawn error — a hook must never block session start/end on this.
+ * every spawn error — a hook must never block session start/end on this —
+ * and reports whether the spawn was actually handed off, so a caller holding
+ * a lock on the runner's behalf can release it instead of leaking it.
  * @param {string} runnerPath
  * @param {string[]} args
  * @param {string} invokedByValue
+ * @returns {boolean} true when the child was spawned, false on a spawn error
  */
 export function spawnDetachedRunner(runnerPath, args, invokedByValue) {
   try {
@@ -151,8 +154,106 @@ export function spawnDetachedRunner(runnerPath, args, invokedByValue) {
     });
     child.on("error", () => {});
     child.unref();
+    return true;
   } catch {
     // never block the hook's own exit on a spawn failure
+    return false;
+  }
+}
+
+/**
+ * How long the compile lock may sit before a later session treats it as
+ * abandoned and takes it over. The lock is taken by compile.mjs and released
+ * by the compile-runner.mjs process it spawns, so a runner killed outright
+ * (machine sleep, reboot, SIGKILL) — or one whose module never finishes
+ * loading, e.g. a missing SDK dependency — never removes its own lock. With
+ * no takeover window the whole pipeline would then be dead permanently, which
+ * is a worse failure than briefly serialising too eagerly. 30 minutes clears
+ * the slowest realistic run of an LLM sub-session by a wide margin.
+ */
+const COMPILE_LOCK_STALE_MS = 30 * 60_000;
+
+/**
+ * @param {string} projectRoot
+ * @returns {string}
+ */
+function compileLockPath(projectRoot) {
+  return path.join(projectRoot, ".claude", "hooks", "log", "compile.lock");
+}
+
+/**
+ * Takes the project-wide compile lock, returning false when another compile
+ * is already in flight. Project-level (Purpose C, same path for every
+ * worktree of the project) on purpose: it guards a project-wide resource —
+ * one daily note being promoted into one set of PARA notes — so a
+ * per-session key would let every parallel session hold its own lock and
+ * guard nothing.
+ *
+ * This is a single global lock: exactly one compile runs per project at a
+ * time. That ceiling is fine while the pipeline compiles one daily note per
+ * session start; per-daily-file locks would only be worth it if several
+ * different daily notes ever had to compile concurrently.
+ *
+ * Fails **closed** — an unwritable lock directory returns false and skips
+ * this session's compile rather than spawning unguarded. Skipping is free
+ * (the next session retries, since the runner records success only when it
+ * really wrote) and the hook still exits 0 either way, so a session is never
+ * blocked; spawning unguarded is the actual bug this exists to prevent.
+ *
+ * @param {string} projectRoot
+ * @returns {boolean} true when the lock is now held by this process
+ */
+export function acquireCompileLock(projectRoot) {
+  const lockPath = compileLockPath(projectRoot);
+  try {
+    fs.mkdirSync(path.dirname(lockPath), { recursive: true });
+  } catch {
+    return false;
+  }
+  // Two attempts: the first can legitimately lose to a stale lock, which the
+  // catch below clears; the second is the real one. Bounded on purpose —
+  // losing twice means a live competitor, not a stale file.
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      // "wx" is create-or-fail in one syscall, which is the whole point: a
+      // stat-then-write check is exactly the read-then-act race this guards
+      // against, so two sessions arriving together cannot both win here.
+      //
+      // The contents are debugging breadcrumbs only, never read back by
+      // anything — and note whose pid it is: the short-lived *hook* process
+      // that took the lock, which has already exited by the time the lock
+      // matters. The process actually holding it is the detached runner the
+      // hook spawned, whose pid is deliberately not tracked (liveness is
+      // decided by the stale window above, not by probing a pid). Don't
+      // "fix" a stuck lock by looking this pid up — it is always dead.
+      fs.writeFileSync(lockPath, String(process.pid), { flag: "wx" });
+      return true;
+    } catch {
+      try {
+        if (Date.now() - fs.statSync(lockPath).mtimeMs < COMPILE_LOCK_STALE_MS) return false;
+        fs.unlinkSync(lockPath);
+      } catch {
+        // Vanished or unreadable mid-check — treat the other side as the
+        // winner rather than racing it for the takeover.
+        return false;
+      }
+    }
+  }
+  return false;
+}
+
+/**
+ * Releases the compile lock. Called by compile-runner.mjs when it finishes
+ * (success or failure alike), and by compile.mjs when the spawn it took the
+ * lock for never happened. Never throws — an already-absent lock is the
+ * expected state after a stale takeover.
+ * @param {string} projectRoot
+ */
+export function releaseCompileLock(projectRoot) {
+  try {
+    fs.unlinkSync(compileLockPath(projectRoot));
+  } catch {
+    // already gone (or never created) — nothing to undo
   }
 }
 

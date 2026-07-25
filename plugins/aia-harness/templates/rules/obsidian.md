@@ -109,6 +109,14 @@ Never rename or move a note by hand-editing its path — these tools rewrite eve
 - **`update_note_tool` replaces the whole note by default.** Pass
   `merge_strategy="append"` to add to the end instead; anything short of a full rewrite
   needs `read_note_tool` first, then a full replace.
+- **`update_note_tool` requires `name` in frontmatter, even though `get_note_template_tool`
+  explicitly says never to supply it.** That tool's `instructions` field reads "`name` is
+  auto-injected from the filename — never supply it yourself"; auto-injection happens on
+  `create_note_tool` only. A `update_note_tool` full replace is rejected with
+  `Missing frontmatter keys: ['name']` until `name` is passed explicitly, set to the
+  filename without its `.md`. Trust the enforcement table above (`name` must match the
+  filename) over the template tool's instruction — five independent agents hit this on five
+  different notes in one pass, so it is the server's real behaviour, not a fluke.
 - **`edit_note_section_tool` matches the *first* occurrence of a duplicated heading**, with
   no parent-hierarchy disambiguation — two sections sharing a heading (e.g. two
   `## Related` in one note) means it edits the first one in file order, regardless of which
