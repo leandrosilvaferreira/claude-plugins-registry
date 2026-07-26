@@ -187,7 +187,7 @@ claude
 |------|---------|--------------|
 | 1️⃣ **Diagnose** | `/aia-harness:scan` | Read-only. Prints stack, package manager, frameworks, architectural domains, canonical commands, and any existing harness. Writes nothing. |
 | 2️⃣ **Scaffold** | `/aia-harness:init` | The full flow: scan → propose a plan → **you multi-select** what to apply → **diffs** for anything that would overwrite → apply → enrich root `CLAUDE.md` → generate **rich domain `CLAUDE.md` files** (via `revise-claude-md`) → safety review. |
-| 3️⃣ **Maintain** | `/aia-harness:doctor` | Later, after a plugin update or codebase drift: audits the harness and **additively** adds what's missing, one diff at a time. |
+| 3️⃣ **Maintain** | `/aia-harness:doctor` | Later, after a plugin update or codebase drift: audits the harness, **additively** adds what's missing, and merges in what's changed — adjudicating any conflict with you, one diff at a time, instead of overwriting. |
 
 That's the loop. `scan` is always safe to run; `init` never writes without your approval; `doctor` keeps an existing harness healthy over time.
 
@@ -204,7 +204,7 @@ All commands are namespaced `/aia-harness:<name>` and take an optional `[path]` 
 | **`scan`** `[path]` | Read-only diagnosis of stack, package manager, frameworks, monorepo layout, canonical commands, architecture, and existing harness. |
 | **`init`** `[path]` | The headline flow: scan → plan → **consent (multi-select)** → diffs → apply → enrich root `CLAUDE.md` → generate rich domain `CLAUDE.md` files (via `revise-claude-md`) → `harness-reviewer` safety pass → optional plugin/tool/MCP install. |
 | **`doctor`** `[path]` | Audits an existing harness (CLAUDE.md quality, settings safety, hook hygiene, drift after upgrades) and **additively** applies missing pieces — never mass-overwrites. |
-| **`patch`** `[path]` | Pick artifact **categories** (settings, hooks, rules, …) and force-overwrite only those. Use when one part of a configured project needs a refresh. |
+| **`patch`** `[path]` | Pick artifact **categories** (settings, hooks, rules, …) and merge the latest version into those — additive strategies (`settings.json`, `.mcp.json`, …) merge with the existing value winning; a `CLAUDE.md` section that exists and differs, or anything with no merge strategy, is adjudicated with you before it's written. Use when one part of a configured project needs a refresh, including a hand-customized harness. |
 
 ### 🔌 Extensions
 
@@ -237,14 +237,14 @@ aia-harness is **two surfaces over one engine**: an interactive Claude Code plug
    │  (read-only) │ ───▶ │  (pure fn)   │ ───▶ │  (writes)    │
    └──────────────┘      └──────────────┘      └──────────────┘
    walks files once,    ProjectProfile →      dry-run unless --yes,
-   runs per-concern     ordered list of       never overwrites a
-   detectors →          Artifacts, each       differing file without
-   ProjectProfile       with contextCost      a diff + --force
+   runs per-concern     ordered list of       merges by default,
+   detectors →          Artifacts, each       never overwrites a
+   ProjectProfile       with contextCost      differing file without --force
 ```
 
 1. **`scan` → `ProjectProfile`** — walks the tree once, then runs independent detectors for language, package manager, frameworks, monorepo, commands, architecture, existing harness, VCS, testing gaps, and large files. **Read-only.**
 2. **`plan` → `HarnessPlan`** — turns the profile into an ordered list of `Artifact`s. Data catalogs decide *what applies* per detected stack; each artifact carries a `contextCost` (estimated tokens loaded every session — `0` means lazy/path-scoped) and a `defaultSelected` flag. **Pure and side-effect-free.**
-3. **`apply`** — writes the plan. **Safe by default:** dry-run unless `--yes`, never overwrites an existing *differing* file unless `--force`, updates `.gitignore` idempotently under an `# aia-harness` header.
+3. **`apply`** — writes the plan. **Safe by default:** dry-run unless `--yes`; `settings.json`, `.mcp.json`, and `.worktreeinclude` always merge additively when they exist and differ, the existing value winning — `--force` is what bypasses that. Merging is the **default** for everything else: a file that exists and differs with no mechanical strategy is left untouched and parked in `conflicts[]` for the user to adjudicate. The merged `CLAUDE.md` sections replace the whole section in place (or append it when absent) instead of merging key-by-key, so a section that exists and differs is parked in `conflicts[]` too rather than replaced. Updates `.gitignore` idempotently under an `# aia-harness` header.
 
 For non-trivial or ambiguous repos, `init` calls in read-only **agents** for human-level judgment — `architecture-mapper` (names the domains so per-domain CLAUDE.md is accurate), `stack-analyst` (verifies canonical commands against CI when detection is uncertain), and `harness-reviewer` (adversarially audits the scaffolded result before you trust it).
 
@@ -419,6 +419,7 @@ A goal is only as good as its finish line — and writing that finish line is ex
 Safety isn't a feature here — it's the contract. These invariants are non-negotiable and never regressed:
 
 - ✅ **Consent gate** before any write; a **diff** before any overwrite.
+- 🔀 **Merging is the default, and never overwrites blind** — `settings.json`, `.mcp.json`, and `.worktreeinclude` always merge additively when they exist and differ, the existing value always winning. Everything else that exists and differs is left untouched and parked in `conflicts[]` for you to adjudicate; the merged `CLAUDE.md` sections replace the whole section in place instead of merging key-by-key, so a section that exists and differs is parked there too rather than replaced. A directory artifact merges file by file, never `rm -rf`'d. `--force` is the only bypass.
 - 🔑 **No secrets in committed files** — `.mcp.json` uses `${ENV}` placeholders; `*.local.*` is gitignored.
 - 🚦 **Guard hooks block with exit code 2**; **formatters fail open** (a missing tool never blocks you).
 - 🛟 **Stop hooks stay fail-open on infrastructure** — they block on real lint/type errors so the agent self-corrects, never on a missing runtime.
@@ -437,7 +438,7 @@ aia-harness apply [dir] [--yes]     # write the plan (dry-run unless --yes)
 aia-harness check [dir] [--json]    # verify required system dependencies
 ```
 
-`apply` is a **dry run unless `--yes`**, and never overwrites an existing, differing file unless `--force`.
+`apply` is a **dry run unless `--yes`**. `settings.json`, `.mcp.json`, and `.worktreeinclude` always merge additively when they exist and differ — `--force` is what bypasses that. Merging is the **default** for everything else: anything that exists and differs with no safe merge path is left untouched and parked in `conflicts[]` for review. The merged `CLAUDE.md` sections replace in place instead of merging additively, so a section that exists and differs is parked in `conflicts[]` too rather than replaced.
 
 <details>
 <summary>🎛️ <strong>Full <code>apply</code> flag reference</strong></summary>
@@ -447,7 +448,8 @@ aia-harness check [dir] [--json]    # verify required system dependencies
 | Flag | Effect |
 |------|--------|
 | `--yes` | Actually write (default is a dry-run preview). |
-| `--force` | Overwrite existing files that differ (after showing a diff). |
+| `--force` | Overwrite existing files that differ, bypassing every merge strategy. The blind escape hatch — no command invokes it unconditionally. |
+| `--merge` | **No-op**, accepted only for backward compatibility. Merging is the default apply behaviour, so passing it changes nothing; `--force` is the only bypass. |
 | `--only=id,id` | Apply only the named artifact IDs. |
 | `--tools=a,b` / `--no-tools` | Limit or skip project-level tools. |
 | `--no-strict` | Use a passive Stop reminder instead of the blocking lint+typecheck loop. |

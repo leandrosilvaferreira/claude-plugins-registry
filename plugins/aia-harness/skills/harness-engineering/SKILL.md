@@ -19,8 +19,12 @@ loop and tailor the generated prose.
 3. **Consent** — ask which artifacts to apply (multi-select). Default-select the
    `selected` items; leave `opt-in` ones unchecked.
 4. **Diff** — for any existing target, show the diff before overwriting.
-5. **Apply** — `... apply <dir> --yes --only=<ids>` (add `--force` only for
-   approved overwrites). Then run the `harness-reviewer` agent.
+5. **Apply** — `... apply <dir> --yes --merge --only=<ids>`: creates what's missing,
+   merges what has a mechanical strategy, and parks anything else that exists and
+   differs in `conflicts[]` for the user to adjudicate rather than overwriting it.
+   Add `--force` only for one specific artifact the user explicitly approved
+   overwriting, as its own `--only=<that id>` call — never to the whole selection.
+   Then run the `harness-reviewer` agent.
 6. **Recommend** — after install, invoke the `claude-automation-recommender`
    skill on the project for Claude's own second opinion on further automations;
    present the new suggestions and offer to act on them. Skip gracefully if the

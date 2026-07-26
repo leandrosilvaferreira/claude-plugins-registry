@@ -35,7 +35,7 @@ If `status === "block"`: present the list of `missing[]` with `installHint` for 
 1. Generate the plan and the runnable installer (writes `scripts/install-plugins.mjs`):
 
    ```bash
-   node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" --yes --only=install-plugins
+   node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" --yes --only=install-plugins --json
    ```
 
    (or run a full `/aia-harness:init` first). Inspect the suggested set:
@@ -43,6 +43,21 @@ If `status === "block"`: present the list of `missing[]` with `installHint` for 
    ```bash
    node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" plan "${1:-$CLAUDE_PROJECT_DIR}" --json
    ```
+
+   **Read the apply JSON before going further.** Merging is the default, so if
+   `scripts/install-plugins.mjs` already exists and differs it is **not** rewritten:
+   the fresh version is staged at `.claude/.aia-harness-pending/` and returned in
+   `conflicts[]`. That matters more here than anywhere else in this command — step 4
+   runs that script, so an unadjudicated conflict means step 4 silently executes the
+   **old** installer while this step reports success, installing whatever the previous
+   plugin set was rather than the set just shown to the user.
+
+   Adjudicate any `conflicts[]` entry with **`patch.md` section 7 ("Adjudicate each
+   conflict")** — `Read` `${CLAUDE_PLUGIN_ROOT}/commands/patch.md` and follow that
+   section as written rather than improvising a diff review here; its three
+   preconditions are satisfied by this call, the `plan … --json` above, and the target
+   path resolved at the top of this command. Resolve it **before** step 4 runs, and
+   remove the staging directory as that command's step 8 describes once done.
 
 2. Present the suggested plugins grouped by purpose (development / quality /
    search / workflow), noting the per-language LSP and which are git-only.

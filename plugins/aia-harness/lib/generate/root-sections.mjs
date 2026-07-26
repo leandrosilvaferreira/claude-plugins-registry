@@ -34,7 +34,12 @@ export const OBSIDIAN_ROOT_MARKER =
  * @property {'render'|'graphify'|'obsidian'} source  Where the section comes from: rendered
  *   into the base root CLAUDE.md, the graphify merge-section, or the obsidian merge-section.
  * @property {'force-root'|'merge:claude-md:graphify-root'|'command:/aia-harness:add-obsidian'} fix
- *   How to remediate a missing section.
+ *   How to remediate a missing section. Each value names the remediation *unit*, never a
+ *   CLI flag: `force-root` means the whole base-generated root file is what has to be
+ *   re-applied (as opposed to one merge-section id, or running another command). Its
+ *   only consumer, `/aia-harness:doctor`, acts on it with
+ *   `apply --merge --only=claude-md-root` plus conflict adjudication — never with
+ *   `--force`, which would wipe the project's `/aia-harness:init` enrichment.
  */
 
 /**

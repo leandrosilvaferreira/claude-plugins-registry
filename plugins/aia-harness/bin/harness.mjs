@@ -68,12 +68,21 @@ Usage:
                                                  (refactor before finishing) or
                                                  advisory (suggest + confirm).
                                                  Default: detector recommendation
+                    [--merge]           No-op: merging is the default apply
+                                        behaviour now, so this flag is only
+                                        accepted for backward compatibility
   aia-harness check [dir] [--json]      Check required system dependencies.
                     [--tools=a,b]       Also check deps for specific tools.
   aia-harness help | version
 
-Apply is a dry run unless --yes is given. Existing differing files are left
-unchanged unless --force is passed.`);
+Apply is a dry run unless --yes is given. Merging into an existing harness is
+the default: artifacts that are safe to write are applied, and anything that
+exists and differs with no mechanical merge strategy is reported in
+conflicts[] instead of being overwritten. A merged CLAUDE.md section that
+exists and differs is reported there too, despite carrying a strategy: that
+strategy replaces the whole section rather than merging it key by key, so a
+differing one is parked instead of replaced. --force bypasses every merge
+strategy and overwrites wholesale; --merge is accepted but is now a no-op.`);
 }
 
 /**
@@ -86,10 +95,23 @@ function printApply(res, dryRun) {
   for (const p of res.created) console.log(`  ${prefix}: ${p}`);
   for (const p of res.updated)
     console.log(`  ${dryRun ? "[dry-run] would update" : "updated"}: ${p}`);
-  for (const p of res.skipped) console.log(`  skipped: ${p}`);
+  // Every conflict is also pushed to `res.skipped` (see lib/apply.mjs) carrying
+  // this exact suffix, and gets its own CONFLICT: line below. Skip those here so
+  // the enumerated list describes the same set the tally counts — otherwise each
+  // conflict prints as both a `skipped:` and a `CONFLICT:` line while the tally
+  // subtracts it, and the two disagree (measured: 196 skipped: lines, "192
+  // skipped").
+  for (const p of res.skipped) {
+    if (p.endsWith("(conflict — pending review)")) continue;
+    console.log(`  skipped: ${p}`);
+  }
+  for (const c of res.conflicts)
+    console.log(`  CONFLICT: ${c.relPath} — pending review at ${c.pendingPath}`);
   for (const e of res.errors) console.log(`  ERROR: ${e.path} — ${e.error}`);
+  // `res.skipped.length` still includes every conflict, so subtract it here
+  // rather than counting the same artifact in both tallies.
   console.log(
-    `\n${res.created.length} created, ${res.updated.length} updated, ${res.skipped.length} skipped, ${res.errors.length} errors.`,
+    `\n${res.created.length} created, ${res.updated.length} updated, ${res.skipped.length - res.conflicts.length} skipped, ${res.conflicts.length} conflicts, ${res.errors.length} errors.`,
   );
 }
 
@@ -219,7 +241,15 @@ function main() {
     });
     const selected = opts.only ? new Set(opts.only.split(",").map((s) => s.trim())) : undefined;
     const dryRun = !flags.has("yes");
-    const res = applyPlan(plan, profile.root, { selected, dryRun, force: flags.has("force") });
+    const res = applyPlan(plan, profile.root, {
+      selected,
+      dryRun,
+      force: flags.has("force"),
+      // Merge is always on from the CLI — applyPlan also defaults to it, but
+      // this stays explicit so `--merge` (accepted below as a compatibility
+      // no-op) never has to be consulted here.
+      merge: true,
+    });
     if (flags.has("json")) {
       process.stdout.write(JSON.stringify(res, null, 2) + "\n");
     } else {

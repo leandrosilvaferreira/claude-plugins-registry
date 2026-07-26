@@ -203,7 +203,7 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
   // Merge extra hooks by matcher, not by naive concat: a tool hook sharing a
   // matcher with a base group (e.g. rtk and graphify both match "Bash") folds
   // into that one group instead of creating a second same-matcher group. This
-  // keeps apply.mjs mergeSettingsHooks — which collapses by first matching
+  // keeps apply.mjs mergeSettingsJson — which collapses by first matching
   // matcher — idempotent on re-apply (a duplicate matcher group would otherwise
   // get the same hook merged into two places).
   for (const [event, entries] of Object.entries(extraHooks)) {
@@ -231,6 +231,15 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
       CLAUDE_CODE_EFFORT_LEVEL: "max",
       CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING: "1",
       CAVEMAN_DEFAULT_MODE: "ultra",
+      // Works around a documented, unfixed Claude Code CLI bug: the Bash
+      // tool's cwd persists across tool calls within a session, and once an
+      // earlier call `cd`s elsewhere, `$CLAUDE_PROJECT_DIR` resolves wrong
+      // for every hook subprocess spawned afterward (upstream issues #50960,
+      // #33815, #27343, #36360, #22343, #6023 — closed not-planned/duplicate
+      // as of v2.1.113+). This resets the Bash tool's cwd to the project
+      // root after every command, fixing the drift at its source. Value must
+      // stay the string "1" — the official schema's enum is ["0","1"].
+      CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR: "1",
     },
     showClearContextOnPlanAccept: true,
     autoMemoryEnabled: true,

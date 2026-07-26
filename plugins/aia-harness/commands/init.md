@@ -100,21 +100,53 @@ for the user's platform and stop — do not execute the following steps.
    `defaultSelected: false` — always opt-in.
 
 4. **Preview & diffs.** Run a dry run to preview, and for any artifact whose
-   target already exists, show the diff before deciding to overwrite:
+   target already exists, show the diff before deciding to overwrite. Merging is the
+   default, which is what makes the preview honest when the project already has some
+   of these files:
+   every target that exists, differs, and has no mechanical merge strategy is reported
+   in `conflicts[]` instead of being counted as a clean write. A dry run still writes
+   nothing at all — not even the pending copies:
 
    ```bash
-   node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" --only=<ids> --large-files=<mode>
+   node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" --merge --only=<ids> --large-files=<mode> --json
    ```
 
-5. **Apply.** Once approved, write the selected artifacts (add `--force` only for
-   approved overwrites). **If the user chose "No, just remind me" for Stop
-   verification, add `--no-strict`** (strict is the default otherwise). **Pass the
-   Large-file guard choice as `--large-files=block` or `--large-files=advisory`**
-   (the hook is always installed; the flag only picks its mode):
+5. **Apply.** Once approved, write the selected artifacts in merge mode. **If the
+   user chose "No, just remind me" for Stop verification, add `--no-strict`** (strict
+   is the default otherwise). **Pass the Large-file guard choice as
+   `--large-files=block` or `--large-files=advisory`** (the hook is always installed;
+   the flag only picks its mode):
 
    ```bash
-   node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" --yes --only=<ids> --large-files=<mode> [--no-strict]
+   node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" --yes --merge --only=<ids> --large-files=<mode> --json [--no-strict]
    ```
+
+   On a virgin project merging changes nothing — every target is missing, so every
+   artifact is simply created. It earns its keep when init runs over a project that
+   already has some of these files: those keep whatever the user put in them and come
+   back in `conflicts[]` rather than being silently replaced. Work through every entry
+   using **`patch.md` section 7 ("Adjudicate each conflict")** — `Read`
+   `${CLAUDE_PLUGIN_ROOT}/commands/patch.md` and follow that section as written rather
+   than improvising a diff review here. Its three preconditions are satisfied by the
+   merge run above, the `plan --json` from step 2, and the target path resolved at the
+   top of this flow. Delete the staging directory as that command's step 8 describes
+   once every conflict has an answer.
+
+   Add `--force` **only** for a specific artifact the user explicitly approved
+   overwriting after seeing its diff in step 4, and only as a separate
+   `--only=<that one id>` call. It bypasses every merge strategy and overwrites
+   wholesale, so it must never be applied to the whole selection.
+
+   **Never force an id whose `mergeStrategy` is `merge-section`** — check that
+   artifact's `mergeStrategy` field in the `plan --json` from step 2 before
+   running `--force` on it. `--force` bypasses merge strategies entirely and
+   falls straight through to a raw overwrite of the whole target file, which
+   for a merge-section artifact reduces it to that lone section and destroys
+   every sibling section it has (graphify, other pillars, hand-written notes,
+   etc.). A merge-section artifact the user wants overwritten is exactly what
+   **`patch.md` section 7 ("Adjudicate each conflict")** is for — `Read`
+   `${CLAUDE_PLUGIN_ROOT}/commands/patch.md` and follow that section as
+   written instead of forcing it.
 
 5.5. **Enrich CLAUDE.md.** After apply, analyze the target project in 3 passes and rewrite the AI-ENRICH-marked sections of the generated `CLAUDE.md`. Do not alter `## Stack`, `## Canonical commands`, or `## Skills`. **Never touch any section carrying the `aia-harness:fixed` marker** (root `## Engineering rules`, domain `## Rules`) — those are non-negotiable baseline rules that must survive verbatim; you may only add to `## Conventions` / `## Local conventions`, never relocate rules out of the fixed section.
 
@@ -190,13 +222,13 @@ for the user's platform and stop — do not execute the following steps.
    remember.** Drive each install **interactively** with `AskUserQuestion`. Do not
    just print a summary and stop, and do not tell the user to run a script "later".
 
-   a. **Plugins.** If `scripts/install-plugins.sh` was written, use `AskUserQuestion`
+   a. **Plugins.** If `scripts/install-plugins.mjs` was written, use `AskUserQuestion`
       to ask whether to install the N suggested plugins now (per-stack LSP,
       code-review, hookify, context7, github, …). On approval, run it (idempotent,
       user-level):
 
       ```bash
-      bash "${1:-$CLAUDE_PROJECT_DIR}/scripts/install-plugins.sh" -y
+      node "${1:-$CLAUDE_PROJECT_DIR}/scripts/install-plugins.mjs" -y
       ```
 
       On decline → `/aia-harness:add-plugins` later.

@@ -5,6 +5,7 @@
  */
 import path from "node:path";
 import { exists, listDirs, readText } from "../util/fs.mjs";
+import { GITIGNORE_HEADER } from "../util/gitignore.mjs";
 import { getTool } from "../data/asset-catalog.mjs";
 import {
   renderGraphifyignore,
@@ -146,8 +147,9 @@ export function addAgkitArtifacts(add, agkitRoot, agkit) {
  * @param {string} toolsRoot
  * @param {string[]} toolIds
  * @param {ProjectProfile} profile
+ * @param {string[]} [planGitignore]  Entries `applyPlan` will append to `.gitignore`; folded into the `.graphifyignore` seed so it converges (see below).
  */
-export function addToolArtifacts(add, toolsRoot, toolIds, profile) {
+export function addToolArtifacts(add, toolsRoot, toolIds, profile, planGitignore = []) {
   for (const id of toolIds) {
     const tool = getTool(id);
     if (!tool) continue;
@@ -182,8 +184,21 @@ export function addToolArtifacts(add, toolsRoot, toolIds, profile) {
       }
     }
     if (id === "graphify") {
+      // Seed = the project `.gitignore` as it will look *after* this apply.
+      // `ensureGitignore` appends `planGitignore` under the `# aia-harness`
+      // header only once every artifact has been rendered, so seeding from the
+      // raw file alone makes apply #2 render a `.graphifyignore` that differs
+      // from apply #1's by exactly the lines apply #1 added — a conflict the
+      // engine parks against itself, and the first one every `/patch` user
+      // sees. Folding the entries in here (and dropping our own header line,
+      // which is a marker, not a pattern) makes the render a fixed point.
       const rawGitignore = readText(path.join(profile.root, ".gitignore"));
-      const gitignoreLines = rawGitignore ? rawGitignore.replace(/\n$/, "").split("\n") : [];
+      const rawLines = rawGitignore ? rawGitignore.replace(/\n$/, "").split("\n") : [];
+      const present = new Set(rawLines.map((l) => l.trim()));
+      const gitignoreLines = [
+        ...rawLines.filter((l) => l.trim() !== GITIGNORE_HEADER),
+        ...planGitignore.filter((e) => !present.has(e)),
+      ];
       add({
         id: "graphifyignore",
         relPath: ".graphifyignore",
@@ -232,9 +247,10 @@ export function addToolArtifacts(add, toolsRoot, toolIds, profile) {
       // usage guide (query/path/explain/update + subagent fan-out). Merged in
       // place (mergeStrategy "merge-section") into the same root CLAUDE.md the
       // base harness generates, so it lands whether the file is missing or
-      // already has unrelated hand-written sections. NOT force-patchable — a raw
-      // overwrite would replace the whole root file with just this section
-      // (patch.md/doctor.md re-apply it via a non-force merge instead).
+      // already has unrelated hand-written sections. The merge strategy is what
+      // makes that safe: a raw `--force` overwrite would replace the whole root
+      // file with just this section, so no command ever applies this id with
+      // `--force` (patch.md and doctor.md both re-apply it as a merge).
       const graphifyRootSection = renderGraphifyRootClaudeMdSection();
       add({
         id: "claude-md:graphify-root",

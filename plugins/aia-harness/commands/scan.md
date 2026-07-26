@@ -68,21 +68,30 @@ files are written):
 node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" --json
 ```
 
-Parse the returned JSON `differs[]` array. If it is non-empty:
+Parse the returned JSON `conflicts[]` array — each entry is
+`{ id, relPath, category, pendingPath }`. Merging is the default apply behaviour, so an
+artifact that exists and differs from the current plugin version is reported there; the
+legacy `differs[]` array is still part of the JSON shape but a dry run never fills it.
+If `conflicts[]` is non-empty:
 
-- For each unique category in `differs[]`, print one line: `"N <category> artifact(s) are out of date vs the current plugin version."`
+- For each unique category in `conflicts[]`, print one line: `"N <category> artifact(s) are out of date vs the current plugin version."`
 - Also grep the root `CLAUDE.md` file for the marker `aia-harness:agent-routing`. If the marker
   is absent **and** `.claude/agents/*.md` files exist in the target project (derive "agents exist"
   from disk: `ls "${1:-$CLAUDE_PROJECT_DIR}/.claude/agents/"*.md 2>/dev/null`), note:
   `"⚠ Superpowers bridge (aia-harness:agent-routing) is missing from CLAUDE.md while agents exist."`
 
+A dry run **reports** every conflict and **writes nothing** — no pending file is staged, so
+each entry's `pendingPath` is only where the fresh content *would* go. Do not print it as if
+it existed and do not read from it: staging those files belongs to `/aia-harness:doctor` and
+`/aia-harness:patch`, never to this command.
+
 Then point the user to:
 
 - `/aia-harness:doctor` for guided fixes of out-of-date artifacts
-- `/aia-harness:patch` to selectively force-overwrite specific categories
+- `/aia-harness:patch` to merge specific categories and adjudicate each conflicting file
 
-If `differs[]` is empty and the bridge marker is present (or no agents exist), omit this section
-silently.
+If `conflicts[]` is empty and the bridge marker is present (or no agents exist), omit this
+section silently.
 
 Do **not** write any files. If the user wants to scaffold the harness, point them to
 `/aia-harness:init`.

@@ -24,7 +24,8 @@ node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" version
 | **Configure the harness from scratch** on a new project (diagnose → approve → apply with diffs) | `/aia-harness:init` |
 | **Audit** an existing harness and receive targeted fixes | `/aia-harness:doctor` |
 | **Update part** of a project that already has the harness (e.g. only `settings.json`, only hooks) | `/aia-harness:patch` |
-| Re-apply **everything** overwriting existing files | `/aia-harness:patch` and select all categories |
+| **My project already has a customized harness** and I want the latest version without losing my edits | `/aia-harness:patch` — merges what's safe automatically, then adjudicates every conflicting file with you, diff by diff |
+| Re-apply **everything**, merging in changes and adjudicating whatever conflicts | `/aia-harness:patch` and select all categories |
 | Add **strategic MCP servers** (`.mcp.json`) | `/aia-harness:add-mcp` |
 | Install the **recommended marketplace plugins** for the stack | `/aia-harness:add-plugins` |
 | Install **token-economy / code-graph tools** (caveman, ponytail, rtk, graphify) | `/aia-harness:add-tools` |
@@ -36,7 +37,7 @@ node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" version
 **Project state → recommended command:**
 
 - **Project without harness** → `/aia-harness:init`
-- **Project with outdated harness** (after plugin upgrade) → `/aia-harness:doctor` detects and **adds what is missing** (new agents/hooks/skills/rules) without touching what exists; use `/aia-harness:patch` to **overwrite** artifacts that changed (e.g. `settings.json`, hooks)
+- **Project with outdated harness** (after plugin upgrade) → `/aia-harness:doctor` detects and **adds what is missing** (new agents/hooks/skills/rules) without touching what exists, and **merges in** artifacts that changed (e.g. `settings.json`, hooks) — any conflicting file is adjudicated with you, never silently overwritten; `/aia-harness:patch` runs the same merge-and-adjudicate flow by category instead of by drift
 - **Project with harness, suspected problem** (broad permissions, wrong hooks, bloated CLAUDE.md) → `/aia-harness:doctor`
 - **Just want to understand the project before touching it** → `/aia-harness:scan`
 
@@ -75,24 +76,37 @@ strict loop that runs lint + typecheck on finish and blocks until they pass.
 `CLAUDE.md`, unfilled `AI-ENRICH` stubs, suppressed fixed rules (`aia-harness:fixed`),
 broad `settings.json` permissions, misconfigured hooks,
 `.mcp.json` with literal secrets, `.gitignore` missing `*.local.*`, absence of
-unit tests. **Also detects what is missing vs. the current plugin version**
-(new agents/hooks/skills/rules) by running `plan` and comparing the `exists` flag of
-each artifact — and offers to **add only the missing ones** via additive apply (no
-`--force`, leaves what already exists untouched). Presents prioritized findings and applies
-each fix **only after approval**, with a diff.
-**When to use:** project **with** a harness — validate quality, **or after a plugin upgrade to receive new artifacts** without overwriting what exists (to overwrite changed artifacts, use `/aia-harness:patch`).
-**Writes files?** Only approved fixes, via `Edit` (never mass-rewrites).
+unit tests. **Also detects drift against the current plugin version:** artifacts that
+are **missing** (new agents/hooks/skills/rules shipped since this project was set up)
+are added via additive apply (no `--force`, leaves what already exists untouched);
+artifacts that are **installed but differ** (stale routing descriptions, an outdated
+rule) are merged in — one with an additive merge strategy (`settings.json`,
+`.mcp.json`) is merged with the existing value always winning, and anything else that
+exists and differs — including a merged `CLAUDE.md` section, which replaces the whole
+section rather than merging key-by-key — is parked in `conflicts[]` and adjudicated with
+you, diff by diff, the same procedure `/aia-harness:patch` uses. Presents prioritized
+findings and applies each fix **only after approval**, with a diff.
+**When to use:** project **with** a harness — validate quality, add artifacts missing
+after a plugin upgrade, or refresh stale ones without losing customizations (to sweep
+whole categories instead of only the stale ones, use `/aia-harness:patch`).
+**Writes files?** Only approved fixes — `Edit` for targeted corrections, plus merge-mode
+`apply` for missing/stale artifacts (never a raw overwrite without adjudication).
 **Parameters:** `path` (optional).
 
 ### `/aia-harness:patch [path]`
 
-**What it does:** selectively re-applies artifact categories in an already-configured
-project. Lists available categories, you choose **one or more**
-(multi-select), and behind the scenes runs `apply --yes --force --only=<ids>` only for
-what was chosen.
-**When to use:** project **with** a harness that needs only a part updated (e.g. `settings.json` changed in the plugin, or you want to reinstall hooks without touching `CLAUDE.md` files).
-**Writes files?** Yes — **overwrites with `--force`** only the selected categories; the rest is untouched.
-**Available categories:** `settings`, `hooks`, `claude-md`, `rules`, `mcp`, `skills`, `agents`, `tools` (only those present in the plan appear).
+**What it does:** merges artifact categories into an already-configured project — not a
+blind overwrite. Lists available categories, you choose **one or more** (multi-select),
+and behind the scenes runs `apply --yes --merge --only=<ids> --large-files=<mode> --json`
+for what was chosen: a missing file is created, an identical one is skipped, one with an
+additive merge strategy (`settings.json`, `.mcp.json`) is merged with the existing value
+always winning, and anything else that exists and differs — including a merged `CLAUDE.md`
+section, which replaces the whole section rather than merging key-by-key — is parked in
+`conflicts[]` — adjudicated with you one file at a time (a real diff, its git history, a
+proposed merge) before anything is written.
+**When to use:** project **with** a harness that needs only a part updated (e.g. `settings.json` changed in the plugin, or you want to reinstall hooks without touching `CLAUDE.md` files) — including a harness that's been hand-customized, since a conflicting file is never silently overwritten.
+**Writes files?** Yes — the selected categories, merged; a file with no safe merge path is written only after you approve its diff.
+**Available categories:** `settings`, `hooks`, `claude-md`, `rules`, `mcp`, `skills`, `agents`, `tools`, `git-hooks`, `github-pm`, `obsidian` (offered only when already installed), `docs`, `lsp`, `worktree`, `script`, `commands` (only those present in the plan appear).
 **Parameters:** `path` (optional).
 
 ### `/aia-harness:add-mcp [path]`
@@ -190,7 +204,8 @@ node bin/harness.mjs help | version
 | Flag | Effect |
 | --- | --- |
 | `--yes` | Actually writes. Without it, **dry-run** (preview). |
-| `--force` | Overwrites existing files that differ. Without it, they are **skipped**. |
+| `--force` | Overwrites existing files that differ, bypassing every merge strategy. The deliberate blind escape hatch — no command invokes it unconditionally. |
+| `--merge` | **No-op**, accepted only for backward compatibility. Merging is the default apply behaviour, so passing it changes nothing; `--force` is the only bypass. |
 | `--only=id,id` | Applies only artifacts with those IDs (basis of `/aia-harness:patch`). |
 | `--tools=a,b` | Limits which project-level tools to install. |
 | `--no-tools` | Skips all project-level tools. |
@@ -198,4 +213,9 @@ node bin/harness.mjs help | version
 
 **Safety (invariants no command breaks):** consent gate before writing, diff before
 overwriting, secrets only as `${ENV}`, `*.local.*` in gitignore, guard hooks exit
-with code 2 / formatters fail open.
+with code 2 / formatters fail open. Merging is the **default**, so `apply` never
+overwrites a differing file without adjudication and never `rm -rf`s a directory
+artifact: a file that exists and differs with no mechanical strategy — and a merged
+`CLAUDE.md` section that exists and differs, which replaces the whole section rather
+than merging it key by key — is parked in `conflicts[]` instead. `--force` is the only
+bypass.

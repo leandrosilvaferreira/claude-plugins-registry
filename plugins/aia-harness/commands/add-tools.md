@@ -31,13 +31,35 @@ Apply the guarded rtk hook and the claude-code-worktrees skill directly
 into the repo via the engine:
 
 ```bash
-node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" --yes
+node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" --yes --json
 ```
 
 This wires the guarded rtk `PreToolUse` hook into `.claude/settings.json`, copies
 the claude-code-worktrees skill into `.claude/skills/`, and writes `.graphifyignore`.
 Caveman and ponytail are global Claude Code plugins installed in Step 3 — not vendored locally.
 To scope which tools: `--no-tools`.
+
+**Read the JSON — this call is not restricted to the tool artifacts.** It carries no
+`--only`, so it applies the whole default plan, and merging is the default: any artifact
+that already exists and differs is **not** written. It is staged at
+`.claude/.aia-harness-pending/<artifact-id-slug>/<relPath>` and returned in `conflicts[]`.
+On any project that has been through `/aia-harness:init` this is the normal case, not an
+edge one — re-detection alone regenerates some content, so entries appear here even when
+the user has changed nothing.
+
+Adjudicate every `conflicts[]` entry with **`patch.md` section 7 ("Adjudicate each
+conflict")** — `Read` `${CLAUDE_PLUGIN_ROOT}/commands/patch.md` and follow that section as
+written rather than improvising a diff review here. Two of its three preconditions are
+satisfied by this call and the target path resolved above; the third is a `plan … --json`,
+which this command does not otherwise run, so run one first whenever `conflicts[]` is
+non-empty:
+
+```bash
+node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" plan "${1:-$CLAUDE_PROJECT_DIR}" --json
+```
+
+Remove the staging directory as that command's step 8 describes once every conflict has an
+answer — nothing else in this command cleans it up.
 
 ## 2. Check system dependencies
 

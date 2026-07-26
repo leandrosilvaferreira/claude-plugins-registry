@@ -232,37 +232,82 @@ checked; it is not part of either apply call below. Then run **two** separate
 apply calls, in this order, both passing `--tools=obsidian-mcp` so `buildPlan`
 computes the obsidian hook fragment into the `settings` artifact's content:
 
-**5a. The 9 plain-content artifacts — with `--force`:**
+**5a. The 9 plain-content artifacts:**
 
 ```bash
-node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "$TARGET" --yes --tools=obsidian-mcp --only=obsidian:rule,obsidian:hook:vault-orient,obsidian:hook:vault-guard,obsidian:hook:compile,obsidian:hook:session-log,obsidian:hook:vault-note-merge,obsidian:hook:vault-pipeline-shared,obsidian:script:compile-runner,obsidian:script:session-log-runner --force
+node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "$TARGET" --yes --tools=obsidian-mcp --only=obsidian:rule,obsidian:hook:vault-orient,obsidian:hook:vault-guard,obsidian:hook:compile,obsidian:hook:session-log,obsidian:hook:vault-note-merge,obsidian:hook:vault-pipeline-shared,obsidian:script:compile-runner,obsidian:script:session-log-runner --merge --json
 ```
 
 These 9 (the rule, the 6 hooks, and the 2 runner scripts) carry no
-`mergeStrategy` in `lib/data/obsidian-catalog.mjs` — without `--force`,
-`applyPlan` (`lib/apply.mjs`) treats any one of them that already exists and
-differs as `skipped: ... (exists, differs — left unchanged)`, full stop. That
-is what made the old single-call, no-`--force` version of this step a near
-no-op on reconfigure: re-applying the vendored content never actually
-replaced the already-substituted files on disk. `--force` is safe here
-because all 9 are pure first-party generated content with no expected user
-customization, unlike the two ids below. On a fresh install `--force` is
-simply a no-op — nothing exists yet to overwrite — so this one call works
-identically for both branches; no branching needed here.
+`mergeStrategy` in `lib/data/obsidian-catalog.mjs`, so a plain `apply` treats
+any one of them that already exists and differs as
+`skipped: ... (exists, differs — left unchanged)`, full stop — which is what
+made the old single-call, no-flag version of this step a near no-op on
+reconfigure. Merging is what fixes that without the blast radius of a
+`--force` overwrite. On a fresh install nothing exists yet, so all 9 are
+simply created and this call behaves exactly as it always did; on a
+reconfigure, each one that already exists and differs is **left on disk
+untouched**, rendered instead to `.claude/.aia-harness-pending/<artifact-id-slug>/<relPath>` and
+reported in `conflicts[]`. One call still covers both branches — no branching
+needed here.
 
-**5b. `obsidian:claude-md` and `settings` — never `--force`:**
+Adjudicate every `conflicts[]` entry with **`patch.md` section 7 ("Adjudicate
+each conflict")** — `Read` `${CLAUDE_PLUGIN_ROOT}/commands/patch.md` and follow
+that section as written rather than improvising a diff review here. Its three
+preconditions are satisfied by this call, the `plan … --json` above, and the
+already-resolved `$TARGET`. Remove the staging directory as that command's
+step 8 describes once every conflict has an answer.
+
+**One obsidian-specific caveat while adjudicating.** The pending copies come
+straight from the vendored templates, so they still carry the literal
+`__OBSIDIAN_VAULT_DIR__` token that Step 6 substitutes afterwards. A hunk that
+differs *only* by that token versus the real folder name is not a change at
+all — never classify it as plugin evolution, and never put it to the user as
+something to resolve. Step 6 runs over whatever ends up on disk either way,
+and its closing `grep` is the check that nothing was left unsubstituted.
+
+**5b. `obsidian:claude-md` and `settings` — merged, never `--force`:**
+
+**First resolve the large-file guard mode.** The `settings` artifact carries that
+wiring, so re-applying it must not silently flip or duplicate it. Read
+`$TARGET/.claude/settings.json` and look for `large-file-warning.mjs`: wired under
+**`Stop`** → the mode is `block`; under **`PostToolUse`** → `advisory`. Preserve
+whichever you find. If it is wired nowhere (or the file is absent) the mode is not yet
+configured — ask with `AskUserQuestion` (single-select): *"Files >350 lines — **block
+and refactor now** (new project, start clean), or **suggest and confirm only** (legacy
+project, no auto-block)?"* → `block` / `advisory`. The hook is mandatory; this only
+picks its mode.
 
 ```bash
-node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "$TARGET" --yes --tools=obsidian-mcp --only=obsidian:claude-md,settings
+node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "$TARGET" --yes --tools=obsidian-mcp --only=obsidian:claude-md,settings --large-files=<mode> --merge --json
 ```
+
+Passing `--large-files=<mode>` is not optional here. `renderSettings` wires the guard
+under `Stop` **or** `PostToolUse` depending on the mode, and `mergeSettingsJson` only
+ever adds what is missing — so generating the mode the target does not use would leave
+it wired under both events, firing the guard twice on every session.
+
+Merging is what keeps this safe. A `# obsidian-vault` section that already exists
+**and differs** — because the user annotated it with their own vault conventions —
+is parked in `conflicts[]` for adjudication instead of being replaced in place; a
+missing section is still appended mechanically, so a fresh install behaves exactly
+as before.
+
+**Adjudicate every `conflicts[]` entry this call returns with `patch.md`
+section 7**, the same way step 5a does — `Read`
+`${CLAUDE_PLUGIN_ROOT}/commands/patch.md` and follow that section as written.
+Its three preconditions are satisfied by this call, the `plan … --json` above,
+and the already-resolved `$TARGET`. `settings` merges additively and will not
+appear there; `obsidian:claude-md` appears only when its section already exists
+and differs.
 
 **Do not add `--force` to this call — two distinct reasons, one per id:**
 
 - `obsidian:claude-md` targets the root, always-loaded `CLAUDE.md` (the same
   file the main harness writes) and carries `mergeStrategy: "merge-section"`
-  (`mergeMarkdownSection` in `lib/apply.mjs`): it already replaces the
-  `# obsidian-vault` block in place when present — a genuine refresh, no
-  `--force` needed — and appends it otherwise, touching no sibling section.
+  (`mergeMarkdownSection` in `lib/apply.mjs`): it appends the `# obsidian-vault`
+  block when absent and parks it as a conflict when it exists
+  and differs — touching no sibling section either way.
   `--force` bypasses merge strategies entirely and falls straight through to a
   raw overwrite of the whole target file; on this id that would replace the
   target project's entire `CLAUDE.md` with nothing but the obsidian section,
@@ -270,27 +315,37 @@ node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "$TARGET" --yes --tools=obsid
   notes, etc.). Never force this id.
 - `settings` almost always already exists in a harnessed target project —
   without `--force`, a differing `settings` artifact is merged via
-  `mergeStrategy: "merge-hooks"` (`mergeSettingsHooks` in `lib/apply.mjs`),
-  which only **adds the missing obsidian hook entries** and leaves every
-  other existing key (custom permissions, other pillars' hooks,
-  `enabledPlugins`, etc.) untouched. `--force` here would instead fully
-  overwrite the whole file with this plan's freshly generated content,
-  silently discarding any customization the target project already made —
-  never do that for `settings` either.
+  `mergeStrategy: "merge-settings"` (`mergeSettingsJson` in `lib/apply.mjs`):
+  it **adds the missing obsidian hook entries** plus any missing
+  `permissions.allow`/`env`/`enabledPlugins`/`extraKnownMarketplaces` entries
+  this plan introduces, while leaving every key the target already has —
+  custom permissions, other pillars' hooks, an existing `enabledPlugins`
+  entry, etc. — untouched. `--force` here would instead fully overwrite the
+  whole file with this plan's freshly generated content, silently discarding
+  any customization the target project already made — never do that for
+  `settings` either.
 
-Together, these two calls write the 6 hooks and the 2 runner scripts, refresh
-the rule (5a), and merge-refresh both the CLAUDE.md section and the 4 hook
-events in `.claude/settings.json` (5b) — genuinely current on both a fresh
-install and a reconfigure, without ever clobbering user customization in the
-two files that carry it.
+Together, these two calls install the 6 hooks and the 2 runner scripts, refresh
+the rule (5a), install the CLAUDE.md section, and merge in the 4 hook events in
+`.claude/settings.json` (5b) — genuinely current on both a fresh install and a
+reconfigure, and neither call can clobber user customization any more. They stay
+two calls because 5b's ids need the `--large-files` mode resolved first; merging
+is the default for both, so anything the user changed comes back as a conflict to
+adjudicate rather than being overwritten, whichever call produced it.
 
 ## Step 6: Substitute the real vault folder name into the copied files
 
-**Both branches** — required on reconfigure too: Step 5a just force-refreshed
-the hooks/rule/scripts from the vendored templates, which contain the
-placeholder again.
+**Both branches** — but which files actually need it now depends on what Step 5a
+wrote. Anything it **created** (every file on a fresh install; a missing artifact
+on reconfigure) comes straight from the vendored templates and still carries the
+placeholder. Anything that came back as a **conflict** was left untouched and
+keeps the real vault name it already had — unless the user resolved it by taking
+the generated version, which reintroduces the placeholder. So work through the
+whole list below either way rather than tracking which is which: an `Edit` whose
+token is not present simply fails without writing anything, and the closing
+`grep` is what actually proves nothing was left behind.
 
-The files just written contain the literal placeholder token
+The files that came from the templates contain the literal placeholder token
 `__OBSIDIAN_VAULT_DIR__`. Replace it with the real folder name resolved
 earlier and stored in `$VAULT_DIR` — read from the existing `.mcp.json` in
 Step 1 on the reconfigure branch, or chosen in Step 3 on the fresh-install
@@ -409,14 +464,20 @@ respected here.
   route there:
 
   ```bash
-  node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "$TARGET" --yes --tools=obsidian-mcp --only=obsidian:memory-instructions
+  node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "$TARGET" --yes --tools=obsidian-mcp --only=obsidian:memory-instructions --merge --json
   ```
 
+  Merging is what keeps this safe to re-run. `obsidian:memory-instructions`
+  carries `mergeStrategy: "merge-section"`: a `## Sanitation` block that already
+  exists **and differs** is parked in `conflicts[]` for adjudication instead of
+  being replaced in place, discarding whatever the user wrote into it; a missing
+  block is still appended mechanically (the normal case). **Adjudicate any
+  conflict with `patch.md` section 7**, exactly as Step 5 does.
+
   **Never add `--force` to this call** — same reasoning as `obsidian:claude-md`
-  in Step 5b: `obsidian:memory-instructions` carries
-  `mergeStrategy: "merge-section"` (replaces just the `## Sanitation` block by
+  in Step 5b: the strategy only ever touches the `## Sanitation` block by
   heading match, leaving "When to save", "How to save", "Reading memories" —
-  and any project-specific edits already there — untouched). `--force`
+  and any project-specific edits already there — untouched. `--force`
   bypasses merge strategies entirely and falls through to a raw overwrite of
   the whole target file; on this id that would reduce the entire
   memory-instructions file down to nothing but the Sanitation section. This

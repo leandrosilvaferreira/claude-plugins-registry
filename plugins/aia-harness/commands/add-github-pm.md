@@ -42,9 +42,18 @@ that already has the harness configured. Analogous to `/add-mcp` and `/add-tools
    node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" plan "${1:-$CLAUDE_PROJECT_DIR}" --json
    ```
 
-   Filter artifacts with `category === 'github-pm'`. Collect their `id` fields into a
-   comma-separated string (e.g. `"github-pm:skill,github-pm:commands,..."`).
-   Show the list with rationale.
+   Filter artifacts with `category === 'github-pm'`. Collect the `id` fields of those
+   with **`exists: false`** into a comma-separated string (e.g.
+   `"github-pm:skill,github-pm:commands,..."`). Show the list with rationale.
+
+   Collect only the missing ones. An artifact of this category that already exists
+   would either be identical (skipped) or exist-and-differ, and merging is now the
+   default, so a differing one is never written — it would be staged in `conflicts[]`
+   for adjudication instead, which is `/aia-harness:patch`'s job, not this command's.
+   Report any `github-pm` artifact with `exists: true` that the user may want
+   refreshed and point them at `/aia-harness:patch` for the merge-and-adjudicate
+   flow. If **no** artifact has `exists: false`, the pillar is already fully
+   installed — say so and stop.
 
 3. **Confirm** with `AskUserQuestion`:
    "Install GitHub PM artifacts? (skill, 10 commands, issue templates, 4 workflows, pm-config template)"
@@ -53,8 +62,23 @@ that already has the harness configured. Analogous to `/add-mcp` and `/add-tools
 4. **Dry run preview** then **apply** using the IDs collected in step 2:
 
    ```bash
-   node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" --yes --only=<comma-joined IDs from step 2>
+   node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" --yes --only=<comma-joined IDs from step 2> --json
    ```
+
+   Merging is now the default, but it never engages here: every id passed comes from
+   the `exists: false` bucket in step 2, so the file each one targets is always absent
+   — the exists-and-differs branch that merging changes can never fire. This call only
+   ever creates.
+
+   Read the JSON anyway and check `conflicts[]` before reporting success. It should be
+   empty; if it is not, the target changed between the `plan` in step 2 and this call,
+   and those entries are staged at `.claude/.aia-harness-pending/` with nothing in this
+   command to resolve them. Adjudicate each one with **`patch.md` section 7 ("Adjudicate
+   each conflict")** — `Read` `${CLAUDE_PLUGIN_ROOT}/commands/patch.md` and follow that
+   section as written rather than improvising a diff review here; its three preconditions
+   are satisfied by this call, the `plan … --json` in step 2, and the target path
+   resolved above. Remove the staging directory as that command's step 8 describes once
+   every conflict has an answer, and do not claim the pillar is installed until then.
 
 5. **Post-install instructions:**
    "GitHub PM installed. Next step: run `/pm:setup-project` to configure

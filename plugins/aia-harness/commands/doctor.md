@@ -77,8 +77,14 @@ for the user's platform and stop — do not execute the following steps.
    `/aia-harness:init` step 5.5 on just those new files so they don't ship as
    generic stubs. For artifacts that **exist but differ** from the current version
    (a changed `settings.json`, an updated hook), this additive step leaves them
-   alone — point the user to `/aia-harness:patch` to force-overwrite those by
-   category.
+   alone — step 3a below merges those, or point the user to `/aia-harness:patch`
+   for the same merge-and-adjudicate flow driven by category.
+
+   Merging is now the default, but it never engages here: every id in `<chosen ids>`
+   comes from the `exists:false && defaultSelected:true` bucket above, so the file each
+   one targets is always absent — the exists-and-differs branch that `merge` changes
+   can never fire. This call only ever creates, exactly as it did before merge became
+   the default.
 
 3a. **Outdated artifacts — installed but differing from the current plugin version.**
 
@@ -90,34 +96,73 @@ dry-run apply and read the structured drift list (omitting `--yes` keeps it a dr
 node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" --json
 ```
 
-Parse `differs[]` (each `{ id, relPath, category }`). Group by `category`. For each
-category with entries, report the count + sample `relPath`s. Of particular note:
+Parse `conflicts[]` (each `{ id, relPath, category, pendingPath }`). Merging is the default
+apply behaviour, so an artifact that exists and differs is reported there; the legacy
+`differs[]` array is still part of the JSON shape but a dry run never fills it. **This first
+run is discovery only** — it reports every conflict but writes nothing, so the `pendingPath`s
+it hands back do not exist on disk yet. Group by `category`. For each category with entries,
+report the count + sample `relPath`s. Of particular note:
 
 - **`agents`** — installed agent files whose descriptions differ. Re-applying gives
   the best-practice, condition-shaped "Use proactively" routing descriptions that the
   native router and the CLAUDE.md table depend on.
+- **`claude-md`** — the root `CLAUDE.md` always lands here, because init enrichment
+  edits `## Conventions` and `## Architecture map`; so does `.claude/memory/MEMORY.md`,
+  which grows with every session. **Offer this category like any other.** The refresh
+  below merges by default, and neither of those two files carries a mechanical
+  merge strategy, so neither is ever written — each is parked as a conflict and
+  adjudicated hunk by hunk, where enrichment and accumulated memory count as user
+  content that must survive. (This category used to be excluded here because the
+  refresh force-overwrote and destroyed both. It no longer does.) The root file's
+  *structural* integrity — missing sections, fixed-rules content — is still audited
+  separately in step 3 via the **Root CLAUDE.md section completeness** and **Fixed
+  rules intact** checks.
 
-**IMPORTANT — exclude `claude-md` from the multi-select offered here.** The root
-`CLAUDE.md` always appears in `differs[]` as category `claude-md` because init
-enrichment edits `## Conventions` and `## Architecture map` — whole-file force-overwrite
-would silently destroy that enrichment. The root file's structural integrity (missing
-sections — superpowers bridge, behavioral guidelines, and the rest of the manifest —
-plus fixed-rules content) is audited separately in step 3 via the **Root CLAUDE.md
-section completeness** and **Fixed rules intact** checks — not by brute force-overwrite
-here.
-
-Use `AskUserQuestion` (multi-select, grouped by category, **omitting `claude-md`**) to
-let the user pick which categories to refresh. For each chosen category, collect its
-`differs[].id`s and force-overwrite ONLY those:
+Use `AskUserQuestion` (multi-select, grouped by category) to let the user pick which
+categories to refresh. For each chosen category, collect its `conflicts[].id`s and merge
+ONLY those:
 
 ```bash
 node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
-  --yes --force --only=<comma-joined ids>
+  --yes --merge --only=<comma-joined ids> --json
 ```
 
-`--force` is required (these files exist and differ). Files outside the selected ids
-are untouched. If the user prefers, point them at `/aia-harness:patch` for the same
-by-category force-overwrite.
+Merging never overwrites a file the user has changed: a missing target is created, a
+file with an additive merge strategy (`settings.json`, `.mcp.json`) is merged with the
+existing value always winning, and anything else that exists and differs — including a
+merged CLAUDE.md section, which replaces the whole section rather than merging
+key-by-key — is left exactly as it is: rendered under `.claude/.aia-harness-pending/`
+and reported in `conflicts[]` with its exact `pendingPath`. Files outside the selected
+ids are untouched.
+
+**Both runs are needed — this second one is not a repeat of the first.** The dry run only
+*names* the conflicts, which is what lets the user choose before anything is written; this
+run is what actually stages them, writing each `pendingPath` to disk so there is a real file
+for the adjudication below to diff against. Neither call can absorb the other: a dry run
+stages nothing to adjudicate, and a writing run must not happen before the user has picked
+categories.
+
+Note that an artifact carrying a **mechanical** merge strategy (`merge-settings`,
+`merge-mcp`, `merge-lines`) never reaches `conflicts[]` at all — it is always merged and
+reported as `updated` or `skipped` — so the `settings`, `mcp` and `worktree` **ids** can
+never be among the ones collected here, and no `--large-files` mode has to be threaded
+through this call. The `settings` wiring is audited by the dedicated checks in step 3
+instead. The `settings` *category* can still appear, via `.claude/settings.local.json`
+(id `settings-local`), which carries no strategy of its own — offering it is safe for the
+same reason, since it is a different artifact from the one that holds the guard wiring.
+
+Report the engine's `created` / `updated` / `skipped` / `errors` lists, then work
+through every entry in `conflicts[]` using **`patch.md` section 7 ("Adjudicate each
+conflict")** — `Read` `${CLAUDE_PLUGIN_ROOT}/commands/patch.md` and follow that section
+as written rather than improvising a diff review here. Its three preconditions are
+already satisfied: the merge run above, the `plan --json` from step 2 (whose
+`rootClaudeMd` audit is the ownership map it needs for the root `CLAUDE.md`), and the
+target path resolved at the top of this command. Once every conflict has an answer,
+delete the staging directory as that command's step 8 describes. If `conflicts[]` is
+empty, say so and move on.
+
+If the user would rather sweep the whole harness by category than only the stale ids,
+point them at `/aia-harness:patch` — it runs this same merge-and-adjudicate flow.
 
 3. Audit each existing artifact and grade it:
 
@@ -127,7 +172,10 @@ by-category force-overwrite.
   `present` / `notApplicable` (report nothing for those). For each `missing` entry,
   act by its `fix`:
   - **`fix: "force-root"`** — a section the base generator renders into the root
-    file is gone. This covers both the always-required structural sections
+    file is gone. The value names the *remediation unit* — the whole base-generated
+    root file, as opposed to one merge-section id or a separate command — not a CLI
+    flag; the fix below merges by default and never force-overwrites. This
+    covers both the always-required structural sections
     (`required: true`: behavioral, stack, canonical-commands, architecture-map,
     conventions, engineering-rules, memory-imports) and conditional sections
     that *do* apply to this project (`required: false`: skills, workflow-agents,
@@ -135,24 +183,42 @@ by-category force-overwrite.
     superpowers-bridge section is gone). Frame the required ones as structural
     gaps and the conditional ones as "applies here but missing" — either way
     they're fixed the same way. Offer to restore them **once, as a group** (not
-    one prompt per section) by force-regenerating the root file:
+    one prompt per section) by merging the regenerated root file:
 
     ```bash
     node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
-      --yes --force --only=claude-md-root
+      --yes --merge --only=claude-md-root --json
     ```
 
-    Warn (as everywhere `--force` touches the root) that this overwrites the root
-    `CLAUDE.md`, so any enriched `## Conventions` / `## Architecture map` must be
-    re-enriched afterward (run `/aia-harness:init` step 5.5).
+    `claude-md-root` carries no mechanical merge strategy, so an existing root file
+    is never written by this call — it is rendered under
+    `.claude/.aia-harness-pending/` and comes back as a single `conflicts[]`
+    entry carrying its own `pendingPath` (it differs by definition; that is why a
+    section is missing). Adjudicate it
+    with **`patch.md` section 7**, exactly as step 3a does. The missing sections are
+    that procedure's "plugin evolution → take" bucket and the enriched
+    `## Conventions` / `## Architecture map` are its "user customization → preserve"
+    bucket, so the enrichment survives and nothing has to be re-enriched afterwards.
+    Only its "take the generated version" answer discards it, and step 7.5 already
+    requires warning before that one.
   - **`fix: "merge:claude-md:graphify-root"`** (graphify installed but its
     `## graphify` section is gone) — merge it back in place, **never `--force`**
     (that would overwrite the whole root file with just this section):
 
     ```bash
     node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
-      --yes --only=claude-md:graphify-root
+      --yes --only=claude-md:graphify-root --json
     ```
+
+    Merging is the default, and for a `merge-section` id it splits two ways. A section that
+    is **absent** is appended in place, reported in `updated`, siblings untouched — and that
+    is the only case this fix ever runs in, because the audit lists `graphify` as missing
+    only when neither its heading nor its marker is anywhere in the file. A section that
+    **exists and differs** is instead parked in `conflicts[]` rather than replaced, so text
+    the user wrote inside it is never silently discarded. That second outcome should
+    therefore be unreachable here: if `conflicts[]` comes back non-empty, the audit and the
+    file disagree about the section (a heading at the wrong level, say). Adjudicate it with
+    **`patch.md` section 7**, exactly as step 3a does — never re-run with `--force`.
 
   - **`fix: "command:/aia-harness:add-obsidian"`** (obsidian pillar installed but
     its `## obsidian-vault` section is gone) — tell the user to re-run
@@ -200,18 +266,31 @@ by-category force-overwrite.
 - **Large-file guard (mandatory):** confirm `large-file-warning.mjs` is present
      **and wired** in `settings.json` — under `Stop` (block mode: agent refactors
      files over 350 lines before finishing) or `PostToolUse` matcher
-     `Edit|Write|MultiEdit` (advisory: suggest + confirm, never auto-block). If it
+     `Edit|Write|MultiEdit` (advisory: suggest + confirm, never auto-block).
+     **Record which one you find** (`Stop` → `block`, `PostToolUse` → `advisory`) and
+     reuse it for the rest of this audit: `renderSettings` wires the guard under one
+     event *or* the other depending on the mode, and `mergeSettingsJson` only ever adds
+     what is missing, so any later `apply` whose `--only` set includes the `settings`
+     artifact must pass the recorded value as `--large-files=<mode>`. Generate the wrong
+     mode and the target ends up wired under both events, firing the guard twice. If it
      is **missing from the wiring** (or `settings.json` predates this guard), it is
      **not configured** — surface it and offer to set it up with `AskUserQuestion`:
-     ask `block` vs `advisory`, recommending the scan's `largeFiles.recommended`
+     ask `block` vs `advisory` — the answer becomes the recorded mode — recommending the scan's `largeFiles.recommended`
      (`block` for a clean repo, `advisory` when there are pre-existing oversized
-     files — `largeFiles.count > 0`). On approval, rewire (force, settings + the
+     files — `largeFiles.count > 0`). On approval, rewire (merge, settings + the
      hook file only):
 
      ```bash
      node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
-       --yes --force --only=settings,hook:large-file-warning.mjs --large-files=<mode>
+       --yes --merge --only=settings,hook:large-file-warning.mjs --large-files=<mode> --json
      ```
+
+     `settings.json` merges additively, so this adds the missing wiring for the
+     chosen mode and leaves every permission, env key and other pillar's hook the
+     project already has untouched — which is the whole point here, since this check
+     fires precisely when a `settings.json` that predates the guard is otherwise fine.
+     If the hook *file* itself exists and differs it comes back in `conflicts[]`;
+     adjudicate it with **`patch.md` section 7** as in step 3a.
 
 - **.mcp.json:** only `${ENV}` placeholders, never literal secrets.
 - **.gitignore:** must ignore `.claude/*.local.*`.
@@ -223,8 +302,17 @@ by-category force-overwrite.
 
      ```bash
      node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
-       --yes --force --only=strategies
+       --yes --merge --only=strategies --json
      ```
+
+     `strategies` carries no mechanical merge strategy, so the existing file is never
+     written by this call: it is rendered under `.claude/.aia-harness-pending/` and
+     comes back as a single `conflicts[]` entry carrying its own `pendingPath`. Adjudicate it with **`patch.md` section 7**, exactly as
+     step 3a does — section 7.1 shows the real regenerated-versus-current diff, and the
+     user chooses between taking it, keeping the current file, or a merge of the two.
+     A doc generated for the wrong stack is the clearest possible "plugin evolution →
+     take" case, but it is still the user's call, and any note they hand-wrote into the
+     file is visible in that diff rather than silently destroyed.
 
 - **.lsp.json:** If the `lsp` artifact exists, confirm it is valid JSON and
      contains language server entries (`languageServerCommand` or similar keys).
@@ -272,8 +360,11 @@ by-category force-overwrite.
   - Check: `"mcp__obsidian"` is present in `.claude/settings.json`'s `permissions.allow`
 
      If any check fails → report as missing, with `/aia-harness:add-obsidian`
-     (reconfigure) as the fix. Do not suggest `/aia-harness:patch` — its `obsidian`
-     category is excluded there (unsafe force-apply; see `patch.md`).
+     (reconfigure) as the fix. `/aia-harness:patch` is not the fix here: it offers its
+     `obsidian` category only when **every** `obsidian:` artifact already exists, which
+     is by definition not the case when one of these checks fails — and only
+     `/aia-harness:add-obsidian` substitutes the real vault folder name into the copied
+     files (see `patch.md`).
      If `.mcp.json` has no `mcpServers.obsidian` key → skip section silently.
      (The root `## obsidian-vault` CLAUDE.md section itself is audited by *Root
      CLAUDE.md section completeness* above — this checks the rest of the pillar.)
@@ -286,8 +377,14 @@ by-category force-overwrite.
 
      ```bash
      node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
-       --yes --only=graphify-git-hook:post-commit,graphify-git-hook:post-checkout
+       --yes --only=graphify-git-hook:post-commit,graphify-git-hook:post-checkout --json
      ```
+
+     A hook file that is genuinely absent is created. One that already exists with different
+     content — another tool's `post-commit`, say — is **not** overwritten: it comes back in
+     `conflicts[]` with its own `pendingPath`, so adjudicate that entry with **`patch.md`
+     section 7**, exactly as step 3a does. The two hooks do different work, so the merged
+     proposal that keeps both is usually the right answer there; it is still the user's call.
 
      Note: git hooks are local (not tracked in git) — each developer must install them.
      If graphify is not in the plan, skip this check silently.
@@ -303,10 +400,43 @@ by-category force-overwrite.
 
      ```bash
      node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
-       --yes --only=settings
+       --yes --only=settings --large-files=<mode>
      ```
 
+     `--large-files=<mode>` is the mode recorded by the **Large-file guard** check above,
+     and it is required here even though this call is only about the graphify hook. This
+     check fires on a project whose `settings.json` already exists and is otherwise fine,
+     so the guard is already wired under one event; `settings.json` merges through its
+     `merge-settings` strategy (no `--merge` needed) and that merge is additive-only, so
+     generating the other mode would add a *second* wiring rather than replace the first.
+
      If graphify is not in the plan, skip this check silently.
+
+- **Bash cd-carryover mitigation (settings.json):** grep `.claude/settings.json`'s
+     `env` block for `CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR`. A project scaffolded
+     before this default existed will have a `settings.json` (so whole-file drift never
+     flags it) that is simply missing the key. If absent, explain briefly: without it, the
+     Claude Code CLI's Bash tool carries a `cd` across tool calls within the same session,
+     and once that happens `$CLAUDE_PROJECT_DIR` resolves wrong for every hook subprocess
+     spawned afterward — a documented, unfixed upstream bug (closed not-planned/duplicate
+     on GitHub as of v2.1.113+). Note that adding it also resets the Bash tool's cwd to the
+     project root after every command instead of letting it persist — any of the project's
+     own commands/skills/workflows that rely on a `cd` carrying over between separate Bash
+     calls must switch to `cd X && cmd` or `git -C` in one call instead. Offer to merge the
+     key in:
+
+     ```bash
+     node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
+       --yes --merge --only=settings --large-files=<mode> --json
+     ```
+
+     `--large-files=<mode>` is the mode recorded by the **Large-file guard** check above,
+     required here for the same reason it is on the graphify hook check just above: this
+     call re-applies the whole `settings` artifact, and its `merge-settings` strategy is
+     additive-only — generating the other large-file mode would add a second guard wiring
+     rather than replace the first. Nothing already present is modified or removed.
+
+     If the key is already present, say nothing.
 
 - **Hook placeholder hygiene (settings.json):** Read `hookHygiene.placeholderIssues`
      from the `scan --json` output (step 1). If empty, say nothing. Otherwise, for each
@@ -318,7 +448,7 @@ by-category force-overwrite.
      `AskUserQuestion`, then fix each one with `Edit` directly on `.claude/settings.json`
      — replace `$<placeholder>` with `${<placeholder>}` in that exact `args` string, and
      nothing else on the line. **Do not** fix this with `apply --only=settings`:
-     `mergeSettingsHooks` dedups hook entries by exact `{command, args}` string identity,
+     `mergeSettingsJson` dedups hook entries by exact `{command, args}` string identity,
      so re-applying would add a duplicate hook, not repair the broken one — `Edit` is the
      only correct fix here.
 

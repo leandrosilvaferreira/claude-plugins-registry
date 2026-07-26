@@ -43,7 +43,7 @@ import { addDocsArtifacts } from "./plan/docs-artifacts.mjs";
  * @property {string|null} content   Inline content, or null when copyFrom is set.
  * @property {string|null} copyFrom  Absolute source path to copy, or null.
  * @property {boolean} exists        Whether the target already exists.
- * @property {'merge-hooks'|'merge-lines'|'merge-section'} [mergeStrategy]  When set, merge into an existing file instead of skip/replace: "merge-hooks" unions hook arrays (JSON); "merge-lines" appends any canonical line missing from the existing file; "merge-section" replaces (or appends) one markdown section in place — heading level taken from the artifact's own content — leaving sibling sections untouched.
+ * @property {'merge-settings'|'merge-lines'|'merge-section'|'merge-mcp'} [mergeStrategy]  When set, merge into an existing file instead of skip/replace: "merge-settings" merges a JSON settings file key by key (array-union for permissions.allow/deny/additionalDirectories, object-union for env/enabledPlugins/extraKnownMarketplaces, hook-array union for hooks, keep-existing/add-if-absent for every other key); "merge-lines" appends any canonical line missing from the existing file; "merge-section" replaces (or appends) one markdown section in place — heading level taken from the artifact's own content — leaving sibling sections untouched, but (unlike the other three strategies) not preserving the section's own prior content on a plain apply; under `merge: true` specifically, a section that already exists and differs is therefore parked as a `conflicts[]` entry instead of being replaced, exactly like a strategy-less artifact. **`--force` bypasses every strategy in this list**, `merge-section` included: it writes the artifact's raw content over the whole target file, which for a section artifact means the file is reduced to that lone section and every sibling is destroyed — never force a `merge-section` id; "merge-mcp" merges a JSON .mcp.json file by unioning mcpServers by server key (existing server always wins, incoming servers absent from existing are added) and keep-existing/add-if-absent for every other top-level key.
  */
 
 /**
@@ -149,7 +149,7 @@ export function buildPlan(profile, ctx) {
   // shell) wired exec-form like every other harness hook, so it runs identically on
   // Linux/macOS/Windows. The hook file is copied by addToolArtifacts. Matcher
   // "Bash|Read|Glob" is distinct from the base "Bash" group, so it stands alone and
-  // dedups by command+args on re-apply (apply.mjs mergeSettingsHooks).
+  // dedups by command+args on re-apply (apply.mjs mergeSettingsJson).
   if (toolIds.includes("graphify")) {
     extraHooks.PreToolUse = [
       ...(extraHooks.PreToolUse ?? []),
@@ -170,7 +170,7 @@ export function buildPlan(profile, ctx) {
   // Obsidian vault hooks (UserPromptSubmit/PreToolUse/SessionStart/SessionEnd):
   // wired only when add-obsidian selected "obsidian-mcp" as a tool id. Merges
   // by matcher, same fold-by-matcher logic as the extraHooks loop above (so
-  // re-apply stays idempotent via apply.mjs's mergeSettingsHooks).
+  // re-apply stays idempotent via apply.mjs's mergeSettingsJson).
   if (toolIds.includes("obsidian-mcp")) {
     for (const [event, entries] of Object.entries(obsidianSettingsHooks())) {
       const base = extraHooks[event] ?? [];
@@ -192,7 +192,7 @@ export function buildPlan(profile, ctx) {
     rationale: "Least-privilege permissions + JS hook wiring (committed).",
     contextCost: 0,
     defaultSelected: true,
-    mergeStrategy: "merge-hooks",
+    mergeStrategy: "merge-settings",
     content: renderSettings(profile, extraHooks, { strict, largeFiles }),
   });
 
@@ -207,6 +207,7 @@ export function buildPlan(profile, ctx) {
       (mcp.prereqs.length > 0 ? ` Prereqs — ${mcp.prereqs.join("; ")}.` : ""),
     contextCost: 0,
     defaultSelected: true,
+    mergeStrategy: "merge-mcp",
     content: mcp.content,
   });
 
@@ -265,10 +266,26 @@ export function buildPlan(profile, ctx) {
   // --- Docs, LSP, worktree, scripts (delegated) ---
   addDocsArtifacts(add, profile, toolIds);
 
+  // `.gitignore` entries `applyPlan` appends under the `# aia-harness` header.
+  // Built here, before the artifacts that need them: `.graphifyignore` seeds
+  // itself from the project `.gitignore`, which `ensureGitignore` only updates
+  // *after* every artifact has been rendered — so a seed taken from the file
+  // alone is always one apply behind and parks a self-inflicted conflict on the
+  // next apply run.
+  const gitignoreEntries = [
+    ".claude/settings.local.json",
+    ".claude/*.local.*",
+    ".claude/.aia-harness-pending/",
+    ...(profile.githubPM?.detected ? [".claude/pm-config.json"] : []),
+    ...(toolIds.includes("graphify")
+      ? ["graphify-out/", "graphify-out/cost.json", "graphify-out/cache/"]
+      : []),
+  ];
+
   // --- Vendored assets (ECC, ag-kit, tools) — delegated ---
   addEccArtifacts(add, eccRoot, ecc);
   addAgkitArtifacts(add, agkitRoot, agkit);
-  addToolArtifacts(add, toolsRoot, toolIds, profile);
+  addToolArtifacts(add, toolsRoot, toolIds, profile, gitignoreEntries);
 
   // --- GitHub PM (opt-in; defaultSelected:false) ---
   for (const asset of selectGitHubPMAssets(profile)) {
@@ -328,14 +345,7 @@ export function buildPlan(profile, ctx) {
 
   return {
     artifacts,
-    gitignore: [
-      ".claude/settings.local.json",
-      ".claude/*.local.*",
-      ...(profile.githubPM?.detected ? [".claude/pm-config.json"] : []),
-      ...(toolIds.includes("graphify")
-        ? ["graphify-out/", "graphify-out/cost.json", "graphify-out/cache/"]
-        : []),
-    ],
+    gitignore: gitignoreEntries,
     notes,
     totalContextCost: artifacts.reduce((sum, a) => sum + a.contextCost, 0),
   };

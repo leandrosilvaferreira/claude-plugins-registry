@@ -48,9 +48,11 @@ export function addClaudeMdArtifacts(add, profile, agentMetas) {
     content: memInstructions,
   });
 
-  // memory-index uses a non-prefixed ID intentionally: it is user-owned data (grows each session)
-  // and must NOT be matched by /patch --force (which would erase accumulated project learnings).
-  // doctor still detects it as missing via artifact.exists check.
+  // memory-index uses a non-prefixed ID intentionally: it is user-owned data (grows each
+  // session) that doesn't share the `claude-md:` prefix, so patch.md's `claude-md` category
+  // names it as an exact match instead of sweeping it in. It carries no mergeStrategy, so an
+  // existing, differing memory-index merges into conflicts[] for review, never a silent
+  // overwrite. doctor still detects it as missing via artifact.exists check.
   add({
     id: "memory-index",
     relPath: ".claude/memory/MEMORY.md",
