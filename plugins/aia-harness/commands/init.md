@@ -64,7 +64,7 @@ for the user's platform and stop — do not execute the following steps.
    script) unchecked. Mention the ECC attribution (MIT, Affaan Mustafa).
 
    The **`.mcp.json` group proposes `context7` + `github`** (github only when the
-   repo is git; plus `sequential-thinking`). On confirmation, apply writes them to
+   repo is git). On confirmation, apply writes them to
    the target's project-root `.mcp.json` using `${ENV}` placeholders only, and adds
    the matching env keys (e.g. `GITHUB_PERSONAL_ACCESS_TOKEN`) to
    `.claude/settings.local.json` for the user to fill. These are suggested

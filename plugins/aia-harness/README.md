@@ -347,7 +347,7 @@ Optional pillars you can layer on — each project-scoped, each one command.
 
 ### 🔗 Strategic MCP servers — `/aia-harness:add-mcp`
 
-A curated catalog (github, context7, sequential-thinking, playwright, postgres, …) merged into `.mcp.json` with `${ENV}` placeholders. Keeps the set small and the secrets out of git.
+A curated catalog (github, context7, playwright, postgres, …) merged into `.mcp.json` with `${ENV}` placeholders. Keeps the set small and the secrets out of git.
 
 ### 📦 Recommended plugins — `/aia-harness:add-plugins`
 

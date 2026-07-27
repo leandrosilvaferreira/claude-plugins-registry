@@ -14,7 +14,6 @@ emits the recommended subset for the current project.
 | Server | When to add | Secrets |
 |--------|-------------|---------|
 | **context7** | Default. Up-to-date library/framework docs. Marginal for dependency-light repos (e.g. tooling-only); high value for React/DB/large-dep projects. | none |
-| **sequential-thinking** | Always. Structured multi-step reasoning. | none |
 | **github** | **Default for any git repo** — issues, PRs, releases, review in the dev loop. Prereq: `gh` CLI (token via `gh auth token`). | `GITHUB_PERSONAL_ACCESS_TOKEN` |
 | **playwright** | Project has Playwright/Cypress. Browser e2e. | none |
 | **postgres** | Project uses PostgreSQL. Schema + read queries. | `DATABASE_URL` |
