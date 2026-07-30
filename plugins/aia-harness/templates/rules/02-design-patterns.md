@@ -1,6 +1,6 @@
 ---
 paths:
-  - “**/*”
+  - "**/*"
 ---
 
 # Design Patterns

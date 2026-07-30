@@ -1,5 +1,6 @@
 ---
-description: Work on a GitHub issue: set In Progress + worktree
+description: >
+  Work on a GitHub issue: set In Progress + worktree
 argument-hint: "[issue-number]"
 allowed-tools: Bash(gh *), Bash(git *), AskUserQuestion
 ---
