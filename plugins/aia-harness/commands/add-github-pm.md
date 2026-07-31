@@ -25,6 +25,25 @@ wrong place.
 Activate the GitHub PM pillar (issues, Projects v2, commands, workflows) in a project
 that already has the harness configured. Analogous to `/add-mcp` and `/add-tools`.
 
+<!-- aia-harness:version-check -->
+## Before anything else — plugin version check
+
+```bash
+node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" version-check --json
+```
+
+Read `status` from the JSON:
+
+- `"stale"` — report `running` → `latest`, then `AskUserQuestion`: **Update now** (run the
+  returned `updateCommand`, then stop and tell the user to run `/reload-plugins` or start a new
+  session and re-issue this command — a running plugin copy cannot hot-swap itself) or
+  **Continue on the current version** (go straight to the next step).
+- `"current"` or `"unknown"` — say nothing, continue.
+
+This check never blocks: it exits 0 even when it cannot reach the registry, and `"unknown"`
+means the answer is unavailable, not that something is wrong.
+<!-- /aia-harness:version-check -->
+
 ## Flow
 
 1. **Scan** the project to check detection:

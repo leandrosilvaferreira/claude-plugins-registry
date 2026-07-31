@@ -4,11 +4,31 @@ argument-hint: "[path]"
 allowed-tools:
   - Bash
   - Read
+  - AskUserQuestion
 ---
 
 # Diagnose the project's harness readiness
 
 Run the deterministic scanner and present the result. This command is read-only.
+
+<!-- aia-harness:version-check -->
+## Before anything else — plugin version check
+
+```bash
+node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" version-check --json
+```
+
+Read `status` from the JSON:
+
+- `"stale"` — report `running` → `latest`, then `AskUserQuestion`: **Update now** (run the
+  returned `updateCommand`, then stop and tell the user to run `/reload-plugins` or start a new
+  session and re-issue this command — a running plugin copy cannot hot-swap itself) or
+  **Continue on the current version** (go straight to the next step).
+- `"current"` or `"unknown"` — say nothing, continue.
+
+This check never blocks: it exits 0 even when it cannot reach the registry, and `"unknown"`
+means the answer is unavailable, not that something is wrong.
+<!-- /aia-harness:version-check -->
 
 ## 0. Check system dependencies
 

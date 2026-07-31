@@ -2,19 +2,36 @@
 description: Show the full aia-harness command reference — what each command does, when to use it, parameters and options — with a "I want to…" quick-start guide at the top.
 allowed-tools:
   - Bash
+  - AskUserQuestion
 ---
 
 # aia-harness command guide
 
 Present this guide to the user in full and well-formatted.
-Start with the "Where to start" section, then detail each command. If useful,
-show the engine version:
-
-```bash
-node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" version
-```
+Start with the "Where to start" section, then detail each command. If useful, show the
+engine version — it is the `running` field the version check below already returns, so
+there is no need to invoke the engine a second time for it.
 
 ---
+
+<!-- aia-harness:version-check -->
+## Before anything else — plugin version check
+
+```bash
+node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" version-check --json
+```
+
+Read `status` from the JSON:
+
+- `"stale"` — report `running` → `latest`, then `AskUserQuestion`: **Update now** (run the
+  returned `updateCommand`, then stop and tell the user to run `/reload-plugins` or start a new
+  session and re-issue this command — a running plugin copy cannot hot-swap itself) or
+  **Continue on the current version** (go straight to the next step).
+- `"current"` or `"unknown"` — say nothing, continue.
+
+This check never blocks: it exits 0 even when it cannot reach the registry, and `"unknown"`
+means the answer is unavailable, not that something is wrong.
+<!-- /aia-harness:version-check -->
 
 ## 🚀 Where to start (decision guide)
 
@@ -196,8 +213,14 @@ The commands above are wrappers over the deterministic entrypoint
 node bin/harness.mjs scan  [dir] [--json]     # diagnose → ProjectProfile (read-only)
 node bin/harness.mjs plan  [dir] [--json]     # ProjectProfile → HarnessPlan (no writes)
 node bin/harness.mjs apply [dir] [--yes]      # apply the plan (dry-run without --yes)
+node bin/harness.mjs version-check [--json]   # is this copy the latest published one?
 node bin/harness.mjs help | version
 ```
+
+`version-check` is what every command runs first. It compares the running copy's
+`.claude-plugin/plugin.json` against the marketplace clone (refreshing it, capped at 15s,
+throttled to once per 15 min) and always exits 0 — `"unknown"` means the answer was
+unavailable, never that something failed. `--no-refresh` skips the network entirely.
 
 **`apply` flags:**
 

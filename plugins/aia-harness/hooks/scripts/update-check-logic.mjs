@@ -18,21 +18,6 @@ export function isCheckDue(lastCheckedAt, now, ttlMs) {
   return now - last >= ttlMs;
 }
 
-/**
- * Compare two "MAJOR.MINOR.PATCH"-style version strings numerically,
- * segment by segment. Missing segments are treated as 0 (so "0.3" == "0.3.0").
- * @param {string} a
- * @param {string} b
- * @returns {number} negative if a<b, zero if equal, positive if a>b
- */
-export function compareVersions(a, b) {
-  const pa = String(a).split(".").map(Number);
-  const pb = String(b).split(".").map(Number);
-  const len = Math.max(pa.length, pb.length);
-  for (let i = 0; i < len; i++) {
-    const na = pa[i] || 0;
-    const nb = pb[i] || 0;
-    if (na !== nb) return na - nb;
-  }
-  return 0;
-}
+// Single definition, shared with the commands' `version-check` path
+// (lib/version-check.mjs) so the two never drift on how versions compare.
+export { compareVersions } from "../../lib/version-check.mjs";

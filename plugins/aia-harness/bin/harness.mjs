@@ -18,6 +18,7 @@ import {
   detectInstalledTools,
 } from "../lib/detect/system-deps.mjs";
 import { auditRootClaudeMdSections } from "../lib/generate/root-sections.mjs";
+import { checkPluginVersion } from "../lib/version-check.mjs";
 import { exists, readText, readJson } from "../lib/util/fs.mjs";
 
 const PLUGIN_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -73,6 +74,9 @@ Usage:
                                         accepted for backward compatibility
   aia-harness check [dir] [--json]      Check required system dependencies.
                     [--tools=a,b]       Also check deps for specific tools.
+  aia-harness version-check [--json]    Is this running copy the latest published
+                    [--no-refresh]      version? Every slash command runs this
+                                        first. Always exits 0 (fail-open).
   aia-harness help | version
 
 Apply is a dry run unless --yes is given. Merging into an existing harness is
@@ -159,6 +163,27 @@ function main() {
   }
   if (cmd === "version" || flags.has("version")) {
     console.log(`aia-harness ${VERSION}`);
+    return 0;
+  }
+
+  // Always exits 0, including on "unknown": commands run this as their first
+  // step, and a version check that can't conclude must never abort the work the
+  // user actually asked for.
+  if (cmd === "version-check") {
+    const result = checkPluginVersion({
+      pluginRoot: PLUGIN_ROOT,
+      refresh: !flags.has("no-refresh"),
+    });
+    if (flags.has("json")) {
+      process.stdout.write(JSON.stringify(result, null, 2) + "\n");
+    } else if (result.status === "stale") {
+      process.stdout.write(
+        `aia-harness ${result.running} is running; ${result.latest} is published.\n` +
+          `Update with: ${result.updateCommand}\n`,
+      );
+    } else {
+      process.stdout.write(`aia-harness ${result.running || VERSION} (${result.status})\n`);
+    }
     return 0;
   }
 
