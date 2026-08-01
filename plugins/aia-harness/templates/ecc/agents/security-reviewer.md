@@ -8,6 +8,7 @@ description: >
 model: sonnet
 ---
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: agents/security-reviewer.md. MIT (c) Affaan Mustafa. -->
+<!-- LOCAL PATCH 2026-07-31: "OWASP Top 10 Check" section below updated to Top 10:2025 categories (verified against owasp.org), ahead of upstream. `npm run sync:ecc` will overwrite this unless also upstreamed to affaan-m/ECC. -->
 
 # Security Reviewer
 
@@ -35,17 +36,17 @@ npx eslint . --plugin security
 - Run `npm audit`, `eslint-plugin-security`, search for hardcoded secrets
 - Review high-risk areas: auth, API endpoints, DB queries, file uploads, payments, webhooks
 
-### 2. OWASP Top 10 Check
-1. **Injection** — Queries parameterized? User input sanitized? ORMs used safely?
-2. **Broken Auth** — Passwords hashed (bcrypt/argon2)? JWT validated? Sessions secure?
-3. **Sensitive Data** — HTTPS enforced? Secrets in env vars? PII encrypted? Logs sanitized?
-4. **XXE** — XML parsers configured securely? External entities disabled?
-5. **Broken Access** — Auth checked on every route? CORS properly configured?
-6. **Misconfiguration** — Default creds changed? Debug mode off in prod? Security headers set?
-7. **XSS** — Output escaped? CSP set? Framework auto-escaping?
-8. **Insecure Deserialization** — User input deserialized safely?
-9. **Known Vulnerabilities** — Dependencies up to date? npm audit clean?
-10. **Insufficient Logging** — Security events logged? Alerts configured?
+### 2. OWASP Top 10:2025 Check
+1. **A01 Broken Access Control** — Auth checked on every route? CORS properly configured? IDOR checked on resource ownership? SSRF-prone requests validated against an allow-list?
+2. **A02 Security Misconfiguration** — Default creds changed? Debug mode off in prod? Security headers set?
+3. **A03 Software Supply Chain Failures** — Dependencies up to date? npm audit clean? Lock file committed? CI/CD and build artifacts verified?
+4. **A04 Cryptographic Failures** — HTTPS enforced? Secrets in env vars? PII encrypted? Weak/legacy algorithms avoided?
+5. **A05 Injection** — Queries parameterized? User input sanitized? ORMs used safely? XML parsers reject external entities (XXE)? Output escaped, CSP set (XSS)?
+6. **A06 Insecure Design** — Threat modeling done for sensitive flows? Abuse cases considered, not just implementation bugs?
+7. **A07 Authentication Failures** — Passwords hashed (bcrypt/argon2)? JWT validated? Sessions secure?
+8. **A08 Software or Data Integrity Failures** — Updates/artifacts signed and verified? User input deserialized safely, never blindly trusted?
+9. **A09 Security Logging and Alerting Failures** — Security events logged? Alerts configured? Logs sanitized?
+10. **A10 Mishandling of Exceptional Conditions** — Errors fail closed, never fail open? Exception handling doesn't leak data or bypass checks?
 
 ### 3. Code Pattern Review
 Flag these patterns immediately:

@@ -292,3 +292,218 @@ export function mergeIntoTemplate(currentBody, proposedBody, templateOrder, vali
 
   return joinSections(current.preamble, mergedSections);
 }
+
+/**
+ * Rewrites every [[wikilink]] whose target does not resolve into plain text,
+ * leaving resolving links, embeds, and code untouched. Deterministic
+ * sanitisation applied after a compile writes: the model can invent a
+ * placeholder link despite the prompt forbidding it, and a broken wikilink is
+ * a hard error under the server's strict wikilink policy.
+ *
+ * Code is skipped by splitting on a CAPTURING regex, so segments alternate
+ * text/code and any segment starting with a backtick is a code span — a fenced
+ * example containing [[foo]] is documentation, not a link.
+ *
+ * The (?<!!) lookbehind excludes ![[embed]] syntax, which addresses an
+ * attachment rather than a note.
+ *
+ * @param {string} text
+ * @param {Set<string>} validTargets every resolvable target: each note's
+ *   basename and its vault-relative path, both without ".md"
+ * @returns {{ text: string, count: number }} count is links rewritten
+ */
+export function unlinkBrokenWikilinks(text, validTargets) {
+  let count = 0;
+  const segments = text.split(/(```[\s\S]*?```|`[^`\n]+`)/);
+  const rewritten = segments.map((segment) => {
+    if (segment.startsWith("`")) return segment;
+    return segment.replace(/(?<!!)\[\[([^\]]+)\]\]/g, (whole, inner) => {
+      const target = inner.split("|")[0].split("#")[0].trim();
+      if (!target || validTargets.has(target)) return whole;
+      count += 1;
+      const pipeIndex = inner.indexOf("|");
+      // A #heading suffix is always discarded, never kept as plain text.
+      return pipeIndex === -1 ? target : inner.slice(pipeIndex + 1).trim();
+    });
+  });
+  return { text: rewritten.join(""), count };
+}
+
+/**
+ * Collapses two or more "## Related" sections into a single one at the end of
+ * the note, merging their links. Successive appends can each add their own
+ * Related section; one note must end with exactly one.
+ *
+ * Link identity, dedup and the "first non-empty relation wins" rule are
+ * delegated to this module's existing parseRelatedLinks / mergeRelatedLinks /
+ * renderRelatedLinks rather than reimplemented — collapsing link identity into
+ * a second, parallel implementation is exactly where the swapo precedent this
+ * ports from lost annotations once already.
+ *
+ * A section runs from its heading to the next heading of ANY level (1-6,
+ * whatever its text) or to EOF. Levels 4-6 terminate a span just like 1-3: an
+ * `#### Subsection` following a Related heading is a sibling of the note's
+ * content, not part of its link list, and a span that ran past it would excise
+ * that subsection along with its whole body. Fewer than two Related headings is
+ * a no-op, so a note that is already correct is returned byte-for-byte
+ * unchanged.
+ *
+ * Everything inside a span that is not a wikilink bullet — prose, sub-bullets,
+ * whatever the note's author put there — is carried into the consolidated
+ * section rather than dropped. This runs over user-authored knowledge notes
+ * that merely happen to have been appended to by a compile, so "not a link
+ * line" must never mean "safe to delete"; only blank-line noise is discarded.
+ * Recognising a link line is delegated to parseRelatedLinks so the two can
+ * never disagree about what counts as one.
+ *
+ * @param {string} text
+ * @returns {{ text: string, removed: number }} removed is sections eliminated
+ */
+export function consolidateRelatedSections(text) {
+  const matches = [...text.matchAll(/^#{1,3}\s+Related\s*$/gim)];
+  if (matches.length <= 1) return { text, removed: 0 };
+
+  /** @type {RelatedLink[]} */
+  let links = [];
+  /** @type {string[]} */
+  const carried = [];
+  /** @type {string[]} */
+  const kept = [];
+  let cursor = 0;
+  for (const match of matches) {
+    const start = match.index ?? 0;
+    kept.push(text.slice(cursor, start));
+    const bodyStart = start + match[0].length;
+    const nextHeading = /^#{1,6}\s/m.exec(text.slice(bodyStart));
+    const bodyEnd = nextHeading ? bodyStart + (nextHeading.index ?? 0) : text.length;
+    const spanLines = text.slice(bodyStart, bodyEnd).split("\n");
+    links = mergeRelatedLinks(links, parseRelatedLinks(spanLines));
+    for (const line of spanLines) {
+      if (line.trim() === "") continue;
+      if (parseRelatedLinks([line]).length > 0) continue;
+      carried.push(line);
+    }
+    cursor = bodyEnd;
+  }
+  kept.push(text.slice(cursor));
+
+  const body = kept
+    .join("")
+    .replace(/\n{3,}/g, "\n\n")
+    .trimEnd();
+  // A bare ISO date is metadata, not a relation — linking one pollutes the
+  // graph and breaks the moment the compile deletes that daily note.
+  const rendered = renderRelatedLinks(links.filter((l) => !/^\d{4}-\d{2}-\d{2}$/.test(l.slug)));
+  const sectionBody = [...carried, ...rendered];
+  const relatedBlock =
+    sectionBody.length > 0 ? `## Related\n\n${sectionBody.join("\n")}\n` : "## Related\n";
+  return { text: `${body}\n\n${relatedBlock}`, removed: matches.length - 1 };
+}
+
+/**
+ * Number of lines, matching Python's `sum(1 for _ in fh)` over a text-mode
+ * file: every newline terminates a line, and a final line without a trailing
+ * newline still counts. `text.split("\n").length` is NOT equivalent — it
+ * over-counts by one whenever the text ends in a newline, which is the normal
+ * case for a note.
+ * @param {string} text
+ * @returns {number}
+ */
+export function countNoteLines(text) {
+  if (!text) return 0;
+  const newlines = text.split("\n").length - 1;
+  return text.endsWith("\n") ? newlines : newlines + 1;
+}
+
+/**
+ * Tokens too generic to make two slugs "the same topic". Ported from swapo's
+ * _dedup.py SLUG_STOPWORDS, minus its Portuguese entries — this repo's source
+ * is English-only, and a Portuguese stopword could never match a slug the
+ * English-language prompt produces anyway.
+ */
+const SLUG_STOPWORDS = new Set([
+  "guard",
+  "guardrail",
+  "check",
+  "gate",
+  "fix",
+  "bug",
+  "review",
+  "code",
+  "update",
+  "final",
+  "impl",
+  "add",
+  "set",
+  "get",
+  "use",
+  "run",
+  "api",
+  "new",
+  "old",
+  "and",
+  "the",
+  "for",
+  "with",
+  "from",
+  "into",
+]);
+
+/** Jaccard score at or above which two slugs are treated as the same topic. */
+export const SLUG_SIM_THRESHOLD = 0.6;
+
+/**
+ * The significant tokens of a kebab-case slug: lowercased, split on hyphens,
+ * with tokens under 3 characters and generic stopwords removed.
+ * @param {string} slug
+ * @returns {Set<string>}
+ */
+export function slugTokens(slug) {
+  return new Set(
+    String(slug)
+      .toLowerCase()
+      .split("-")
+      .filter((token) => token.length >= 3 && !SLUG_STOPWORDS.has(token)),
+  );
+}
+
+/**
+ * Jaccard similarity of two slugs' significant tokens, in [0, 1]. A slug with
+ * no significant tokens scores 0 against everything rather than dividing by
+ * zero — "fix-the-bug" is not evidence of any topic.
+ * @param {string} a
+ * @param {string} b
+ * @returns {number}
+ */
+export function slugSimilarity(a, b) {
+  const tokensA = slugTokens(a);
+  const tokensB = slugTokens(b);
+  if (tokensA.size === 0 || tokensB.size === 0) return 0;
+  let intersection = 0;
+  for (const token of tokensA) if (tokensB.has(token)) intersection += 1;
+  return intersection / (tokensA.size + tokensB.size - intersection);
+}
+
+/**
+ * The existing slug that `candidateSlug` most likely duplicates, or null. An
+ * exact match short-circuits; otherwise the highest-scoring slug at or above
+ * `threshold` wins.
+ * @param {string} candidateSlug
+ * @param {Iterable<string>} existingSlugs
+ * @param {number} [threshold]
+ * @returns {string | null}
+ */
+export function findDuplicateSlug(candidateSlug, existingSlugs, threshold = SLUG_SIM_THRESHOLD) {
+  /** @type {string | null} */
+  let best = null;
+  let bestScore = 0;
+  for (const existing of existingSlugs) {
+    if (existing === candidateSlug) return existing;
+    const score = slugSimilarity(candidateSlug, existing);
+    if (score >= threshold && score > bestScore) {
+      bestScore = score;
+      best = existing;
+    }
+  }
+  return best;
+}

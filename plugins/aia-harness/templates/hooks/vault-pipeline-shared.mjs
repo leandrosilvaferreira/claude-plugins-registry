@@ -16,6 +16,11 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { spawn } from "node:child_process";
+import {
+  unlinkBrokenWikilinks,
+  consolidateRelatedSections,
+  countNoteLines,
+} from "./vault-note-merge.mjs";
 
 /**
  * First 16 hex chars of the sha256 of a file's bytes. Used as the
@@ -194,21 +199,27 @@ function compileLockPath(projectRoot) {
  * session start; per-daily-file locks would only be worth it if several
  * different daily notes ever had to compile concurrently.
  *
- * Fails **closed** — an unwritable lock directory returns false and skips
+ * Fails **closed** — an unwritable lock directory returns "" and skips
  * this session's compile rather than spawning unguarded. Skipping is free
  * (the next session retries, since the runner records success only when it
  * really wrote) and the hook still exits 0 either way, so a session is never
  * blocked; spawning unguarded is the actual bug this exists to prevent.
  *
+ * Returns the **ownership nonce** written into the lock file, which
+ * touchCompileLock/releaseCompileLock take to prove they still hold the lock
+ * they are about to refresh or remove. Falsy ("") on failure, so a caller
+ * that only ever tested this for truthiness keeps working unchanged.
+ *
  * @param {string} projectRoot
- * @returns {boolean} true when the lock is now held by this process
+ * @returns {string} the ownership nonce when the lock is now held, "" otherwise
  */
 export function acquireCompileLock(projectRoot) {
   const lockPath = compileLockPath(projectRoot);
+  const nonce = crypto.randomUUID();
   try {
     fs.mkdirSync(path.dirname(lockPath), { recursive: true });
   } catch {
-    return false;
+    return "";
   }
   // Two attempts: the first can legitimately lose to a stale lock, which the
   // catch below clears; the second is the real one. Bounded on purpose —
@@ -219,27 +230,57 @@ export function acquireCompileLock(projectRoot) {
       // stat-then-write check is exactly the read-then-act race this guards
       // against, so two sessions arriving together cannot both win here.
       //
-      // The contents are debugging breadcrumbs only, never read back by
-      // anything — and note whose pid it is: the short-lived *hook* process
-      // that took the lock, which has already exited by the time the lock
-      // matters. The process actually holding it is the detached runner the
-      // hook spawned, whose pid is deliberately not tracked (liveness is
-      // decided by the stale window above, not by probing a pid). Don't
-      // "fix" a stuck lock by looking this pid up — it is always dead.
-      fs.writeFileSync(lockPath, String(process.pid), { flag: "wx" });
-      return true;
+      // The contents are the ownership nonce, deliberately NOT the pid: the
+      // pid here would be the short-lived *hook* process that took the lock,
+      // which has already exited by the time the lock matters, while the
+      // process actually holding it is the detached runner the hook spawned.
+      // Liveness is still decided by the stale window above, never by probing
+      // a pid — the nonce answers a different question: "is the lock at this
+      // path still the one I took?", which is what stops a runner whose lock
+      // was taken over mid-batch from refreshing, and then deleting, the
+      // lock now belonging to somebody else.
+      fs.writeFileSync(lockPath, nonce, { flag: "wx" });
+      return nonce;
     } catch {
       try {
-        if (Date.now() - fs.statSync(lockPath).mtimeMs < COMPILE_LOCK_STALE_MS) return false;
+        if (Date.now() - fs.statSync(lockPath).mtimeMs < COMPILE_LOCK_STALE_MS) return "";
         fs.unlinkSync(lockPath);
       } catch {
         // Vanished or unreadable mid-check — treat the other side as the
         // winner rather than racing it for the takeover.
-        return false;
+        return "";
       }
     }
   }
-  return false;
+  return "";
+}
+
+/**
+ * The ownership nonce currently in the lock file, or null when there is no
+ * readable lock. The detached runner reads this once at startup: the hook
+ * that took the lock on its behalf is a different, already-exited process, so
+ * the nonce cannot be handed over in argv without changing the runner's argv
+ * contract (which `commands/add-obsidian.md` Step 5a documents as a coupling
+ * installers must adjudicate).
+ *
+ * Residual, stated honestly rather than papered over: a takeover in the window
+ * between the hook's acquire and this first read hands the runner somebody
+ * else's nonce, and it will then happily refresh and release that lock. The
+ * window is milliseconds against a 30-minute stale threshold, and it is the
+ * mid-batch takeover — minutes to hours wide — that actually bit the precedent
+ * project. A lock file written by anything other than this acquire (e.g. the
+ * pre-nonce pid format left by an older installed copy of these hooks) simply
+ * never matches, so release becomes a no-op and the file is cleared by the
+ * stale window instead of by release.
+ * @param {string} projectRoot
+ * @returns {string | null}
+ */
+export function readCompileLockNonce(projectRoot) {
+  try {
+    return fs.readFileSync(compileLockPath(projectRoot), "utf8");
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -247,9 +288,17 @@ export function acquireCompileLock(projectRoot) {
  * (success or failure alike), and by compile.mjs when the spawn it took the
  * lock for never happened. Never throws — an already-absent lock is the
  * expected state after a stale takeover.
+ *
+ * With `nonce`, the file is removed only when it still holds that exact value;
+ * a mismatch is a silent no-op, so a runner whose lock was taken over mid-batch
+ * cannot delete the lock the new owner is relying on. Without `nonce` the
+ * removal is unconditional, preserving the original behaviour for any caller
+ * that has no nonce to offer.
  * @param {string} projectRoot
+ * @param {string | null} [nonce]
  */
-export function releaseCompileLock(projectRoot) {
+export function releaseCompileLock(projectRoot, nonce) {
+  if (nonce != null && readCompileLockNonce(projectRoot) !== nonce) return;
   try {
     fs.unlinkSync(compileLockPath(projectRoot));
   } catch {
@@ -395,13 +444,23 @@ export function isDestructiveUpdateNoteCall(toolInput) {
  * with "03-knowledge/"), letting a traversal segment escape the allowed
  * folder despite passing the check. Defensive: a non-string `notePath`
  * counts as outside rather than throwing.
+ *
+ * A backslash anywhere is rejected outright: vault paths are forward-slashed
+ * by contract (the MCP server's own path convention), so a backslash is never
+ * legitimate here — and on Windows "03-knowledge/..\\..\\evil.md" resolves
+ * outside the vault while splitting on "/" alone sees one long, innocuous
+ * filename segment and reports "not outside". Confirmed with path.win32.join,
+ * not theorised. The segment split below tolerates both separators too, so
+ * the traversal check keeps working even if this earlier reject is ever
+ * loosened.
  * @param {unknown} notePath
  * @param {string[]} allowedFolderPrefixes
  * @returns {boolean}
  */
 export function isPathOutsideAllowedFolders(notePath, allowedFolderPrefixes) {
   if (typeof notePath !== "string") return true;
-  if (notePath.split("/").includes("..")) return true;
+  if (notePath.includes("\\")) return true;
+  if (notePath.split(/[\\/]/).includes("..")) return true;
   return !allowedFolderPrefixes.some(
     (prefix) => notePath === prefix || notePath.startsWith(`${prefix}/`),
   );
@@ -485,4 +544,383 @@ export function isErroredTrackedResult(block, pendingIds) {
  */
 export function isRetryBudgetExhausted(retryCountByTarget, target, maxRetries) {
   return (retryCountByTarget.get(target) ?? 0) > maxRetries;
+}
+
+/**
+ * Local-time YYYY-MM-DD for "today". Deliberately NOT
+ * `new Date().toISOString().slice(0, 10)`, which is UTC-based and would name
+ * tomorrow's date in the evening for any timezone west of UTC — the same trap
+ * documented on compile.mjs's former yesterday() helper.
+ * @returns {string}
+ */
+export function todayLocal() {
+  const d = new Date();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${d.getFullYear()}-${month}-${day}`;
+}
+
+/**
+ * Path of the project-level, CROSS-session compile cache. Deliberately not a
+ * session scratch dir (see .claude/rules/hooks-cwd-resolution.md, Purpose C):
+ * its whole job is to survive across sessions so an unchanged daily note is
+ * not recompiled on every session start.
+ * @param {string} projectRoot
+ * @returns {string}
+ */
+export function compileStatePath(projectRoot) {
+  return path.join(projectRoot, ".claude", "hooks", "log", "compile-state.json");
+}
+
+/**
+ * Reads compile-state.json. Missing or corrupt reads as {} — never throws,
+ * because a corrupt cache must degrade into "recompile" rather than into a
+ * crashed hook.
+ * @param {string} projectRoot
+ * @returns {Record<string, any>}
+ */
+export function readCompileState(projectRoot) {
+  try {
+    const parsed = JSON.parse(fs.readFileSync(compileStatePath(projectRoot), "utf8"));
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+/**
+ * How many times one daily note may end a compile without reaching a terminal
+ * conclusion before it is abandoned. Each attempt costs a full LLM sub-session
+ * and — since the batch is capped and ordered oldest-first — occupies a slot
+ * every session, ahead of every newer daily behind it, so an unbounded retry is
+ * how one poisoned note starves the whole pipeline. Abandoning is not deleting:
+ * the daily stays on disk, the runner logs why it gave up, and editing the file
+ * (which changes its hash) restores it to pending with a fresh budget.
+ */
+export const MAX_COMPILE_ATTEMPTS = 3;
+
+/**
+ * A state entry's recorded attempt count. Missing/non-numeric reads as 0, so an
+ * entry written before this field existed starts with a full budget rather than
+ * being retired on sight.
+ * @param {any} entry
+ * @returns {number}
+ */
+function readAttempts(entry) {
+  return typeof entry?.attempts === "number" && entry.attempts > 0 ? entry.attempts : 0;
+}
+
+/**
+ * Daily notes still awaiting compilation, oldest first.
+ *
+ * Replaces the old single-day `yesterday()` window, which permanently skipped
+ * any daily note whose next calendar day happened to start no session — a gap
+ * confirmed against this repo's own vault, not theorised.
+ *
+ * Today's daily is always excluded: session-log-runner.mjs is still appending
+ * to it, so compiling it would promote a half-written log. Comparison is
+ * lexicographic, which is equivalent to date order for fixed-width YYYY-MM-DD.
+ *
+ * A recorded entry with `partial: true` never retires its daily, even when its
+ * hash still matches the current content: that run never proved it finished
+ * reading the daily, so it stays pending by design until a future attempt
+ * reaches a terminal success. The recorded fingerprints on that entry are what
+ * stop the retry from re-promoting what already landed — see the PreToolUse
+ * guard in compile-runner.mjs — not this exclusion.
+ *
+ * That retry is bounded by `attempts` (see MAX_COMPILE_ATTEMPTS): a daily whose
+ * content is unchanged since its last failure and that has already burned its
+ * attempt budget is retired, so a permanently-failing daily cannot occupy a
+ * batch slot every session forever, ahead of every newer daily behind it. It is
+ * only ever retired, never deleted — and editing the daily changes its hash,
+ * which restores it to pending with a fresh budget.
+ *
+ * `dailyDir` is a parameter rather than derived here on purpose — this module
+ * must stay free of the vault directory name so its template copy needs no
+ * __OBSIDIAN_VAULT_DIR__ placeholder.
+ *
+ * @param {string} dailyDir absolute path to the vault's daily/ directory
+ * @param {Record<string, any>} state parsed compile-state.json
+ * @returns {string[]} filenames (not paths), ascending
+ */
+export function listPendingDailies(dailyDir, state) {
+  /** @type {string[]} */
+  let entries = [];
+  try {
+    entries = fs.readdirSync(dailyDir);
+  } catch {
+    return []; // missing or unreadable directory -> nothing pending
+  }
+  const today = todayLocal();
+  /** @type {string[]} */
+  const pending = [];
+  for (const name of entries) {
+    const match = /^(\d{4}-\d{2}-\d{2})\.md$/.exec(name);
+    if (!match) continue;
+    if (match[1] >= today) continue;
+    // A directory named like a daily note, or a file that vanished mid-scan,
+    // hashes to null and is skipped rather than crashing the gate.
+    const current = hashOfIfExists(path.join(dailyDir, name));
+    if (current === null) continue;
+    const recorded = state?.[name];
+    if (recorded && typeof recorded === "object" && recorded.hash === current) {
+      // Compiled to a terminal conclusion at this exact content.
+      if (recorded.partial !== true) continue;
+      // Still partial, but out of attempts at this content — abandoned.
+      if (readAttempts(recorded) >= MAX_COMPILE_ATTEMPTS) continue;
+    }
+    pending.push(name);
+  }
+  return pending.sort();
+}
+
+/**
+ * Moves the compile lock's mtime to now. acquireCompileLock treats a lock
+ * older than COMPILE_LOCK_STALE_MS as abandoned; that window was sized for a
+ * single LLM sub-session, but the runner now processes every pending daily in
+ * one batch and can legitimately outlive it. Without this refresh a second
+ * session steals the lock mid-batch and both runners promote the same dailies
+ * concurrently — the precise failure the swapo precedent hit (49 concurrent
+ * executions, 40 duplicated notes). Never throws: a lock already taken over is
+ * the expected state, not an error.
+ *
+ * With `nonce`, the refresh happens only when the lock file still holds that
+ * exact value, and the return value reports whether it did. The heartbeat only
+ * fires between dailies, so a sub-session that outlives the stale window loses
+ * the lock mid-daily; without this check the displaced runner would keep the
+ * *new* owner's lock alive while running unguarded beside it. A `false` return
+ * is the caller's signal to stop, not something to retry. Without `nonce` the
+ * refresh is unconditional, preserving the original behaviour.
+ * @param {string} projectRoot
+ * @param {string | null} [nonce]
+ * @returns {boolean} true when the lock was refreshed (i.e. still owned)
+ */
+export function touchCompileLock(projectRoot, nonce) {
+  if (nonce != null && readCompileLockNonce(projectRoot) !== nonce) return false;
+  try {
+    const now = new Date();
+    fs.utimesSync(compileLockPath(projectRoot), now, now);
+    return true;
+  } catch {
+    // gone or unwritable — nothing to refresh
+    return false;
+  }
+}
+
+/**
+ * Normalizes note content for fingerprint comparison: drops a leading YAML
+ * frontmatter block, drops ATX heading lines, collapses blank-line runs,
+ * trims, lowercases. Ported from swapo's _dedup.py `_normalize_content`.
+ *
+ * The frontmatter regex intentionally has NO `m` flag — the Python omits
+ * MULTILINE so only a block at offset 0 is stripped; adding `m` would eat any
+ * `---` fence mid-document and silently change every fingerprint.
+ *
+ * toLowerCase(), never toLocaleLowerCase(): the latter is locale-dependent
+ * (Turkish dotted/dotless I) and would make a hash machine-dependent.
+ *
+ * @param {unknown} text
+ * @returns {string}
+ */
+export function normalizeNoteContent(text) {
+  if (typeof text !== "string") return "";
+  return text
+    .replace(/^---\n[\s\S]*?\n---\n/, "")
+    .replace(/^#{1,6}\s+.*$/gm, "")
+    .replace(/\n{2,}/g, "\n")
+    .trim()
+    .toLowerCase();
+}
+
+/**
+ * Identity of one promoted learning, used to stop a retry of a partially
+ * failed compile from re-promoting what already landed.
+ *
+ * Truncation happens BEFORE normalization, matching the Python — reversing the
+ * order changes every hash. Only the content is normalized; folder, slug and
+ * action are concatenated verbatim, so callers must pass a stable lowercase
+ * action ("created" / "updated").
+ *
+ * @param {string} folder first path segment, e.g. "03-knowledge"
+ * @param {string} slug   basename without ".md"
+ * @param {string} action "created" | "updated"
+ * @param {unknown} contentSnippet the write's proposed content
+ * @returns {string} 16 hex chars
+ */
+export function buildLearningFingerprint(folder, slug, action, contentSnippet) {
+  const snippet = typeof contentSnippet === "string" ? contentSnippet.slice(0, 200) : "";
+  const raw = `${folder}|${slug}|${action}|${normalizeNoteContent(snippet)}`;
+  return crypto.createHash("sha256").update(raw, "utf8").digest("hex").slice(0, 16);
+}
+
+/**
+ * Line ceiling a promoted note should stay under. Mirrors this vault's
+ * OBSIDIAN_MAX_NOTE_LINES. The server's size policy is "warn", so it writes an
+ * oversized note anyway and returns a warning to a caller that discards it —
+ * which is why the guard below has to measure this itself.
+ */
+export const MAX_NOTE_LINES = 500;
+
+/**
+ * Every wikilink target that resolves in this vault: for each note, both its
+ * basename and its vault-relative path, each without the ".md" suffix — the
+ * server resolves either form.
+ *
+ * The exclusion list is deliberately NARROWER than a "content notes" scan:
+ * daily/ and templates/ notes are perfectly valid link targets even though
+ * they are never promotion destinations.
+ *
+ * Relative paths are joined with "/" explicitly rather than path.join, so a
+ * Windows run produces the same target strings as a POSIX one.
+ *
+ * @param {string} vaultRoot
+ * @returns {Set<string>}
+ */
+export function collectValidTargets(vaultRoot) {
+  const skipTopLevel = new Set(["_meta", ".obsidian", ".trash", ".git"]);
+  /** @type {Set<string>} */
+  const targets = new Set();
+  /**
+   * @param {string} dir
+   * @param {string} rel
+   */
+  const walk = (dir, rel) => {
+    /** @type {import("node:fs").Dirent[]} */
+    let entries = [];
+    try {
+      entries = fs.readdirSync(dir, { withFileTypes: true });
+    } catch {
+      return; // unreadable subtree — skip it, never fail the whole scan
+    }
+    for (const entry of entries) {
+      if (entry.isDirectory()) {
+        if (rel === "" && skipTopLevel.has(entry.name)) continue;
+        walk(path.join(dir, entry.name), rel ? `${rel}/${entry.name}` : entry.name);
+      } else if (entry.isFile() && entry.name.endsWith(".md")) {
+        const stem = entry.name.slice(0, -3);
+        targets.add(stem);
+        targets.add(rel ? `${rel}/${stem}` : stem);
+      }
+    }
+  };
+  walk(vaultRoot, "");
+  return targets;
+}
+
+/**
+ * The absolute path of `relPath` inside `vaultRoot`, or null when it does not
+ * actually land inside the vault. An exported write primitive must not depend
+ * on its caller having pre-validated the paths it is handed: `..` segments and
+ * (on Windows) backslash separators both escape a plain join, and the caller
+ * here is fed note paths a language model chose. Resolve-then-contain rather
+ * than pattern-matching the input, so normalisation is the platform's own.
+ * @param {string} vaultRoot
+ * @param {string} relPath vault-relative, forward-slashed
+ * @returns {string | null}
+ */
+function resolveInsideVault(vaultRoot, relPath) {
+  if (typeof relPath !== "string" || relPath.includes("\\")) return null;
+  const root = path.resolve(vaultRoot);
+  const absolute = path.resolve(root, ...relPath.split("/"));
+  return absolute === root || absolute.startsWith(root + path.sep) ? absolute : null;
+}
+
+/**
+ * Deterministic sanitisation of the notes a compile just wrote. The prompt
+ * asks the sub-agent not to invent links or duplicate a Related section; this
+ * guarantees it. Scoped to `notePaths` — the notes this run actually wrote and
+ * confirmed on disk — so a pre-existing problem elsewhere in the vault is
+ * never silently rewritten by an unrelated compile.
+ *
+ * Oversized notes are reported, never split: splitting would cost a second LLM
+ * sub-session per note.
+ *
+ * Every per-note failure is swallowed. This runs after the promotion already
+ * succeeded; a guard that could fail the compile would be worse than the
+ * cosmetic problems it fixes.
+ *
+ * @param {string} vaultRoot
+ * @param {Iterable<string>} notePaths vault-relative, forward-slashed
+ * @param {Set<string>} validTargets from collectValidTargets
+ * @param {number} [maxNoteLines]
+ * @returns {{ unlinked: number, consolidated: number, oversized: {path: string, lines: number}[] }}
+ */
+export function applyPostWriteGuard(
+  vaultRoot,
+  notePaths,
+  validTargets,
+  maxNoteLines = MAX_NOTE_LINES,
+) {
+  let unlinked = 0;
+  let consolidated = 0;
+  /** @type {{path: string, lines: number}[]} */
+  const oversized = [];
+  for (const notePath of notePaths) {
+    const absolute = resolveInsideVault(vaultRoot, notePath);
+    if (absolute === null) continue; // escapes the vault — never read, never write
+    let original = "";
+    try {
+      original = fs.readFileSync(absolute, "utf8");
+    } catch {
+      continue; // vanished or unreadable — nothing to sanitise
+    }
+    const unlinkResult = unlinkBrokenWikilinks(original, validTargets);
+    const relatedResult = consolidateRelatedSections(unlinkResult.text);
+    if (relatedResult.text !== original) {
+      try {
+        fs.writeFileSync(absolute, relatedResult.text);
+      } catch {
+        continue; // could not persist the fix — report nothing further for this note
+      }
+      // Counted only after the write actually landed: these numbers are the
+      // sole record of what the guard did in compile.log, so incrementing
+      // before the write over-reports a fix that never reached disk.
+      unlinked += unlinkResult.count;
+      consolidated += relatedResult.removed;
+    }
+    const lines = countNoteLines(relatedResult.text);
+    if (lines > maxNoteLines) oversized.push({ path: notePath, lines });
+  }
+  return { unlinked, consolidated, oversized };
+}
+
+/**
+ * Every note under the given vault folders, as {relPath, slug}. Scoped to the
+ * promotion destinations rather than the whole vault: only a note the pipeline
+ * could itself create is a duplication candidate, so daily/ and templates/ are
+ * irrelevant here (unlike collectValidTargets, where they are valid link
+ * targets and must be included).
+ *
+ * Paths are forward-slashed regardless of platform, since they are compared
+ * and rendered into a prompt.
+ *
+ * @param {string} vaultRoot
+ * @param {string[]} folders top-level folder names, e.g. the PARA four
+ * @returns {{relPath: string, slug: string}[]} sorted by relPath
+ */
+export function listVaultNotes(vaultRoot, folders) {
+  /** @type {{relPath: string, slug: string}[]} */
+  const notes = [];
+  /**
+   * @param {string} dir
+   * @param {string} rel
+   */
+  const walk = (dir, rel) => {
+    /** @type {import("node:fs").Dirent[]} */
+    let entries = [];
+    try {
+      entries = fs.readdirSync(dir, { withFileTypes: true });
+    } catch {
+      return; // folder absent or unreadable — nothing to inventory
+    }
+    for (const entry of entries) {
+      if (entry.isDirectory()) {
+        walk(path.join(dir, entry.name), `${rel}/${entry.name}`);
+      } else if (entry.isFile() && entry.name.endsWith(".md")) {
+        notes.push({ relPath: `${rel}/${entry.name}`, slug: entry.name.slice(0, -3) });
+      }
+    }
+  };
+  for (const folder of folders) walk(path.join(vaultRoot, folder), folder);
+  return notes.sort((a, b) => (a.relPath < b.relPath ? -1 : a.relPath > b.relPath ? 1 : 0));
 }

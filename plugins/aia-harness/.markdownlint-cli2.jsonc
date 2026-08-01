@@ -22,7 +22,12 @@
     "MD060": false
   },
   "ignores": [
-    "node_modules/**",
+    // Nested, not just root: `.claude/scripts/node_modules/` is a real install
+    // (the vault pipeline's isolated SDK dependency, gitignored) and a bare
+    // "node_modules/**" does not match it — it only anchors at the repo root.
+    // Without the "**/" prefix, `npm run lint` reports ~3000 errors from
+    // third-party READMEs and buries the handful of real ones.
+    "**/node_modules/**",
     ".git/**",
     "templates/**",
     ".superpowers/**",

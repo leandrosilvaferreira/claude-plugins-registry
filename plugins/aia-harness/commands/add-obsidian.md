@@ -257,6 +257,13 @@ computes the obsidian hook fragment into the `settings` artifact's content:
 node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "$TARGET" --yes --tools=obsidian-mcp --only=obsidian:rule,obsidian:hook:vault-orient,obsidian:hook:vault-guard,obsidian:hook:compile,obsidian:hook:session-log,obsidian:hook:vault-note-merge,obsidian:hook:vault-pipeline-shared,obsidian:script:compile-runner,obsidian:script:session-log-runner --merge --json
 ```
 
+> **If any of these land in `.claude/.aia-harness-pending/` for adjudication:**
+> `compile.mjs` and `compile-runner.mjs` share an argv contract
+> (`[projectDir]`). Accept both or neither — accepting one alone leaves a
+> runner receiving arguments it does not parse, and the compile silently stops
+> working. `vault-pipeline-shared.mjs` and `vault-note-merge.mjs` are imported
+> by both; accept them alongside either.
+
 These 9 (the rule, the 6 hooks, and the 2 runner scripts) carry no
 `mergeStrategy` in `lib/data/obsidian-catalog.mjs`, so a plain `apply` treats
 any one of them that already exists and differs as
@@ -384,8 +391,12 @@ this ever looks stale):
   `REASON` message array, the user-facing deny explanation starting
   `"__OBSIDIAN_VAULT_DIR__/ is served by the obsidian MCP server..."`) are
   both plain strings — use the raw (unescaped) chosen name for those two.
-- `$TARGET/.claude/hooks/compile.mjs` and `$TARGET/.claude/hooks/session-log.mjs`:
-  1 occurrence each, plain string replace with the chosen name.
+- `$TARGET/.claude/hooks/compile.mjs`: **2 occurrences**, plain string
+  replace with the chosen name — one inside a doc comment
+  (`<projectRoot>/__OBSIDIAN_VAULT_DIR__/daily/ matching YYYY-MM-DD.md`), one
+  in code (`path.join(projectRoot, "__OBSIDIAN_VAULT_DIR__", "daily")`).
+- `$TARGET/.claude/hooks/session-log.mjs`: 1 occurrence, plain string replace
+  with the chosen name.
 - `$TARGET/.claude/rules/obsidian.md`: replace every occurrence with the
   chosen name (5 occurrences; plain string replace — it's prose, not a
   regex).
@@ -394,9 +405,9 @@ this ever looks stale):
   — plain string replace.
 - `$TARGET/.claude/scripts/compile-runner.mjs`: 1 occurrence
   (`path.join(projectDir, "__OBSIDIAN_VAULT_DIR__")`) — plain string replace.
-  This is the detached worker `compile.mjs` spawns to promote yesterday's
-  daily note; an unsubstituted placeholder here silently breaks that whole
-  pipeline (it would resolve a vault root that never exists).
+  This is the detached worker `compile.mjs` spawns to promote each pending
+  daily note it finds; an unsubstituted placeholder here silently breaks
+  that whole pipeline (it would resolve a vault root that never exists).
 - `$TARGET/.claude/scripts/session-log-runner.mjs`: 1 occurrence
   (`path.join(projectDir, "__OBSIDIAN_VAULT_DIR__", "daily")`) — plain string
   replace. Same failure mode: the session-end daily-note writer would target

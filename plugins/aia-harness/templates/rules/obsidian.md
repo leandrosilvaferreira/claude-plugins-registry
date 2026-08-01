@@ -169,9 +169,25 @@ what they already do:
   had enough substantive turns, then spawns a detached worker that calls
   `add_daily_note_tool` once with a `## Session — HH:MM` block (What I did / Decisions /
   Problems / Ideas, whichever have content).
-- **`.claude/hooks/compile.mjs`** (`SessionStart`) — promotes yesterday's daily note into
-  `03-knowledge/`, idempotently (by content hash), without deleting the daily note it read
-  from.
+- **`.claude/hooks/compile.mjs`** (`SessionStart`) — promotes **every** daily
+  note older than today that has not yet been compiled, oldest first, one LLM
+  sub-session each. Today's note is never eligible: `session-log-runner.mjs`
+  is still appending to it. Idempotent by content hash, so an unchanged note
+  is never recompiled.
+
+A daily note is **deleted** once the compile sub-agent reaches a terminal
+conclusion about it — including a deliberate "nothing here worth promoting"
+and a run where every write it attempted was rejected. The raw log is not
+kept. If this vault is gitignored, that deletion is unrecoverable; commit
+the vault, or back it up, if you want the raw daily log to survive its
+promotion.
+
+The compile also **rewrites the notes it just wrote to**, deterministically
+and only those: any `[[wikilink]]` whose target does not exist is turned into
+plain text (the vault's wikilink policy is strict, so a broken link is a hard
+error), and two or more `## Related` sections are merged into a single one at
+the end of the note. Both edits touch notes you may have authored by hand, so
+expect a note the pipeline appended to to come back tidied, not byte-identical.
 
 Both hooks spawn their detached worker via `@anthropic-ai/claude-agent-sdk`, which must be
 resolvable from this project (e.g. `npm install @anthropic-ai/claude-agent-sdk`) — without
