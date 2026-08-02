@@ -683,7 +683,7 @@ function writeFile(target, content, executable) {
  * `fs.cpSync` call: `fs.cpSync`'s `dereference` option only resolves the
  * top-level `src` argument, not a symlink found while walking nested
  * directory contents (confirmed empirically on Node v24 — see
- * `copyDereferenced()` in `templates/hooks/worktree-create.mjs` for the same
+ * `copyDereferenced()` in `templates/hooks/worktree-seed.mjs` for the same
  * pattern). Using `statSync` (which follows symlinks) instead of
  * `Dirent.isDirectory()` for the type check, and `copyFileSync` per file
  * (which preserves the source file's own mode) sidesteps that gap file by

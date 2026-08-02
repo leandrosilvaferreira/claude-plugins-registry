@@ -53,7 +53,13 @@ export const MCP_CATALOG = [
       env: { Authorization: "Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}" },
     },
     envPlaceholders: ["GITHUB_PERSONAL_ACCESS_TOKEN"],
-    prereq: "gh CLI (get a token with: gh auth token)",
+    // The value is the keyring OAuth token, never a PAT hand-made in the
+    // GitHub UI: fine-grained PATs lack `Checks: Read` (breaking `gh pr checks`)
+    // and expose no X-OAuth-Scopes header to diagnose with, and a classic PAT
+    // is one more secret to rotate by hand. This server is HTTP-remote and
+    // resolves the header statically, so the env entry itself cannot go away.
+    prereq:
+      "gh CLI, authenticated with the scopes this project needs. Run `gh auth refresh -h github.com -s repo,workflow` (add `,read:org,project` for the GitHub PM pillar), then `gh auth token` for the value.",
     recommended: (p) => p.vcs.isGit,
   },
   {

@@ -17,6 +17,8 @@ import {
   resolveDepsFromProfile,
   detectInstalledTools,
 } from "../lib/detect/system-deps.mjs";
+import { checkGhAuth } from "../lib/detect/gh-auth.mjs";
+import { GH_SCOPES_BASE, GH_SCOPES_PM } from "../lib/data/gh-scopes.mjs";
 import { auditRootClaudeMdSections } from "../lib/generate/root-sections.mjs";
 import { checkPluginVersion } from "../lib/version-check.mjs";
 import { exists, readText, readJson } from "../lib/util/fs.mjs";
@@ -120,6 +122,34 @@ function printApply(res, dryRun) {
 }
 
 /**
+ * Widen the PM-tier decision past `profile.githubPM.hasPmConfig`'s "found in the
+ * scanned file list" contract. `.claude/pm-config.json` is gitignored (lib/plan.mjs),
+ * so git never copies it into a linked worktree on its own — `hasPmConfig` is always
+ * false there even on a genuine PM project, and `check` would ask for only the base
+ * scope tier. `CLAUDE_PROJECT_DIR` (set by Claude Code to the invoking project's root)
+ * is checked directly, but only when it points somewhere other than the scanned dir —
+ * this is the worktree case, not a redundant re-check of the same directory.
+ *
+ * Fail-open: any error here (missing env, fs failure) is swallowed and treated as
+ * "no widening" — this must never throw or otherwise affect `check`'s exit code.
+ * Does NOT change what `detectGitHubPM` itself means: `hasPmConfig` keeps meaning
+ * "found in the scanned file list", this only widens where the tier is *chosen*.
+ *
+ * @param {import('../lib/profile.mjs').ProjectProfile} profile
+ * @returns {boolean}
+ */
+function needsPmScopes(profile) {
+  if (profile.githubPM?.hasPmConfig) return true;
+  try {
+    const projectDir = process.env.CLAUDE_PROJECT_DIR;
+    if (!projectDir || path.resolve(projectDir) === path.resolve(profile.root)) return false;
+    return exists(path.join(projectDir, ".claude", "pm-config.json"));
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Render a DepsReport as human-readable text for CLI output.
  * @param {import('../lib/profile.mjs').DepsReport} report
  * @param {string} platform
@@ -148,6 +178,50 @@ function formatDepsReport(report, platform) {
   } else {
     lines.push("STATUS: ok  all dependencies found.");
   }
+
+  if (
+    report.ghAuth &&
+    (!report.ghAuth.available ||
+      report.ghAuth.envTokenOverride ||
+      !report.ghAuth.authenticated ||
+      report.ghAuth.missing.length > 0)
+  ) {
+    lines.push("");
+    if (!report.ghAuth.available) {
+      // gh was found on disk but spawnSync could not run it (corrupt binary,
+      // permission problem, timeout, non-functional shim) — nothing else about
+      // its auth state was determined, so `missing`/`authenticated` below are
+      // artifacts of that failure, not findings. Neither `gh auth refresh` nor
+      // `gh auth login` can fix a binary that will not start.
+      lines.push(
+        "⚠  gh was found but could not be run.",
+        "   Verify the installation by running `gh --version` yourself.",
+      );
+    } else if (report.ghAuth.envTokenOverride) {
+      lines.push(
+        "⚠  GH_TOKEN/GITHUB_TOKEN is set — gh prefers it over the keyring account,",
+        "   so its permissions are what apply. Run `unset GH_TOKEN GITHUB_TOKEN` to",
+        "   fall back to the OAuth login before refreshing scopes.",
+      );
+    } else if (!report.ghAuth.authenticated) {
+      // A freshly-installed gh: `gh auth refresh` has nothing to refresh yet —
+      // that command only adds scopes to an existing login. `missing` already
+      // equals the full required tier here (checkGhAuth diffs against an empty
+      // granted list when not authenticated), so it's the right scope list to log in with.
+      lines.push(
+        "⚠  gh is not logged in to any host.",
+        `   Run: gh auth login -h github.com -s ${report.ghAuth.missing.join(",")}`,
+        "   Confirm with `gh auth status`.",
+      );
+    } else {
+      lines.push(
+        `⚠  gh is missing OAuth scope(s): ${report.ghAuth.missing.join(", ")}`,
+        `   Run: ${report.ghAuth.refreshCmd}`,
+        "   Confirm with `gh auth status`.",
+      );
+    }
+  }
+
   return lines.join("\n");
 }
 
@@ -205,11 +279,27 @@ function main() {
     const profile = scanProject(dir);
     const deps = resolveDepsFromProfile(profile, toolList);
     const report = checkSystemDeps(deps, process.platform);
+
+    // Scopes are only meaningful once the binary exists. The PM tier applies
+    // when the project is already wired to a GitHub Project; a plain GitHub
+    // repo is asked for the base tier only (least privilege).
+    const ghCheck = report.checks.find((c) => c.name === "gh");
+    const payload = ghCheck?.found
+      ? {
+          ...report,
+          ghAuth: checkGhAuth(needsPmScopes(profile) ? GH_SCOPES_PM : GH_SCOPES_BASE, {
+            binPath: ghCheck.resolvedPath,
+          }),
+        }
+      : report;
+
     if (flags.has("json")) {
-      process.stdout.write(JSON.stringify(report, null, 2) + "\n");
+      process.stdout.write(JSON.stringify(payload, null, 2) + "\n");
     } else {
-      process.stdout.write(formatDepsReport(report, process.platform) + "\n");
+      process.stdout.write(formatDepsReport(payload, process.platform) + "\n");
     }
+    // Missing scopes are advisory: the exit code stays driven by the dep
+    // status alone, so `ghAuth` can never halt a harness operation.
     return report.status === "block" ? 1 : 0;
   }
 

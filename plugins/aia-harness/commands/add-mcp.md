@@ -62,9 +62,31 @@ means the answer is unavailable, not that something is wrong.
 
 4. For each required env var, add an empty entry under `env` in
    `.claude/settings.local.json` (gitignored) and tell the user to fill it.
-   For **github** (default on any git repo): prereq is the `gh` CLI — the user can
-   generate `GITHUB_PERSONAL_ACCESS_TOKEN` with `gh auth token`. Surface any
-   prereqs reported in the plan's `.mcp.json` rationale.
+   Surface any prereqs reported in the plan's `.mcp.json` rationale.
+
+   For **github** (default on any git repo), give the user these two commands
+   verbatim and tell them to paste the output of the second one as
+   `GITHUB_PERSONAL_ACCESS_TOKEN`:
+
+   ```bash
+   gh auth refresh -h github.com -s repo,workflow
+   gh auth token
+   ```
+
+   If the project uses the GitHub PM pillar (`.claude/pm-config.json` exists),
+   use the wider scope set instead:
+
+   ```bash
+   gh auth refresh -h github.com -s repo,workflow,read:org,project
+   gh auth token
+   ```
+
+   Do **not** tell the user to create a personal access token at
+   github.com/settings/tokens. A fine-grained PAT lacks `Checks: Read`, so
+   `gh pr checks` fails with "Resource not accessible by personal access token",
+   and it exposes no `X-OAuth-Scopes` header to diagnose with. The keyring OAuth
+   token that `gh auth token` prints already carries the right scopes and is
+   rotated by re-running the refresh.
 
 5. Remind the user to restart Claude Code so the servers load, and to keep the
    server count small (high-signal servers only).

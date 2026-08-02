@@ -65,9 +65,13 @@ export function renderLspJson(profile) {
 
 /**
  * @param {boolean} [hasGraphify]
+ * @param {boolean} [isGitHubPM]  Project detected as a GitHub repo (profile.githubPM.detected).
+ *   `.claude/pm-config.json` is gitignored (lib/plan.mjs), so git never copies it into a
+ *   linked worktree on its own — listing it here is what makes a new worktree actually
+ *   carry it, keeping the PM scope tier resolvable there too.
  * @returns {string}
  */
-export function renderWorktreeInclude(hasGraphify = false) {
+export function renderWorktreeInclude(hasGraphify = false, isGitHubPM = false) {
   const lines = [
     "# Files copied into every new worktree (aia-harness)",
     ".claude/settings.local.json",
@@ -75,6 +79,7 @@ export function renderWorktreeInclude(hasGraphify = false) {
     ".env.local",
   ];
   if (hasGraphify) lines.push("graphify-out/graph.json");
+  if (isGitHubPM) lines.push(".claude/pm-config.json");
   return lines.join("\n") + "\n";
 }
 

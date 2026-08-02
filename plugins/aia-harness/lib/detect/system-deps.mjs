@@ -209,7 +209,7 @@ export function checkSystemDeps(deps, platform) {
  * Derive which system deps to check from a project profile + installed tools.
  * Engine deps (node) are always included.
  *
- * @param {{ primaryLanguage: string|null, packageManagers: Array<{ ecosystem: string }> }} profile
+ * @param {{ primaryLanguage: string|null, packageManagers: Array<{ ecosystem: string }>, githubPM?: { detected: boolean } }} profile
  * @param {string[]} installedTools  Tool names, e.g. ['rtk', 'graphify'].
  * @returns {DepEntry[]}
  */
@@ -241,6 +241,18 @@ export function resolveDepsFromProfile(profile, installedTools = []) {
   for (const tool of installedTools) {
     add(TOOL_DEPS[tool] ?? []);
   }
+
+  // A GitHub remote implies `gh` even when no tool asked for it — the PM
+  // pillar, the github MCP server and the scope guard all route through it.
+  // Two deliberate choices here:
+  //   • Appended AFTER the loop, because add() is first-wins: an explicit
+  //     --tools=gh (TOOL_DEPS.gh, level "required", as /add-tools passes)
+  //     must stay authoritative rather than be demoted by this entry.
+  //   • level "recommended", not TOOL_DEPS.gh's "required": a repo that merely
+  //     has a GitHub remote must never reach status "block", which makes
+  //     `harness.mjs check` exit 1 and halts every harness operation over an
+  //     optional tool.
+  if (profile.githubPM?.detected) add([{ name: "gh", level: "recommended" }]);
 
   return [...seen.values()];
 }

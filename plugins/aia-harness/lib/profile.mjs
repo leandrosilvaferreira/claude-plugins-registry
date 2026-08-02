@@ -154,6 +154,17 @@
  */
 
 /**
+ * Result of inspecting the active `gh` login (lib/detect/gh-auth.mjs).
+ * @typedef {Object} GhAuthCheck
+ * @property {boolean} available        `gh` was executable.
+ * @property {boolean} authenticated    `gh auth status` exited 0.
+ * @property {string[]} scopes          Scopes parsed from the status output.
+ * @property {string[]} missing         Required scopes not present in `scopes`.
+ * @property {boolean} envTokenOverride GH_TOKEN/GITHUB_TOKEN shadows the keyring.
+ * @property {string} refreshCmd        Command that grants the required scopes.
+ */
+
+/**
  * @typedef {Object} DepsReport
  * @property {'ok'|'warn'|'block'} status
  *   ok    = all required found.
@@ -161,6 +172,10 @@
  *   block = at least one required missing — engine exits 1.
  * @property {DepCheck[]} checks
  * @property {string[]} missing   Names of required deps not found.
+ * @property {GhAuthCheck} [ghAuth]
+ *   Present only when `gh` resolved on a GitHub repo. Optional so
+ *   `checkSystemDeps` — which never populates it — still satisfies this type.
+ *   Never affects `status`: missing scopes are advisory.
  */
 
 /**

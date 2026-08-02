@@ -117,10 +117,12 @@ export const PROJECT_HOOK_FILES = [
   "worktree-prompt-ctx.mjs",
   "worktree-write-guard.mjs",
   "worktree-create.mjs",
+  "worktree-seed.mjs",
   "worktree-remove.mjs",
   "check-deps-on-start.mjs",
   "validate-settings-schema.mjs",
   "orchestration-mode.mjs",
+  "gh-scope-guard.mjs",
 ];
 
 const HOOK_DIR = "${CLAUDE_PROJECT_DIR}/.claude/hooks";

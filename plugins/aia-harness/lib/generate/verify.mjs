@@ -79,11 +79,16 @@ const execDir = (event && typeof event.cwd === "string" && event.cwd) || project
 const failures = [];
 for (const entry of COMMANDS) {
   try {
-    execSync(entry.cmd, { cwd: execDir, env: env, timeout: 120000, stdio: ["ignore", "pipe", "pipe"] });
+    execSync(entry.cmd, { cwd: execDir, env: env, timeout: 120000, windowsHide: true, stdio: ["ignore", "pipe", "pipe"] });
   } catch (err) {
+    const stderrText = err.stderr ? err.stderr.toString() : "";
     // ENOENT / exit 127 = command or runtime missing -> infra, fail open.
     if (err.code === "ENOENT" || err.status === 127) continue;
-    const out = ((err.stdout ? err.stdout.toString() : "") + (err.stderr ? err.stderr.toString() : "")).trim();
+    // Windows cmd.exe has no POSIX exit 127 for a missing command; it exits 1
+    // with this message instead. ponytail: English-locale match only, switch
+    // to a PATH pre-check if non-English Windows needs support.
+    if (process.platform === "win32" && /is not recognized as an internal or external command/i.test(stderrText)) continue;
+    const out = ((err.stdout ? err.stdout.toString() : "") + stderrText).trim();
     failures.push({ label: entry.label, cmd: entry.cmd, out: out || err.message || (entry.label + " failed") });
   }
 }

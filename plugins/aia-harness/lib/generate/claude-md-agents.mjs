@@ -177,6 +177,7 @@ NOT self-commit. Untagged or uncertain tasks run serial (no regression). Full pr
   return `## Workflow & Agents
 
 Invoke \`superpowers:subagent-driven-development\` for **non-trivial** implementation — trigger it when the request meets **≥2** of:
+
 - touches **3+ files** or **2+ domains/layers** (UI + agent, API + DB…)
 - is a **new feature / epic / cross-cutting refactor** (not a one-line or single-function change)
 - needs a **multi-step plan** or ordered tasks, each with its own verification

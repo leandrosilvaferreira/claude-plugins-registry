@@ -56,7 +56,14 @@ if (result.status !== 0 && result.status !== 1) {
   passThrough();
 }
 
-/** @type {{ status: "ok"|"warn"|"block", checks: any[], missing: string[] }|null} */
+/**
+ * @type {{
+ *   status: "ok"|"warn"|"block",
+ *   checks: any[],
+ *   missing: string[],
+ *   ghAuth?: { available: boolean, authenticated: boolean, scopes: string[], missing: string[], envTokenOverride: boolean, refreshCmd: string },
+ * }|null}
+ */
 let report = null;
 try {
   report = JSON.parse(result.stdout ?? "");
@@ -64,7 +71,20 @@ try {
   passThrough();
 }
 
-if (!report || report.status === "ok") {
+// A gh scope problem is reported independently of the aggregate status. It has
+// to be: checkSystemDeps computes `warn` as `missingRecommendedOnly &&
+// !hasFoundRequired`, and ENGINE_DEPS always contributes `node`, which is
+// always found — so `status` is in practice only ever "ok" or "block", and
+// keying off it alone would swallow this entirely.
+const ghProblem = Boolean(
+  report?.ghAuth &&
+  (!report.ghAuth.available ||
+    report.ghAuth.missing.length > 0 ||
+    report.ghAuth.envTokenOverride ||
+    !report.ghAuth.authenticated),
+);
+
+if (!report || (report.status === "ok" && !ghProblem)) {
   passThrough();
 }
 
@@ -82,7 +102,7 @@ if (report.status === "warn") {
     lines.push(`  • ${c.name}  → ${c.installHint?.[platform] ?? "see docs"}`);
   }
   lines.push("The harness works, but some optional tools are missing.");
-} else {
+} else if (report.status === "block") {
   // status === "block": required deps missing
   lines.push("🚫  REQUIRED DEPENDENCIES MISSING — harness operations may fail.", "");
   lines.push("Install before continuing:");
@@ -92,6 +112,42 @@ if (report.status === "warn") {
     lines.push(`  • ${name}  → ${hint}`);
   }
   lines.push("", "Run /check-deps to see the full report.");
+}
+
+if (ghProblem && report.ghAuth) {
+  if (lines.length > 0) lines.push("");
+  if (!report.ghAuth.available) {
+    // gh was found on disk but could not be executed — nothing else about its
+    // auth state was determined, so scopes/missing below are artifacts of
+    // that failure, not findings. Neither `gh auth refresh` nor
+    // `gh auth login` can fix a binary that will not start.
+    lines.push(
+      "⚠️  gh is installed but could not be run.",
+      "   GitHub commands (issues, PRs, Projects v2) will fail until this is fixed.",
+      "   Verify the installation by running `gh --version` yourself.",
+    );
+  } else if (report.ghAuth.envTokenOverride) {
+    lines.push(
+      "⚠️  GH_TOKEN/GITHUB_TOKEN is set — gh uses it instead of your keyring login,",
+      "   so its permissions are what apply and `gh auth refresh` cannot change them.",
+      "   Run `unset GH_TOKEN GITHUB_TOKEN` before using gh in this session.",
+    );
+  } else if (!report.ghAuth.authenticated) {
+    lines.push(
+      "⚠️  gh is installed but not logged in.",
+      "   GitHub commands (issues, PRs, Projects v2) will fail until you do. Run:",
+      `     gh auth login -h github.com -s ${report.ghAuth.missing.join(",")}`,
+      "   Do not work around this with GH_TOKEN or a hand-made personal access token.",
+    );
+  } else {
+    lines.push(
+      `⚠️  gh is missing OAuth scope(s): ${report.ghAuth.missing.join(", ")}`,
+      "   GitHub commands (issues, PRs, Projects v2) will fail until granted. Run:",
+      `     ${report.ghAuth.refreshCmd}`,
+      "   It adds scopes without revoking existing ones. Confirm with `gh auth status`.",
+      "   Do not work around this with GH_TOKEN or a hand-made personal access token.",
+    );
+  }
 }
 
 process.stdout.write(

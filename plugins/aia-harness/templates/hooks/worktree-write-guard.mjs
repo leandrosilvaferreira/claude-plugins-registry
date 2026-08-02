@@ -51,18 +51,32 @@ const targetPath =
 
 if (!targetPath) process.exit(0);
 
-const absTarget = path.isAbsolute(targetPath) ? targetPath : path.resolve(cwd, targetPath);
+// Always resolve — never branch on path.isAbsolute(). On Windows, a POSIX-style
+// path (e.g. "/Users/dev/proj/...", as used by cross-platform callers/tests) is
+// already isAbsolute()===true (root-relative, no drive letter), so the old
+// isAbsolute-guarded ternary skipped path.resolve() and left it un-normalized —
+// no drive letter, forward slashes — while wtPath below always goes through
+// path.resolve() (drive letter, backslashes). The two then never compared equal,
+// misclassifying every file actually inside the worktree as outside it.
+// path.resolve(cwd, targetPath) is a no-op for an already-resolved absolute path,
+// so this is safe for the relative-path case too.
+const absTarget = path.resolve(cwd, targetPath);
 
 // Allow writes inside the worktree (or to the worktree root itself).
 if (absTarget === wtPath || absTarget.startsWith(wtPath + path.sep)) process.exit(0);
 
-const relTarget = path.relative(projectDir, absTarget);
-const relWt = path.relative(projectDir, wtPath);
+// Display with forward slashes regardless of host OS: these are read by the
+// agent/user as message text, not compared against a filesystem path, so a
+// consistent "/" reads correctly everywhere instead of Windows' native "\".
+const toDisplay = (/** @type {string} */ p) => p.split(path.sep).join("/");
+const relTarget = toDisplay(path.relative(projectDir, absTarget));
+const relWt = toDisplay(path.relative(projectDir, wtPath));
+const wtDisplay = toDisplay(wtPath);
 
 const reason = [
   `Target file "${relTarget}" is outside the active worktree "${relWt}".`,
-  `Active worktree: ${wtPath}`,
-  `Intended? If you meant to edit the worktree copy, use the path inside "${wtPath}".`,
+  `Active worktree: ${wtDisplay}`,
+  `Intended? If you meant to edit the worktree copy, use the path inside "${wtDisplay}".`,
 ].join("\n");
 
 process.stdout.write(

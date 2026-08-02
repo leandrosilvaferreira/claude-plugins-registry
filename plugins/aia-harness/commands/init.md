@@ -59,6 +59,34 @@ node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" check "${1:-$CLAUDE_PROJECT_DIR}" -
 If `status === "block"`: present the list of `missing[]` with `installHint`
 for the user's platform and stop — do not execute the following steps.
 
+If the payload carries a `ghAuth` object, report it but **never stop on it** —
+a harness scaffolds fine without GitHub access:
+
+- `ghAuth.available === false` → tell the user `gh` was found on disk but
+  could not be executed (a corrupt binary, a permission problem, or a
+  non-functional shim). Nothing else about its auth state could be
+  determined, so ignore `ghAuth.missing` here — it is an artifact of the
+  failure, not a finding — and say only this. Tell them to verify the
+  installation themselves by running `gh --version`. Never suggest
+  `gh auth refresh` or `gh auth login` — neither can fix a binary that will
+  not start.
+- `ghAuth.envTokenOverride === true` → tell the user `GH_TOKEN`/`GITHUB_TOKEN`
+  is set in their environment, that `gh` uses it instead of their keyring login,
+  and that `gh auth refresh` cannot change its permissions. Fix:
+  `unset GH_TOKEN GITHUB_TOKEN`.
+- otherwise, `ghAuth.authenticated === false` →
+  tell the user `gh` is installed but not logged in. Give them this command
+  verbatim to run in their own terminal, with `ghAuth.missing` joined by commas
+  in place of `<scopes>`: `gh auth login -h github.com -s <scopes>`. Do not
+  offer to run it yourself (it is an interactive browser flow), and do not
+  suggest a personal access token as an alternative.
+- otherwise, `ghAuth.missing` non-empty → tell the user which scopes are missing
+  and give them `ghAuth.refreshCmd` verbatim to run in their own terminal. Note
+  that it adds scopes without revoking existing ones. Do not offer to run it
+  yourself (it is an interactive browser flow), and do not suggest a personal
+  access token as an alternative.
+- `ghAuth.missing` empty and no override (and authenticated) → say nothing.
+
 1. **Diagnose.** Run and present the report:
 
    ```bash

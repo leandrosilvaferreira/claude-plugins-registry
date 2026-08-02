@@ -54,6 +54,10 @@ node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" check "${1:-$CLAUDE_PROJECT_DIR}" -
 If `status === "block"`: present the list of `missing[]` with `installHint`
 for the user's platform and stop — do not execute the following steps.
 
+Keep the `ghAuth` object from this payload (present whenever `gh` is found
+among the checked dependencies — auto-detected on a GitHub repo, or forced by
+`--tools=gh`) — step 3 reports it as a finding.
+
 1. Re-scan to see what exists:
 
    ```bash
@@ -470,6 +474,31 @@ point them at `/aia-harness:patch` — it runs this same merge-and-adjudicate fl
      `mergeSettingsJson` dedups hook entries by exact `{command, args}` string identity,
      so re-applying would add a duplicate hook, not repair the broken one — `Edit` is the
      only correct fix here.
+- **gh OAuth scopes:** report the `ghAuth` object retained from step 0. Nothing
+  to report when it is absent, or when `missing` is empty, `envTokenOverride`
+  is false, and the login is authenticated.
+  - `available: false` → finding: "gh was found but could not be executed (a
+    corrupt binary, a permission problem, or a non-functional shim). Nothing
+    else about its auth state could be determined — `missing` is an artifact
+    of that failure, not a finding. Verify the installation by running
+    `gh --version` yourself." Report only this finding — never also report
+    scopes, and never suggest `gh auth refresh`/`gh auth login`, neither of
+    which can fix a binary that will not start.
+  - `envTokenOverride: true` → finding: "`GH_TOKEN`/`GITHUB_TOKEN` is set in the
+    environment. `gh` prefers it over the keyring login, so its permissions are
+    what apply and `gh auth refresh` cannot change them. Fix:
+    `unset GH_TOKEN GITHUB_TOKEN`."
+  - otherwise `authenticated: false` → finding: "gh is
+    installed but not logged in. Fix: `gh auth login -h github.com -s
+    <scopes>`" (`<scopes>` = `ghAuth.missing` joined by commas).
+  - otherwise `missing` non-empty → finding: "gh is missing OAuth scope(s):
+    `<ghAuth.missing joined>`. GitHub commands (issues, PRs, Projects v2) will
+    fail until granted. Fix: `<ghAuth.refreshCmd>` — adds scopes without revoking
+    existing ones; confirm with `gh auth status`."
+
+  Present these as findings for the user to act on. Never offer to run
+  `gh auth login`/`gh auth refresh` yourself (both are interactive browser
+  flows), and never suggest a personal access token as an alternative.
 
 4. Present a prioritized findings list. For each accepted fix, show a diff and
    apply with `Edit` only after the user approves. Do not rewrite files wholesale.

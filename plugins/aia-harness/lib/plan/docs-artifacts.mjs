@@ -54,7 +54,7 @@ export function addDocsArtifacts(add, profile, toolIds) {
       contextCost: 0,
       defaultSelected: true,
       mergeStrategy: "merge-lines",
-      content: renderWorktreeInclude(toolIds.includes("graphify")),
+      content: renderWorktreeInclude(toolIds.includes("graphify"), profile.githubPM?.detected),
     });
   }
 

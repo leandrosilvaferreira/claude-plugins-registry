@@ -1,7 +1,7 @@
 ---
 name: claude-code-worktrees
 description: This skill should be used when the user asks to create, enter, switch to, or exit a worktree ("work in a worktree", "create a worktree", "enter the worktree X", "exit the worktree") — acting on that request means calling the EnterWorktree tool, never `git worktree add` — and when the user asks about "worktree", "worktrees", "parallel sessions with worktree", "--worktree flag", "EnterWorktree", "ExitWorktree", ".worktreeinclude", "WorktreeCreate hook", "WorktreeRemove hook", "worktree.baseRef", "isolate subagents", "isolation worktree", "isolated sessions in Claude Code", "run Claude in parallel with worktrees", or any question about running parallel Claude Code sessions in isolated git worktrees.
-version: 0.2.0
+version: 0.2.1
 ---
 
 # Claude Code — Git Worktrees
@@ -52,7 +52,7 @@ Two wirings in `.claude/settings.json` route to the same `.claude/hooks/worktree
 
 | Event | Fires on | Role |
 |---|---|---|
-| `WorktreeCreate` | `--worktree`, subagents with `isolation: "worktree"`, background sessions — **replaces** the native `git worktree add` | creates the worktree, seeds it, prints its absolute path on stdout |
+| `WorktreeCreate` | `--worktree`, subagents with `isolation: "worktree"`, background sessions — **replaces** the native `git worktree add` | creates the worktree, prints its absolute path on stdout, spawns a detached background seeder |
 | `PostToolUse` (matcher `EnterWorktree`) | **every** `EnterWorktree` call, `name` or `path` | idempotent re-seed safety net — this is what covers the in-session tool |
 
 The official hook docs list `WorktreeCreate`'s triggers as `--worktree` / `isolation:
@@ -60,15 +60,22 @@ The official hook docs list `WorktreeCreate`'s triggers as `--worktree` / `isola
 what makes in-session entry seed correctly, and it is idempotent, so both firing is
 harmless.
 
-What the hook seeds, each skipped if already present:
+Creation returns almost immediately — the worktree itself and its path. The
+copy work below runs out-of-process in a detached seeder with no timeout of
+its own, so a fresh worktree's `node_modules` etc. may still be filling in for
+a short while after `EnterWorktree` returns; re-entering it while that's
+happening reports `additionalContext` saying so instead of looking broken.
+
+What the background seeder copies, each skipped if already present:
 
 - `node_modules` — copied with every symlink dereferenced (never symlinked: `.bin/*` pointing back at the root's copy yields two module instances in one process). No root `node_modules` → background `npm`/`pnpm`/`yarn`/`bun install` per lockfile.
 - `.husky/_` — Husky's generated shim, otherwise `pre-commit`/`pre-push` are silently skipped in the worktree.
 - `.docker`, `graphify-out` (plus a background `graphify update .`).
-- Every `.worktreeinclude` pattern — the hook reimplements that copy, because configuring `WorktreeCreate` disables Claude Code's native `.worktreeinclude` processing.
+- Every `.worktreeinclude` pattern — the seeder reimplements that copy, because configuring `WorktreeCreate` disables Claude Code's native `.worktreeinclude` processing.
 
 **Recovering a hand-made worktree**: call `EnterWorktree({ path })` on it. The
-`PostToolUse` pass seeds it in place — no need to delete and recreate.
+`PostToolUse` pass spawns the same background seeder in place — no need to
+delete and recreate.
 
 Confirm the wiring exists before relying on it: `WorktreeCreate` and a `PostToolUse`
 entry with matcher `EnterWorktree`, both in `.claude/settings.json`.
@@ -240,10 +247,11 @@ JSON shape is only for `"type": "http"` hooks. A non-zero exit, or a stdout that
 directory, fails worktree creation.
 
 > This project already ships one — `.claude/hooks/worktree-create.mjs`, wired to both
-> `WorktreeCreate` and `PostToolUse`/`EnterWorktree`. Extend that file rather than adding a
-> second `WorktreeCreate` hook, and keep hooks as `.mjs` invoked through exec form
-> (`"command": "node"` + `args`) — never the `bash -c` + `jq` shape below, which breaks on
-> native Windows.
+> `WorktreeCreate` and `PostToolUse`/`EnterWorktree`. It spawns
+> `.claude/hooks/worktree-seed.mjs` detached to do the actual copy work. Extend
+> those files rather than adding a second `WorktreeCreate` hook, and keep hooks
+> as `.mjs` invoked through exec form (`"command": "node"` + `args`) — never
+> the `bash -c` + `jq` shape below, which breaks on native Windows.
 
 SVN example (upstream illustration for non-git VCS, not the pattern to copy here):
 ```json

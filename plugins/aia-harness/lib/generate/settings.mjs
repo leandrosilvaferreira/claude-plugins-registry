@@ -131,10 +131,24 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
       {
         // Idempotent re-seed safety net: fires on every EnterWorktree call,
         // including entry into a worktree that already existed before this
-        // hook was configured. worktree-create.mjs stays silent on this path.
+        // hook was configured. worktree-create.mjs copies nothing on this
+        // path itself: it emits `additionalContext` while the detached
+        // worktree-seed.mjs child it spawned is still seeding, and stays
+        // silent once seeding is done (or was never needed).
         matcher: "EnterWorktree",
-        hooks: [{ type: "command", ...hookCmd("worktree-create.mjs"), timeout: 60 }],
+        hooks: [{ type: "command", ...hookCmd("worktree-create.mjs"), timeout: 20 }],
       },
+      // Only meaningful where `gh` talks to github.com. The hook is copied to
+      // every target regardless (PROJECT_HOOK_FILES) but stays unwired
+      // elsewhere, so it costs nothing on a non-GitHub project.
+      ...(profile.githubPM?.detected
+        ? [
+            {
+              matcher: "Bash",
+              hooks: [{ type: "command", ...hookCmd("gh-scope-guard.mjs"), timeout: 10 }],
+            },
+          ]
+        : []),
     ],
     SessionStart: [
       {
@@ -172,9 +186,10 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
       },
     ],
     // Replaces Claude Code's native `git worktree add` entirely once configured
-    // (also disables native .worktreeinclude processing — worktree-create.mjs
-    // reimplements that copy). Must print the created worktree's absolute path
-    // as a bare string on stdout (command-hook contract, not JSON).
+    // (also disables native .worktreeinclude processing — reimplemented in the
+    // detached worktree-seed.mjs child this hook spawns, not here). Must print
+    // the created worktree's absolute path as a bare string on stdout
+    // (command-hook contract, not JSON).
     WorktreeCreate: [
       { hooks: [{ type: "command", ...hookCmd("worktree-create.mjs"), timeout: 30 }] },
     ],

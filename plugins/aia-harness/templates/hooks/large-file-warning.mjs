@@ -100,16 +100,29 @@ const IGNORED_DIRS = new Set([
 /**
  * Returns true when the file is a real source/business file worth
  * enforcing a line-count budget on.
+ *
+ * IGNORED_DIRS matching is scoped to the path *relative to `baseDir`* (the
+ * project/exec root), never to absolute filesystem ancestry above it.
+ * Matching the raw absolute path would treat the OS's own temp root as an
+ * "ignored" project subdirectory whenever a project happens to live directly
+ * under it: os.tmpdir() resolves to exactly "/tmp" on stock Linux (no custom
+ * TMPDIR/TMP/TEMP — the default on GitHub Actions ubuntu runners), and "tmp"
+ * is itself one of the IGNORED_DIRS names below (meant to skip a project-
+ * local tmp/ folder) — so every file under a Linux /tmp/<x>/... path,
+ * including this project's own test fixtures, was silently treated as
+ * ignored/vendored and never flagged, no matter how large.
  * @param {string} absPath
+ * @param {string} baseDir
  * @returns {boolean}
  */
-function isSourceFile(absPath) {
+function isSourceFile(absPath, baseDir) {
   const ext = path.extname(absPath).toLowerCase();
   if (!SOURCE_EXTS.has(ext)) return false;
   // TypeScript declaration files are type-only, not logic.
   if (absPath.endsWith(".d.ts")) return false;
 
-  const dirs = absPath.split(path.sep).slice(0, -1);
+  const rel = path.relative(baseDir, absPath);
+  const dirs = rel.split(path.sep).slice(0, -1);
   for (const seg of dirs) {
     if (IGNORED_DIRS.has(seg)) return false;
   }
@@ -175,7 +188,7 @@ function advisory() {
   const file = ti.file_path ?? ti.path;
   if (!file || typeof file !== "string") return;
   const abs = path.isAbsolute(file) ? file : path.join(execDir, file);
-  if (!isSourceFile(abs)) return;
+  if (!isSourceFile(abs, execDir)) return;
   const lines = countLines(abs);
   if (lines == null || lines <= MAX_LINES) return;
 
@@ -244,7 +257,7 @@ function blockOnStop() {
   const oversized = [];
   for (const f of candidates) {
     const abs = path.isAbsolute(f) ? f : path.join(execDir, f);
-    if (!isSourceFile(abs)) continue;
+    if (!isSourceFile(abs, execDir)) continue;
     const lines = countLines(abs);
     if (lines != null && lines > MAX_LINES) {
       oversized.push({ file: path.relative(execDir, abs), lines });

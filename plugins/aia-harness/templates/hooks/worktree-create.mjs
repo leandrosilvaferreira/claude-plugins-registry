@@ -13,12 +13,15 @@
  * PostToolUse stdin with tool_name "EnterWorktree" (PostToolUseHookInput):
  * {hook_event_name:"PostToolUse", tool_input:{name|path}, cwd, ...} — fires on
  * every EnterWorktree call, including entry into a worktree that already
- * existed. Used here as an idempotent re-seed safety net. PostToolUse's schema
- * has no bare-path convention, so this path stays silent (empty stdout).
+ * existed. Used here as an idempotent re-seed safety net. PostToolUse's
+ * schema has no bare-path convention: this path stays silent (empty stdout)
+ * once seeding is done or was never needed, and emits a JSON
+ * additionalContext notice instead while a claimed seed is still running.
  */
 import { execFileSync, spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 /** @returns {string} */
 function readStdin() {
@@ -211,425 +214,337 @@ if (!fs.existsSync(dir)) {
 }
 
 // Command-hook contract: WorktreeCreate must print the bare path on stdout;
-// PostToolUse has no such field and must stay silent (empty, valid stdout).
-// Emitted here — as soon as the worktree itself exists, before the seeding
-// steps below — rather than at the very end: node_modules seeding is a
-// synchronous fs.cpSync that falls back to a full byte-copy (not a reflink)
-// on filesystems without copy-on-write support (most Linux/Windows setups,
-// i.e. ext4/NTFS), which can be slow enough to exceed this hook's timeout on
-// a large node_modules. If the process gets killed mid-copy, the worktree it
-// already created is still usable and its path was already delivered — the
-// PostToolUse:EnterWorktree safety net re-runs this same seeding logic
-// idempotently to finish the job. A killed process must not cost Claude Code
-// the one thing it structurally cannot recover without: the path itself.
+// PostToolUse has no such field and stays silent once seeding is done (or
+// was never needed) — while a claimed seed is still running, it emits an
+// additionalContext notice instead (see below). Emitted here, immediately
+// after the worktree itself exists: everything below this line — claiming
+// the seed and spawning worktree-seed.mjs — hands the potentially-slow copy
+// work (node_modules, .husky/_, .docker, graphify-out, .worktreeinclude) off
+// to a detached child with no timeout of its own, so this hook returns well
+// under a second regardless of project size instead of racing a synchronous
+// copy against its own timeout the way it used to.
 if (isCreate) process.stdout.write(dir);
 
-/**
- * Package manager install command for a fresh `node_modules`, chosen by lockfile.
- * @param {string} d
- * @returns {{ cmd: string, args: string[] }}
- */
-function detectInstallCommand(d) {
-  if (fs.existsSync(path.join(d, "pnpm-lock.yaml"))) return { cmd: "pnpm", args: ["install"] };
-  if (fs.existsSync(path.join(d, "yarn.lock"))) return { cmd: "yarn", args: ["install"] };
-  if (fs.existsSync(path.join(d, "bun.lockb")) || fs.existsSync(path.join(d, "bun.lock")))
-    return { cmd: "bun", args: ["install"] };
-  return { cmd: "npm", args: ["install"] };
+// Seed state: <worktree's own git-dir>/aia-seed.{json,log} — resolved via
+// `git rev-parse --git-dir` run WITH cwd = the worktree, which lands under
+// <root>/.git/worktrees/<name>/ (correct too when the root is itself a
+// worktree, where <root>/.git is a file, not a directory). A location there
+// is invisible to `git status` and outlives this process, unlike anything
+// inside the worktree itself.
+//
+// `git rev-parse` failing here should be rare (the worktree was just
+// verified to exist above), but an empty result must never fall through
+// straight to an UNCOORDINATED spawn: WorktreeCreate followed immediately
+// by PostToolUse:EnterWorktree would then spawn two seeders with no claim
+// file to arbitrate between them at all. First try the deterministic path
+// git's own convention would have produced for a normal (non-nested)
+// worktree — `<root>/.git/worktrees/<name>` is exactly the value
+// `rev-parse --git-dir` returns in that case — so this costs nothing extra
+// when it's right, and it is never written INTO the worktree's own working
+// tree (which would show up in `git status`).
+//
+// The guess is NOT trustworthy by name alone: git deduplicates colliding
+// worktree admin-dir basenames (confirmed empirically) — if some OTHER
+// worktree elsewhere in this repo already has a directory basename of
+// `name`, THAT one keeps the plain `<root>/.git/worktrees/<name>` and ours
+// gets a numeric suffix (`<name>1`, `<name>2`, ...) instead. Using the guess
+// unvalidated in that case would read/write a STRANGER's admin directory —
+// including its aia-seed.json, silently skipping seeding if it happens to
+// read `status:"done"` there. Every worktree admin dir carries its own
+// `gitdir` file (git's own bookkeeping) naming the exact worktree `.git`
+// file it belongs to; only trust the guess once that file confirms it
+// points back at THIS worktree's own `.git`. A mismatch, or a missing/
+// unreadable `gitdir` file, means the guess is unusable.
+//
+// Only when NEITHER the primary lookup nor the validated fallback resolves
+// does this degrade to spawning unconditionally with no state file — safe
+// now that copyDereferencedAtomic's orphan sweep (worktree-seed.mjs) no
+// longer deletes a live sibling's tmp dir out from under it, so an
+// uncoordinated double-spawn is wasteful, never corrupting.
+let gitDirRaw = git(dir, ["rev-parse", "--git-dir"]);
+if (!gitDirRaw) {
+  const fallbackGitDir = path.join(cwd, ".git", "worktrees", name);
+  try {
+    const claimedGitFile = fs.readFileSync(path.join(fallbackGitDir, "gitdir"), "utf8").trim();
+    // Both sides must be reduced to ONE canonical spelling of the same file
+    // before comparing, because git and Node genuinely disagree about how to
+    // spell it — differently on each platform, and a purely lexical compare
+    // rejects a perfectly valid match on both:
+    //   macOS   — git records the FULLY RESOLVED path, so its `gitdir` file
+    //             says /private/var/..., while `dir` was built from the
+    //             un-resolved /var/... side of that symlink.
+    //   Windows — git records the LONG-NAME path (Git for Windows' own getcwd
+    //             runs GetLongPathNameW), so its `gitdir` file says
+    //             C:/Users/runneradmin/..., while `dir` was built from
+    //             `event.cwd`/`os.tmpdir()`, which on a GitHub Actions runner
+    //             is literally C:\Users\RUNNER~1\... — an 8.3 short name.
+    // `.native`, not plain `fs.realpathSync`, is what covers BOTH. Plain
+    // `fs.realpathSync` is Node's own JS reimplementation of POSIX realpath:
+    // it resolves symlinks and nothing else, so on Windows it hands RUNNER~1
+    // straight back and the comparison fails. Measured on windows-latest —
+    // that mismatch is exactly what silently disabled this fallback there,
+    // degrading every EnterWorktree into an uncoordinated second seeder.
+    // `fs.realpathSync.native` goes through libuv's uv_fs_realpath:
+    // GetFinalPathNameByHandleW(FILE_NAME_NORMALIZED | VOLUME_NAME_DOS) on
+    // Windows (long-name, true-case, no \\?\ prefix — libuv strips it) and
+    // realpath(3) on POSIX, so both sides converge on every platform.
+    // Deliberately still a STRICT equality: a different worktree's admin dir
+    // must never be accepted, which is the whole reason this check exists.
+    if (fs.realpathSync.native(claimedGitFile) === fs.realpathSync.native(path.join(dir, ".git"))) {
+      gitDirRaw = fallbackGitDir;
+    }
+  } catch {
+    /* fallbackGitDir doesn't exist, its gitdir file is missing/unreadable, or a path in the
+       comparison doesn't resolve — fallback unavailable */
+  }
+}
+/** @type {string | null} */
+let statePath = null;
+/** @type {string | null} */
+let logPath = null;
+if (gitDirRaw) {
+  const gitDir = path.isAbsolute(gitDirRaw) ? gitDirRaw : path.resolve(dir, gitDirRaw);
+  statePath = path.join(gitDir, "aia-seed.json");
+  logPath = path.join(gitDir, "aia-seed.log");
 }
 
 /**
- * Recursively copies `src` to `dest`, dereferencing every symlink
- * encountered — including ones nested inside subdirectories — instead of
- * preserving it. A single entry that can't be stat'd or copied (a dangling
- * symlink, a permission error, an exotic file type) is warned about and
- * skipped — it does NOT abort the rest of the tree. fs.cpSync's default
- * behavior (verbatim symlink copy, no throw on a dangling one) always
- * completes the whole tree; matching that resilience matters here because
- * copyDereferencedAtomic (below) treats "did this function throw" as "is the
- * copy unusable" — a single bad entry must not look like a total failure.
- *
- * fs.cpSync's own `dereference` option does NOT dereference recursively:
- * confirmed empirically (Node v24) that it only dereferences the top-level
- * `src` argument if THAT itself is a symlink — a symlink found while walking
- * a directory's contents during a recursive copy survives unchanged. That
- * matters here: npm always creates node_modules/.bin/* as absolute-path
- * symlinks into the real package (e.g. .bin/vitest -> <root>/node_modules/
- * vitest/vitest.mjs), never relative ones. A preserved symlink keeps every
- * worktree's .bin/* pointing at the ROOT's copy instead of its own — the
- * binary then resolves its own transitive deps from root's node_modules
- * while files loaded FROM the worktree (setupFiles, test files) resolve
- * theirs from the worktree's copy: two separate module instances of the
- * same package in one process, so state one sets (e.g. jest-dom's
- * `expect.extend`) is invisible to the other. This walks the tree manually
- * so every entry, at any depth, resolves to real file content instead.
- *
- * Uses COPYFILE_FICLONE per file — copy-on-write reflink where supported
- * (near-instant, space-efficient on APFS/Btrfs/XFS), silent fallback to a
- * full byte-copy otherwise — matching fs.cpSync's own `mode` semantics.
- * @param {string} src
- * @param {string} dest
+ * True if `pid` is a positive integer identifying a currently-running
+ * process. Guards `Number.isInteger(pid) && pid > 0` before calling
+ * `process.kill(pid, 0)` — the standard cross-platform "does this pid exist"
+ * probe, which throws ESRCH (never actually signals) once it's gone —
+ * because pid 0 and negative pids address process GROUPS on POSIX:
+ * `process.kill(0, 0)` and `process.kill(-1, 0)` both succeed as long as ANY
+ * process in that group exists (confirmed empirically, Node v24.17.0), which
+ * would otherwise misread a corrupt `pid:0` in the state file as a live
+ * claim and block seeding forever.
+ * @param {unknown} pid
+ * @returns {boolean}
  */
-function copyDereferenced(src, dest) {
-  /** @type {fs.Stats} */
-  let st;
+function isAlivePid(pid) {
+  if (typeof pid !== "number" || !Number.isInteger(pid) || pid <= 0) return false;
   try {
-    st = fs.statSync(src); // follows symlinks, unlike lstatSync
-  } catch (err) {
-    process.stderr.write(
-      `worktree-create: WARNING — could not stat "${src}" (dangling symlink?), skipped: ${err instanceof Error ? err.message : String(err)}\n`,
-    );
-    return;
+    process.kill(pid, 0);
+    return true;
+  } catch {
+    return false;
   }
-  if (st.isDirectory()) {
-    fs.mkdirSync(dest, { recursive: true });
-    for (const entry of fs.readdirSync(src)) {
-      copyDereferenced(path.join(src, entry), path.join(dest, entry));
+}
+
+/**
+ * Atomically claims ownership of seeding this worktree. Returns true when
+ * the caller now owns seeding and must spawn worktree-seed.mjs; false when
+ * someone else already owns it — a completed run, or one whose pid is still
+ * verifiably alive — and no child should be spawned.
+ * @param {string | null} statePathArg
+ * @returns {boolean}
+ */
+function claimSeed(statePathArg) {
+  if (!statePathArg) return true; // no git-dir resolved (primary or fallback) — spawn unconditionally
+
+  /** @returns {string} */
+  const freshClaim = () =>
+    JSON.stringify({ pid: process.pid, status: "running", startedAt: new Date().toISOString() });
+
+  try {
+    // "wx": create-or-fail, atomically — the primitive that makes this safe
+    // against two hook invocations racing each other (e.g. WorktreeCreate
+    // immediately followed by PostToolUse:EnterWorktree). A read-then-write
+    // check here would not be atomic and could let both spawn a seeder.
+    fs.writeFileSync(statePathArg, freshClaim(), { flag: "wx" });
+    return true;
+  } catch (err) {
+    if (!(err instanceof Error) || /** @type {NodeJS.ErrnoException} */ (err).code !== "EEXIST") {
+      return true; // any other fs error — fail open: seeding twice is recoverable, never seeding is not
     }
-  } else {
+  }
+
+  // EEXIST: someone already claimed this worktree — inspect what they left.
+  /** @type {any} */
+  let existing = null;
+  try {
+    existing = JSON.parse(fs.readFileSync(statePathArg, "utf8"));
+  } catch {
+    existing = null; // unreadable/unparseable — treated as a dead run below
+  }
+
+  if (existing?.status === "done") return false;
+  // A verifiably live pid always wins — no staleness override. startedAt is
+  // preserved in the file purely as diagnostics; it has no say in this
+  // decision. A seeder can legitimately still be mid-copy well past any
+  // "should be done by now" guess: a multi-GB node_modules with no reflink
+  // support (ext4, NTFS — the whole reason detached seeding exists) is a
+  // plausible multi-minute-plus runtime, not a pathological one, and
+  // retaking a real, still-running seeder's claim would let a second one
+  // start racing it on the very same files. Only a dead, missing,
+  // non-integer, non-positive, or unparseable pid retakes.
+  if (existing?.status === "running") {
+    if (isAlivePid(existing.pid)) return false;
+    // The pid probe is a SECOND sample, taken microseconds after the status
+    // read above — and a seeder that finishes in that gap writes
+    // status:"done" and only THEN exits, so "the file said running" plus
+    // "the pid is gone" does not add up to "the run died". Re-read before
+    // retaking. Without this, a seeder caught mid-exit loses its claim to a
+    // redundant second seeder whose competing "running" write also lands on
+    // top of the seeder's in-flight "done" write, leaving a torn state file
+    // that every later reader then treats as a dead run too. Observed on
+    // ubuntu-latest in CI (JSON.parse: "Unexpected non-whitespace character
+    // after JSON at position 70" — a complete 70-byte "done" record with the
+    // 3-byte tail of a 73-byte "running" record still stuck to the end).
     try {
-      fs.copyFileSync(src, dest, fs.constants.COPYFILE_FICLONE);
+      existing = JSON.parse(fs.readFileSync(statePathArg, "utf8"));
+    } catch {
+      existing = null;
+    }
+    if (existing?.status === "done") return false;
+  }
+
+  // Dead pid, unparseable state, an explicit status:"failed" (worktree-
+  // seed.mjs's own signal that a block-level copy attempt threw — see its
+  // header comment), or any other unrecognized status — the previous run
+  // died or gave up before finishing (or never validly claimed at all).
+  // Retake the claim (no "wx" this time — we already own the only copy of
+  // this file that matters) and let the caller spawn a fresh seeder. No
+  // separate handling needed for "failed" specifically: it already falls
+  // through this same catch-all, exactly like a dead pid would.
+  try {
+    fs.writeFileSync(statePathArg, freshClaim());
+    return true;
+  } catch {
+    return true; // fail open, same reasoning as above
+  }
+}
+
+// Tracks whether THIS invocation's own spawn attempt below is known to
+// have failed — distinct from the state FILE, which claimSeed already
+// wrote "running" into before the spawn was even attempted (the wx/retake
+// claim has to land before we know whether the process will actually
+// start). Used only to suppress the PostToolUse notice for THIS
+// invocation (see below); the state file itself is deliberately left
+// alone — the placeholder pid this invocation wrote dies with it, so the
+// NEXT claimSeed call already retakes it correctly with no further
+// bookkeeping here.
+let spawnFailed = false;
+
+if (claimSeed(statePath)) {
+  const seedScript = path.join(path.dirname(fileURLToPath(import.meta.url)), "worktree-seed.mjs");
+
+  let logFd = -1;
+  if (logPath) {
+    try {
+      logFd = fs.openSync(logPath, "a");
     } catch (err) {
       process.stderr.write(
-        `worktree-create: WARNING — could not copy "${src}", skipped: ${err instanceof Error ? err.message : String(err)}\n`,
+        `worktree-create: WARNING — could not open seed log "${logPath}": ${err instanceof Error ? err.message : String(err)}\n`,
       );
     }
   }
-}
 
-/**
- * Wraps copyDereferenced so the copy is atomic from every call site's point
- * of view: it lands at `dest` only once the WHOLE copy has finished, never
- * partially.
- *
- * This matters because every call site below guards re-seeding with
- * `!fs.existsSync(dest)` (skip if already seeded) so the idempotent
- * PostToolUse:EnterWorktree safety net doesn't redo finished work. Without
- * this wrapper, a copy interrupted mid-way — e.g. this hook's own process
- * killed by Claude Code's timeout partway through a large node_modules copy
- * on a non-reflink filesystem — leaves a PARTIALLY populated `dest` that
- * still satisfies that exists-check, so the safety net wrongly treats it as
- * "already done" and never finishes it. Copying into a temporary sibling
- * first and renaming into place only on success means an interrupted copy
- * leaves nothing at `dest` at all — the safety net correctly sees "not
- * seeded yet" next time and retries cleanly.
- * @param {string} src
- * @param {string} dest
- */
-function copyDereferencedAtomic(src, dest) {
-  const tmp = `${dest}.tmp-${process.pid}`;
-  fs.rmSync(tmp, { recursive: true, force: true });
-  copyDereferenced(src, tmp);
-  fs.renameSync(tmp, dest);
-}
-
-// node_modules: isolated copy, never a symlink — gated on package.json so a
-// non-Node project never attempts this block. Vitest/Vite write scratch state
-// into node_modules/.vite-temp; a symlinked node_modules shares that dir
-// between root and every worktree, so parallel test runs race on it (one
-// process removes/renames it while another reads/writes). Trade-off
-// accepted: root `npm install` no longer propagates to already-live
-// worktrees — run it inside the worktree itself for a new dependency.
-// copyDereferencedAtomic (not fs.cpSync) — see its own doc comment for why.
-if (fs.existsSync(path.join(cwd, "package.json"))) {
-  const rootModules = path.join(cwd, "node_modules");
-  const wtModules = path.join(dir, "node_modules");
-  if (fs.existsSync(rootModules)) {
-    if (!fs.existsSync(wtModules)) {
-      try {
-        copyDereferencedAtomic(rootModules, wtModules);
-      } catch (err) {
-        process.stderr.write(
-          `worktree-create: WARNING — node_modules copy failed: ${err instanceof Error ? err.message : String(err)}\n`,
-        );
-      }
-    }
-  } else if (!fs.existsSync(wtModules)) {
-    // No root node_modules to copy — install fresh, backgrounded so this hook
-    // doesn't block the session on a full install. shell:true is scoped to
-    // Windows only: npm/pnpm/yarn/bun resolve to .cmd shims there, which
-    // spawn() cannot invoke without a shell (Node's own documented mechanism
-    // for this case). cmd/args here are hardcoded by this file, not derived
-    // from external input, so this carries none of the injection risk the
-    // hooks-cross-platform.md "no shell form" rule targets (that rule is about
-    // a hook's own top-level settings.json invocation, a different case).
-    const { cmd, args } = detectInstallCommand(cwd);
-    const child = spawn(cmd, args, {
+  try {
+    // process.execPath (never the string "node") so the child uses the same
+    // runtime regardless of PATH, and never needs a shell to launch it.
+    // spawn() does not throw for most failure modes — a missing/broken
+    // executable, EMFILE, EAGAIN, ENOMEM, etc. leave `.pid` undefined and
+    // queue an async "error" event instead (checked below) — but it CAN
+    // throw synchronously for others (an invalid `cwd`, confirmed
+    // empirically: ENOTDIR). This try/catch is what keeps either kind from
+    // becoming an uncaught exception that would exit this script with an
+    // uncontrolled code instead of the required 0.
+    const child = spawn(process.execPath, [seedScript, cwd, dir, statePath ?? ""], {
       cwd: dir,
-      stdio: "ignore",
       detached: true,
+      stdio: logFd === -1 ? "ignore" : ["ignore", logFd, logFd],
       windowsHide: true,
-      shell: process.platform === "win32",
     });
-    child.on("error", (err) => {
+    if (typeof child.pid !== "number") {
+      // The common spawn-failure shape (ENOENT, EMFILE, EAGAIN, ENOMEM,
+      // ...): spawn() doesn't throw, it leaves `.pid` undefined and queues
+      // an async "error" event for later. This script calls process.exit(0)
+      // almost immediately after this block, before that event ever gets a
+      // turn — confirmed empirically (Node v24.17.0) that the listener
+      // below never fires in time — so THIS synchronous check is what
+      // actually reports the failure.
+      spawnFailed = true;
       process.stderr.write(
-        `worktree-create: WARNING — background ${cmd} install failed to start: ${err.message}\n`,
+        "worktree-create: WARNING — background seeder failed to spawn; node_modules " +
+          "and other seeded content will be missing until the worktree is re-entered.\n",
+      );
+    }
+    child.on("error", (err) => {
+      // Kept as a backstop, not the primary report (see above): an
+      // unhandled "error" event on an EventEmitter throws and would crash
+      // this script with an uncontrolled exit code if nothing were
+      // listening, for the rare case something downstream ever keeps this
+      // process alive long enough for the event to actually fire.
+      process.stderr.write(
+        `worktree-create: WARNING — failed to spawn background seeder: ${err.message}\n`,
       );
     });
     child.unref();
-  }
-}
 
-// .husky/_: Husky's generated shim (from `npm run prepare`/`husky`), ignored via
-// its own .husky/_/.gitignore — git worktree only materializes tracked content,
-// so a new worktree never inherits it. Gated on the root .husky dir existing at
-// all, so a project that doesn't use Husky never triggers this block or its
-// warning. Without the shim, core.hooksPath points at an empty dir and git
-// silently skips pre-commit/pre-push there. Never symlink: a shared inode means
-// one worktree regenerating it (via `npm install`/`prepare`) can race with
-// another mid-commit/push.
-if (fs.existsSync(path.join(cwd, ".husky"))) {
-  const wtHuskyShim = path.join(dir, ".husky", "_");
-  if (!fs.existsSync(wtHuskyShim)) {
-    const rootHuskyShim = path.join(cwd, ".husky", "_");
-    if (fs.existsSync(rootHuskyShim)) {
+    // claimSeed() had to write THIS hook's own pid as a placeholder to win
+    // the atomic "wx" race before the seeder existed to give us a real
+    // one — this hook exits right after this line, so a later invocation's
+    // liveness check (isAlivePid, above) must see the long-running CHILD's
+    // pid, not this already-exiting one. Overwrite it now, preserving the
+    // original claim's startedAt. Guarded on the claim still reading
+    // "running": a trivial/no-op seed can finish (and write status:"done")
+    // before this line runs, and blindly overwriting that back to "running"
+    // would make an already-complete seed look unfinished to a later
+    // PostToolUse check.
+    if (statePath && typeof child.pid === "number") {
       try {
-        copyDereferencedAtomic(rootHuskyShim, wtHuskyShim);
-      } catch {
-        /* checked below */
-      }
-    } else if (fs.existsSync(path.join(dir, ".husky"))) {
-      // Invoke husky's JS entrypoint directly via node — never `npx` as the
-      // spawn command (npx is a .cmd shim on Windows, not directly
-      // executable without a shell). Missing bin.js (e.g. a Husky major
-      // version with a different entry) falls through to the warning below,
-      // same as any other regen failure.
-      try {
-        const huskyBin = path.join(dir, "node_modules", "husky", "bin.js");
-        if (fs.existsSync(huskyBin)) {
-          execFileSync("node", [huskyBin], { cwd: dir, stdio: "ignore", windowsHide: true });
+        const claimed = JSON.parse(fs.readFileSync(statePath, "utf8"));
+        if (claimed?.status === "running") {
+          fs.writeFileSync(
+            statePath,
+            JSON.stringify({ pid: child.pid, status: "running", startedAt: claimed.startedAt }),
+          );
         }
       } catch {
-        /* checked below */
+        /* not fatal — worst case a later invocation sees this pid already gone and retakes harmlessly */
       }
     }
-  }
-  if (!fs.existsSync(wtHuskyShim)) {
-    process.stderr.write(
-      "worktree-create: WARNING — .husky/_ missing; native git hooks (pre-commit, pre-push) " +
-        "will be INACTIVE and SILENT in this worktree.\n",
-    );
-  }
-}
-
-// .docker: isolated copy of any local Docker volumes/state at the repo root, if
-// present. Never symlink — a worktree needs its own independent volume state
-// (e.g. a local DB). copyDereferencedAtomic (not fs.cpSync) — see its doc comment.
-const rootDocker = path.join(cwd, ".docker");
-const wtDocker = path.join(dir, ".docker");
-if (fs.existsSync(rootDocker) && !fs.existsSync(wtDocker)) {
-  try {
-    copyDereferencedAtomic(rootDocker, wtDocker);
   } catch (err) {
+    // The worktree itself already exists and (for WorktreeCreate) its path
+    // was already printed above — that is the one thing Claude Code cannot
+    // recover on its own, so a failed spawn here is a warning, never exit 2.
+    spawnFailed = true;
     process.stderr.write(
-      `worktree-create: WARNING — .docker copy failed: ${err instanceof Error ? err.message : String(err)}\n`,
+      `worktree-create: WARNING — failed to spawn background seeder: ${err instanceof Error ? err.message : String(err)}\n`,
     );
   }
+  if (logFd !== -1) fs.closeSync(logFd);
 }
 
-// graphify-out: isolated copy of the knowledge graph, if the root has already
-// built one. graph.json/manifest.json store only repo-relative paths (no
-// absolute-path entries), so the copy itself carries no wrong-location
-// baggage the way an undereferenced node_modules/.bin symlink would — but
-// per-file mtimes in manifest.json were recorded against root's files, while
-// `git worktree add`/this copy stamp fresh mtimes on the worktree's own
-// files, so every file looks "changed" by mtime alone. `graphify update .`
-// reconciles this via each file's stored content hash (unaffected by mtime)
-// and self-heals — backgrounded so this hook doesn't block the session on a
-// full graph pass. Skipped entirely when root has no graphify-out yet.
-const rootGraphifyOut = path.join(cwd, "graphify-out");
-const wtGraphifyOut = path.join(dir, "graphify-out");
-if (fs.existsSync(rootGraphifyOut) && !fs.existsSync(wtGraphifyOut)) {
+// PostToolUse notice: while a claimed seed is still running (just spawned
+// above, or a live earlier invocation's), tell Claude Code so a partially
+// copied node_modules doesn't read as a broken install. WorktreeCreate's
+// stdout contract is the bare path only, so this is gated on !isCreate; once
+// seeding is done, or there is no state file to check, stdout stays empty
+// (never "{}"). Also suppressed when THIS invocation just claimed the seed
+// and then failed to spawn it (spawnFailed, above): the state file can
+// still read "running" at this point (claimSeed had to write that before
+// the spawn attempt even happened), but advertising a seeder that never
+// started would tell Claude Code to "wait and retry" a copy nothing is
+// doing — a silent stdout is correct instead, since the dying placeholder
+// pid means the next EnterWorktree's claimSeed retakes it anyway.
+if (!isCreate && statePath && !spawnFailed) {
+  /** @type {any} */
+  let state = null;
   try {
-    copyDereferencedAtomic(rootGraphifyOut, wtGraphifyOut);
-    // shell:true is scoped to Windows only, same reasoning as the npm/pnpm/
-    // yarn/bun install fallback above — graphify's binary resolution on
-    // Windows is not guaranteed shim-free, and shell:true costs nothing when
-    // it isn't needed.
-    const child = spawn("graphify", ["update", "."], {
-      cwd: dir,
-      stdio: "ignore",
-      detached: true,
-      windowsHide: true,
-      shell: process.platform === "win32",
-    });
-    child.on("error", (err) => {
-      process.stderr.write(
-        `worktree-create: WARNING — background graphify update failed to start: ${err.message}\n`,
-      );
-    });
-    child.unref();
-  } catch (err) {
-    process.stderr.write(
-      `worktree-create: WARNING — graphify-out copy failed: ${err instanceof Error ? err.message : String(err)}\n`,
+    state = JSON.parse(fs.readFileSync(statePath, "utf8"));
+  } catch {
+    state = null;
+  }
+  if (state?.status === "running") {
+    const additionalContext =
+      "This worktree's dependencies are still being copied in the background " +
+      "(node_modules and related directories may be incomplete for a short while). " +
+      "Wait and retry rather than reinstalling or reporting a broken setup.";
+    process.stdout.write(
+      JSON.stringify({ hookSpecificOutput: { hookEventName: "PostToolUse", additionalContext } }),
     );
-  }
-}
-
-/**
- * Compiles one .worktreeinclude line (gitignore syntax — a strict subset:
- * `*`/`**` wildcards, leading `/` anchoring, trailing `/` for directory-only,
- * leading `!` for negation) into a matcher.
- * @param {string} rawLine
- * @returns {{ negate: boolean, dirOnly: boolean, regex: RegExp } | null}
- *   null for a pattern that reduces to nothing (e.g. a bare "!").
- */
-function compilePattern(rawLine) {
-  let line = rawLine;
-  let negate = false;
-  if (line.startsWith("!")) {
-    negate = true;
-    line = line.slice(1);
-  }
-  if (!line) return null;
-  const anchored = line.startsWith("/");
-  if (anchored) line = line.slice(1);
-  const dirOnly = line.endsWith("/");
-  if (dirOnly) line = line.slice(0, -1);
-  if (!line) return null;
-
-  const DOUBLESTAR = "  ";
-  const parts = line
-    .split("/")
-    .map((seg) =>
-      seg === "**" ? DOUBLESTAR : seg.replace(/[.+^${}()|[\]\\]/g, "\\$&").replace(/\*/g, "[^/]*"),
-    );
-  let body = parts.join("/");
-  if (body === DOUBLESTAR) {
-    body = ".*";
-  } else {
-    body = body
-      .split(`/${DOUBLESTAR}/`)
-      .join("(?:/.*)?/")
-      .split(`${DOUBLESTAR}/`)
-      .join("(?:.*/)?")
-      .split(`/${DOUBLESTAR}`)
-      .join("(?:/.*)?");
-  }
-  const prefix = anchored || line.includes("/") ? "^" : "^(?:.*/)?";
-  return { negate, dirOnly, regex: new RegExp(`${prefix}${body}$`) };
-}
-
-/**
- * Walks `root`, skipping VCS/dependency/worktree-admin directories, and
- * returns every file/dir's path relative to `root` (POSIX-separated,
- * directories carry a trailing "/"). Bounded: only called for patterns that
- * actually contain a wildcard — literal patterns use a direct existsSync
- * check instead (see resolveWorktreeIncludePaths).
- *
- * Skips `.claude/worktrees` specifically (walking into sibling worktrees
- * would be pointless and potentially expensive), NOT all of `.claude` — the
- * rest of `.claude/` (settings.local.json, hooks/, memory/, ...) stays
- * reachable so a wildcard pattern like `**\/*.local.json` can still match
- * `.claude/settings.local.json`, the exact file this harness's own
- * generated `.worktreeinclude` lists by default (via the separate literal-
- * path fast path in resolveWorktreeIncludePaths, which this walk doesn't
- * gate — but a hand-written wildcard pattern targeting `.claude/` should
- * work too, not just the literal default).
- * @param {string} root
- * @returns {string[]}
- */
-function walkRelative(root) {
-  const SKIP_NAMES = new Set(["node_modules", ".git", ".docker", "graphify-out"]);
-  const SKIP_PATHS = new Set([path.join(".claude", "worktrees")]);
-  /** @type {string[]} */
-  const out = [];
-  /** @param {string} dir */
-  const recurse = (dir) => {
-    /** @type {fs.Dirent[]} */
-    let entries;
-    try {
-      entries = fs.readdirSync(dir, { withFileTypes: true });
-    } catch {
-      return;
-    }
-    for (const entry of entries) {
-      if (SKIP_NAMES.has(entry.name)) continue;
-      const abs = path.join(dir, entry.name);
-      const relOs = path.relative(root, abs);
-      if (SKIP_PATHS.has(relOs)) continue;
-      const rel = relOs.split(path.sep).join("/");
-      out.push(entry.isDirectory() ? `${rel}/` : rel);
-      if (entry.isDirectory()) recurse(abs);
-    }
-  };
-  recurse(root);
-  return out;
-}
-
-/**
- * Resolves every path under `root` that `.worktreeinclude`'s patterns select
- * (gitignore syntax subset — see compilePattern). Patterns with no wildcard
- * character use a direct existsSync check (fast path, matches every pattern
- * this harness's own renderWorktreeInclude() generator emits today). Later
- * lines override earlier ones (negation), matching git's own precedence.
- * Returns paths relative to `root` (POSIX-separated).
- * @param {string} root
- * @param {string[]} patterns
- * @returns {string[]}
- */
-function resolveWorktreeIncludePaths(root, patterns) {
-  /** @type {Set<string>} */
-  const selected = new Set();
-  /** @type {string[] | null} */
-  let treeCache = null;
-  const tree = () => (treeCache ??= walkRelative(root));
-
-  for (const rawPattern of patterns) {
-    const hasWildcard = rawPattern.replace(/^!/, "").includes("*");
-    if (!hasWildcard) {
-      const bare = rawPattern.replace(/^!/, "").replace(/^\//, "").replace(/\/$/, "");
-      if (rawPattern.startsWith("!")) selected.delete(bare);
-      else if (fs.existsSync(path.join(root, bare))) selected.add(bare);
-      continue;
-    }
-    let compiled;
-    try {
-      compiled = compilePattern(rawPattern);
-    } catch (err) {
-      process.stderr.write(
-        `worktree-create: skipping invalid .worktreeinclude pattern "${rawPattern}": ${err instanceof Error ? err.message : String(err)}\n`,
-      );
-      continue;
-    }
-    if (!compiled) continue;
-    for (const relEntry of tree()) {
-      const isDir = relEntry.endsWith("/");
-      const rel = isDir ? relEntry.slice(0, -1) : relEntry;
-      if (compiled.dirOnly && !isDir) continue;
-      if (!compiled.regex.test(rel)) continue;
-      if (compiled.negate) selected.delete(rel);
-      else selected.add(rel);
-    }
-  }
-  return [...selected];
-}
-
-// .worktreeinclude: gitignore-syntax patterns (literal paths, `*`/`**`
-// wildcards, leading `/` anchoring, leading `!` negation) for files/dirs to
-// copy verbatim. Once WorktreeCreate is configured, Claude Code's native
-// .worktreeinclude processing is disabled, so this hook must reimplement it.
-// copyDereferencedAtomic (not fs.cpSync) for the same isolation reason as
-// every copy above.
-const includeFile = path.join(cwd, ".worktreeinclude");
-if (fs.existsSync(includeFile)) {
-  const patterns = fs
-    .readFileSync(includeFile, "utf8")
-    .split("\n")
-    .map((line) => line.replace(/#.*$/, "").trim())
-    .filter(Boolean);
-  const relPaths = resolveWorktreeIncludePaths(cwd, patterns);
-  for (const rel of relPaths) {
-    const src = path.join(cwd, rel);
-    const dest = path.join(dir, rel);
-    if (fs.existsSync(dest) || !fs.existsSync(src)) continue;
-    try {
-      fs.mkdirSync(path.dirname(dest), { recursive: true });
-      copyDereferencedAtomic(src, dest);
-    } catch (err) {
-      process.stderr.write(
-        `worktree-create: WARNING — .worktreeinclude copy of "${rel}" failed: ${err instanceof Error ? err.message : String(err)}\n`,
-      );
-    }
   }
 }
 

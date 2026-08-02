@@ -36,6 +36,10 @@ means the answer is unavailable, not that something is wrong.
 node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" check "${1:-$CLAUDE_PROJECT_DIR}" --json
 ```
 
+On a repo where `gh` is found among the checked dependencies, this also runs
+`gh auth status` to surface OAuth scope gaps — a network call, ~2.2s. `scan`
+still writes nothing, so it stays read-only, but this step is not instant.
+
 Read the returned JSON. If `status === "block"`: present the list of `missing[]`
 with `installHint` for the user's platform and stop — do not execute the following steps.
 
@@ -99,6 +103,9 @@ If `conflicts[]` is non-empty:
   is absent **and** `.claude/agents/*.md` files exist in the target project (derive "agents exist"
   from disk: `ls "${1:-$CLAUDE_PROJECT_DIR}/.claude/agents/"*.md 2>/dev/null`), note:
   `"⚠ Superpowers bridge (aia-harness:agent-routing) is missing from CLAUDE.md while agents exist."`
+- Same check for the marker `aia-harness:parallel-sdd` (rendered by the same `## Workflow &
+  Agents` block, under the same "agents exist" condition). If absent while agents exist, note:
+  `"⚠ Parallel wave execution (aia-harness:parallel-sdd) is missing from CLAUDE.md while agents exist."`
 
 A dry run **reports** every conflict and **writes nothing** — no pending file is staged, so
 each entry's `pendingPath` is only where the fresh content *would* go. Do not print it as if
@@ -110,7 +117,7 @@ Then point the user to:
 - `/aia-harness:doctor` for guided fixes of out-of-date artifacts
 - `/aia-harness:patch` to merge specific categories and adjudicate each conflicting file
 
-If `conflicts[]` is empty and the bridge marker is present (or no agents exist), omit this
+If `conflicts[]` is empty and both bridge markers are present (or no agents exist), omit this
 section silently.
 
 Do **not** write any files. If the user wants to scaffold the harness, point them to

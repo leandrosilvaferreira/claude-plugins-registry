@@ -25,6 +25,21 @@ cat .claude/pm-config.json 2>/dev/null || echo "NOT_FOUND"
 If it returns `NOT_FOUND`, instruct the user to run `/pm:setup-project` and stop.
 Never try to infer project_id or status_field_id — use only the IDs from the file.
 
+The second precondition is OAuth scope. Every workflow below calls
+`gh api graphql` against Projects v2, which needs `project` — a scope the token
+minted by a plain `gh auth login` does not carry. When any `gh` command fails
+with "token has not been granted the required scopes", "requires the following
+scopes", or "Resource not accessible by personal access token", that is a
+missing scope, not a bug in the query. Stop and give the user:
+
+```bash
+gh auth refresh -h github.com -s repo,workflow,read:org,project
+```
+
+Never set `GH_TOKEN`/`GITHUB_TOKEN` or suggest a personal access token from the
+GitHub web UI as a workaround — a fine-grained PAT additionally lacks
+`Checks: Read`, which breaks `gh pr checks` in a way that looks unrelated.
+
 ## Lifecycle
 
 ```

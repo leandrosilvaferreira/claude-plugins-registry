@@ -57,6 +57,35 @@ means the answer is unavailable, not that something is wrong.
      - `✗ <name>  not found  [<level>]` + install hint for the platform if `found: false`
    - **Overall status:** ok / warn / block
 
+If the payload carries a `ghAuth` object, present it after the dependency list:
+
+- `available: false` → `gh` was found on disk but could not be executed (a
+  corrupt binary, a permission problem, or a non-functional shim). Nothing
+  else about its auth state could be determined, so ignore `missing` here —
+  it is an artifact of the failure, not a finding — and report only this.
+  Tell the user to verify the installation themselves by running
+  `gh --version`. Never suggest `gh auth refresh` or `gh auth login` —
+  neither can fix a binary that will not start.
+- `envTokenOverride: true` → report that `GH_TOKEN`/`GITHUB_TOKEN` is set in the
+  environment, that `gh` prefers it over the keyring login, and that
+  `gh auth refresh` cannot change its permissions. Fix:
+  `unset GH_TOKEN GITHUB_TOKEN`.
+- otherwise, `authenticated: false` → `gh` is installed but not logged in.
+  Give the user this command verbatim to run in their own terminal, with
+  `ghAuth.missing` joined by commas in place of `<scopes>`:
+  `gh auth login -h github.com -s <scopes>`. Never suggest `GH_TOKEN` or a
+  personal access token instead. Never offer to run this yourself —
+  `gh auth login` is an interactive browser flow, always the user's to run.
+- otherwise, `missing` non-empty → list the missing scopes and give `ghAuth.refreshCmd`
+  verbatim for the user to run in their own terminal. It adds scopes without
+  revoking existing ones; confirm with `gh auth status`. Never suggest setting
+  `GH_TOKEN` or creating a personal access token in the GitHub web UI instead.
+  Never offer to run this yourself — `gh auth refresh` is an interactive
+  browser flow, always the user's to run.
+- otherwise → confirm the gh login carries the scopes this project needs.
+
+Missing scopes never change the overall status and never stop the command.
+
 4. If `status === "block"`:
    - Highlight the deps in `missing[]` and their `installHint[platform]`
    - Inform the user that **no harness operation can continue** until they are installed

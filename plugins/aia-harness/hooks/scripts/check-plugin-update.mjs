@@ -11,6 +11,16 @@
  * External dependencies are env-overridable for testing:
  *   AIA_UPDATE_CHECK_CLAUDE_BIN        — command to run instead of the real
  *                                        `claude` binary on PATH.
+ *   AIA_UPDATE_CHECK_CLAUDE_BIN_SCRIPT — optional script path inserted as the
+ *                                        first argument on every invocation of
+ *                                        AIA_UPDATE_CHECK_CLAUDE_BIN. Lets a
+ *                                        test double be run as `node
+ *                                        <script>` (AIA_UPDATE_CHECK_CLAUDE_BIN
+ *                                        = process.execPath) instead of as a
+ *                                        bare executable: unlike POSIX,
+ *                                        Windows has no shebang mechanism, so
+ *                                        a `.mjs` fake-CLI file cannot be
+ *                                        CLAUDE_BIN itself there.
  *   AIA_UPDATE_CHECK_CACHE_FILE        — cache file path. Falls back to
  *                                        argv[2] (the
  *                                        ${CLAUDE_PLUGIN_DATA}/update-check.json
@@ -47,6 +57,7 @@ const RETRY_MS = 60 * 60 * 1000;
  */
 const ORPHAN_GRACE_MS = 7 * 24 * 60 * 60 * 1000;
 const CLAUDE_BIN = process.env.AIA_UPDATE_CHECK_CLAUDE_BIN || "claude";
+const CLAUDE_BIN_SCRIPT = process.env.AIA_UPDATE_CHECK_CLAUDE_BIN_SCRIPT;
 const MARKETPLACE_HOME = process.env.AIA_UPDATE_CHECK_MARKETPLACE_HOME || os.homedir();
 
 /**
@@ -54,7 +65,12 @@ const MARKETPLACE_HOME = process.env.AIA_UPDATE_CHECK_MARKETPLACE_HOME || os.hom
  * @returns {string} stdout
  */
 function runClaude(args) {
-  return execFileSync(CLAUDE_BIN, args, { encoding: "utf8", timeout: 20000, windowsHide: true });
+  const fullArgs = CLAUDE_BIN_SCRIPT ? [CLAUDE_BIN_SCRIPT, ...args] : args;
+  return execFileSync(CLAUDE_BIN, fullArgs, {
+    encoding: "utf8",
+    timeout: 20000,
+    windowsHide: true,
+  });
 }
 
 /**

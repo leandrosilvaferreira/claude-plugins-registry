@@ -51,6 +51,27 @@ Go/Rust bin  →  not for hooks. Use only for distributed CLIs.
 - **MANDATORY** — every `spawn` / `exec` / `execFile` / `fork` call inside a hook **must** pass `windowsHide: true` in its options. Issue [#19012](https://github.com/anthropics/claude-code/issues/19012): without it, spawning Node.js (or any console app) flashes a console window on Windows. The option is a no-op on macOS/Linux, so always set it — no condition.
 - To run an npm-installed tool (eslint, prettier, tsc) from a hook on Windows, invoke its JS entrypoint directly via `node`, never the `node_modules/.bin` shim.
 
+## Windows API traps (each verified on real Windows CI, each cost a shipped bug)
+
+- **`fs.realpathSync` is NOT `GetFinalPathNameByHandleW`** — it is Node's JS reimplementation
+  of POSIX realpath and resolves symlinks only, so on Windows it returns 8.3 short names
+  (`RUNNER~1`) unchanged, while git and most tooling record long names. A strict comparison
+  then silently fails. Use **`fs.realpathSync.native`** (libuv `uv_fs_realpath`) on BOTH
+  operands of any path equality check.
+- **`.bat`/`.cmd` cannot be spawned without a shell**, even fully-qualified — `CreateProcess`
+  needs a real executable image. Composer, npm and many package managers ship `.bat` shims.
+  When a shell is unavoidable, allow-list untrusted args *before* they reach it; quoting alone
+  is not sufficient (CVE-2024-27980).
+- **Git for Windows creates `.git` hidden** (`core.hideDotFiles`), including a linked
+  worktree's pointer file. `writeFileSync`'s default `'w'` maps to `CREATE_ALWAYS`, which
+  Win32 refuses on a hidden file with a **permanent** `EPERM` — retrying never clears it. Use
+  `openSync(path, "r+")` + `ftruncateSync`.
+- **A live process's cwd is locked** — `rmSync` on a directory a detached child is running in
+  fails `EPERM`. Test teardown needs a retry helper, not a bare `rmSync`.
+- **`cmd.exe` reports a missing command as exit 1 + "is not recognized"**, never POSIX exit
+  127. Any fail-open "binary absent" check must match both, or the hook blocks forever on
+  Windows.
+
 ## Forbidden
 
 - Don't author a hook in anything but `.mjs` — no `.sh`, `.bat`, `.ps1`, `.py`, or any platform-specific shell, under any condition.
