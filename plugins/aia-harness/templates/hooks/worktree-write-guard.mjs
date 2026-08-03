@@ -13,7 +13,9 @@
  * Uses `event.cwd` directly (no state files): Claude Code propagates the
  * dynamic cwd into every hook event, so detection is always current.
  *
- * No-op when cwd is the project root or any non-worktree path.
+ * No-op when cwd is the project root or any non-worktree path. Also no-op
+ * for writes into Claude Code's own per-session scratchpad, which by design
+ * lives outside every worktree.
  * Always exits 0 (never hard-blocks: "ask" lets the user decide).
  */
 import fs from "node:fs";
@@ -64,6 +66,18 @@ const absTarget = path.resolve(cwd, targetPath);
 
 // Allow writes inside the worktree (or to the worktree root itself).
 if (absTarget === wtPath || absTarget.startsWith(wtPath + path.sep)) process.exit(0);
+
+// Claude Code's own per-session scratchpad
+// (<tmp>/claude-*/<project-slug>/<session-id>/scratchpad/...) sits outside
+// every worktree by design, so without this it always reads as a
+// cross-tree write and asks — on every temp file. Matched structurally
+// (claude-*/.../scratchpad), never a hardcoded temp root, so it holds on
+// every platform. Same layout session-scratch.mjs's findClaudeScratchRoot()
+// walks on disk — this guard stays regex-only (no fs access) since it runs
+// on every write, but keep both in sync if that layout ever changes.
+if (/[/\\]claude-[^/\\]+[/\\][^/\\]+[/\\][^/\\]+[/\\]scratchpad([/\\]|$)/.test(absTarget)) {
+  process.exit(0);
+}
 
 // Display with forward slashes regardless of host OS: these are read by the
 // agent/user as message text, not compared against a filesystem path, so a

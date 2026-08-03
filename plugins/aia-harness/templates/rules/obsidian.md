@@ -23,22 +23,31 @@ made, what was already tried and failed, conventions that span modules.
 
 Vault files are reached **only** through `mcp__obsidian__*` tools — never `Read`, `Write`,
 `Edit`, `MultiEdit`, `NotebookEdit`, `Grep`, `Glob`, `Bash`, or `PowerShell` on anything under
-`__OBSIDIAN_VAULT_DIR__/`. Direct access bypasses the server's template, wikilink, and slug
-enforcement (below); a hand-written note silently violates all three and only fails later,
-at some unrelated write.
+`__OBSIDIAN_VAULT_DIR__/`, with one narrow exception: `Read`/`Grep`/`Glob` may target
+`__OBSIDIAN_VAULT_DIR__/daily/` directly (see below). Direct access otherwise bypasses the
+server's template, wikilink, and slug enforcement (below); a hand-written note silently
+violates all three and only fails later, at some unrelated write.
 
 This is enforced mechanically, not just by convention — but the guarantee differs by tool,
 so state it precisely rather than overclaim it. `.claude/hooks/vault-guard.mjs`
 (`PreToolUse`, matcher `Read|Grep|Glob|Write|Edit|MultiEdit|NotebookEdit|Bash|PowerShell`) denies any
 call whose **structured path field** (`file_path`, `path`, `pattern`, `glob`,
-`notebook_path`) contains a `__OBSIDIAN_VAULT_DIR__/` segment, naming the MCP tool to use instead.
-For those file tools this is a hard boundary keyed on path, not intent — there is no
-field-level escape hatch. Shell tools (`Bash`, `PowerShell`) are different: they have no structured path field, so the hook
-falls back to a plain substring check on the command string. That catches the accidental and
-casual case (`cat >> __OBSIDIAN_VAULT_DIR__/daily/x.md`) but is **not** a security boundary —
-variable indirection, base64/encoding, or `cd __OBSIDIAN_VAULT_DIR__ && cat >> x.md` all slip past a
-string match; a determined bypass through a shell is not prevented. A genuine need for direct
-access to a file-tool path means unwiring the hook, not finding a way around it here.
+`notebook_path`) contains a `__OBSIDIAN_VAULT_DIR__/` segment, naming the MCP tool to use instead —
+**except** a `Read`/`Grep`/`Glob` call whose path falls specifically under
+`__OBSIDIAN_VAULT_DIR__/daily/`, which the hook lets through: daily notes are auto-generated
+raw session logs, not curated knowledge, so an agent may inspect the backlog (list/grep/read)
+directly, without an MCP round-trip per note. `Write`/`Edit`/`MultiEdit`/`NotebookEdit` on
+`daily/` are **NOT** exempt — the server's frontmatter/template/slug enforcement must still
+gate anything actually written there. For every other vault path, and for every write tool
+everywhere including `daily/`, this remains a hard boundary keyed on path, not intent — there
+is no field-level escape hatch. Shell tools (`Bash`, `PowerShell`) are different, and are
+unaffected by the `daily/` carve-out (a shell command can write as easily as it can read):
+they have no structured path field, so the hook falls back to a plain substring check on the
+command string. That catches the accidental and casual case (`cat >> __OBSIDIAN_VAULT_DIR__/daily/x.md`)
+but is **not** a security boundary — variable indirection, base64/encoding, or
+`cd __OBSIDIAN_VAULT_DIR__ && cat >> x.md` all slip past a string match; a determined bypass
+through a shell is not prevented. A genuine need for direct write access to a file-tool path
+means unwiring the hook, not finding a way around it here.
 
 ## Tools by job
 

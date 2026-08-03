@@ -41,6 +41,18 @@
  *    base64/encoding, or `cd .vault-obsidian && cat >> x.md` all slip past a
  *    string match. See .claude/rules/obsidian.md for the documented ceiling.
  *
+ * Carve-out: `.vault-obsidian/daily/` is exempt from the structured-path
+ * check, but ONLY for the three read-only tools (`Read`, `Grep`, `Glob`) —
+ * daily notes are auto-generated raw session logs, not curated knowledge,
+ * and an agent legitimately needs to inspect the backlog directly
+ * (list/grep/read) without an MCP round-trip per note.
+ * `Write`/`Edit`/`MultiEdit`/`NotebookEdit` on `daily/` are still denied: the
+ * MCP server's frontmatter/template/slug enforcement must still gate
+ * anything actually written there. The Bash command-string check is
+ * unaffected by this carve-out — it still denies any `.vault-obsidian/`
+ * reference, `daily/` included, since a shell command can write as easily
+ * as it can read.
+ *
  * When no candidate path and no Bash command touches the vault — the
  * overwhelmingly common case, every Read in every session hits this hook —
  * it emits nothing at all.
@@ -65,6 +77,7 @@
  * — a vault hook must never block a session on its own plumbing failure.
  */
 import fs from "node:fs";
+import path from "node:path";
 
 // Anti-recursion / sub-session exemption — same idiom as vault-orient.mjs.
 if (process.env.CLAUDE_INVOKED_BY) process.exit(0);
@@ -97,16 +110,32 @@ const input = event.tool_input ?? {};
 // a joined "fileA pathB patternC" string would put a literal space before
 // pathB whenever fileA is empty, so the "start of string" anchor below would
 // never line up with pathB's own boundary.
+// path.posix.normalize collapses "." / ".." segments (e.g.
+// "__OBSIDIAN_VAULT_DIR__/daily/../03-knowledge/x.md" -> "__OBSIDIAN_VAULT_DIR__/03-knowledge/x.md")
+// BEFORE either regex runs below — without it, a "daily/.." prefix resolves
+// outside daily/ on the real filesystem while still text-matching
+// DAILY_SEGMENT_RE, defeating the read-only carve-out for the whole vault.
 const candidates = [input.file_path, input.path, input.pattern, input.glob, input.notebook_path]
   .filter((v) => typeof v === "string")
-  .map((v) => v.replace(/\\/g, "/"));
+  .map((v) => path.posix.normalize(v.replace(/\\/g, "/")));
 
 // Directory-segment match only: the vault segment must be preceded by "/" or
 // string-start, and followed by "/" or string-end. A loose substring match
 // (e.g. matching on "vault-obsidian" alone) would wrongly deny
 // docs/about-vault-obsidian-setup.md, which lives nowhere near the vault.
 const VAULT_SEGMENT_RE = /(^|\/)__OBSIDIAN_VAULT_DIR__(\/|$)/;
-const pathHit = candidates.some((c) => VAULT_SEGMENT_RE.test(c));
+
+// Read-only carve-out (see file-level doc comment): Read/Grep/Glob may target
+// __OBSIDIAN_VAULT_DIR__/daily/ directly. Same segment-boundary discipline as
+// VAULT_SEGMENT_RE, so "daily-backup" or "dailyfoo" are never mistaken for it.
+const DAILY_SEGMENT_RE = /(^|\/)__OBSIDIAN_VAULT_DIR__\/daily(\/|$)/;
+const READ_ONLY_TOOLS = new Set(["Read", "Grep", "Glob"]);
+const toolName = typeof event.tool_name === "string" ? event.tool_name : "";
+const dailyReadExempt = READ_ONLY_TOOLS.has(toolName);
+
+const pathHit = candidates.some(
+  (c) => VAULT_SEGMENT_RE.test(c) && !(dailyReadExempt && DAILY_SEGMENT_RE.test(c)),
+);
 
 // Shell tools (Bash, PowerShell) have no structured path field, so the vault
 // path (if present at all) is embedded inside an arbitrary command string — a
