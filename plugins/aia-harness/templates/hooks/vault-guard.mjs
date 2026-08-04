@@ -41,6 +41,53 @@
  *    base64/encoding, or `cd .vault-obsidian && cat >> x.md` all slip past a
  *    string match. See .claude/rules/obsidian.md for the documented ceiling.
  *
+ *    Exemption (added 2026-08-04, user-approved): a command that is ENTIRELY
+ *    made of `git add|status|diff|commit|push|log` invocations is let
+ *    through even when it names a .vault-obsidian/ path. The vault is
+ *    versioned in git like any other tracked directory (see
+ *    .claude/rules/obsidian.md), and these six subcommands only stage,
+ *    inspect, or publish content that already reached disk through the MCP
+ *    tools (or the session-log/compile sub-sessions below) — they cannot
+ *    introduce or rewrite note content themselves, so they don't bypass the
+ *    template/wikilink/slug enforcement this hook exists to protect.
+ *    Destructive or content-rewriting git plumbing (`checkout`/`restore`/
+ *    `reset`/`rm`/`mv`/`clean`) is deliberately NOT on this list.
+ *
+ *    SAFETY MECHANISM (rewritten 2026-08-04 after a same-day security
+ *    review caught the first version, then tightened same-day by a second
+ *    review pass): reject the WHOLE raw command outright if it contains ANY
+ *    shell metacharacter that can spawn a subprocess, expand a variable,
+ *    redirect I/O, or cross a line boundary — backtick, ANY `$` (covers
+ *    `$(command substitution)`, `${parameter expansion}`, and plain `$VAR`,
+ *    which can silently leak an environment variable's value into whatever
+ *    consumes the command's output), `<`, `>`, a LONE `&` (background/detach
+ *    — `&&` itself stays legal, it is the segment separator this allowlist
+ *    already splits on), a real backslash, or a newline/CR — before ever
+ *    splitting it into segments. The first version tried to tell "safe data
+ *    inside quotes" apart from "dangerous shell syntax" by erasing
+ *    quoted/heredoc regions with regex before matching; that approach
+ *    shipped with two real bugs on its first day: `git commit -m "$(cmd)"`
+ *    matched the safe-subcommand pattern because the erasure treated the
+ *    double-quoted region as inert data, when bash actually runs `cmd` first
+ *    regardless of the surrounding quotes; and the segment splitter didn't
+ *    treat a bare newline as a command separator the way bash does, so
+ *    `git add x\ncat .vault-obsidian/secret.md` read as one single "git add"
+ *    segment and passed. A flat denylist on the untouched raw string has no
+ *    equivalent gap: none of these characters can ever legitimately appear
+ *    in a plain `git add/status/diff/commit/push/log` invocation's OWN
+ *    syntax, so rejecting on sight of one is always safe — at the cost of
+ *    also rejecting some unusual-but-innocent commit messages (e.g. one
+ *    containing a literal `<`, `&`, `$`, or backtick). Those still work via
+ *    `git commit -F <file>`, with the message written to `<file>` through
+ *    the Write tool instead of embedded in the Bash command string — and
+ *    multi-line messages now require that path too, since a newline
+ *    anywhere in the command is an unconditional reject. Checked against the
+ *    RAW `input.command`, not the backslash-normalized `command` below —
+ *    that normalization exists for Windows path matching (point 1) and
+ *    would silently turn a real line-continuation backslash into `/`,
+ *    hiding it from this check while the shell that actually executes the
+ *    command still sees the original backslash.
+ *
  * Carve-out: `.vault-obsidian/daily/` is exempt from the structured-path
  * check, but ONLY for the three read-only tools (`Read`, `Grep`, `Glob`) —
  * daily notes are auto-generated raw session logs, not curated knowledge,
@@ -68,8 +115,10 @@
  * those tools is impossible — that is the intent. A human editing the vault
  * in Obsidian itself is unaffected (hooks only see Claude Code tool calls).
  * The shell command-string check does not carry the same guarantee (see
- * point 2 above). If a genuine need for direct access ever appears, unwire
- * the hook rather than adding a config flag.
+ * point 2 above), and now carries one narrow, explicit allowlist (git
+ * add/status/diff/commit/push/log — see point 2) for git plumbing over
+ * already-materialized vault files. Any OTHER genuine need for direct
+ * access means unwiring the hook, not widening this list.
  *
  * Wire in .claude/settings.json under PreToolUse with matcher
  * "Read|Grep|Glob|Write|Edit|MultiEdit|NotebookEdit|Bash|PowerShell". Fails open on any
@@ -146,8 +195,55 @@ const pathHit = candidates.some(
 // the tool name, so it covers every shell tool in the matcher uniformly.
 // Best-effort only — see the file-level doc comment for what this does not
 // cover (variable indirection, encoding, `cd` then a relative path).
-const command = typeof input.command === "string" ? input.command.replace(/\\/g, "/") : "";
-const commandHit = command.includes("__OBSIDIAN_VAULT_DIR__/");
+// See file-level doc comment, point 2, "Exemption" and "SAFETY MECHANISM" —
+// git plumbing that can only stage/inspect/publish, never write note
+// content or spawn anything else, is let through even when it names a
+// .vault-obsidian/ path.
+//
+// Reject outright on any shell metacharacter capable of spawning a
+// subprocess, redirecting I/O, or crossing a line boundary — checked on the
+// RAW, un-normalized command (see file-level comment for why). This must
+// run BEFORE segment-splitting: `git commit -m "$(cmd)"` is one segment
+// that matches SAFE_GIT_SUBCOMMAND_RE below on its face, so the dangerous-
+// character check is what actually stops it, not the split. `&` is checked
+// separately, below — `&&` (the segment separator) must stay legal, so it
+// can't sit in this same blanket character class.
+const DANGEROUS_CHAR_RE = /[`<>\\\n\r$]/;
+
+// Strip an optional leading `rtk ` before matching: an rtk wrapper (this
+// project's own `rtk-hook.mjs`, if installed via `/add-tools`, or a user's
+// global RTK config) can transparently rewrite `git ...` into `rtk git ...`
+// before this hook ever sees the command. Matching bare `git` only would
+// deny every rewritten invocation, including the plain `git add`/`git
+// commit` this allowlist exists to permit.
+const SAFE_GIT_SUBCOMMAND_RE = /^\s*git\s+(add|status|diff|commit|push|log)\b/;
+const RTK_PREFIX_RE = /^\s*rtk\s+/;
+
+// Every `&&`/`;`/`|`-separated segment of the command must independently
+// match — `git add .vault-obsidian/ && cat .vault-obsidian/x.md` stays
+// blocked because its second segment doesn't (and would also be caught
+// above: `cat` isn't in the safe-subcommand list even without a dangerous
+// character in sight).
+/**
+ * @param {string} cmd
+ * @returns {boolean}
+ */
+function isSafeGitPlumbing(cmd) {
+  if (DANGEROUS_CHAR_RE.test(cmd)) return false;
+  // A lone `&` backgrounds/detaches a command — dangerous, reject. `&&` is
+  // the separator this allowlist itself relies on, so strip every `&&` pair
+  // first; anything left over is a real single ampersand.
+  if (cmd.replace(/&&/g, "").includes("&")) return false;
+  const segments = cmd
+    .split(/&&|;|\|/)
+    .map((s) => s.trim().replace(RTK_PREFIX_RE, ""))
+    .filter(Boolean);
+  return segments.length > 0 && segments.every((s) => SAFE_GIT_SUBCOMMAND_RE.test(s));
+}
+
+const rawCommand = typeof input.command === "string" ? input.command : "";
+const command = rawCommand.replace(/\\/g, "/");
+const commandHit = command.includes("__OBSIDIAN_VAULT_DIR__/") && !isSafeGitPlumbing(rawCommand);
 
 if (!pathHit && !commandHit) process.exit(0);
 
