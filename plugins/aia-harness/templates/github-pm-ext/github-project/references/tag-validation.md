@@ -161,7 +161,7 @@ Add **before** any packaging/publish step in the release workflow. This is the f
           TAG_VERSION: ${{ github.ref_name }}
         run: |
           # Adapt extraction command per ecosystem (see table below)
-          FILE_VERSION=$(python3 -c "import json; print(json.load(open('.claude-plugin/plugin.json'))['version'])")
+          FILE_VERSION=$(jq -r .version .claude-plugin/plugin.json)
           TAG_BARE="${TAG_VERSION#v}"
           if [[ "${TAG_BARE}" != "${FILE_VERSION}" ]]; then
             echo "::error file=.claude-plugin/plugin.json::Tag ${TAG_VERSION} does not match version file ${FILE_VERSION}"
@@ -181,7 +181,7 @@ Add **before** any packaging/publish step in the release workflow. This is the f
 | Python | `pyproject.toml` | `sed -nE 's/^version[[:space:]]*=[[:space:]]*"([^"]+)".*/\1/p'` |
 | Go | `version.go` | `sed -nE 's/.*Version[[:space:]]*=[[:space:]]*"([^"]+)".*/\1/p'` |
 | Rust | `Cargo.toml` | `sed -nE 's/^version[[:space:]]*=[[:space:]]*"([^"]+)".*/\1/p'` |
-| Claude Code Plugin | `.claude-plugin/plugin.json` | `python3 -c "import json; print(json.load(open('.claude-plugin/plugin.json'))['version'])"` |
+| Claude Code Plugin | `.claude-plugin/plugin.json` | `jq -r .version` |
 
 ## Composer Audit Blocking Installs
 

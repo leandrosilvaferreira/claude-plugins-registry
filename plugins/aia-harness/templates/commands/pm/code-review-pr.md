@@ -1,7 +1,7 @@
 ---
 description: Parallel code review of a PR using subagents
 argument-hint: "[pr-number]"
-allowed-tools: Bash(gh *), Bash(bash *), Bash(python3 *)
+allowed-tools: Bash(gh *)
 ---
 
 Config PM: !`cat .claude/pm-config.json 2>/dev/null || echo "NOT_FOUND"`

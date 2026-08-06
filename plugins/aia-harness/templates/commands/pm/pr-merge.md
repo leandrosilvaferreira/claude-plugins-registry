@@ -1,7 +1,7 @@
 ---
 description: Safely merge a PR — validates CI before merging
 argument-hint: "[pr-or-issue-number]"
-allowed-tools: Bash(gh *), Bash(git *), Bash(bash *), Bash(python3 *), AskUserQuestion
+allowed-tools: Bash(gh *), Bash(git *), Bash(node *), AskUserQuestion
 ---
 
 Config PM: !`cat .claude/pm-config.json 2>/dev/null || echo "NOT_FOUND"`
@@ -28,17 +28,23 @@ the command ever runs.)
 **Step 1 — Identify PR**
 
 - Try directly as a PR number: `gh pr view $ARGUMENTS --json number`
-- If it fails: look for a PR with branch `feat/$ARGUMENTS-*` or body with `Closes #$ARGUMENTS`
+- If it fails: treat the argument as an issue number and look for a PR whose
+  branch is `<N>-*` or `<type>/<N>-*`, or whose body closes `#<N>`. Substitute
+  `<N>` literally in **both** places below — do not write `$ARGUMENTS` inside
+  the jq program, where a stray quote in the argument would break the quoting
+  and inject into the program itself. `gh`'s built-in `--jq` does this in one
+  process; do not pipe into `python3`, which stock Windows shadows with an App
+  Execution Alias stub that opens the Microsoft Store instead of running
+  anything. Prints the PR number, or nothing when there is no match:
 
   ```bash
-  gh pr list --json number,headRefName,body | python3 -c "
-  import sys,json; prs=json.load(sys.stdin)
-  n=int('$ARGUMENTS')
-  for p in prs:
-    if f'/{n}-' in p['headRefName'] or f'#{n}' in p.get('body',''):
-      print(p['number']); break
-  "
+  gh pr list --json number,headRefName,body --jq '[.[] | select((.headRefName | test("(^|/)<N>-")) or ((.body // "") | test("#<N>([^0-9]|$)")))] | first | .number // empty'
   ```
+
+  The `([^0-9]|$)` boundary matters: a plain `#<N>` substring test matches
+  `#420` while looking for issue 42, which would hand the wrong PR to the
+  merge below. `.body // ""` covers a PR whose body is JSON `null` rather than
+  an empty string.
 
 **Step 2 — Check draft status**
 

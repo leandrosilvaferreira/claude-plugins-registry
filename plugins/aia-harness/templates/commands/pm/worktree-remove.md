@@ -1,7 +1,7 @@
 ---
 description: Safely remove worktree — validates no lost work
 argument-hint: "[branch|issue-number|path]"
-allowed-tools: Bash(gh *), Bash(git *), Bash(bash *)
+allowed-tools: Bash(gh *), Bash(git *), Bash(node *)
 ---
 
 Config PM: !`cat .claude/pm-config.json 2>/dev/null || echo "NOT_FOUND"`
