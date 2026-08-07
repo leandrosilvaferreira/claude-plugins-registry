@@ -1,6 +1,6 @@
 ---
 description: Commit, push, and open PR linked to the issue
-allowed-tools: Bash(git *), Bash(gh *), AskUserQuestion
+allowed-tools: Bash(git *), Bash(gh *), Bash(cat *), AskUserQuestion
 ---
 
 Current branch: !`git branch --show-current`
@@ -12,13 +12,16 @@ Use the `github-pm` skill to execute this workflow.
 
 **Worktree-safe execution:** run every `git`/`gh` command below as its own separate,
 plain Bash call — never chain two of them with `&&`, `;`, or `$(...)` command
-substitution. A worktree-isolated session refuses any command it cannot statically
-verify stays inside the worktree, and a compound git invocation (variable assigned
-from a git command substitution, then reused) is exactly what gets refused ("too
-complex to verify that it stays inside the worktree"). Each step below is already
-written as one command per code block for this reason — keep it that way, including
-when a step has two consecutive code blocks (run them as two separate Bash calls,
-not pasted together).
+substitution. Per the [official worktree docs](https://code.claude.com/docs/en/worktrees#how-claude-code-enforces-isolation),
+Claude Code blocks any Bash command that redirects git into the main checkout —
+`git -C`, `--git-dir`, a `GIT_DIR`/`GIT_WORK_TREE` variable, or a `cd` into the
+main checkout before running git — plus, separately, any command it can't
+otherwise verify stays inside the worktree ("too complex to verify that it stays
+inside the worktree"). This file never needs `git -C`: every step below already
+targets whatever checkout the session is currently in. Each step below is
+already written as one command per code block for this reason — keep it that
+way, including when a step has two consecutive code blocks (run them as two
+separate Bash calls, not pasted together).
 
 1. Branch gate — never commit onto `main`/`master`. If the current branch is
    `main` or `master`, automatically create a fresh branch for the pending

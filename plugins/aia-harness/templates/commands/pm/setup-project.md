@@ -1,6 +1,6 @@
 ---
 description: Link repo to GitHub Project and write pm-config.json
-allowed-tools: Bash(gh *), Bash(git *), Write, AskUserQuestion
+allowed-tools: Bash(gh *), Bash(git *), Bash(cat *), Bash(head *), Bash(grep *), Write, AskUserQuestion
 ---
 
 Auth status: !`gh auth status 2>&1 | head -8`

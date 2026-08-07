@@ -1,7 +1,7 @@
 ---
 description: Create a new GitHub issue and add it to the project board
 argument-hint: "[description]"
-allowed-tools: Bash(gh *), Bash(git *), Write, AskUserQuestion
+allowed-tools: Bash(gh *), Bash(git *), Bash(cat *), Write, AskUserQuestion
 ---
 
 Config PM: !`cat .claude/pm-config.json 2>/dev/null || echo "NOT_FOUND"`

@@ -1,6 +1,6 @@
 ---
 description: Show open issues grouped by Projects v2 status
-allowed-tools: Bash(gh *)
+allowed-tools: Bash(gh *), Bash(git *), Bash(cat *)
 ---
 
 Config PM: !`cat .claude/pm-config.json 2>/dev/null || echo "NOT_FOUND"`

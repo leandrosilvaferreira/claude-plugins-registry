@@ -1,7 +1,7 @@
 ---
 description: Safely merge a PR — validates CI before merging
 argument-hint: "[pr-or-issue-number]"
-allowed-tools: Bash(gh *), Bash(git *), Bash(node *), AskUserQuestion
+allowed-tools: Bash(gh *), Bash(git *), Bash(cat *), Bash(node *), AskUserQuestion
 ---
 
 Config PM: !`cat .claude/pm-config.json 2>/dev/null || echo "NOT_FOUND"`
@@ -12,16 +12,22 @@ argument can be a PR number or an issue number.
 
 **Worktree-safe execution:** run every `git`/`gh` command below as its own
 separate, plain Bash call — never chain two of them with `&&`, `;`, or `$(...)`
-command substitution. A worktree-isolated session refuses any command it cannot
-statically verify stays inside the worktree, and a compound git invocation is
-exactly what gets refused. Every `<PLACEHOLDER>` below is a value **you**
-substitute literally into the command before running it — never a shell
-variable. A shell variable does not survive from one Bash call to the next, so
-`gh pr merge $PR_NUMBER $MERGE_FLAG --delete-branch` with both unset silently
-degrades to `gh pr merge --delete-branch`, which merges whatever PR the current
-branch happens to point at, with the default strategy. (`$ARGUMENTS` is the one
-exception: it is a Claude Code command placeholder the loader substitutes before
-the command ever runs.)
+command substitution. Per the [official worktree docs](https://code.claude.com/docs/en/worktrees#how-claude-code-enforces-isolation),
+Claude Code blocks any Bash command that redirects git into the main checkout —
+`git -C`, `--git-dir`, a `GIT_DIR`/`GIT_WORK_TREE` variable, or a `cd` into the
+main checkout before running git — plus, separately, any command it can't
+otherwise verify stays inside the worktree. This file never needs `git -C`:
+every step below already targets whatever checkout the session is currently in
+(Step 7 explicitly branches on "in a worktree" vs. "on the main checkout" rather
+than redirecting into one from the other). Every `<PLACEHOLDER>` below is a
+value **you** substitute literally into the command before running it — never a
+shell variable. A shell variable does not survive from one Bash call to the
+next, so `gh pr merge $PR_NUMBER $MERGE_FLAG --delete-branch` with both unset
+silently degrades to `gh pr merge --delete-branch`, which merges whatever PR the
+current branch happens to point at, with the default strategy. (`$ARGUMENTS`
+above is a Claude Code command placeholder, substituted textually by the loader
+before the shell ever runs — a separate mechanism from the guard described
+above, not a confirmed exemption from it.)
 
 **NEVER skip the gates below. This is the mandatory sequence:**
 

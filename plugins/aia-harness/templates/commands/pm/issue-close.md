@@ -1,10 +1,10 @@
 ---
 description: Close an issue after validating acceptance criteria
 argument-hint: "[issue-number]"
-allowed-tools: Bash(gh *)
+allowed-tools: Bash(gh *), Bash(cat *)
 ---
 
-Issue: !`gh issue view ${ARGUMENTS:-} --json number,title,body,state 2>/dev/null || echo "NOT_FOUND"`
+Issue: !`gh issue view $ARGUMENTS --json number,title,body,state 2>/dev/null || echo "NOT_FOUND"`
 Config PM: !`cat .claude/pm-config.json 2>/dev/null || echo "NOT_FOUND"`
 
 Use the `github-pm` skill to execute the issue closing workflow (Workflow 3).

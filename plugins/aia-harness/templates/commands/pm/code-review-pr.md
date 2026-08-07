@@ -1,12 +1,12 @@
 ---
 description: Parallel code review of a PR using subagents
 argument-hint: "[pr-number]"
-allowed-tools: Bash(gh *)
+allowed-tools: Bash(gh *), Bash(cat *)
 ---
 
 Config PM: !`cat .claude/pm-config.json 2>/dev/null || echo "NOT_FOUND"`
-PR info: !`gh pr view ${ARGUMENTS:-} --json number,title,state,isDraft,headRefName,body 2>/dev/null || echo "NOT_FOUND"`
-Diff stat: !`gh pr diff ${ARGUMENTS:-} --stat 2>/dev/null || echo "NOT_FOUND"`
+PR info: !`gh pr view $ARGUMENTS --json number,title,state,isDraft,headRefName,body 2>/dev/null || echo "NOT_FOUND"`
+Changed files: !`gh pr diff $ARGUMENTS --name-only 2>/dev/null || echo "NOT_FOUND"`
 
 Use the `github-pm` skill to execute the parallel code review.
 PR number: `$ARGUMENTS`.

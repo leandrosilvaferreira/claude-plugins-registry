@@ -2,10 +2,10 @@
 description: >
   Work on a GitHub issue: set In Progress + worktree
 argument-hint: "[issue-number]"
-allowed-tools: Bash(gh *), Bash(git *), AskUserQuestion
+allowed-tools: Bash(gh *), Bash(git *), Bash(cat *), AskUserQuestion
 ---
 
-Issue: !`gh issue view ${ARGUMENTS:-} --json number,title,labels,body 2>/dev/null || echo "NOT_FOUND"`
+Issue: !`gh issue view $ARGUMENTS --json number,title,labels,body 2>/dev/null || echo "NOT_FOUND"`
 Config PM: !`cat .claude/pm-config.json 2>/dev/null || echo "NOT_FOUND"`
 Existing worktrees: !`git worktree list 2>/dev/null`
 
