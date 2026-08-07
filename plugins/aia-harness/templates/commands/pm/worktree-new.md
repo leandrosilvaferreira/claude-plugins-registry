@@ -1,7 +1,6 @@
 ---
 description: Create worktree for issue with auto-named branch
 argument-hint: "[issue-number]"
-allowed-tools: Bash(gh *), Bash(git *), Bash(cat *), AskUserQuestion
 ---
 
 Issue: !`gh issue view $ARGUMENTS --json number,title,labels 2>/dev/null || echo "NOT_FOUND"`

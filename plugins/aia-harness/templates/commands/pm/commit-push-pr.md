@@ -1,6 +1,5 @@
 ---
 description: Commit, push, and open PR linked to the issue
-allowed-tools: Bash(git *), Bash(gh *), Bash(cat *), AskUserQuestion
 ---
 
 Current branch: !`git branch --show-current`

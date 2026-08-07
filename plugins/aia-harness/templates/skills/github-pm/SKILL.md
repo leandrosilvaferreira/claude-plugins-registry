@@ -80,7 +80,10 @@ step-by-step — do not invent an alternative flow.
 2. Confirm with the user before creating or closing issues.
 3. Status reflects real state. Never leave In Progress if work has stopped.
 4. NEVER operate on `main` — always on a feature branch or worktree.
-5. NEVER merge without the `check-pr-status.mjs` gate with exit 0 (or exit 4 + confirmation).
+5. NEVER merge without the `check-pr-status.mjs` gate with exit 0 (or exit 4/5 + confirmation).
+   Exit 5 means CI and `reviewDecision` are fine but unresolved review-thread comments or
+   pending review requests remain — the only way a `COMMENTED` bot review (Codex, Claude
+   Code, etc.) surfaces, since it never sets `reviewDecision`.
 6. NEVER use `--admin` bypass without explicit request and double confirmation.
 
 ## Anti-patterns

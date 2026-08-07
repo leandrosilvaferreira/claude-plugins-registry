@@ -1,7 +1,6 @@
 ---
 description: Close an issue after validating acceptance criteria
 argument-hint: "[issue-number]"
-allowed-tools: Bash(gh *), Bash(cat *)
 ---
 
 Issue: !`gh issue view $ARGUMENTS --json number,title,body,state 2>/dev/null || echo "NOT_FOUND"`

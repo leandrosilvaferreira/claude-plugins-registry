@@ -22,7 +22,7 @@ try {
       "--repo",
       ownerRepo,
       "--json",
-      "state,isDraft,mergeStateStatus,statusCheckRollup,reviewDecision",
+      "state,isDraft,mergeStateStatus,statusCheckRollup,reviewDecision,reviewRequests",
     ],
     { encoding: "utf8", windowsHide: true },
   );
@@ -74,9 +74,71 @@ if (rollup === "PENDING") {
 
 // Check review decision
 const review = prData.reviewDecision ?? "NONE";
-if (review === "APPROVED" || review === "NONE") {
-  process.stderr.write(`PR #${prNumber}: all checks passed\n`);
-  process.exit(0);
+if (review !== "APPROVED" && review !== "NONE") {
+  process.stderr.write(`PR #${prNumber}: checks OK but review not approved (status: ${review})\n`);
+  process.exit(4);
 }
-process.stderr.write(`PR #${prNumber}: checks OK but review not approved (status: ${review})\n`);
-process.exit(4);
+
+// reviewDecision never reflects a COMMENTED review (Codex, Claude Code, and most AI
+// reviewers leave feedback this way, never CHANGES_REQUESTED) or a reviewer who was
+// requested but hasn't submitted yet. Check both explicitly before declaring the PR clean.
+/** @type {Array<{login?: string, name?: string}>} */
+const reviewRequests = prData.reviewRequests ?? [];
+const pendingReviewers = reviewRequests.map((r) => r.login ?? r.name).filter(Boolean);
+
+/** @type {string[]} */
+let unresolvedThreadAuthors = [];
+try {
+  const [owner, name] = ownerRepo.split("/");
+  const graphqlOut = execFileSync(
+    "gh",
+    [
+      "api",
+      "graphql",
+      "-f",
+      `query=query($owner:String!,$name:String!,$number:Int!){
+        repository(owner:$owner,name:$name){
+          pullRequest(number:$number){
+            reviewThreads(first:100){
+              nodes{ isResolved comments(first:1){ nodes{ author{ login } } } }
+            }
+          }
+        }
+      }`,
+      "-f",
+      `owner=${owner}`,
+      "-f",
+      `name=${name}`,
+      "-F",
+      `number=${prNumber}`,
+    ],
+    { encoding: "utf8", windowsHide: true },
+  );
+  /** @type {Array<{isResolved: boolean, comments: {nodes: Array<{author?: {login?: string}}>}}>} */
+  const threads = JSON.parse(graphqlOut).data.repository.pullRequest.reviewThreads.nodes;
+  unresolvedThreadAuthors = threads
+    .filter((t) => !t.isResolved)
+    .map((t) => t.comments.nodes[0]?.author?.login ?? "unknown");
+} catch (err) {
+  const detail = /** @type {{ stderr?: string, message?: string }} */ (err);
+  process.stderr.write(
+    `warning: could not check review threads: ${detail.stderr ?? detail.message ?? String(err)}\n`,
+  );
+}
+
+if (unresolvedThreadAuthors.length > 0 || pendingReviewers.length > 0) {
+  if (unresolvedThreadAuthors.length > 0) {
+    process.stderr.write(
+      `PR #${prNumber}: ${unresolvedThreadAuthors.length} unresolved review thread(s) from: ${unresolvedThreadAuthors.join(", ")}\n`,
+    );
+  }
+  if (pendingReviewers.length > 0) {
+    process.stderr.write(
+      `PR #${prNumber}: review requested but not yet submitted from: ${pendingReviewers.join(", ")}\n`,
+    );
+  }
+  process.exit(5);
+}
+
+process.stderr.write(`PR #${prNumber}: all checks passed\n`);
+process.exit(0);

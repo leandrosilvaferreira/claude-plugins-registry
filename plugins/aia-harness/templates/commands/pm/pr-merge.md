@@ -1,7 +1,6 @@
 ---
 description: Safely merge a PR — validates CI before merging
 argument-hint: "[pr-or-issue-number]"
-allowed-tools: Bash(gh *), Bash(git *), Bash(cat *), Bash(node *), AskUserQuestion
 ---
 
 Config PM: !`cat .claude/pm-config.json 2>/dev/null || echo "NOT_FOUND"`
@@ -79,6 +78,15 @@ node .claude/skills/github-pm/scripts/check-pr-status.mjs <PR_NUMBER> <OWNER>/<R
 - Exit 2 → ask via **AskUserQuestion** ("CI still running — wait for it?", options "Wait" / "Stop"); if Wait → `gh pr checks <PR_NUMBER> --watch`, then re-run the gate
 - Exit 3 → STOP (invalid PR)
 - Exit 4 → warn "CI green but no approved review". Ask via **AskUserQuestion** ("Merge without an approved review?", options "Merge anyway" / "Stop") before any merge.
+- Exit 5 → CI green and reviewDecision is fine (APPROVED/none required), but the gate
+  found pending code review activity that `reviewDecision` alone misses: unresolved
+  review-thread comments and/or reviewers who were requested but haven't submitted yet.
+  This is how bot reviewers (Codex, Claude Code, and most AI reviewers) usually show up —
+  they post a `COMMENTED` review, which never sets `reviewDecision`, but still leave
+  unresolved feedback. Relay exactly what the script printed (who left unresolved
+  comments, who hasn't reviewed yet), then ask via **AskUserQuestion** ("PR has pending
+  code review issues — fix them first?", options "Fix first (e.g. `/orchestrate`)" /
+  "Merge anyway").
 
 **Step 4 — Detect merge strategy**
 
@@ -120,6 +128,6 @@ If exit ≠ 0 → report the exact error, STOP without post-merge.
 
 CRITICAL RULES (never violate):
 
-- NEVER `gh pr merge` without the Step 3 gate with exit 0 (or exit 4 + explicit confirmation)
+- NEVER `gh pr merge` without the Step 3 gate with exit 0 (or exit 4/5 + explicit confirmation)
 - NEVER close the issue before confirming merge exit 0
 - NEVER `--admin` without explicit request + double confirmation
