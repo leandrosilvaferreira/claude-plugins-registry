@@ -37,11 +37,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { sessionScratchDir } from "./session-scratch.mjs";
+import { parseHookEvent, readStdinRaw } from "./hook-io.mjs";
 import {
   isSubstantiveTurn,
   exitIfInvokedBySelf,
-  readStdinRaw,
-  parseHookEvent,
   resolveProjectRootPurposeC,
   hasObsidianServer,
   runnerPathOverride,

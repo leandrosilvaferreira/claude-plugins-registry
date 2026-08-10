@@ -125,33 +125,14 @@
  * I/O or parse error, including literal `null` on stdin (exit 0, no output)
  * — a vault hook must never block a session on its own plumbing failure.
  */
-import fs from "node:fs";
 import path from "node:path";
+import { parseHookEvent, readStdinRaw } from "./hook-io.mjs";
 
 // Anti-recursion / sub-session exemption — same idiom as vault-orient.mjs.
 if (process.env.CLAUDE_INVOKED_BY) process.exit(0);
 
-/** @returns {string} */
-function readStdin() {
-  try {
-    return fs.readFileSync(0, "utf8");
-  } catch {
-    return "";
-  }
-}
-
-/** @type {any} */
-let event;
-try {
-  event = JSON.parse(readStdin() || "{}");
-} catch {
-  process.exit(0);
-}
-
-// Literal `null` is valid JSON and parses without throwing — the repo-wide
-// `JSON.parse(x || "{}")` idiom alone does not catch it. Guard explicitly
-// (see .claude/memory/hook-stdin-null-crash.md).
-if (typeof event !== "object" || event === null) process.exit(0);
+const event = parseHookEvent(readStdinRaw());
+if (event === null) process.exit(0);
 
 const input = event.tool_input ?? {};
 

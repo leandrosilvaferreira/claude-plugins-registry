@@ -4,24 +4,12 @@
  * changes, surface a system message nudging a lint/test run. Never blocks.
  */
 import { execFileSync } from "node:child_process";
-import fs from "node:fs";
+import { parseHookEvent, readStdinRaw } from "./hook-io.mjs";
 
-/** @returns {string} */
-function readStdin() {
-  try {
-    return fs.readFileSync(0, "utf8");
-  } catch {
-    return "";
-  }
-}
-
-/** @type {any} */
-let event = {};
-try {
-  event = JSON.parse(readStdin() || "{}");
-} catch {
-  // ignore
-}
+// Parse failure (malformed OR literal `null`) falls back to {} rather than
+// exiting — this hook still runs its git-status check with the cwd fallback
+// below even when it can't read a usable event (see .claude/memory/hook-stdin-null-crash.md).
+const event = parseHookEvent(readStdinRaw()) ?? {};
 
 // Anti-loop guard: skip when already inside a stop-hook chain.
 if (event?.stop_hook_active) process.exit(0);

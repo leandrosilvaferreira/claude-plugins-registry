@@ -27,23 +27,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { sessionScratchDir } from "./session-scratch.mjs";
+import { parseHookEvent, readStdinRaw } from "./hook-io.mjs";
 
-/** @returns {string} */
-function readStdin() {
-  try {
-    return fs.readFileSync(0, "utf8");
-  } catch {
-    return "";
-  }
-}
-
-/** @type {any} */
-let event = {};
-try {
-  event = JSON.parse(readStdin() || "{}");
-} catch {
-  process.exit(0);
-}
+const event = parseHookEvent(readStdinRaw());
+if (event === null) process.exit(0);
 
 const cwd = typeof event.cwd === "string" ? event.cwd : "";
 

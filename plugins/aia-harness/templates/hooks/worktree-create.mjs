@@ -22,23 +22,10 @@ import { execFileSync, spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { parseHookEvent, readStdinRaw } from "./hook-io.mjs";
 
-/** @returns {string} */
-function readStdin() {
-  try {
-    return fs.readFileSync(0, "utf8");
-  } catch {
-    return "";
-  }
-}
-
-/** @type {any} */
-let event = {};
-try {
-  event = JSON.parse(readStdin() || "{}");
-} catch {
-  process.exit(0);
-}
+const event = parseHookEvent(readStdinRaw());
+if (event === null) process.exit(0);
 
 // Both git() and gitOk() cap at 5s. remoteDefaultBranch()/tryFetchFreshBase()
 // below call these for network operations (git ls-remote, git fetch) that

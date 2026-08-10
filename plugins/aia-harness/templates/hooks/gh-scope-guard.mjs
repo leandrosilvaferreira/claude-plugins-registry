@@ -17,6 +17,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import { parseHookEvent, readStdinRaw } from "./hook-io.mjs";
 
 // --- Kept in sync with lib/data/gh-scopes.mjs. Hooks ship standalone into
 // --- target projects and cannot import from lib/. The sync is asserted
@@ -33,25 +34,8 @@ function ghRefreshCommand(scopes) {
 const SCOPE_ERROR_RE =
   /requires (the following|additional) scopes?|token has not been granted|resource not accessible by (personal access token|integration)|insufficient (permission|scope)|missing (the )?required scopes?|gh auth refresh -s/i;
 
-/** @returns {string} */
-function readStdin() {
-  try {
-    return fs.readFileSync(0, "utf8");
-  } catch {
-    return "";
-  }
-}
-
-/** @type {any} */
-let event = {};
-try {
-  event = JSON.parse(readStdin() || "{}");
-} catch {
-  process.exit(0);
-}
-// JSON.parse("null") yields null, and the repo-wide `|| "{}"` idiom does not
-// catch it — the property access below would throw and exit 1.
-if (!event || typeof event !== "object") process.exit(0);
+const event = parseHookEvent(readStdinRaw());
+if (event === null) process.exit(0);
 
 const command = event.tool_input?.command ?? "";
 // Boundary class includes `\` (Windows path separator, e.g. C:\tools\gh) and the

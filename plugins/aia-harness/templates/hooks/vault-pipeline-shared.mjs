@@ -62,36 +62,6 @@ export function exitIfInvokedBySelf() {
 }
 
 /**
- * Reads all of stdin as utf8, or "" if it can't be read (e.g. not connected
- * to a pipe). Never throws.
- * @returns {string}
- */
-export function readStdinRaw() {
-  try {
-    return fs.readFileSync(0, "utf8");
-  } catch {
-    return "";
-  }
-}
-
-/**
- * Parses a hook's stdin JSON, returning null for anything that isn't a
- * genuine object — including unparseable input AND the literal JSON value
- * `null` (valid JSON that parses without throwing, so `JSON.parse(x || "{}")`
- * alone does not catch it; see .claude/memory/hook-stdin-null-crash.md).
- * @param {string} raw
- * @returns {any | null}
- */
-export function parseHookEvent(raw) {
-  try {
-    const event = JSON.parse(raw || "{}");
-    return typeof event === "object" && event !== null ? event : null;
-  } catch {
-    return null;
-  }
-}
-
-/**
  * Purpose-C project-root resolution (see
  * .claude/rules/hooks-cwd-resolution.md): CLAUDE_PROJECT_DIR wins over
  * event.cwd, the opposite precedence of an operational directory, because

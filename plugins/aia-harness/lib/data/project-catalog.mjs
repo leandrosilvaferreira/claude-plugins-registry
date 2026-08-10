@@ -102,9 +102,10 @@ export const PROJECT_BY_STACK = {
  * plan.mjs because they depend on the profile / strict flag.
  */
 export const PROJECT_HOOK_FILES = [
-  // Shared helper (not a hook itself — imported by the hooks below via
-  // relative path). Must ship first so the others can rely on it.
+  // Shared helpers (not hooks themselves — imported by the hooks below via
+  // relative path). Must ship first so the others can rely on them.
   "session-scratch.mjs",
+  "hook-io.mjs",
   "secret-scan.mjs",
   "rtk-hook.mjs",
   "large-file-warning.mjs",

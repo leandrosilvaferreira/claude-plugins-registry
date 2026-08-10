@@ -66,10 +66,9 @@
  */
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { parseHookEvent, readStdinRaw } from "./hook-io.mjs";
 import {
   exitIfInvokedBySelf,
-  readStdinRaw,
-  parseHookEvent,
   resolveProjectRootPurposeC,
   hasObsidianServer,
   runnerPathOverride,

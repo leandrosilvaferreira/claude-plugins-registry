@@ -23,15 +23,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { spawn } from "node:child_process";
-
-/** @returns {string} */
-function readStdin() {
-  try {
-    return fs.readFileSync(0, "utf8");
-  } catch {
-    return "";
-  }
-}
+import { parseHookEvent, readStdinRaw } from "./hook-io.mjs";
 
 /**
  * Fire-and-forget `graphify .` to build the graph for the first time.
@@ -70,13 +62,8 @@ function spawnGraphifyBuild(cwd, graphifyOutDir) {
   }
 }
 
-/** @type {any} */
-let event = {};
-try {
-  event = JSON.parse(readStdin() || "{}");
-} catch {
-  process.exit(0);
-}
+const event = parseHookEvent(readStdinRaw());
+if (event === null) process.exit(0);
 
 const cwdArg = typeof event.cwd === "string" && event.cwd ? event.cwd : "";
 const projectDir = cwdArg || process.env.CLAUDE_PROJECT_DIR || process.cwd();

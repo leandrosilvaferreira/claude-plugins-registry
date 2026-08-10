@@ -19,7 +19,7 @@
  * Fails open on any I/O or parse error, including literal `null` on stdin
  * (exit 0, no output) — this hook must never block a session.
  */
-import fs from "node:fs";
+import { parseHookEvent, readStdinRaw } from "./hook-io.mjs";
 
 // Anti-recursion guard — sub-session pollution prevention. Runners that spawn
 // Agent SDK sub-sessions set CLAUDE_INVOKED_BY on the child process env;
@@ -27,15 +27,6 @@ import fs from "node:fs";
 // orchestration directive, prompting it to delegate further and risking a
 // recursive delegation storm.
 if (process.env.CLAUDE_INVOKED_BY) process.exit(0);
-
-/** @returns {string} */
-function readStdin() {
-  try {
-    return fs.readFileSync(0, "utf8");
-  } catch {
-    return "";
-  }
-}
 
 const ORCHESTRATION_CONTEXT = `ORCHESTRATION MODE — MANDATORY
 
@@ -59,18 +50,8 @@ Read-only investigation parallelizes by default.
 Every dispatch carries its own complete context. Subagents inherit nothing from this
 conversation: state the task, exact paths, constraints, and the expected return.`;
 
-/** @type {any} */
-let event;
-try {
-  event = JSON.parse(readStdin() || "{}");
-} catch {
-  process.exit(0);
-}
-
-// Literal `null` is valid JSON and parses without throwing — the repo-wide
-// `JSON.parse(x || "{}")` idiom alone does not catch it. Guard explicitly
-// (see .claude/memory/hook-stdin-null-crash.md).
-if (typeof event !== "object" || event === null) process.exit(0);
+const event = parseHookEvent(readStdinRaw());
+if (event === null) process.exit(0);
 
 process.stdout.write(
   JSON.stringify({

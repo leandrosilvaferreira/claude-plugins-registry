@@ -13,14 +13,10 @@
  */
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
+import { parseHookEvent, readStdinRaw } from "./hook-io.mjs";
 
-/** @type {any} */
-let event = {};
-try {
-  event = JSON.parse(fs.readFileSync(0, "utf8") || "{}");
-} catch {
-  process.exit(0);
-}
+const event = parseHookEvent(readStdinRaw());
+if (event === null) process.exit(0);
 
 const wtPath = typeof event.worktree_path === "string" ? event.worktree_path : "";
 const cwd =

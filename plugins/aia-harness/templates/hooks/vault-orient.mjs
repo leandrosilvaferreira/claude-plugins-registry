@@ -22,6 +22,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import { parseHookEvent, readStdinRaw } from "./hook-io.mjs";
 
 // Anti-recursion guard — this is sub-session pollution prevention, NOT
 // infinite-recursion prevention (this hook never spawns anything itself).
@@ -33,15 +34,6 @@ import path from "node:path";
 // wasting its turn budget. Those runners set CLAUDE_INVOKED_BY on the child
 // process env; exit before touching stdin.
 if (process.env.CLAUDE_INVOKED_BY) process.exit(0);
-
-/** @returns {string} */
-function readStdin() {
-  try {
-    return fs.readFileSync(0, "utf8");
-  } catch {
-    return "";
-  }
-}
 
 const VAULT_CONTEXT = [
   "MANDATORY: this project's long-term memory lives in the Obsidian vault at",
@@ -71,18 +63,8 @@ const VAULT_CONTEXT = [
   "template, wikilink and slug rules that direct file access bypasses).",
 ].join("\n");
 
-/** @type {any} */
-let event;
-try {
-  event = JSON.parse(readStdin() || "{}");
-} catch {
-  process.exit(0);
-}
-
-// Literal `null` is valid JSON and parses without throwing — the repo-wide
-// `JSON.parse(x || "{}")` idiom alone does not catch it. Guard explicitly
-// (see .claude/memory/hook-stdin-null-crash.md).
-if (typeof event !== "object" || event === null) process.exit(0);
+const event = parseHookEvent(readStdinRaw());
+if (event === null) process.exit(0);
 
 // Purpose C — project-wide, cross-worktree resource (see
 // .claude/rules/hooks-cwd-resolution.md's Purpose C section): the vault must
