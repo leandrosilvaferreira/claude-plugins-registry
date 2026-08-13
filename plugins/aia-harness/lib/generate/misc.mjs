@@ -66,9 +66,10 @@ export function renderLspJson(profile) {
 /**
  * @param {boolean} [hasGraphify]
  * @param {boolean} [isGitHubPM]  Project detected as a GitHub repo (profile.githubPM.detected).
- *   `.claude/pm-config.json` is gitignored (lib/plan.mjs), so git never copies it into a
- *   linked worktree on its own — listing it here is what makes a new worktree actually
- *   carry it, keeping the PM scope tier resolvable there too.
+ *   `.claude/pm-config.json` is a tracked, committed file (not gitignored — see
+ *   lib/plan.mjs) — a linked worktree already receives it from git like any other tracked
+ *   file. This entry is kept for defense in depth (e.g. an uncommitted config a user is
+ *   still editing locally) and is a harmless no-op once the file is committed.
  * @returns {string}
  */
 export function renderWorktreeInclude(hasGraphify = false, isGitHubPM = false) {

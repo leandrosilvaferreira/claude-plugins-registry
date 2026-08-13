@@ -6,37 +6,36 @@ on:
 jobs:
   add-to-project:
     runs-on: ubuntu-latest
+    env:
+      PROJECTS_PAT: ${{ secrets.PROJECTS_PAT }}
     steps:
       - name: Check PROJECTS_PAT
-        run: |
-          if [ -z "${{ secrets.PROJECTS_PAT }}" ]; then
-            echo "PROJECTS_PAT not set — skipping project automation"
-            exit 0
-          fi
+        if: env.PROJECTS_PAT == ''
+        run: echo "PROJECTS_PAT not set — skipping project automation"
 
       - name: Add issue to project
-        if: secrets.PROJECTS_PAT != ''
-        uses: actions/add-to-project@v1.0.2
+        if: env.PROJECTS_PAT != ''
+        uses: actions/add-to-project@v2.0.0
         with:
           project-url: https://github.com/orgs/${{ github.repository_owner }}/projects/1
-          github-token: ${{ secrets.PROJECTS_PAT }}
+          github-token: ${{ env.PROJECTS_PAT }}
 
       - name: Set status to Triage
-        if: secrets.PROJECTS_PAT != ''
-        uses: github/update-project-action@v1
+        if: env.PROJECTS_PAT != ''
+        uses: github/update-project-action@v4
         with:
-          github_token: ${{ secrets.PROJECTS_PAT }}
+          github_token: ${{ env.PROJECTS_PAT }}
           organization: ${{ github.repository_owner }}
           project_number: 1
-          item_url: ${{ github.event.issue.html_url }}
+          content_id: ${{ github.event.issue.node_id }}
           field: Status
           value: Triage
 
       - name: Add needs-triage label
-        if: ${{ secrets.PROJECTS_PAT != '' }}
+        if: env.PROJECTS_PAT != ''
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # v7.0.1
         with:
-          github-token: ${{ secrets.PROJECTS_PAT }}
+          github-token: ${{ env.PROJECTS_PAT }}
           script: |
             await github.rest.issues.addLabels({
               owner: context.repo.owner,

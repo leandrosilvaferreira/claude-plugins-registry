@@ -5,7 +5,7 @@
  * Templates live in:
  *   templates/skills/github-pm/      first-party skill
  *   templates/commands/pm/           10 /pm:* commands
- *   templates/github/                ISSUE_TEMPLATE, workflows, pm-config
+ *   templates/github/                ISSUE_TEMPLATE, workflows, actions, pm-config
  *   templates/github-pm-ext/         vendored github-issues + github-project
  *
  * @module data/github-pm-catalog
@@ -55,6 +55,13 @@ const GITHUB_PM_ARTIFACTS = [
     description: "4 GitHub Actions workflows: issue lifecycle → Projects v2 status automation",
     copyFrom: path.join(T, "github", "workflows"),
     dest: ".github/workflows",
+  },
+  {
+    id: "github-pm:actions",
+    description:
+      "Composite action: shared Projects v2 status-update logic (guarded, used by all 3 status workflows)",
+    copyFrom: path.join(T, "github", "actions"),
+    dest: ".github/actions",
   },
   {
     id: "github-pm:pm-config",

@@ -7,36 +7,50 @@ jobs:
   close-linked-issues:
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
+    env:
+      PROJECTS_PAT: ${{ secrets.PROJECTS_PAT }}
     steps:
       - name: Check PROJECTS_PAT
-        run: |
-          if [ -z "${{ secrets.PROJECTS_PAT }}" ]; then
-            echo "PROJECTS_PAT not set — skipping"
-            exit 0
-          fi
+        if: env.PROJECTS_PAT == ''
+        run: echo "PROJECTS_PAT not set — skipping"
+
+      - name: Checkout
+        if: env.PROJECTS_PAT != ''
+        uses: actions/checkout@v7
 
       - name: Extract linked issues
         id: issues
+        if: env.PROJECTS_PAT != ''
         env:
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          ISSUES=$(printf '%s' "$PR_BODY" | \
+          if ! ISSUES=$(printf '%s' "$PR_BODY" | \
             grep -ioE '(closes|fixes|resolves)\s+#[0-9]+' | \
-            grep -oE '#[0-9]+' | tr -d '#' | tr '\n' ',' | sed 's/,$//')
+            grep -oE '#[0-9]+' | tr -d '#' | tr '\n' ',' | sed 's/,$//'); then
+            ISSUES=""
+          fi
           echo "issue_numbers=$ISSUES" >> "$GITHUB_OUTPUT"
 
-      - name: Close issues and move to Done
-        if: steps.issues.outputs.issue_numbers != '' && secrets.PROJECTS_PAT != ''
+      - name: Close issues
+        if: env.PROJECTS_PAT != '' && steps.issues.outputs.issue_numbers != ''
         env:
-          GH_TOKEN: ${{ secrets.PROJECTS_PAT }}
+          GH_TOKEN: ${{ env.PROJECTS_PAT }}
           REPO: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
+          ISSUE_NUMBERS: ${{ steps.issues.outputs.issue_numbers }}
         run: |
-          IFS=',' read -ra NUMS <<< "${{ steps.issues.outputs.issue_numbers }}"
+          IFS=',' read -ra NUMS <<< "$ISSUE_NUMBERS"
           for N in "${NUMS[@]}"; do
-            echo "Closing issue #$N and moving to Done"
             gh issue close "$N" \
               --comment "Automatically closed by merge of PR #$PR_NUMBER. ✅" \
-              --repo "$REPO" 2>/dev/null || echo "Could not close #$N"
-            # Move to Done via project CLI (same pattern as commit-to-progress.yml)
+              --repo "$REPO" || echo "::warning::Could not close #$N — see log above"
           done
+
+      - name: Move to Done
+        if: env.PROJECTS_PAT != '' && steps.issues.outputs.issue_numbers != ''
+        uses: ./.github/actions/pm-status-update
+        with:
+          github-token: ${{ env.PROJECTS_PAT }}
+          issue-numbers: ${{ steps.issues.outputs.issue_numbers }}
+          target-status: Done
+          guard-mode: force

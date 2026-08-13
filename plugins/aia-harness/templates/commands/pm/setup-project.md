@@ -44,18 +44,34 @@ Use the `github-pm` skill to consult `references/pm-config-schema.md` for the pm
    listed project (label `#<number> <title>`); the tool's free-text "Other"
    fallback covers a number not listed.
 
-4. Fetch IDs via GraphQL:
+4. Fetch IDs via GraphQL. `repositoryOwner` resolves both organization- and user-owned
+   projects in one query (a plain `user(login:)` query returns `null` for an
+   organization, which is the common case for a team project):
 
    ```bash
    gh api graphql -f query='
      query($owner: String!, $num: Int!) {
-       user(login: $owner) {
-         projectV2(number: $num) {
-           id
-           fields(first: 20) {
-             nodes {
-               ... on ProjectV2SingleSelectField {
-                 id name options { id name }
+       repositoryOwner(login: $owner) {
+         ... on Organization {
+           projectV2(number: $num) {
+             id
+             fields(first: 20) {
+               nodes {
+                 ... on ProjectV2SingleSelectField {
+                   id name options { id name }
+                 }
+               }
+             }
+           }
+         }
+         ... on User {
+           projectV2(number: $num) {
+             id
+             fields(first: 20) {
+               nodes {
+                 ... on ProjectV2SingleSelectField {
+                   id name options { id name }
+                 }
                }
              }
            }
@@ -64,8 +80,14 @@ Use the `github-pm` skill to consult `references/pm-config-schema.md` for the pm
      }' -F owner=<owner> -F num=<project_number>
    ```
 
-   Identify the "Status" field and extract IDs for each option
-   (Triage, Backlog, In Progress, In Review, Done).
+   Both inline fragments produce `projectV2` at the same shape, so extraction is uniform
+   regardless of ownership type: `.data.repositoryOwner.projectV2...`. If
+   `.data.repositoryOwner` itself is `null`, the owner login does not exist or the
+   authenticated token cannot see it — stop and tell the user, do not proceed with a
+   partially-written config.
+
+   Identify the "Status" field and extract IDs for each of the 8 options: `Triage`,
+   `Backlog`, `Todo`, `Ready`, `In Progress`, `In Review`, `Blocked`, `Done`.
 
 5. Write `.claude/pm-config.json` with the real IDs. Use the Write tool.
 

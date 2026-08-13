@@ -1,10 +1,12 @@
 /**
- * GitHub CLI authentication and OAuth scope detection.
+ * GitHub CLI authentication, OAuth scope detection, and repo secret listing.
  *
  * The deps engine only ever verified that the `gh` binary exists. It never
  * asked whether the stored token can actually do anything, so a login missing
  * the `project` or `workflow` scope stayed invisible until an unrelated command
- * failed with "token has not been granted the required scopes".
+ * failed with "token has not been granted the required scopes". `listGhSecretNames`
+ * closes the same gap one layer up: a workflow can also silently no-op because the
+ * repo secret it reads was never created at all.
  *
  * FAIL-OPEN, scoped to environmental failure: the binary missing, a non-zero
  * exit, unparseable output, or spawn itself throwing all return a well-formed
@@ -53,6 +55,71 @@ export function diffScopes(required, granted) {
 }
 
 /**
+ * Run a `gh` subcommand safely across platforms. Shared by every function in
+ * this module that shells out to `gh` — factored out so the Windows-shim
+ * dance below is written, and has to be reasoned about, exactly once.
+ *
+ * `binPath` may be a Windows .bat/.cmd shim resolved by findBinary
+ * (lib/detect/system-deps.mjs tries [".exe", ".cmd", ".bat", ""] there). A
+ * .bat/.cmd is not a PE image, so Windows' CreateProcess cannot launch it
+ * directly — spawnSync without a shell silently fails to start it, which the
+ * fail-open check below then reads as "unavailable" rather than "never ran".
+ * Confirmed on real Windows CI for the equivalent PHPStan case (see
+ * templates/hooks/phpstan-on-edit.mjs); shell:true is Node's documented fix,
+ * scoped to win32 only so POSIX behavior here is unchanged. With shell:true,
+ * Node needs ONE pre-quoted command string rather than a separate args array
+ * — a non-empty args array alongside shell:true trips DEP0190 and mis-joins
+ * the arguments. No allow-list gate is needed here the way
+ * phpstan-on-edit.mjs gates its file argument: every `args` entry passed by
+ * this module's callers is a static literal, never user input — only `bin`
+ * itself needs quoting, since a real install path can contain spaces (e.g.
+ * "C:\Program Files\...").
+ *
+ * shell:true also destroys ENOENT: cmd.exe starts fine whatever it is asked
+ * to run, and reports an unresolvable command through error text that is
+ * localized and version-dependent, so neither result.error nor the exit code
+ * can be trusted to mean "never ran" — a missing gh would come back looking
+ * available with a real (non-zero) exit, i.e. blamed for the subcommand
+ * failing instead of not being installed. Resolve up front instead: callers
+ * pass an already resolved absolute path, and the bare-name default falls
+ * back to the same PATH+extension search every other dep goes through.
+ *
+ * FAIL-OPEN: binary missing, non-zero exit is NOT swallowed here (callers
+ * decide what a non-zero exit means), but spawn itself throwing, ENOENT, or
+ * the process never starting all return `null` rather than throwing.
+ *
+ * @param {string} bin
+ * @param {string[]} args
+ * @param {Record<string, string|undefined>} env
+ * @param {{ cwd?: string }} [opts]
+ * @returns {{ status: number, stdout: string, stderr: string } | null}
+ */
+function runGh(bin, args, env, opts = {}) {
+  const isWin = process.platform === "win32";
+  if (isWin && !fs.existsSync(bin) && !findBinary(bin, "win32", env)) return null;
+
+  const [cmd, cmdArgs] = isWin ? [[bin, ...args].map((s) => `"${s}"`).join(" "), []] : [bin, args];
+
+  /** @type {import("node:child_process").SpawnSyncReturns<string>} */
+  let result;
+  try {
+    result = spawnSync(cmd, cmdArgs, {
+      encoding: "utf8",
+      timeout: 10_000,
+      windowsHide: true,
+      shell: isWin,
+      cwd: opts.cwd,
+    });
+  } catch {
+    return null;
+  }
+  // status === null means the process was killed or never started (ENOENT
+  // surfaces as result.error rather than a throw).
+  if (result.error || result.status === null) return null;
+  return { status: result.status, stdout: result.stdout ?? "", stderr: result.stderr ?? "" };
+}
+
+/**
  * Check whether the active `gh` login carries `required`.
  *
  * Fail-open covers environmental failure only — the binary missing, a
@@ -87,56 +154,12 @@ export function checkGhAuth(required, opts = {}) {
     refreshCmd,
   };
 
-  // `binPath` may be a Windows .bat/.cmd shim resolved by findBinary
-  // (lib/detect/system-deps.mjs tries [".exe", ".cmd", ".bat", ""] there). A
-  // .bat/.cmd is not a PE image, so Windows' CreateProcess cannot launch it
-  // directly — spawnSync without a shell silently fails to start it, which the
-  // fail-open check below then reads as "unavailable" rather than "never ran".
-  // Confirmed on real Windows CI for the equivalent PHPStan case (see
-  // templates/hooks/phpstan-on-edit.mjs); shell:true is Node's documented fix,
-  // scoped to win32 only so POSIX behavior here is unchanged. With shell:true,
-  // Node needs ONE pre-quoted command string rather than a separate args array
-  // — a non-empty args array alongside shell:true trips DEP0190 and mis-joins
-  // the arguments. No allow-list gate is needed here the way
-  // phpstan-on-edit.mjs gates its file argument: "auth" and "status" are
-  // static literals, never user input — only `bin` itself needs quoting, since
-  // a real install path can contain spaces (e.g. "C:\Program Files\...").
-  const isWin = process.platform === "win32";
-
-  // shell:true also destroys ENOENT: cmd.exe starts fine whatever it is asked
-  // to run, and reports an unresolvable command through error text that is
-  // localized and version-dependent, so neither result.error nor the exit code
-  // can be trusted to mean "never ran" — a missing gh would come back
-  // available with no scopes, i.e. blamed for missing OAuth scopes instead of
-  // not being installed. Resolve up front instead: callers pass an already
-  // resolved absolute path, and the bare-name default falls back to the same
-  // PATH+extension search every other dep goes through.
-  if (isWin && !fs.existsSync(bin) && !findBinary(bin, "win32", env)) return unavailable;
-
-  const authArgs = ["auth", "status"];
-  const [cmd, cmdArgs] = isWin
-    ? [[bin, ...authArgs].map((s) => `"${s}"`).join(" "), []]
-    : [bin, authArgs];
-
-  /** @type {import("node:child_process").SpawnSyncReturns<string>} */
-  let result;
-  try {
-    result = spawnSync(cmd, cmdArgs, {
-      encoding: "utf8",
-      timeout: 10_000,
-      windowsHide: true,
-      shell: isWin,
-    });
-  } catch {
-    return unavailable;
-  }
-  // status === null means the process was killed or never started (ENOENT
-  // surfaces as result.error rather than a throw).
-  if (result.error || result.status === null) return unavailable;
+  const result = runGh(bin, ["auth", "status"], env);
+  if (!result) return unavailable;
 
   // gh writes the status transcript to stderr on some versions and stdout on
   // others; read both rather than guessing.
-  const scopes = parseScopes(`${result.stdout ?? ""}\n${result.stderr ?? ""}`);
+  const scopes = parseScopes(`${result.stdout}\n${result.stderr}`);
   return {
     available: true,
     authenticated: result.status === 0,
@@ -145,4 +168,40 @@ export function checkGhAuth(required, opts = {}) {
     envTokenOverride,
     refreshCmd,
   };
+}
+
+/**
+ * List the names of every repository-level Actions secret, via
+ * `gh secret list --json name`. Read-only — never creates, updates, or
+ * removes a secret. Backs the GitHub PM smoke check's "pat-secret-exists"
+ * guard (lib/pm-check.mjs): a workflow that reads a missing secret gets an
+ * empty string for it and silently no-ops, with no error anywhere.
+ *
+ * FAIL-OPEN the same way checkGhAuth is: binary missing, a non-zero exit
+ * (unauthenticated, no resolvable GitHub remote in `cwd`, or the
+ * authenticated account lacking admin access to list secrets), or
+ * unparseable output all come back `null` — callers must treat that as
+ * "cannot verify", never as "confirmed absent".
+ *
+ * @param {{ binPath?: string, cwd?: string, env?: Record<string, string|undefined> }} [opts]
+ *   `binPath` should be the path already resolved by `findBinary`, same as checkGhAuth.
+ *   `cwd` should be the project root so gh can infer the repo from its git remote.
+ * @returns {string[] | null}
+ */
+export function listGhSecretNames(opts = {}) {
+  const env = opts.env ?? process.env;
+  const bin = opts.binPath ?? "gh";
+
+  const result = runGh(bin, ["secret", "list", "--json", "name"], env, { cwd: opts.cwd });
+  if (!result || result.status !== 0) return null;
+
+  try {
+    const parsed = JSON.parse(result.stdout);
+    if (!Array.isArray(parsed)) return null;
+    return parsed
+      .map((s) => (s && typeof s === "object" ? s.name : undefined))
+      .filter((name) => typeof name === "string");
+  } catch {
+    return null;
+  }
 }

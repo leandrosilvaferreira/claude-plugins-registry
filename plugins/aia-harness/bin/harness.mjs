@@ -6,7 +6,7 @@
  * @module bin/harness
  */
 import path from "node:path";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { scanProject } from "../lib/detect/index.mjs";
 import { buildPlan } from "../lib/plan.mjs";
@@ -16,11 +16,14 @@ import {
   checkSystemDeps,
   resolveDepsFromProfile,
   detectInstalledTools,
+  findBinary,
 } from "../lib/detect/system-deps.mjs";
-import { checkGhAuth } from "../lib/detect/gh-auth.mjs";
+import { checkGhAuth, listGhSecretNames } from "../lib/detect/gh-auth.mjs";
+import { checkPathGitStatus } from "../lib/detect/git-track-status.mjs";
 import { GH_SCOPES_BASE, GH_SCOPES_PM } from "../lib/data/gh-scopes.mjs";
 import { auditRootClaudeMdSections } from "../lib/generate/root-sections.mjs";
 import { checkPluginVersion } from "../lib/version-check.mjs";
+import { buildPmHealthReport } from "../lib/pm-check.mjs";
 import { exists, readText, readJson } from "../lib/util/fs.mjs";
 
 const PLUGIN_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -76,6 +79,16 @@ Usage:
                                         accepted for backward compatibility
   aia-harness check [dir] [--json]      Check required system dependencies.
                     [--tools=a,b]       Also check deps for specific tools.
+  aia-harness pm-check [dir] [--json]   GitHub PM pillar smoke check: does it
+                                        actually work, not just "is it
+                                        installed"? Verifies pm-config.json
+                                        exists, has no leftover placeholders,
+                                        is tracked by git, status names agree
+                                        with the installed workflows, and the
+                                        workflows are not stub loops
+                                        (blocking); PROJECTS_PAT secret and
+                                        gh token scope (advisory). Exit 1 on
+                                        any blocking failure.
   aia-harness version-check [--json]    Is this running copy the latest published
                     [--no-refresh]      version? Every slash command runs this
                                         first. Always exits 0 (fail-open).
@@ -226,6 +239,74 @@ function formatDepsReport(report, platform) {
 }
 
 /**
+ * Render a PmHealthReport as human-readable text for CLI output.
+ * @param {import('../lib/pm-check.mjs').PmHealthReport} report
+ * @returns {string}
+ */
+function formatPmHealthReport(report) {
+  const icon = { pass: "✓", fail: "✗", warn: "⚠" };
+  const lines = report.checks.map((c) => {
+    const line = `${icon[c.status]} [${c.blocking ? "blocking" : "advisory"}] ${c.id}: ${c.message}`;
+    return c.remedy ? `${line}\n  → ${c.remedy}` : line;
+  });
+  lines.push("");
+  lines.push(
+    report.healthy
+      ? "STATUS: healthy — the github-pm pillar is installed and wired correctly."
+      : "STATUS: blocked — see the failing check(s) above; the pillar cannot work until they are fixed.",
+  );
+  return lines.join("\n");
+}
+
+/**
+ * Gather every already-read input buildPmHealthReport needs (IO at the edge,
+ * per lib/CLAUDE.md's architecture) and run the smoke check.
+ * @param {string} dir
+ * @returns {import('../lib/pm-check.mjs').PmHealthReport}
+ */
+function runPmCheck(dir) {
+  const configRaw = readText(path.join(dir, ".claude", "pm-config.json"));
+  let configParsed = null;
+  if (configRaw != null) {
+    try {
+      configParsed = JSON.parse(configRaw);
+    } catch {
+      configParsed = null;
+    }
+  }
+
+  const gitStatus = checkPathGitStatus(dir, path.join(".claude", "pm-config.json"));
+
+  /** @type {{ name: string, content: string }[]} */
+  const workflowFiles = [];
+  try {
+    const workflowsDir = path.join(dir, ".github", "workflows");
+    for (const f of readdirSync(workflowsDir)) {
+      if (!f.endsWith(".yml") && !f.endsWith(".yaml")) continue;
+      const content = readText(path.join(workflowsDir, f));
+      if (content != null) workflowFiles.push({ name: f, content });
+    }
+  } catch {
+    // .github/workflows doesn't exist (or isn't readable) — workflowFiles stays [].
+  }
+
+  // Scopes/secrets are only meaningful once the binary exists — same gate the
+  // `check` command above uses before ever calling checkGhAuth.
+  const ghPath = findBinary("gh", process.platform, process.env);
+  const ghAuth = ghPath ? checkGhAuth(GH_SCOPES_PM, { binPath: ghPath }) : null;
+  const secretNames = ghPath ? listGhSecretNames({ binPath: ghPath, cwd: dir }) : null;
+
+  return buildPmHealthReport({
+    configRaw,
+    configParsed,
+    gitStatus,
+    workflowFiles,
+    ghAuth,
+    secretNames,
+  });
+}
+
+/**
  * @returns {number}
  */
 function main() {
@@ -301,6 +382,16 @@ function main() {
     // Missing scopes are advisory: the exit code stays driven by the dep
     // status alone, so `ghAuth` can never halt a harness operation.
     return report.status === "block" ? 1 : 0;
+  }
+
+  if (cmd === "pm-check") {
+    const report = runPmCheck(dir);
+    if (flags.has("json")) {
+      process.stdout.write(JSON.stringify(report, null, 2) + "\n");
+    } else {
+      process.stdout.write(formatPmHealthReport(report) + "\n");
+    }
+    return report.healthy ? 0 : 1;
   }
 
   const toolsOpt = flags.has("no-tools")

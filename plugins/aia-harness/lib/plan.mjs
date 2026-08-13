@@ -29,6 +29,7 @@ import {
 } from "./plan/vendored-artifacts.mjs";
 import { addClaudeMdArtifacts } from "./plan/claude-md-artifacts.mjs";
 import { addDocsArtifacts } from "./plan/docs-artifacts.mjs";
+import { buildGitignoreEntries } from "./plan/gitignore-entries.mjs";
 
 /**
  * @typedef {Object} Artifact
@@ -266,21 +267,10 @@ export function buildPlan(profile, ctx) {
   // --- Docs, LSP, worktree, scripts (delegated) ---
   addDocsArtifacts(add, profile, toolIds);
 
-  // `.gitignore` entries `applyPlan` appends under the `# aia-harness` header.
-  // Built here, before the artifacts that need them: `.graphifyignore` seeds
-  // itself from the project `.gitignore`, which `ensureGitignore` only updates
-  // *after* every artifact has been rendered — so a seed taken from the file
-  // alone is always one apply behind and parks a self-inflicted conflict on the
-  // next apply run.
-  const gitignoreEntries = [
-    ".claude/settings.local.json",
-    ".claude/*.local.*",
-    ".claude/.aia-harness-pending/",
-    ...(profile.githubPM?.detected ? [".claude/pm-config.json"] : []),
-    ...(toolIds.includes("graphify")
-      ? ["graphify-out/", "graphify-out/cost.json", "graphify-out/cache/"]
-      : []),
-  ];
+  // --- `.gitignore` entries (delegated) ---
+  // Built here, before the artifacts that need them — see
+  // lib/plan/gitignore-entries.mjs for why.
+  const gitignoreEntries = buildGitignoreEntries(toolIds);
 
   // --- Vendored assets (ECC, ag-kit, tools) — delegated ---
   addEccArtifacts(add, eccRoot, ecc);

@@ -57,10 +57,11 @@ function hasPmConfig(dir) {
 }
 
 // A project already wired to a GitHub Project needs the Projects v2 scopes;
-// anything else is asked for the base tier only. lib/plan.mjs gitignores
-// .claude/pm-config.json, and git never copies gitignored paths into a new
-// worktree — so a worktree session may find it only under CLAUDE_PROJECT_DIR
-// (the original checkout), never under event.cwd (.claude/rules/hooks-cwd-resolution.md,
+// anything else is asked for the base tier only. .claude/pm-config.json is a
+// tracked, committed file today, so a fresh worktree checkout normally carries
+// it — but a session can still be mid-edit on an uncommitted config, or working
+// in a worktree checked out before a later commit added the file, so it may
+// exist under one location and not the other (.claude/rules/hooks-cwd-resolution.md,
 // Purpose C). Check both; PM tier if either location has it.
 const cwdArg = typeof event.cwd === "string" && event.cwd ? event.cwd : "";
 const projectDirEnv = process.env.CLAUDE_PROJECT_DIR || "";

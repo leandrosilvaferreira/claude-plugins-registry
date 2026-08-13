@@ -7,31 +7,36 @@ jobs:
   set-in-review:
     runs-on: ubuntu-latest
     if: "!github.event.pull_request.draft && !contains(github.event.pull_request.body, '[skip-pm]')"
+    env:
+      PROJECTS_PAT: ${{ secrets.PROJECTS_PAT }}
     steps:
       - name: Check PROJECTS_PAT
-        run: |
-          if [ -z "${{ secrets.PROJECTS_PAT }}" ]; then
-            echo "PROJECTS_PAT not set — skipping"
-            exit 0
-          fi
+        if: env.PROJECTS_PAT == ''
+        run: echo "PROJECTS_PAT not set — skipping"
+
+      - name: Checkout
+        if: env.PROJECTS_PAT != ''
+        uses: actions/checkout@v7
 
       - name: Extract linked issues from PR body
         id: issues
+        if: env.PROJECTS_PAT != ''
         env:
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          ISSUES=$(printf '%s' "$PR_BODY" | \
+          if ! ISSUES=$(printf '%s' "$PR_BODY" | \
             grep -ioE '(closes|fixes|resolves)\s+#[0-9]+' | \
-            grep -oE '#[0-9]+' | tr -d '#' | tr '\n' ',' | sed 's/,$//')
+            grep -oE '#[0-9]+' | tr -d '#' | tr '\n' ',' | sed 's/,$//'); then
+            ISSUES=""
+          fi
           echo "issue_numbers=$ISSUES" >> "$GITHUB_OUTPUT"
 
-      - name: Move linked issues to In Review
-        if: steps.issues.outputs.issue_numbers != '' && secrets.PROJECTS_PAT != ''
-        env:
-          GH_TOKEN: ${{ secrets.PROJECTS_PAT }}
-        run: |
-          IFS=',' read -ra NUMS <<< "${{ steps.issues.outputs.issue_numbers }}"
-          for N in "${NUMS[@]}"; do
-            echo "Moving issue #$N to In Review"
-            # Status update via gh CLI (see commit-to-progress.yml for pattern)
-          done
+      - name: Move to In Review
+        if: env.PROJECTS_PAT != '' && steps.issues.outputs.issue_numbers != ''
+        uses: ./.github/actions/pm-status-update
+        with:
+          github-token: ${{ env.PROJECTS_PAT }}
+          issue-numbers: ${{ steps.issues.outputs.issue_numbers }}
+          target-status: In Review
+          guard-mode: block-from
+          guard-statuses: Blocked,Done

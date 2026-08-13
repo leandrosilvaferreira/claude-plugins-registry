@@ -33,7 +33,7 @@ gh project item-list <project_number> --owner <owner> --format json
 
 When presenting the backlog to the user:
 
-1. Group by current status (Triage / Backlog / In Progress / In Review)
+1. Group by current status (Triage / Backlog / Todo / Ready / In Progress / In Review / Blocked / Done)
 2. Highlight "In Progress" issues with no recent activity (possible abandonment)
 3. Highlight "Triage" issues without triage for more than 3 days
 

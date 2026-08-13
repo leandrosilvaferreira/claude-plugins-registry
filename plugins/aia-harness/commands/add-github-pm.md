@@ -71,8 +71,27 @@ means the answer is unavailable, not that something is wrong.
    for adjudication instead, which is `/aia-harness:patch`'s job, not this command's.
    Report any `github-pm` artifact with `exists: true` that the user may want
    refreshed and point them at `/aia-harness:patch` for the merge-and-adjudicate
-   flow. If **no** artifact has `exists: false`, the pillar is already fully
-   installed — say so and stop.
+   flow.
+
+   If **no** artifact has `exists: false`, every file is present on disk — but
+   existence is not functionality: a project can have all 8 artifacts present and
+   still move zero board items (an unconfigured `pm-config.json`, an uncommitted
+   or gitignored one, or an installed workflow whose status names no longer match
+   the config all look identical to "fully installed" from an `exists` check
+   alone). Run the smoke check before concluding anything:
+
+   ```bash
+   node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" pm-check "${1:-$CLAUDE_PROJECT_DIR}" --json
+   ```
+
+   Read `healthy`. `true` → say so and stop — installed *and* verified working,
+   nothing to do. `false` → **do not say "already installed" and stop as if that
+   settled it.** Report every check whose `status` is `"fail"` (its `message` and
+   `remedy`, in plain language) and stop there anyway: re-running `apply` fixes
+   nothing when every artifact already exists on disk — the fix is always one of
+   pm-check's own remedies (commit `.claude/pm-config.json`, replace a leftover
+   placeholder, run `/pm:setup-project`, add a missing `status_options` key).
+   Skip steps 3-5.
 
 3. **Confirm** with `AskUserQuestion`:
    "Install GitHub PM artifacts? (skill, 10 commands, issue templates, 4 workflows, pm-config template)"
@@ -99,6 +118,35 @@ means the answer is unavailable, not that something is wrong.
    resolved above. Remove the staging directory as that command's step 8 describes once
    every conflict has an answer, and do not claim the pillar is installed until then.
 
-5. **Post-install instructions:**
-   "GitHub PM installed. Next step: run `/pm:setup-project` to configure
-   the Project ID and status IDs for Projects v2."
+5. **Verify, then report truthfully** — run the same smoke check step 2 runs, now
+   that the artifacts step 4 just created are actually on disk:
+
+   ```bash
+   node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" pm-check "${1:-$CLAUDE_PROJECT_DIR}" --json
+   ```
+
+   Read `healthy` and every entry in `checks[]`. A **fresh** install is expected to
+   still report `healthy: false` right here: `.claude/pm-config.json` was just
+   copied from the template (still full of `REPLACE_ME` placeholders) and has not
+   been committed yet, so `no-placeholders` and `config-tracked` normally still
+   fail at this exact point — that is real state, not a bug to explain away, and
+   it is exactly what the old "GitHub PM installed. Next step: run
+   `/pm:setup-project`" message hid: a user had no signal anything was still
+   broken until a board silently never moved, days later.
+
+   Report the outcome honestly instead of declaring success:
+
+   - List every check whose `status` is `"fail"` or `"warn"`, each with its
+     `message`; for a `"fail"` check, include its `remedy` too.
+   - If `healthy` is `false` (the expected case right after a fresh install),
+     close with something like: "GitHub PM artifacts installed — not yet working,
+     N item(s) remain (see above). Run `/pm:setup-project` next; it resolves the
+     config/placeholder items. **After that, `.claude/pm-config.json` must still
+     be committed** (`git add .claude/pm-config.json && git commit`) — GitHub
+     Actions only ever sees committed files, so an uncommitted or gitignored
+     config makes every workflow silently no-op with no error anywhere. Re-run
+     `node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" pm-check` afterward to confirm
+     `healthy: true` before trusting the board to update itself."
+   - If `healthy` is already `true` (e.g. this command is being re-run after
+     `/pm:setup-project` and the commit were both already done), say so plainly
+     instead: "GitHub PM installed and verified working."

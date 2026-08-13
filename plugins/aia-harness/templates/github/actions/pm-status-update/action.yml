@@ -1,0 +1,156 @@
+name: PM status update
+description: >
+  Move each listed issue's Projects v2 Status field to target-status, with a
+  same-status-family guard so automation never regresses a status a human (or
+  a later pipeline stage) already set. Reads .claude/pm-config.json for
+  project/field/option IDs — the caller workflow must check out the repo
+  first. Never fails the job for one issue's error; each is logged via
+  ::warning:: and skipped independently.
+inputs:
+  github-token:
+    description: Token with the `project` scope (PROJECTS_PAT).
+    required: true
+  issue-numbers:
+    description: Comma-separated issue numbers to move.
+    required: true
+  target-status:
+    description: Status name to set (must be a key in pm-config.json's status_options).
+    required: true
+  guard-mode:
+    description: >
+      force: always set. allow-from: only set when current status is unset or
+      in guard-statuses. block-from: only set when current status is NOT in
+      guard-statuses.
+    required: true
+  guard-statuses:
+    description: Comma-separated status names, meaning depends on guard-mode. Ignored when guard-mode is force.
+    required: false
+    default: ""
+runs:
+  using: composite
+  steps:
+    - name: Move project items' status
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        ISSUE_NUMBERS: ${{ inputs.issue-numbers }}
+        TARGET_STATUS: ${{ inputs.target-status }}
+        GUARD_MODE: ${{ inputs.guard-mode }}
+        GUARD_STATUSES: ${{ inputs.guard-statuses }}
+      run: |
+        set -euo pipefail
+
+        if [ ! -f .claude/pm-config.json ]; then
+          echo "::warning::.claude/pm-config.json not found — run /pm:setup-project. Skipping all."
+          exit 0
+        fi
+
+        if ! JQ_VALIDATE_ERR=$(jq empty .claude/pm-config.json 2>&1); then
+          echo "::warning::.claude/pm-config.json is not valid JSON (truncated write or leftover merge-conflict markers?) — run /pm:setup-project. Skipping all. ($JQ_VALIDATE_ERR)"
+          exit 0
+        fi
+
+        PROJECT_ID=$(jq -r '.project_id' .claude/pm-config.json)
+        FIELD_ID=$(jq -r '.status_field_id' .claude/pm-config.json)
+        TARGET_OPTION_ID=$(jq -r --arg s "$TARGET_STATUS" '.status_options[$s] // empty' .claude/pm-config.json)
+
+        if [ -z "$TARGET_OPTION_ID" ]; then
+          echo "::warning::No status_options entry for '$TARGET_STATUS' in pm-config.json. Skipping all."
+          exit 0
+        fi
+
+        # ponytail: single page (first: 100), same ceiling as pm-config-schema.md's own
+        # documented query. Upgrade to cursor pagination if a board ever carries >100
+        # open items.
+        # shellcheck disable=SC2016 # $project/etc are GraphQL vars bound via -F, not shell vars
+        if ! ITEMS_JSON=$(gh api graphql -f query='
+          query($project: ID!) {
+            node(id: $project) {
+              ... on ProjectV2 {
+                items(first: 100) {
+                  nodes {
+                    id
+                    content { ... on Issue { number } }
+                    fieldValueByName(name: "Status") {
+                      ... on ProjectV2ItemFieldSingleSelectValue { name }
+                    }
+                  }
+                }
+              }
+            }
+          }' -F project="$PROJECT_ID"); then
+          ITEMS_JSON='{"errors":[{"message":"gh api graphql (list) failed"}]}'
+        fi
+
+        LIST_ERR=$(echo "$ITEMS_JSON" | jq -r '.errors // empty')
+        if [ -n "$LIST_ERR" ]; then
+          echo "::warning::GraphQL error listing project items: $(echo "$ITEMS_JSON" | jq -r '.errors[0].message')"
+          exit 0
+        fi
+
+        if [ "$(echo "$ITEMS_JSON" | jq -r '.data.node')" = "null" ]; then
+          echo "::warning::project_id in pm-config.json did not resolve to a project (board deleted/recreated, or ID copied from another repo?) — run /pm:setup-project. Skipping all."
+          exit 0
+        fi
+
+        IFS=',' read -ra NUMS <<< "$ISSUE_NUMBERS"
+        for N in "${NUMS[@]}"; do
+          [ -z "$N" ] && continue
+
+          ITEM_ID=$(echo "$ITEMS_JSON" | jq -r --argjson n "$N" \
+            '.data.node.items.nodes[] | select(.content.number == $n) | .id' | head -1)
+
+          if [ -z "$ITEM_ID" ]; then
+            echo "::warning::Issue #$N has no matching project item — was it added to the project? Skipping."
+            continue
+          fi
+
+          CURRENT_STATUS=$(echo "$ITEMS_JSON" | jq -r --argjson n "$N" \
+            '.data.node.items.nodes[] | select(.content.number == $n) | .fieldValueByName.name // empty' | head -1)
+
+          ALLOWED=true
+          case "$GUARD_MODE" in
+            force) ALLOWED=true ;;
+            allow-from)
+              ALLOWED=false
+              [ -z "$CURRENT_STATUS" ] && ALLOWED=true
+              IFS=',' read -ra OK <<< "$GUARD_STATUSES"
+              for s in "${OK[@]}"; do [ "$s" = "$CURRENT_STATUS" ] && ALLOWED=true; done
+              ;;
+            block-from)
+              ALLOWED=true
+              IFS=',' read -ra BAD <<< "$GUARD_STATUSES"
+              for s in "${BAD[@]}"; do [ "$s" = "$CURRENT_STATUS" ] && ALLOWED=false; done
+              ;;
+            *)
+              echo "::warning::Unknown guard-mode '$GUARD_MODE'."
+              continue
+              ;;
+          esac
+
+          if [ "$ALLOWED" != "true" ]; then
+            echo "Issue #$N is '$CURRENT_STATUS' — $GUARD_MODE guard blocks moving to '$TARGET_STATUS'. Skipping."
+            continue
+          fi
+
+          # shellcheck disable=SC2016 # $project/etc are GraphQL vars bound via -F, not shell vars
+          if ! RESULT=$(gh api graphql -f query='
+            mutation($project: ID!, $item: ID!, $field: ID!, $value: String!) {
+              updateProjectV2ItemFieldValue(input: {
+                projectId: $project
+                itemId: $item
+                fieldId: $field
+                value: { singleSelectOptionId: $value }
+              }) { projectV2Item { id } }
+            }' -F project="$PROJECT_ID" -F item="$ITEM_ID" -F field="$FIELD_ID" -F value="$TARGET_OPTION_ID"); then
+            RESULT='{"errors":[{"message":"gh api graphql (mutate) failed"}]}'
+          fi
+
+          MUTATE_ERR=$(echo "$RESULT" | jq -r '.errors // empty')
+          if [ -n "$MUTATE_ERR" ]; then
+            echo "::warning::GraphQL error updating #$N: $(echo "$RESULT" | jq -r '.errors[0].message')"
+            continue
+          fi
+
+          echo "Issue #$N: ${CURRENT_STATUS:-<none>} -> $TARGET_STATUS"
+        done

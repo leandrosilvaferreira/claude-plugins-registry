@@ -144,6 +144,13 @@ gh api graphql -f query='
 
 > For additional fields (Effort, Priority, Business Value), repeat the mutation with the corresponding field IDs from `pm-config.json`.
 
+> **Why `Backlog`, not `Triage`:** the automated `issue-to-project.yml` workflow sets
+> every newly-opened issue to `Triage` — but an issue created through this command has
+> already gone through type/effort/priority classification with explicit user
+> confirmation (steps 2-6 above), so triage is already done. `Backlog` reflects that. An
+> issue opened directly on GitHub (bypassing this command) has none of that context and
+> correctly starts at `Triage`.
+
 ### 11. Respond to the user
 
 Return:

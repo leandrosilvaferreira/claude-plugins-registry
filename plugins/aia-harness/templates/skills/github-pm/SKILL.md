@@ -42,12 +42,23 @@ GitHub web UI as a workaround — a fine-grained PAT additionally lacks
 
 ## Lifecycle
 
+8 states on the board: `Triage, Backlog, Todo, Ready, In Progress, In Review, Blocked, Done`.
+
+**Automated** (3 of the 4 workflows in `.github/workflows/` call the guarded
+`pm-status-update` composite action so they never regress a status a human or a later
+stage already set; the 4th (`issue-to-project.yml`) sets the initial Triage status directly
+via `github/update-project-action@v4`, since a brand-new item has no prior status to regress
+from):
+
 ```
-Backlog → In Progress → In Review → Done
+Triage (issue opened) → In Progress (commit) → In Review (PR opened) → Done (PR merged)
 ```
 
-Never skip a state. Never regress a status (e.g.: In Review stays In Review
-if a new commit is made while the PR is open).
+**Human-curated** (never touched by automation — move issues between these, and out of
+`Triage`, by hand or via `/pm:*` commands): `Backlog`, `Todo`, `Ready`, `Blocked`.
+
+Never skip a state. Never regress a status (e.g.: In Review stays In Review if a new
+commit is made while the PR is open; a merge always wins even over Blocked).
 
 ## Delegation map
 
