@@ -6,24 +6,29 @@
  * @module bin/harness
  */
 import path from "node:path";
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { scanProject } from "../lib/detect/index.mjs";
 import { buildPlan } from "../lib/plan.mjs";
-import { renderReport, renderPlanSummary } from "../lib/render.mjs";
+import {
+  renderReport,
+  renderPlanSummary,
+  renderHelp,
+  renderApplyResult,
+  renderDepsReport,
+  renderPmHealthReport,
+} from "../lib/render.mjs";
 import { applyPlan } from "../lib/apply.mjs";
 import {
   checkSystemDeps,
   resolveDepsFromProfile,
   detectInstalledTools,
-  findBinary,
 } from "../lib/detect/system-deps.mjs";
-import { checkGhAuth, listGhSecretNames } from "../lib/detect/gh-auth.mjs";
-import { checkPathGitStatus } from "../lib/detect/git-track-status.mjs";
-import { GH_SCOPES_BASE, GH_SCOPES_PM } from "../lib/data/gh-scopes.mjs";
+import { checkGhAuth } from "../lib/detect/gh-auth.mjs";
+import { GH_SCOPES } from "../lib/data/gh-scopes.mjs";
 import { auditRootClaudeMdSections } from "../lib/generate/root-sections.mjs";
 import { checkPluginVersion } from "../lib/version-check.mjs";
-import { buildPmHealthReport } from "../lib/pm-check.mjs";
+import { runPmCheck } from "../lib/detect/pm-check-io.mjs";
 import { exists, readText, readJson } from "../lib/util/fs.mjs";
 
 const PLUGIN_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -59,253 +64,6 @@ function parseArgs(argv) {
   return { cmd: positional[0] ?? "help", dir: positional[1] ?? ".", flags, opts };
 }
 
-function printHelp() {
-  console.log(`aia-harness ${VERSION} — scan a project and scaffold a Claude Code harness.
-
-Usage:
-  aia-harness scan  [dir] [--json]      Diagnose stack/architecture (read-only).
-  aia-harness plan  [dir] [--json]      Show the proposed harness plan.
-  aia-harness apply [dir] [--yes]       Apply the plan (default: dry-run preview).
-                    [--only=id,id] [--force]
-                    [--tools=a,b | --no-tools]   Limit/skip project-level tools
-                    [--no-strict]                Passive Stop reminder instead of
-                                                 the blocking lint+typecheck loop
-                    [--large-files=block|advisory]  Large-file guard mode: block
-                                                 (refactor before finishing) or
-                                                 advisory (suggest + confirm).
-                                                 Default: detector recommendation
-                    [--merge]           No-op: merging is the default apply
-                                        behaviour now, so this flag is only
-                                        accepted for backward compatibility
-  aia-harness check [dir] [--json]      Check required system dependencies.
-                    [--tools=a,b]       Also check deps for specific tools.
-  aia-harness pm-check [dir] [--json]   GitHub PM pillar smoke check: does it
-                                        actually work, not just "is it
-                                        installed"? Verifies pm-config.json
-                                        exists, has no leftover placeholders,
-                                        is tracked by git, status names agree
-                                        with the installed workflows, and the
-                                        workflows are not stub loops
-                                        (blocking); PROJECTS_PAT secret and
-                                        gh token scope (advisory). Exit 1 on
-                                        any blocking failure.
-  aia-harness version-check [--json]    Is this running copy the latest published
-                    [--no-refresh]      version? Every slash command runs this
-                                        first. Always exits 0 (fail-open).
-  aia-harness help | version
-
-Apply is a dry run unless --yes is given. Merging into an existing harness is
-the default: artifacts that are safe to write are applied, and anything that
-exists and differs with no mechanical merge strategy is reported in
-conflicts[] instead of being overwritten. A merged CLAUDE.md section that
-exists and differs is reported there too, despite carrying a strategy: that
-strategy replaces the whole section rather than merging it key by key, so a
-differing one is parked instead of replaced. --force bypasses every merge
-strategy and overwrites wholesale; --merge is accepted but is now a no-op.`);
-}
-
-/**
- * @param {import('../lib/apply.mjs').ApplyResult} res
- * @param {boolean} dryRun
- */
-function printApply(res, dryRun) {
-  const prefix = dryRun ? "[dry-run] would create" : "created";
-  console.log(`${dryRun ? "DRY RUN (pass --yes to write)\n" : ""}`);
-  for (const p of res.created) console.log(`  ${prefix}: ${p}`);
-  for (const p of res.updated)
-    console.log(`  ${dryRun ? "[dry-run] would update" : "updated"}: ${p}`);
-  // Every conflict is also pushed to `res.skipped` (see lib/apply.mjs) carrying
-  // this exact suffix, and gets its own CONFLICT: line below. Skip those here so
-  // the enumerated list describes the same set the tally counts — otherwise each
-  // conflict prints as both a `skipped:` and a `CONFLICT:` line while the tally
-  // subtracts it, and the two disagree (measured: 196 skipped: lines, "192
-  // skipped").
-  for (const p of res.skipped) {
-    if (p.endsWith("(conflict — pending review)")) continue;
-    console.log(`  skipped: ${p}`);
-  }
-  for (const c of res.conflicts)
-    console.log(`  CONFLICT: ${c.relPath} — pending review at ${c.pendingPath}`);
-  for (const e of res.errors) console.log(`  ERROR: ${e.path} — ${e.error}`);
-  // `res.skipped.length` still includes every conflict, so subtract it here
-  // rather than counting the same artifact in both tallies.
-  console.log(
-    `\n${res.created.length} created, ${res.updated.length} updated, ${res.skipped.length - res.conflicts.length} skipped, ${res.conflicts.length} conflicts, ${res.errors.length} errors.`,
-  );
-}
-
-/**
- * Widen the PM-tier decision past `profile.githubPM.hasPmConfig`'s "found in the
- * scanned file list" contract. `.claude/pm-config.json` is gitignored (lib/plan.mjs),
- * so git never copies it into a linked worktree on its own — `hasPmConfig` is always
- * false there even on a genuine PM project, and `check` would ask for only the base
- * scope tier. `CLAUDE_PROJECT_DIR` (set by Claude Code to the invoking project's root)
- * is checked directly, but only when it points somewhere other than the scanned dir —
- * this is the worktree case, not a redundant re-check of the same directory.
- *
- * Fail-open: any error here (missing env, fs failure) is swallowed and treated as
- * "no widening" — this must never throw or otherwise affect `check`'s exit code.
- * Does NOT change what `detectGitHubPM` itself means: `hasPmConfig` keeps meaning
- * "found in the scanned file list", this only widens where the tier is *chosen*.
- *
- * @param {import('../lib/profile.mjs').ProjectProfile} profile
- * @returns {boolean}
- */
-function needsPmScopes(profile) {
-  if (profile.githubPM?.hasPmConfig) return true;
-  try {
-    const projectDir = process.env.CLAUDE_PROJECT_DIR;
-    if (!projectDir || path.resolve(projectDir) === path.resolve(profile.root)) return false;
-    return exists(path.join(projectDir, ".claude", "pm-config.json"));
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Render a DepsReport as human-readable text for CLI output.
- * @param {import('../lib/profile.mjs').DepsReport} report
- * @param {string} platform
- * @returns {string}
- */
-function formatDepsReport(report, platform) {
-  const plat = /** @type {'win32'|'darwin'|'linux'} */ (
-    platform === "win32" ? "win32" : platform === "darwin" ? "darwin" : "linux"
-  );
-  const lines = [];
-  for (const c of report.checks) {
-    if (c.found) {
-      lines.push(`✓ ${c.name.padEnd(12)} v${c.version ?? "?"}   ${c.resolvedPath}`);
-    } else {
-      lines.push(`✗ ${c.name.padEnd(12)} not found  [${c.level}]`);
-      const hint = c.installHint[plat];
-      if (hint) lines.push(`  → ${plat}: ${hint}`);
-    }
-  }
-  lines.push("");
-  if (report.status === "block") {
-    lines.push("BLOCKED: install the dependencies above before continuing.");
-  } else if (report.status === "warn") {
-    const n = report.checks.filter((c) => !c.found).length;
-    lines.push(`STATUS: ok  (${n} recommended missing, no required deps missing)`);
-  } else {
-    lines.push("STATUS: ok  all dependencies found.");
-  }
-
-  if (
-    report.ghAuth &&
-    (!report.ghAuth.available ||
-      report.ghAuth.envTokenOverride ||
-      !report.ghAuth.authenticated ||
-      report.ghAuth.missing.length > 0)
-  ) {
-    lines.push("");
-    if (!report.ghAuth.available) {
-      // gh was found on disk but spawnSync could not run it (corrupt binary,
-      // permission problem, timeout, non-functional shim) — nothing else about
-      // its auth state was determined, so `missing`/`authenticated` below are
-      // artifacts of that failure, not findings. Neither `gh auth refresh` nor
-      // `gh auth login` can fix a binary that will not start.
-      lines.push(
-        "⚠  gh was found but could not be run.",
-        "   Verify the installation by running `gh --version` yourself.",
-      );
-    } else if (report.ghAuth.envTokenOverride) {
-      lines.push(
-        "⚠  GH_TOKEN/GITHUB_TOKEN is set — gh prefers it over the keyring account,",
-        "   so its permissions are what apply. Run `unset GH_TOKEN GITHUB_TOKEN` to",
-        "   fall back to the OAuth login before refreshing scopes.",
-      );
-    } else if (!report.ghAuth.authenticated) {
-      // A freshly-installed gh: `gh auth refresh` has nothing to refresh yet —
-      // that command only adds scopes to an existing login. `missing` already
-      // equals the full required tier here (checkGhAuth diffs against an empty
-      // granted list when not authenticated), so it's the right scope list to log in with.
-      lines.push(
-        "⚠  gh is not logged in to any host.",
-        `   Run: gh auth login -h github.com -s ${report.ghAuth.missing.join(",")}`,
-        "   Confirm with `gh auth status`.",
-      );
-    } else {
-      lines.push(
-        `⚠  gh is missing OAuth scope(s): ${report.ghAuth.missing.join(", ")}`,
-        `   Run: ${report.ghAuth.refreshCmd}`,
-        "   Confirm with `gh auth status`.",
-      );
-    }
-  }
-
-  return lines.join("\n");
-}
-
-/**
- * Render a PmHealthReport as human-readable text for CLI output.
- * @param {import('../lib/pm-check.mjs').PmHealthReport} report
- * @returns {string}
- */
-function formatPmHealthReport(report) {
-  const icon = { pass: "✓", fail: "✗", warn: "⚠" };
-  const lines = report.checks.map((c) => {
-    const line = `${icon[c.status]} [${c.blocking ? "blocking" : "advisory"}] ${c.id}: ${c.message}`;
-    return c.remedy ? `${line}\n  → ${c.remedy}` : line;
-  });
-  lines.push("");
-  lines.push(
-    report.healthy
-      ? "STATUS: healthy — the github-pm pillar is installed and wired correctly."
-      : "STATUS: blocked — see the failing check(s) above; the pillar cannot work until they are fixed.",
-  );
-  return lines.join("\n");
-}
-
-/**
- * Gather every already-read input buildPmHealthReport needs (IO at the edge,
- * per lib/CLAUDE.md's architecture) and run the smoke check.
- * @param {string} dir
- * @returns {import('../lib/pm-check.mjs').PmHealthReport}
- */
-function runPmCheck(dir) {
-  const configRaw = readText(path.join(dir, ".claude", "pm-config.json"));
-  let configParsed = null;
-  if (configRaw != null) {
-    try {
-      configParsed = JSON.parse(configRaw);
-    } catch {
-      configParsed = null;
-    }
-  }
-
-  const gitStatus = checkPathGitStatus(dir, path.join(".claude", "pm-config.json"));
-
-  /** @type {{ name: string, content: string }[]} */
-  const workflowFiles = [];
-  try {
-    const workflowsDir = path.join(dir, ".github", "workflows");
-    for (const f of readdirSync(workflowsDir)) {
-      if (!f.endsWith(".yml") && !f.endsWith(".yaml")) continue;
-      const content = readText(path.join(workflowsDir, f));
-      if (content != null) workflowFiles.push({ name: f, content });
-    }
-  } catch {
-    // .github/workflows doesn't exist (or isn't readable) — workflowFiles stays [].
-  }
-
-  // Scopes/secrets are only meaningful once the binary exists — same gate the
-  // `check` command above uses before ever calling checkGhAuth.
-  const ghPath = findBinary("gh", process.platform, process.env);
-  const ghAuth = ghPath ? checkGhAuth(GH_SCOPES_PM, { binPath: ghPath }) : null;
-  const secretNames = ghPath ? listGhSecretNames({ binPath: ghPath, cwd: dir }) : null;
-
-  return buildPmHealthReport({
-    configRaw,
-    configParsed,
-    gitStatus,
-    workflowFiles,
-    ghAuth,
-    secretNames,
-  });
-}
-
 /**
  * @returns {number}
  */
@@ -313,7 +71,7 @@ function main() {
   const { cmd, dir, flags, opts } = parseArgs(process.argv.slice(2));
 
   if (cmd === "help" || flags.has("help")) {
-    printHelp();
+    console.log(renderHelp(VERSION));
     return 0;
   }
   if (cmd === "version" || flags.has("version")) {
@@ -361,14 +119,12 @@ function main() {
     const deps = resolveDepsFromProfile(profile, toolList);
     const report = checkSystemDeps(deps, process.platform);
 
-    // Scopes are only meaningful once the binary exists. The PM tier applies
-    // when the project is already wired to a GitHub Project; a plain GitHub
-    // repo is asked for the base tier only (least privilege).
+    // Scopes are only meaningful once the binary exists.
     const ghCheck = report.checks.find((c) => c.name === "gh");
     const payload = ghCheck?.found
       ? {
           ...report,
-          ghAuth: checkGhAuth(needsPmScopes(profile) ? GH_SCOPES_PM : GH_SCOPES_BASE, {
+          ghAuth: checkGhAuth(GH_SCOPES, {
             binPath: ghCheck.resolvedPath,
           }),
         }
@@ -377,7 +133,7 @@ function main() {
     if (flags.has("json")) {
       process.stdout.write(JSON.stringify(payload, null, 2) + "\n");
     } else {
-      process.stdout.write(formatDepsReport(payload, process.platform) + "\n");
+      process.stdout.write(renderDepsReport(payload, process.platform) + "\n");
     }
     // Missing scopes are advisory: the exit code stays driven by the dep
     // status alone, so `ghAuth` can never halt a harness operation.
@@ -389,7 +145,7 @@ function main() {
     if (flags.has("json")) {
       process.stdout.write(JSON.stringify(report, null, 2) + "\n");
     } else {
-      process.stdout.write(formatPmHealthReport(report) + "\n");
+      process.stdout.write(renderPmHealthReport(report) + "\n");
     }
     return report.healthy ? 0 : 1;
   }
@@ -459,13 +215,13 @@ function main() {
     if (flags.has("json")) {
       process.stdout.write(JSON.stringify(res, null, 2) + "\n");
     } else {
-      printApply(res, dryRun);
+      console.log(renderApplyResult(res, dryRun));
     }
     return res.errors.length > 0 ? 1 : 0;
   }
 
   console.error(`Unknown command: ${cmd}\n`);
-  printHelp();
+  console.log(renderHelp(VERSION));
   return 2;
 }
 

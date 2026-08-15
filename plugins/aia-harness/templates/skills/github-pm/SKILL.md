@@ -33,7 +33,7 @@ scopes", or "Resource not accessible by personal access token", that is a
 missing scope, not a bug in the query. Stop and give the user:
 
 ```bash
-gh auth refresh -h github.com -s repo,workflow,read:org,project
+gh auth refresh -h github.com -s admin:public_key,gist,project,read:org,repo,workflow
 ```
 
 Never set `GH_TOKEN`/`GITHUB_TOKEN` or suggest a personal access token from the

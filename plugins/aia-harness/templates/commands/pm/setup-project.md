@@ -13,13 +13,14 @@ Use the `github-pm` skill to consult `references/pm-config-schema.md` for the pm
 1. Check authentication **and scopes** in the injected "Auth status" above.
 
    - Not logged in → tell the user to run `gh auth login` and stop.
-   - Logged in → read the `Token scopes:` line. This pillar needs all four of
-     `repo`, `workflow`, `read:org`, `project`. Anything missing means every
-     Projects v2 step below will fail with "token has not been granted the
-     required scopes", so stop and give the user this command verbatim:
+   - Logged in → read the `Token scopes:` line. This pillar needs `repo`,
+     `workflow`, `read:org`, `project` (plus the `admin:public_key`/`gist`
+     defaults of the initial login). Anything missing means every Projects v2
+     step below will fail with "token has not been granted the required
+     scopes", so stop and give the user this command verbatim:
 
      ```bash
-     gh auth refresh -h github.com -s repo,workflow,read:org,project
+     gh auth refresh -h github.com -s admin:public_key,gist,project,read:org,repo,workflow
      ```
 
      It adds scopes without revoking existing ones. Ask them to confirm with

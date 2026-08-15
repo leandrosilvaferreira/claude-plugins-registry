@@ -14,7 +14,7 @@ emits the recommended subset for the current project.
 | Server | When to add | Secrets |
 |--------|-------------|---------|
 | **context7** | Default. Up-to-date library/framework docs. Marginal for dependency-light repos (e.g. tooling-only); high value for React/DB/large-dep projects. | none |
-| **github** | **Default for any git repo** — issues, PRs, releases, review in the dev loop. Prereq: `gh` CLI authenticated with `repo,workflow` (add `read:org,project` for the PM pillar) — `gh auth refresh -h github.com -s <scopes>`, then `gh auth token` for the value. Never a PAT made in the web UI. | `GITHUB_PERSONAL_ACCESS_TOKEN` |
+| **github** | **Default for any git repo** — issues, PRs, releases, review in the dev loop. Prereq: `gh` CLI authenticated with `admin:public_key,gist,project,read:org,repo,workflow` — `gh auth refresh -h github.com -s <scopes>`, then `gh auth token` for the value. Never a PAT made in the web UI. | `GITHUB_PERSONAL_ACCESS_TOKEN` |
 | **playwright** | Project has Playwright/Cypress. Browser e2e. | none |
 | **postgres** | Project uses PostgreSQL. Schema + read queries. | `DATABASE_URL` |
 | **filesystem** | Needs access outside the project dir. | none |

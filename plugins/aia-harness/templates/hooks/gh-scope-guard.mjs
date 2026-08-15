@@ -15,16 +15,13 @@
  * Shipped by aia-harness; wired only on projects with a github.com remote.
  * FAIL-OPEN.
  */
-import fs from "node:fs";
-import path from "node:path";
 import { parseHookEvent, readStdinRaw } from "./hook-io.mjs";
 
 // --- Kept in sync with lib/data/gh-scopes.mjs. Hooks ship standalone into
 // --- target projects and cannot import from lib/. The sync is asserted
 // --- behaviourally by tests/hook-gh-scope-guard.test.mjs, which compares the
 // --- emitted command against ghRefreshCommand() from the real catalog.
-const GH_SCOPES_BASE = ["repo", "workflow"];
-const GH_SCOPES_PM = [...GH_SCOPES_BASE, "read:org", "project"];
+const GH_SCOPES = ["admin:public_key", "gist", "project", "read:org", "repo", "workflow"];
 
 /** @param {string[]} scopes @returns {string} */
 function ghRefreshCommand(scopes) {
@@ -46,28 +43,7 @@ const response = event.tool_response ?? {};
 const output = `${response.stdout ?? ""}\n${response.stderr ?? ""}`;
 if (!SCOPE_ERROR_RE.test(output)) process.exit(0);
 
-/** @param {string} dir @returns {boolean} */
-function hasPmConfig(dir) {
-  if (!dir) return false;
-  try {
-    return fs.existsSync(path.join(dir, ".claude", "pm-config.json"));
-  } catch {
-    return false;
-  }
-}
-
-// A project already wired to a GitHub Project needs the Projects v2 scopes;
-// anything else is asked for the base tier only. .claude/pm-config.json is a
-// tracked, committed file today, so a fresh worktree checkout normally carries
-// it — but a session can still be mid-edit on an uncommitted config, or working
-// in a worktree checked out before a later commit added the file, so it may
-// exist under one location and not the other (.claude/rules/hooks-cwd-resolution.md,
-// Purpose C). Check both; PM tier if either location has it.
-const cwdArg = typeof event.cwd === "string" && event.cwd ? event.cwd : "";
-const projectDirEnv = process.env.CLAUDE_PROJECT_DIR || "";
-const isPmProject = hasPmConfig(cwdArg) || hasPmConfig(projectDirEnv);
-
-const refreshCmd = ghRefreshCommand(isPmProject ? GH_SCOPES_PM : GH_SCOPES_BASE);
+const refreshCmd = ghRefreshCommand(GH_SCOPES);
 
 // gh prefers GH_TOKEN/GITHUB_TOKEN over the keyring account, so when one is set
 // the failing credential is the environment token — and `gh auth refresh`, which

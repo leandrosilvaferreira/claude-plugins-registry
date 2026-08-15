@@ -59,7 +59,7 @@ export const MCP_CATALOG = [
     // is one more secret to rotate by hand. This server is HTTP-remote and
     // resolves the header statically, so the env entry itself cannot go away.
     prereq:
-      "gh CLI, authenticated with the scopes this project needs. Run `gh auth refresh -h github.com -s repo,workflow` (add `,read:org,project` for the GitHub PM pillar), then `gh auth token` for the value.",
+      "gh CLI, authenticated with the scopes this project needs. Run `gh auth refresh -h github.com -s admin:public_key,gist,project,read:org,repo,workflow`, then `gh auth token` for the value.",
     recommended: (p) => p.vcs.isGit,
   },
   {

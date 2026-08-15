@@ -69,15 +69,7 @@ means the answer is unavailable, not that something is wrong.
    `GITHUB_PERSONAL_ACCESS_TOKEN`:
 
    ```bash
-   gh auth refresh -h github.com -s repo,workflow
-   gh auth token
-   ```
-
-   If the project uses the GitHub PM pillar (`.claude/pm-config.json` exists),
-   use the wider scope set instead:
-
-   ```bash
-   gh auth refresh -h github.com -s repo,workflow,read:org,project
+   gh auth refresh -h github.com -s admin:public_key,gist,project,read:org,repo,workflow
    gh auth token
    ```
 
