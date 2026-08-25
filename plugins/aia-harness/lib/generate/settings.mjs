@@ -239,6 +239,9 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
     $schema: "https://json.schemastore.org/claude-code-settings.json",
     // Default model: Opus for planning, Sonnet for execution.
     model: "opusplan",
+    // Terse by default: lead with the result, skip preamble/narration. See
+    // https://code.claude.com/docs/en/output-styles
+    outputStyle: "Concise",
     // Default reasoning effort to MAX. `effortLevel` in settings.json only
     // persists up to "xhigh"; `max` is session-only, so it's set via the env
     // var Claude Code reads for the same purpose.
