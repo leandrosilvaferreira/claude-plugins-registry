@@ -64,7 +64,7 @@ means the answer is unavailable, not that something is wrong.
    `.claude/settings.local.json` (gitignored) and tell the user to fill it.
    Surface any prereqs reported in the plan's `.mcp.json` rationale.
 
-   For **github** (default on any git repo), give the user these two commands
+   For **github**, if selected, give the user these two commands
    verbatim and tell them to paste the output of the second one as
    `GITHUB_PERSONAL_ACCESS_TOKEN`:
 

@@ -3,6 +3,8 @@ description: Create new application command. Triggers App Builder skill and star
 ---
 <!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/workflows/create.md. MIT (c) vudovn. -->
 
+> **Note on specialist agents:** names like `frontend-specialist`, `mobile-developer`, `seo-specialist`, and `game-developer` mentioned below are only installed when your project's detected stack matches (web, mobile, or games respectively) - check `.claude/agents/` for what is actually present before assuming one of these ran.
+
 # /create - Create Application
 
 $ARGUMENTS

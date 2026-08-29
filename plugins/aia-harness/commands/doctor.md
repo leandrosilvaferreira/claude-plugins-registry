@@ -474,6 +474,28 @@ point them at `/aia-harness:patch` — it runs this same merge-and-adjudicate fl
      `mergeSettingsJson` dedups hook entries by exact `{command, args}` string identity,
      so re-applying would add a duplicate hook, not repair the broken one — `Edit` is the
      only correct fix here.
+- **Stale `javascript.md` rule (TypeScript rename):** Read `staleJavascriptRule` from
+     the `scan --json` output (step 1). If `false`, say nothing. Otherwise: an older
+     plugin version always named the generated JS/TS rule file
+     `.claude/rules/javascript.md`, even for TypeScript projects; it is now
+     `.claude/rules/typescript.md` for TypeScript (`lib/generate/rules.mjs`). The
+     artifact id is derived from the path, so `apply`/`patch` only ever *add* the new
+     file when it's missing (step 2 already offers that, driven by `plan --json`) —
+     neither ever notices or removes the old one on its own; there is no general
+     rename/orphan-detection mechanism in this pipeline. This project is detected as
+     TypeScript and still has the old file: it is stale (JS-flavored guidance, and its
+     `**/*.js`/`**/*.jsx`/`**/*.mjs`/`**/*.cjs` glob patterns keep matching real files)
+     and would otherwise sit there indefinitely alongside the correct rule. Ask the
+     user with `AskUserQuestion` (**Remove the stale file** / **Leave it for now**). On
+     approval:
+
+     ```bash
+     rm "${1:-$CLAUDE_PROJECT_DIR}/.claude/rules/javascript.md"
+     ```
+
+     Not an `apply`/`patch` fix — the engine only ever writes artifacts the current
+     plan wants and has no delete path, so removal is a direct `rm` after explicit
+     user approval (same precedent as `patch.md` step 8's pending-directory cleanup).
 - **gh OAuth scopes:** report the `ghAuth` object retained from step 0. Nothing
   to report when it is absent, or when `missing` is empty, `envTokenOverride`
   is false, and the login is authenticated.

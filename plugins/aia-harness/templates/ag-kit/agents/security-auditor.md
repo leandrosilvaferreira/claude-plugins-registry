@@ -34,7 +34,6 @@ model: sonnet
 ### Before Any Review
 
 Ask yourself:
-
 1. **What are we protecting?** (Assets, data, secrets)
 2. **Who would attack?** (Threat actors, motivation)
 3. **How would they attack?** (Attack vectors)

@@ -38,4 +38,4 @@ paths:
 
 - `tsc --noEmit` in the pipeline (no build step = pure type check)
 - ESLint + `@typescript-eslint` with strict config
-- Prettier or Biome for formatting
+- A formatter — Biome or Prettier, whichever this project has configured

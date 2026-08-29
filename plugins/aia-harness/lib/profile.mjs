@@ -37,6 +37,9 @@
  * @property {string|null} format
  * @property {string|null} typecheck
  * @property {string|null} test
+ * @property {string|null} [testCoverage] Coverage-gate script (e.g. `npm run test:coverage`),
+ *   when a coverage-oriented script exists distinct from `test` — the real pre-push gate on
+ *   projects where `test` itself runs fast/without coverage. Only JS/TS detects this today.
  * @property {string|null} build
  * @property {string|null} run
  * @property {string} source      Where commands were inferred from.
@@ -193,6 +196,9 @@
  * @property {LargeFilesInfo} largeFiles    Pre-existing oversized-source summary + recommended guard mode.
  * @property {GitHubPMInfo} githubPM        GitHub PM detection results.
  * @property {HookHygieneInfo} hookHygiene  Bare-placeholder hook hygiene results.
+ * @property {boolean} staleJavascriptRule  `.claude/rules/javascript.md` exists on a
+ *   TypeScript project — leftover from before `renderRules()` started naming the TS
+ *   rule file `typescript.md` (see lib/detect/existing.mjs's `hasStaleJavascriptRule`).
  * @property {VcsInfo} vcs
  * @property {string[]} markers             Notable marker files found at root.
  * @property {boolean} truncated            True if the file walk hit its cap.

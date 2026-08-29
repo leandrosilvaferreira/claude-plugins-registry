@@ -34,6 +34,6 @@ paths:
 
 ## Tooling
 
-- `next lint` (built-in ESLint config) in the pipeline
+- ESLint directly via `eslint.config.mjs` (`@next/eslint-plugin-next`) — `next lint` was removed in Next 16
 - `@next/bundle-analyzer` to inspect the bundle
 - Vercel Speed Insights + Web Analytics for production metrics

@@ -129,27 +129,23 @@ What's slow?
 ## Quick Wins Checklist
 
 ### Images
-
 - [ ] Lazy loading enabled
 - [ ] Proper format (WebP, AVIF)
 - [ ] Correct dimensions
 - [ ] Responsive srcset
 
 ### JavaScript
-
 - [ ] Code splitting for routes
 - [ ] Tree shaking enabled
 - [ ] No unused dependencies
 - [ ] Async/defer for non-critical
 
 ### CSS
-
 - [ ] Critical CSS inlined
 - [ ] Unused CSS removed
 - [ ] No render-blocking CSS
 
 ### Caching
-
 - [ ] Static assets cached
 - [ ] Proper cache headers
 - [ ] CDN configured

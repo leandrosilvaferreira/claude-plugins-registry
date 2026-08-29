@@ -40,7 +40,6 @@ public class Order {
 ## Naming
 
 Follow standard Java conventions:
-
 - `PascalCase` for classes, interfaces, records, enums
 - `camelCase` for methods, fields, parameters, local variables
 - `SCREAMING_SNAKE_CASE` for `static final` constants
@@ -49,7 +48,6 @@ Follow standard Java conventions:
 ## Modern Java Features
 
 Use modern language features where they improve clarity:
-
 - **Records** for DTOs and value types (Java 16+)
 - **Sealed classes** for closed type hierarchies (Java 17+)
 - **Pattern matching** with `instanceof` — no explicit cast (Java 16+)

@@ -382,15 +382,21 @@ this ever looks stale):
 
 - `$TARGET/.claude/hooks/vault-orient.mjs` — 3 occurrences, plain string
   replace.
-- `$TARGET/.claude/hooks/vault-guard.mjs` — **3 occurrences**. The first is
-  inside a regex literal (`const VAULT_SEGMENT_RE = /(^|\/)__OBSIDIAN_VAULT_DIR__(\/|$)/;`)
-  — if the chosen folder name contains any regex-special character (any of
+- `$TARGET/.claude/hooks/vault-guard.mjs` — **6 occurrences across 6 lines**
+  (7 tokens total — one comment line repeats the token twice). Two are regex
+  literals and BOTH need the same escaping treatment:
+  `const VAULT_SEGMENT_RE = /(^|\/)__OBSIDIAN_VAULT_DIR__(\/|$)/;` and
+  `const DAILY_SEGMENT_RE = /(^|\/)__OBSIDIAN_VAULT_DIR__\/daily(\/|$)/;` —
+  if the chosen folder name contains any regex-special character (any of
   `. * + ? ^ $ { } ( ) | [ ] \`), escape each one with a backslash before
-  substituting into this line only. The second
-  (`command.includes("__OBSIDIAN_VAULT_DIR__/")`) and third (inside the
-  `REASON` message array, the user-facing deny explanation starting
-  `"__OBSIDIAN_VAULT_DIR__/ is served by the obsidian MCP server..."`) are
-  both plain strings — use the raw (unescaped) chosen name for those two.
+  substituting into BOTH of these lines. Missing `DAILY_SEGMENT_RE` leaves a
+  broken regex that silently defeats the `daily/` read-only carve-out (see
+  its own neighboring comment in the source). The rest are plain strings —
+  use the raw (unescaped) chosen name: `command.includes("__OBSIDIAN_VAULT_DIR__/")`,
+  the `REASON` message array (`"__OBSIDIAN_VAULT_DIR__/ is served by the
+  obsidian MCP server..."`), and two doc-comment lines near the top of the
+  file (one of them repeats the token twice, illustrating a path transform
+  example).
 - `$TARGET/.claude/hooks/compile.mjs`: **2 occurrences**, plain string
   replace with the chosen name — one inside a doc comment
   (`<projectRoot>/__OBSIDIAN_VAULT_DIR__/daily/ matching YYYY-MM-DD.md`), one
@@ -398,7 +404,7 @@ this ever looks stale):
 - `$TARGET/.claude/hooks/session-log.mjs`: 1 occurrence, plain string replace
   with the chosen name.
 - `$TARGET/.claude/rules/obsidian.md`: replace every occurrence with the
-  chosen name (5 occurrences; plain string replace — it's prose, not a
+  chosen name (7 occurrences; plain string replace — it's prose, not a
   regex).
 - `$TARGET/CLAUDE.md`: 1 occurrence, inside the merged obsidian-vault
   section (`` this project's long-term memory at `__OBSIDIAN_VAULT_DIR__/` ``)
@@ -416,14 +422,20 @@ this ever looks stale):
 Verify with:
 
 ```bash
-grep -rl "__OBSIDIAN_VAULT_DIR__" "$TARGET/.claude/hooks" "$TARGET/.claude/scripts" "$TARGET/.claude/rules/obsidian.md" "$TARGET/CLAUDE.md"
+grep -rl "__OBSIDIAN_VAULT_DIR__" "$TARGET/.claude/hooks" "$TARGET/.claude/scripts" "$TARGET/.claude/rules/obsidian.md" "$TARGET/CLAUDE.md" \
+  | grep -v vault-pipeline-shared.mjs
 ```
 
-Expected: no output (every occurrence substituted). If anything is still
-listed, fix it before proceeding — a leftover placeholder in a hook or
-script would make it read from or write to a directory that will never
-exist; a leftover in the rule or CLAUDE.md is at minimum a confusing literal
-string shown to every future session.
+Expected: no output (every occurrence substituted). `vault-pipeline-shared.mjs`
+is excluded on purpose: it carries the placeholder token only inside a
+doc-comment explaining that this module deliberately stays free of the vault
+directory name (see its own docstring above `listPendingDailies`) — it is
+not one of the 8 destination files above and needs no substitution, so
+without the exclusion this command would always report a false positive. If
+anything else is still listed, fix it before proceeding — a leftover
+placeholder in a hook or script would make it read from or write to a
+directory that will never exist; a leftover in the rule or CLAUDE.md is at
+minimum a confusing literal string shown to every future session.
 
 ## Step 7: Gitignore local vault paths, then install the writers' SDK (optional)
 

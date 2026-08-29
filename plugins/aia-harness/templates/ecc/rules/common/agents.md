@@ -1,5 +1,7 @@
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: rules/common/agents.md. MIT (c) Affaan Mustafa. -->
 
+> **Note on agent names below:** ECC's stack-specific reviewer/build-resolver agents (e.g. `typescript-reviewer`, `go-reviewer`, `rust-reviewer`) are only installed when your project's detected stack matches — check `.claude/agents/` for what is actually present before assuming one of these ran. `code-reviewer` and `security-reviewer` are installed for every project.
+
 # Agent Orchestration
 
 ## Available Agents
@@ -8,25 +10,17 @@ Located in `~/.claude/agents/`:
 
 | Agent | Purpose | When to Use |
 |-------|---------|-------------|
-| planner | Implementation planning | Complex features, refactoring |
-| architect | System design | Architectural decisions |
-| tdd-guide | Test-driven development | New features, bug fixes |
 | code-reviewer | Code review | After writing code |
 | security-reviewer | Security analysis | Before commits |
-| build-error-resolver | Fix build errors | When build fails |
-| e2e-runner | E2E testing | Critical user flows |
-| refactor-cleaner | Dead code cleanup | Code maintenance |
-| doc-updater | Documentation | Updating docs |
 | rust-reviewer | Rust code review | Rust projects |
-| harmonyos-app-resolver | HarmonyOS app development | HarmonyOS/ArkTS projects |
 
 ## Immediate Agent Usage
 
 No user prompt needed:
-1. Complex feature requests - Use **planner** agent
+1. Complex feature requests - Use an appropriate specialist agent (check `.claude/agents/`)
 2. Code just written/modified - Use **code-reviewer** agent
-3. Bug fix or new feature - Use **tdd-guide** agent
-4. Architectural decision - Use **architect** agent
+3. Bug fix or new feature - Use an appropriate specialist agent (check `.claude/agents/`)
+4. Architectural decision - Use an appropriate specialist agent (check `.claude/agents/`)
 
 ## Parallel Task Execution
 

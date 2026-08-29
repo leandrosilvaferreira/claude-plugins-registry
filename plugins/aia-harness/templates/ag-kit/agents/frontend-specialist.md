@@ -277,11 +277,11 @@ Standard templates, typical layouts, common color schemes, overused patterns = *
 - **STOP using "soft lines" (rounded corners/shapes) by default for everything.**
 - Explore **SHARP, GEOMETRIC, and MINIMALIST** edges.
 - **🚫 AVOID THE "SAFE BOREDOM" ZONE (4px-8px):**
-  - Don't just slap `rounded-md` (6-8px) on everything. It looks generic.
-  - **Go EXTREME:**
-    - Use **0px - 2px** for Tech, Luxury, Brutalist (Sharp/Crisp).
-    - Use **16px - 32px** for Social, Lifestyle, Bento (Friendly/Soft).
-  - _Make a choice. Don't sit in the middle._
+    - Don't just slap `rounded-md` (6-8px) on everything. It looks generic.
+    - **Go EXTREME:**
+        - Use **0px - 2px** for Tech, Luxury, Brutalist (Sharp/Crisp).
+        - Use **16px - 32px** for Social, Lifestyle, Bento (Friendly/Soft).
+    - _Make a choice. Don't sit in the middle._
 - **Break the "Safe/Round/Friendly" habit.** Don't be afraid of "Aggressive/Sharp/Technical" visual styles when appropriate.
 - Every project should have a **DIFFERENT** geometry. One sharp, one rounded, one organic, one brutalist.
 
@@ -289,16 +289,16 @@ Standard templates, typical layouts, common color schemes, overused patterns = *
 
 - **STATIC DESIGN IS FAILURE.** UI must always feel alive and "Wow" the user with movement.
 - **Mandatory Layered Animations:**
-  - **Reveal:** All sections and main elements must have scroll-triggered (staggered) entrance animations.
-  - **Micro-interactions:** Every clickable/hoverable element must provide physical feedback (`scale`, `translate`, `glow-pulse`).
-  - **Spring Physics:** Animations should not be linear; they must feel organic and adhere to "spring" physics.
+    - **Reveal:** All sections and main elements must have scroll-triggered (staggered) entrance animations.
+    - **Micro-interactions:** Every clickable/hoverable element must provide physical feedback (`scale`, `translate`, `glow-pulse`).
+    - **Spring Physics:** Animations should not be linear; they must feel organic and adhere to "spring" physics.
 - **Mandatory Visual Depth:**
-  - Do not use only flat colors/shadows; Use **Overlapping Elements, Parallax Layers, and Grain Textures** for depth.
-  - **Avoid:** Mesh Gradients and Glassmorphism (unless user specifically requests).
+    - Do not use only flat colors/shadows; Use **Overlapping Elements, Parallax Layers, and Grain Textures** for depth.
+    - **Avoid:** Mesh Gradients and Glassmorphism (unless user specifically requests).
 - **⚠️ OPTIMIZATION MANDATE (CRITICAL):**
-  - Use only GPU-accelerated properties (`transform`, `opacity`).
-  - Use `will-change` strategically for heavy animations.
-  - `prefers-reduced-motion` support is MANDATORY.
+    - Use only GPU-accelerated properties (`transform`, `opacity`).
+    - Use `will-change` strategically for heavy animations.
+    - `prefers-reduced-motion` support is MANDATORY.
 
 **✅ EVERY design must achieve this trinity:**
 
@@ -325,11 +325,11 @@ Standard templates, typical layouts, common color schemes, overused patterns = *
 >
 > - **Geometry:** [e.g., Sharp edges for premium feel]
 > - **Typography:** [e.g., Serif Headers + Sans Body]
->   - _Ref:_ Scale from `typography-system.md`
+>     - _Ref:_ Scale from `typography-system.md`
 > - **Palette:** [e.g., Teal + Gold - Purple Ban ✅]
->   - _Ref:_ Emotion mapping from `ux-psychology.md`
+>     - _Ref:_ Emotion mapping from `ux-psychology.md`
 > - **Effects/Motion:** [e.g., Subtle shadow + ease-out]
->   - _Ref:_ Principle from `visual-effects.md`, `animation-guide.md`
+>     - _Ref:_ Principle from `visual-effects.md`, `animation-guide.md`
 > - **Layout uniqueness:** [e.g., Asymmetric 70/30 split, NOT centered hero]
 
 **Rules:**
@@ -382,7 +382,6 @@ Build layer by layer:
 Verify HONESTLY before delivering:
 
 **🔍 The "Template Test" (BRUTAL HONESTY):**
-
 | Question | FAIL Answer | PASS Answer |
 |----------|-------------|-------------|
 | "Could this be a Vercel/Stripe template?" | "Well, it's clean..." | "No way, this is unique to THIS brand." |

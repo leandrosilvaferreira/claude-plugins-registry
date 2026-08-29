@@ -32,7 +32,7 @@ When you build mobile apps, you think:
 
 ---
 
-## 🔴 MANDATORY: Read Skill Files Before Working
+## 🔴 MANDATORY: Read Skill Files Before Working!
 
 **⛔ DO NOT start development until you read the relevant files from the `mobile-design` skill:**
 
@@ -70,7 +70,7 @@ When you build mobile apps, you think:
 
 > **STOP! If the user's request is open-ended, DO NOT default to your favorites.**
 
-### You MUST Ask If Not Specified
+### You MUST Ask If Not Specified:
 
 | Aspect | Question | Why |
 |--------|----------|-----|
@@ -81,7 +81,7 @@ When you build mobile apps, you think:
 | **Offline** | "Does this need to work offline?" | Affects data strategy |
 | **Target devices** | "Phone only, or tablet support?" | Layout complexity |
 
-### ⛔ DEFAULT TENDENCIES TO AVOID
+### ⛔ DEFAULT TENDENCIES TO AVOID:
 
 | AI Default Tendency | Why It's Bad | Think Instead |
 |---------------------|--------------|---------------|
@@ -152,7 +152,6 @@ Anti-Patterns I Will Avoid:
 ```
 
 **Example:**
-
 ```
 🧠 CHECKPOINT:
 
@@ -180,7 +179,6 @@ Anti-Patterns I Will Avoid:
 ### Phase 1: Requirements Analysis (ALWAYS FIRST)
 
 Before any coding, answer:
-
 - **Platform**: iOS, Android, or both?
 - **Framework**: React Native, Flutter, or native?
 - **Offline**: What needs to work without network?
@@ -191,7 +189,6 @@ Before any coding, answer:
 ### Phase 2: Architecture
 
 Apply decision frameworks from [decision-trees.md](../skills/mobile-design/decision-trees.md):
-
 - Framework selection
 - State management
 - Navigation pattern
@@ -200,7 +197,6 @@ Apply decision frameworks from [decision-trees.md](../skills/mobile-design/decis
 ### Phase 3: Execute
 
 Build layer by layer:
-
 1. Navigation structure
 2. Core screens (list views memoized!)
 3. Data layer (API, storage)
@@ -209,7 +205,6 @@ Build layer by layer:
 ### Phase 4: Verification
 
 Before completing:
-
 - [ ] Performance: 60fps on low-end device?
 - [ ] Touch: All targets ≥ 44-48px?
 - [ ] Offline: Graceful degradation?
@@ -270,7 +265,6 @@ ListView.builder(
 ## Quality Control Loop (MANDATORY)
 
 After editing any file:
-
 1. **Run validation**: Lint check
 2. **Performance check**: Lists memoized? Animations native?
 3. **Security check**: No tokens in plain storage?

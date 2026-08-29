@@ -7,6 +7,8 @@ priority: CRITICAL
 ---
 <!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/skills/clean-code/SKILL.md. MIT (c) vudovn. -->
 
+> **Note on specialist agents:** names like `frontend-specialist`, `mobile-developer`, `seo-specialist`, and `game-developer` mentioned below are only installed when your project's detected stack matches (web, mobile, or games respectively) - check `.claude/agents/` for what is actually present before assuming one of these ran.
+
 # Clean Code - Pragmatic AI Coding Standards
 
 > **CRITICAL SKILL** - Be **concise, direct, and solution-focused**.
@@ -148,17 +150,11 @@ File to edit: UserService.ts
 
 | Agent | Script | Command |
 |-------|--------|---------|
-| **frontend-specialist** | UX Audit | `python .agents/skills/frontend-design/scripts/ux_audit.py .` |
-| **frontend-specialist** | A11y Check | `python .agents/skills/frontend-design/scripts/accessibility_checker.py .` |
-| **backend-specialist** | API Validator | `python .agents/skills/api-patterns/scripts/api_validator.py .` |
 | **mobile-developer** | Mobile Audit | `python .agents/skills/mobile-design/scripts/mobile_audit.py .` |
 | **database-architect** | Schema Validate | `python .agents/skills/database-design/scripts/schema_validator.py .` |
 | **security-auditor** | Security Scan | `python .agents/skills/vulnerability-scanner/scripts/security_scan.py .` |
-| **seo-specialist** | SEO Check | `python .agents/skills/seo-fundamentals/scripts/seo_checker.py .` |
-| **seo-specialist** | GEO Check | `python .agents/skills/geo-fundamentals/scripts/geo_checker.py .` |
 | **performance-optimizer** | Lighthouse | `python .agents/skills/performance-profiling/scripts/lighthouse_audit.py <url>` |
 | **test-engineer** | Test Runner | `python .agents/skills/testing-patterns/scripts/test_runner.py .` |
-| **test-engineer** | Playwright | `python .agents/skills/webapp-testing/scripts/playwright_runner.py <url>` |
 | **Any agent** | Lint Check | `python .agents/skills/lint-and-validate/scripts/lint_runner.py .` |
 | **Any agent** | Type Coverage | `python .agents/skills/lint-and-validate/scripts/type_coverage.py .` |
 | **Any agent** | i18n Check | `python .agents/skills/i18n-localization/scripts/i18n_checker.py .` |

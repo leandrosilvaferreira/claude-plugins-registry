@@ -311,9 +311,9 @@ When reviewing AI-generated changes, prioritize:
 4. Unnecessary model-cost-inducing complexity
 
 Cost-awareness check:
-
 - Flag workflows that escalate to higher-cost models without clear reasoning need.
 - Recommend defaulting to lower-cost tiers for deterministic refactors.
+
 <!-- harness-patch: appended by sync-ecc.mjs after vendoring. Edit THIS file, not templates/ecc/agents/code-reviewer.md. -->
 
 ## Harness: Pre-Review Setup (runs BEFORE the checklist)
@@ -323,6 +323,7 @@ When invoked, execute these steps FIRST — before gathering the git diff:
 ### 1. Read Session Context for Plans / PRDs / Specs
 
 Scan the current conversation for any referenced:
+
 - Plans (task lists, implementation plans, `plans/` documents)
 - PRDs (product requirement documents)
 - Design specs or architecture documents

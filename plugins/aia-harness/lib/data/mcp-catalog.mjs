@@ -45,7 +45,7 @@ export const MCP_CATALOG = [
   },
   {
     name: "github",
-    description: "Default for any git repo: issues, PRs, releases and code review in the dev loop.",
+    description: "Issues, PRs, releases and code review in the dev loop.",
     docsUrl: "https://github.com/github/github-mcp-server",
     server: {
       type: "http",
@@ -60,7 +60,7 @@ export const MCP_CATALOG = [
     // resolves the header statically, so the env entry itself cannot go away.
     prereq:
       "gh CLI, authenticated with the scopes this project needs. Run `gh auth refresh -h github.com -s admin:public_key,gist,project,read:org,repo,workflow`, then `gh auth token` for the value.",
-    recommended: (p) => p.vcs.isGit,
+    recommended: () => false,
   },
   {
     name: "playwright",

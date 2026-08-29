@@ -1,5 +1,5 @@
 /**
- * Command discovery: lint / format / typecheck / test / build / run.
+ * Command discovery: lint / format / typecheck / test / test-coverage / build / run.
  * Priority: declared scripts > config-implied tool > ecosystem default.
  * @module detect/commands
  */
@@ -76,6 +76,13 @@ function jsCommands(root, pm, rootFiles) {
           ? "bun install"
           : "npm install";
 
+  // pick() is case-sensitive exact-match; coverage script names vary in casing
+  // in practice, so match case-insensitively against the common spellings
+  // instead — a bare substring match previously caught unrelated scripts like
+  // "precoverage" or "coverage:watch".
+  const COVERAGE_NAMES = new Set(["test:coverage", "coverage", "test:cov"]);
+  const coverageScript = Object.keys(scripts).find((n) => COVERAGE_NAMES.has(n.toLowerCase()));
+
   return {
     install: installCmd,
     lint: pick("lint") ?? (biome ? "npx @biomejs/biome lint ." : eslint ? "npx eslint ." : null),
@@ -85,6 +92,7 @@ function jsCommands(root, pm, rootFiles) {
     typecheck:
       pick("typecheck", "type-check", "tsc", "check-types") ?? (hasTs ? "npx tsc --noEmit" : null),
     test: pick("test"),
+    testCoverage: coverageScript ? run(coverageScript) : null,
     build: pick("build"),
     run: pick("dev", "start", "serve"),
     source: "package.json scripts + config",

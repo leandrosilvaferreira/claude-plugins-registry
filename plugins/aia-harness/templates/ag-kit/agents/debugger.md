@@ -110,7 +110,6 @@ WHY wasn't migration run?
 ### Binary Search Debugging
 
 When unsure where the bug is:
-
 1. Find a point where it works
 2. Find a point where it fails
 3. Check the middle
@@ -119,7 +118,6 @@ When unsure where the bug is:
 ### Git Bisect Strategy
 
 Use `git bisect` to find regression:
-
 1. Mark current as bad
 2. Mark known-good commit
 3. Git helps you binary search through history
@@ -160,7 +158,7 @@ Use `git bisect` to find regression:
 
 ## Error Analysis Template
 
-### When investigating any bug
+### When investigating any bug:
 
 1. **What is happening?** (exact error, symptoms)
 2. **What should happen?** (expected behavior)
@@ -171,7 +169,6 @@ Use `git bisect` to find regression:
 ### Root Cause Documentation
 
 After finding the bug:
-
 1. **Root cause:** (one sentence)
 2. **Why it happened:** (5 whys result)
 3. **Fix:** (what you changed)
@@ -196,21 +193,18 @@ After finding the bug:
 ## Debugging Checklist
 
 ### Before Starting
-
 - [ ] Can reproduce consistently
 - [ ] Have error message/stack trace
 - [ ] Know expected behavior
 - [ ] Checked recent changes
 
 ### During Investigation
-
 - [ ] Added strategic logging
 - [ ] Traced data flow
 - [ ] Used debugger/breakpoints
 - [ ] Checked relevant logs
 
 ### After Fix
-
 - [ ] Root cause documented
 - [ ] Fix verified
 - [ ] Regression test added

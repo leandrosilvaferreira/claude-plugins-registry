@@ -42,6 +42,7 @@ ${
     c.typecheck && `- Typecheck: \`${c.typecheck}\``,
     c.lint && `- Lint: \`${c.lint}\``,
     c.test && `- Test: \`${c.test}\``,
+    c.testCoverage && `- Coverage gate (the real pre-push check): \`${c.testCoverage}\``,
   ]
     .filter(Boolean)
     .join("\n") || "- Run the project's lint and test commands."
@@ -62,7 +63,7 @@ Report the actual command output. Do not assert success without running them.
 
 Test what can break, not every function. Full rubric: \`.claude/rules/05-testing.md\`.
 
-- Test: business rules, branching logic (CC ≥ 2), money/security/auth, algorithms, edge cases, bug regressions.
+- Test: branching logic (CC ≥ 2) that also hits ≥1 of business rules, money/security/auth, algorithms, high fan-in, hotspots, blast radius, or bug regressions.
 - Skip (or integration-only): trivial getters/wrappers, pass-through, config, presentational UI, generated code.
 ${c.test ? `- Run \`${c.test}\` before claiming done.` : "- Run the project's test command before claiming done."}
 `,
@@ -72,7 +73,7 @@ ${c.test ? `- Run \`${c.test}\` before claiming done.` : "- Run the project's te
   if (primary === "JavaScript" || primary === "TypeScript") {
     const isTs = primary === "TypeScript";
     rules.push({
-      relPath: ".claude/rules/javascript.md",
+      relPath: isTs ? ".claude/rules/typescript.md" : ".claude/rules/javascript.md",
       title: "JavaScript / TypeScript",
       content: ruleDoc(
         isTs

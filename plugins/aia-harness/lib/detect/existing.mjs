@@ -36,3 +36,32 @@ export function detectExistingHarness(root, files) {
     graphifyGitHooks,
   };
 }
+
+/**
+ * Detect one known stale-artifact case left behind by a fixed generator bug:
+ * `renderRules()` (`lib/generate/rules.mjs`) used to always name the JS/TS rule file
+ * `.claude/rules/javascript.md`, even for TypeScript projects; it now writes
+ * `.claude/rules/typescript.md` for TypeScript. The artifact id is derived from the
+ * path (`rule:${relPath}` in `lib/plan.mjs`), so a project scaffolded before that fix
+ * keeps the old, mislabeled file forever: `apply`/`patch` only ever add what the
+ * CURRENT plan wants — nothing in this pipeline compares a target's existing
+ * `.claude/` contents against what an OLDER plan used to produce, so a renamed
+ * artifact's stale copy is never flagged or removed on its own (no general
+ * rename/orphan-detection mechanism exists here; this is one narrow, hardcoded
+ * old-path check for this one rename, not a framework for renamed artifacts in
+ * general).
+ *
+ * Deliberately NOT gated on `.claude/rules/typescript.md` being absent: once a
+ * project is detected as TypeScript, `javascript.md` is stale regardless of
+ * whether the replacement has already been added (e.g. by an earlier `doctor`
+ * run) — gating on the new file's absence would make this check go silent
+ * forever after the first successful add, leaving the stale file undetected.
+ * @param {string} root
+ * @param {string|null} primaryLanguage
+ * @returns {boolean}
+ */
+export function hasStaleJavascriptRule(root, primaryLanguage) {
+  return (
+    primaryLanguage === "TypeScript" && exists(path.join(root, ".claude", "rules", "javascript.md"))
+  );
+}

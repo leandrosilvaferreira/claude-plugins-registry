@@ -10,7 +10,7 @@ import { detectFrameworks } from "./frameworks.mjs";
 import { detectMonorepo } from "./monorepo.mjs";
 import { detectCommands } from "./commands.mjs";
 import { detectArchitecture } from "./architecture.mjs";
-import { detectExistingHarness } from "./existing.mjs";
+import { detectExistingHarness, hasStaleJavascriptRule } from "./existing.mjs";
 import { detectVcs } from "./vcs.mjs";
 import { detectTesting } from "./testing.mjs";
 import { detectLargeFiles } from "./large-files.mjs";
@@ -80,6 +80,7 @@ export function scanProject(root, opts = {}) {
     commands,
     architecture,
     existingHarness,
+    staleJavascriptRule: hasStaleJavascriptRule(abs, primaryLanguage),
     testing: /** @type {import('../profile.mjs').TestingInfo} */ ({
       configured: false,
       framework: null,

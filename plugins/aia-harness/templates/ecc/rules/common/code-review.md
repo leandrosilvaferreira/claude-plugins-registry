@@ -1,5 +1,7 @@
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: rules/common/code-review.md. MIT (c) Affaan Mustafa. -->
 
+> **Note on agent names below:** ECC's stack-specific reviewer/build-resolver agents (e.g. `typescript-reviewer`, `go-reviewer`, `rust-reviewer`) are only installed when your project's detected stack matches — check `.claude/agents/` for what is actually present before assuming one of these ran. `code-reviewer` and `security-reviewer` are installed for every project.
+
 # Code Review Standards
 
 ## Purpose

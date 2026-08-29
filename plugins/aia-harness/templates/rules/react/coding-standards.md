@@ -19,7 +19,7 @@ paths:
 | Prop drilling > 2 levels | Context, Zustand, or Jotai |
 | Duplicated state (same data in two `useState`) | Single source of truth; derive the rest |
 | Direct state mutation | Always create a new object/array |
-| Component > 250 LOC | Extract sub-components or custom hooks |
+| Component grows hard to follow | Extract sub-components or custom hooks — check your linter's configured line-limit gate |
 | `any` in prop types | Explicit interfaces |
 | Business logic inside the component | Custom hook (`use<Name>`) |
 | `document.querySelector` in a React component | `useRef` |
@@ -35,6 +35,6 @@ paths:
 
 ## Tooling
 
-- `eslint-plugin-react` + `eslint-plugin-react-hooks`
-- `eslint-plugin-jsx-a11y` for accessibility
+- `eslint-plugin-react-hooks` (or your linter's rules-of-hooks equivalent)
+- Accessibility linting — `eslint-plugin-jsx-a11y`, or your formatter/linter's built-in a11y rules (e.g. Biome)
 - React DevTools Profiler to measure before optimizing

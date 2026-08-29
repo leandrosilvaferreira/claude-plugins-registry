@@ -1,6 +1,5 @@
 ---
 paths:
-  - "hooks/**"
   - ".claude/hooks/**"
 ---
 

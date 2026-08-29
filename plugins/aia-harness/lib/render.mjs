@@ -57,6 +57,10 @@ export function renderReport(profile) {
       ? `\n\n## ⚠ Hook placeholder hygiene\n${hhIssues.length} hook(s) in .claude/settings.json use a bare $VAR instead of \${VAR} — Claude Code only expands the braced form in exec-form hooks (no shell), so these will throw MODULE_NOT_FOUND. Run \`/aia-harness:doctor\` to fix.\n${hhIssues.map((i) => `  - \`${i.script}\` (${i.event}): \`${i.arg}\``).join("\n")}`
       : "";
 
+  const staleRuleBlock = profile.staleJavascriptRule
+    ? `\n\n## ⚠ Stale rule file\n\`.claude/rules/javascript.md\` is a leftover from before this plugin named the TypeScript rule file \`typescript.md\` — this project is detected as TypeScript. Run \`/aia-harness:doctor\` to remove it.`
+    : "";
+
   return `# Harness diagnosis — ${profile.root.split("/").pop()}
 
 ## Languages
@@ -90,7 +94,7 @@ ${profile.testing.configured ? `- present${profile.testing.framework ? ` — ${p
 
 ## Existing harness
 ${existing}
-${hookHygieneBlock}`;
+${hookHygieneBlock}${staleRuleBlock}`;
 }
 
 /**

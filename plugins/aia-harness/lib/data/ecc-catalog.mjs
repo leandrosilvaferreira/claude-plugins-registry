@@ -152,7 +152,45 @@ export const ECC_AGENT_WHEN_TO_USE = /** @type {Record<string,string>} */ ({
 });
 
 /**
- * ECC assets to install for a profile (deduped, common included).
+ * JS/TS-ecosystem stack keys (see stack-keys.mjs), excluded from the *default*
+ * per-profile selection below — first-party rules/hooks already cover this
+ * ecosystem more accurately (rubric-based testing.md vs. ECC's TDD-mandatory
+ * rule, Vitest vs. ECC's Jest+RTL+MSW, Biome-first format-on-edit.mjs vs.
+ * ECC's Prettier-based hook, a real agent roster vs. ECC's common/agents.md
+ * listing agents this harness doesn't ship), so ECC's marginal value here is
+ * low relative to its conflict cost. `ECC_BY_STACK` itself is untouched — the
+ * exclusion happens only in `selectEccAssets` below. But `selectEccAssets` is
+ * the *only* function the plan/apply CLI ever calls (`lib/plan.mjs` passes
+ * its result, never `allEccAssets()`, into `addEccArtifacts`), so for an
+ * excluded stack no `ECC_BY_STACK` artifact for it is ever added to the plan
+ * — there is nothing for a manual `--only=ecc-agent:<name>` to select.
+ * `allEccAssets()` (used only by `scripts/sync-ecc.mjs`, to decide what to
+ * vendor from upstream) is the one place that still sees the full catalog for
+ * these stacks. `next` and `nestjs` have no `ECC_BY_STACK` entry today (they
+ * already no-op below); listed anyway so they stay excluded if an entry is
+ * ever added for either.
+ *
+ * These five keys must stay in sync with every key `stack-keys.mjs`'s
+ * `case "TypeScript": case "JavaScript":` branch can produce (currently: an
+ * unconditional `typescript`, plus `react`/`next`/`vue`/`nestjs` each gated
+ * on a detected framework) — that branch is inline conditional logic, not a
+ * named export, so there is nothing to import here in place of this literal
+ * set. `tests/ecc-catalog.test.mjs` has a regression test that exercises
+ * every framework combination through `stackKeys()` and fails if that branch
+ * ever produces a key not listed here — update both together.
+ * @type {ReadonlySet<string>}
+ */
+export const ECC_STACKS_EXCLUDED_FROM_DEFAULT = new Set([
+  "typescript",
+  "react",
+  "next",
+  "vue",
+  "nestjs",
+]);
+
+/**
+ * ECC assets to install for a profile (deduped, common included). Skips
+ * JS/TS-ecosystem stacks — see `ECC_STACKS_EXCLUDED_FROM_DEFAULT`.
  * @param {import('../profile.mjs').ProjectProfile} profile
  * @returns {EccAssetSet}
  */
@@ -162,6 +200,7 @@ export function selectEccAssets(profile) {
   /** @type {Set<string>} */ const rules = new Set(ECC_COMMON.rules);
 
   for (const key of stackKeys(profile)) {
+    if (ECC_STACKS_EXCLUDED_FROM_DEFAULT.has(key)) continue;
     const set = ECC_BY_STACK[key];
     if (!set) continue;
     set.agents.forEach((a) => agents.add(a));

@@ -3,10 +3,10 @@
   "ref": "main",
   "commit": "20a13da6d4414c7c6ae33db050a9c606eaef9f40",
   "attribution": "ag-kit by vudovn — https://github.com/vudovn/ag-kit — MIT License",
-  "vendoredAt": "2026-06-21T19:04:51.992Z",
+  "vendoredAt": "2026-08-29T01:38:39.388Z",
   "counts": {
     "agents": 20,
-    "skills": 26,
+    "skills": 25,
     "commands": 12,
     "scripts": 2,
     "other": 1
@@ -41,7 +41,6 @@
       "batch-operations",
       "behavioral-modes",
       "clean-code",
-      "code-review-graph",
       "context-compression",
       "coordinator-mode",
       "database-design",

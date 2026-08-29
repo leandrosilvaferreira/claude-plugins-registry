@@ -183,7 +183,7 @@ export function renderGraphifyRootClaudeMdSection() {
       "## graphify",
       GRAPHIFY_ROOT_MARKER,
       "",
-      "This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.",
+      "When graphify-out/graph.json has been generated, it holds a knowledge graph of this project — god nodes, community structure, and cross-file relationships.",
       "",
       "Rules:",
       "",
