@@ -1,11 +1,11 @@
 {
   "$schema": "./schema/plugin.schema.json",
   "version": "1",
-  "updatedAt": "2026-08-29",
+  "updatedAt": "2026-09-03",
   "plugins": [
     {
       "name": "aia-harness",
-      "version": "0.18.0",
+      "version": "0.19.0",
       "description": "Scan a project and scaffold a complete Claude Code harness: hooks, skills, agents, rules, settings, MCPs, worktree config and per-domain CLAUDE.md. Diagnose, approve, apply.",
       "author": {
         "name": "Leandro Silva Ferreira",
@@ -27,7 +27,7 @@
         "mcp"
       ],
       "installUrl": "https://github.com/leandrosilvaferreira/aia_harness",
-      "publishedAt": "2026-08-29"
+      "publishedAt": "2026-09-03"
     }
   ]
 }
