@@ -14,7 +14,7 @@
 
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 // skills/<any-skill-name>/lib/ → 3 levels up → plugin root → lib/... . Same depth and
 // same computation as condense.mjs's cmdFrontmatter (name-agnostic, survives a skill rename).
@@ -38,8 +38,12 @@ function fail(msg) {
 async function cmdList(args) {
   const root = flag(args, "--root") || process.cwd();
   const dir = join(root, ".claude", "agents");
-  const { splitFrontmatter } = await import(join(PLUGIN_ROOT, "lib/ecc/transform.mjs"));
-  const { parseFrontmatter } = await import(join(PLUGIN_ROOT, "lib/util/frontmatter-yaml.mjs"));
+  const { splitFrontmatter } = await import(
+    pathToFileURL(join(PLUGIN_ROOT, "lib/ecc/transform.mjs")).href
+  );
+  const { parseFrontmatter } = await import(
+    pathToFileURL(join(PLUGIN_ROOT, "lib/util/frontmatter-yaml.mjs")).href
+  );
 
   /** @type {{ file: string, name: string, description: string }[]} */
   const agents = [];
@@ -88,7 +92,7 @@ async function cmdCheck(args) {
   const text = flag(args, "--text");
   if (text === null) fail('check: pass --text "<value>"');
   const { checkAgentDescription } = await import(
-    join(PLUGIN_ROOT, "lib/validate/agent-description.mjs")
+    pathToFileURL(join(PLUGIN_ROOT, "lib/validate/agent-description.mjs")).href
   );
   process.stdout.write(JSON.stringify(checkAgentDescription(text)));
 }
@@ -152,7 +156,7 @@ async function cmdGrep(args) {
   const root = flag(args, "--root") || process.cwd();
   const name = flag(args, "--name");
   if (!name) fail("grep: pass --name <agent-name>");
-  const { collectFiles } = await import(join(PLUGIN_ROOT, "lib/util/fs.mjs"));
+  const { collectFiles } = await import(pathToFileURL(join(PLUGIN_ROOT, "lib/util/fs.mjs")).href);
 
   /**
    * @type {{

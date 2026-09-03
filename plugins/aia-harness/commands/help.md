@@ -49,6 +49,7 @@ means the answer is unavailable, not that something is wrong.
 | Add **long-term memory** / a knowledge vault to this project | `/aia-harness:add-obsidian` |
 | Generate or refresh **rich intermediate CLAUDE.md** files for strategic subdirectories | `/aia-harness:revise-claude-md` |
 | **Sync agent routing** — audit `.claude/agents` frontmatter descriptions and fix stale/missing CLAUDE.md mentions | `/aia-harness:revise-agent-routing` |
+| **Check consistency** — every skill/agent/rule/script/CLAUDE.md cross-reference resolves, and each artifact still fits the real stack | `/aia-harness:check-consistency` |
 | See this help | `/aia-harness:help` |
 
 **Project state → recommended command:**
@@ -200,6 +201,29 @@ aia-harness. Shows a diff before every write; never writes without approval.
 agent-description pipeline.
 **Writes files?** Only approved fixes, via `Edit` — agent frontmatter `description:` lines and
 CLAUDE.md `## Workflow & Agents` rows/sections.
+**Parameters:** `path` (optional).
+
+### `/aia-harness:check-consistency [path]`
+
+**What it does:** audits the whole harness as a graph. A deterministic pass enumerates
+every skill, agent, rule, command, hook/script and `CLAUDE.md` (root **and** nested) and
+resolves every path-shaped reference between them, reporting the ones that point at
+nothing and the hook scripts that are never wired in `settings.json` **and** never
+mentioned anywhere else (an import, a spawn path, a CLAUDE.md mention). Parallel `sonnet`
+subagents — one per artifact category — then settle the ambiguous name references and
+judge whether each artifact's content still fits the project's **real** detected stack
+(language, frameworks, library versions), flagging guidance written for a framework,
+tool, or version the project no longer uses. Findings are consolidated into one plan you
+approve by category; approved fixes are applied by dispatched subagents in parallel
+waves, then re-verified deterministically.
+**When to use:** a harness that has drifted — hand-edited artifacts, files renamed or
+deleted, a stack that moved (framework swap, major version bump), or artifacts added by
+plugins/other tools that nothing references.
+**Writes files?** Only approved fixes — every finding, mechanical reference repair or
+content rewrite alike, is shown as a diff before anything is written, then applied by a
+dispatched subagent after approval. One named exception: the routing-sync sub-step (agent
+descriptions vs. the CLAUDE.md table) edits in this skill's own thread, under its own
+per-finding approval gate, not a dispatched subagent.
 **Parameters:** `path` (optional).
 
 ---

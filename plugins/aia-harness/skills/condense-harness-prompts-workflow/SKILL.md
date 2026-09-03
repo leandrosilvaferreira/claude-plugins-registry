@@ -1,5 +1,5 @@
 ---
-name: condense-harness-prompts
+name: condense-harness-prompts-workflow
 description: Condenses harness .md prompts (.claude/agents, commands, rules, skills) using caveman full + Opus, without losing information. Compresses verbose prose and tables, preserves code blocks/URLs/inline-code/headings via a deterministic gate. Overwrites in place (git is the review safety net). Use when asked to "condense/compress/shorten the agents/commands/rules/skills in .claude".
 ---
 
@@ -38,7 +38,7 @@ Single question, header `Scope`, options:
 ### 2. Enumerate targets
 
 ```bash
-node "${CLAUDE_PLUGIN_ROOT}/skills/condense-harness-prompts/lib/condense.mjs" \
+node "${CLAUDE_PLUGIN_ROOT}/skills/condense-harness-prompts-workflow/lib/condense.mjs" \
   enumerate --root "${CLAUDE_PROJECT_DIR}" <flags>
 ```
 
@@ -65,7 +65,7 @@ For each enumerated file, derive the type from the path and record it internally
 | `.claude/rules/*.md` | `rule` | `best-practices/rules.md` |
 | `.claude/skills/**/SKILL.md` | `skill` | `best-practices/skills.md` |
 
-`best_practices_path` = `"${CLAUDE_PLUGIN_ROOT}/skills/condense-harness-prompts/best-practices/<type>s.md"` (replace `<type>s` with the plural of the type, e.g. `agents.md`).
+`best_practices_path` = `"${CLAUDE_PLUGIN_ROOT}/skills/condense-harness-prompts-workflow/best-practices/<type>s.md"` (replace `<type>s` with the plural of the type, e.g. `agents.md`).
 
 Record `{ path, type, best_practices_path }` per file. Use it when composing each subagent's prompt in step 4.
 
@@ -88,7 +88,7 @@ One `Agent` per file, **all in the same turn** (multiple `Agent` calls in a sing
 After all subagents return:
 
 ```bash
-node "${CLAUDE_PLUGIN_ROOT}/skills/condense-harness-prompts/lib/condense.mjs" \
+node "${CLAUDE_PLUGIN_ROOT}/skills/condense-harness-prompts-workflow/lib/condense.mjs" \
   commit <file1> <file2> ...
 ```
 
@@ -247,10 +247,12 @@ A faithful port of caveman-compress's `validate.py`:
 - Hardcoded model (haiku/sonnet-4-5). We want **Opus**.
 - Haiku is lossy; the goal here is **preservation** (Opus + gate).
 
-**Reuses (ported into `lib/condense.mjs`):**
+**Reuses** (ported into `lib/commit.mjs` and `lib/enumerate.mjs` — the `commit` and
+`enumerate` subcommands' own library modules; `lib/condense.mjs` is only the thin CLI
+dispatcher now):
 
-- `validate.py` → deterministic gate, 6 checks. Self-contained in the plugin, works for the team.
-- `compress.py` guardrails: `is_sensitive_path`, `MAX_FILE_SIZE` 500KB, skip empty, `strip_llm_wrapper`, abort if identical, fix-loop (step 5b).
+- `validate.py` → deterministic gate, 6 checks, in `lib/commit.mjs`. Self-contained in the plugin, works for the team.
+- `compress.py` guardrails, split by which subcommand needs them: `is_sensitive_path` and `MAX_FILE_SIZE` 500KB (the `enumerate` scan) live in `lib/enumerate.mjs`; `strip_llm_wrapper`, abort-if-identical, and the fix-loop (step 5b) live in `lib/commit.mjs`. Empty-file skip is also part of `enumerate`'s guardrails, in `lib/enumerate.mjs`.
 
 ## Best-practices reference files
 
@@ -266,4 +268,4 @@ Each artifact type has its guide in `best-practices/` — loaded by the subagent
 - **No dry-run** — writes in place; git is the review.
 - **Does not inherit history** — each subagent receives full context in the prompt.
 - `.condensed.tmp` files are never re-enumerated (filtered out in enumerate).
-- `<best-practices-path>` in the subagent template = `"${CLAUDE_PLUGIN_ROOT}/skills/condense-harness-prompts/best-practices/<type>s.md"` — substitute before dispatching.
+- `<best-practices-path>` in the subagent template = `"${CLAUDE_PLUGIN_ROOT}/skills/condense-harness-prompts-workflow/best-practices/<type>s.md"` — substitute before dispatching.

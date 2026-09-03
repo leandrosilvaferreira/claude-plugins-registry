@@ -4,6 +4,7 @@ argument-hint: "[path]"
 allowed-tools:
   - Bash
   - AskUserQuestion
+  - Skill
   - Agent
   - TodoWrite
 ---
@@ -27,7 +28,7 @@ later bare-env-var fallback to the wrong place.
 Runs two sequential stages on the target project's `.claude/` artifacts:
 
 **Stage 1 — Frontmatter validation + auto-fix**
-**Stage 2 — Semantic condensation** (via skill `condense-harness-prompts`)
+**Stage 2 — Semantic condensation** (via skill `condense-harness-prompts-workflow`)
 
 ---
 
@@ -70,7 +71,7 @@ Record internally whether the user requested `--skip-dedup` (skips dedup review 
 ## 2. Enumerate files
 
 ```bash
-node "${CLAUDE_PLUGIN_ROOT}/skills/condense-harness-prompts/lib/condense.mjs" \
+node "${CLAUDE_PLUGIN_ROOT}/skills/condense-harness-prompts-workflow/lib/condense.mjs" \
   enumerate --root "${1:-$CLAUDE_PROJECT_DIR}" <scope flags>
 ```
 
@@ -85,7 +86,7 @@ Present the list to the user **largest → smallest** with size alongside.
 Before compressing, fix invalid frontmatters in all enumerated files.
 
 ```bash
-node "${CLAUDE_PLUGIN_ROOT}/skills/condense-harness-prompts/lib/condense.mjs" \
+node "${CLAUDE_PLUGIN_ROOT}/skills/condense-harness-prompts-workflow/lib/condense.mjs" \
   frontmatter <file1> <file2> ...
 ```
 
@@ -110,9 +111,12 @@ After stage 1 report, proceed to stage 2.
 
 ## 4. Stage 2 — Semantic condensation
 
-Invoke the `condense-harness-prompts` skill to condense the same files enumerated in step 2. The scope is already determined — **skip the scope question** in the skill and go directly to step 3 (todo list) and 4 (subagent dispatch).
+Invoke the `condense-harness-prompts-workflow` skill to condense the same files enumerated in
+step 2: use the `Skill` tool with `skill: "aia-harness:condense-harness-prompts-workflow"` and
+`args: <resolved path>`. The scope is already determined — **skip the scope question** in it
+and go straight to its step 3 (todo list) and step 4 (subagent dispatch).
 
-Follow the skill workflow exactly:
+Follow that workflow exactly:
 
 1. `TodoWrite` one item per file (if 2+ files)
 2. Parallel dispatch of Opus subagents (1 per file, all in the same turn)

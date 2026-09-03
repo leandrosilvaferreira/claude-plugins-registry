@@ -1,33 +1,13 @@
-#!/usr/bin/env node
-// condense.mjs — deterministic layer for the condense-harness-prompts skill.
-//
-// Subcommands:
-//   enumerate    → list target .md files for a given scope (one path per line)
-//   commit       → validate each <file>.condensed.tmp sidecar against original;
-//                  overwrite on pass, keep .tmp on fail.
-//   frontmatter  → validate and auto-fix Claude Code frontmatter for a list of files.
-//
-// The SEMANTIC compression is done by Opus subagents (they write the .tmp
-// sidecars). This script never compresses — it only enumerates and runs the
-// deterministic preservation gate, because subagents can misreport success.
+// commit.mjs — condense-harness-prompts `commit` subcommand: validate each
+// <file>.condensed.tmp sidecar against its original; overwrite on pass, keep .tmp on fail.
+// Pure move out of condense.mjs — see condense.mjs's header for the full subcommand list.
 //
 // Gate is a JS port of the caveman-compress plugin validate.py:
 // blocks (error) on lost code blocks / URLs / inline-code / heading-count;
 // warns (non-blocking) on heading-text reorder / bullet drift / path drift.
 
-import {
-  readFileSync,
-  writeFileSync,
-  existsSync,
-  unlinkSync,
-  statSync,
-  readdirSync,
-} from "node:fs";
-import { join, resolve, isAbsolute, basename, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-
-// Safety guardrails adopted from caveman-compress compress.py.
-const MAX_FILE_SIZE = 500_000; // 500KB — refuse oversized prompts.
+import { readFileSync, writeFileSync, existsSync, unlinkSync, statSync } from "node:fs";
+import { fail } from "./cli.mjs";
 
 // Strip an outer ```markdown … ``` fence the subagent may wrap its whole
 // output in. Without this, a wrapped sidecar would fail the code-block gate
@@ -37,32 +17,6 @@ const OUTER_FENCE_RE = /^\s*(`{3,}|~{3,})[^\n]*\n([\s\S]*)\n\1\s*$/;
 function stripLlmWrapper(text) {
   const m = text.match(OUTER_FENCE_RE);
   return m ? m[2] : text;
-}
-
-// Hard denylist for files that must never be shipped to the model. Compressing
-// sends raw bytes to a subagent (Anthropic API boundary); a .env / key / creds
-// file pointed at via --file would otherwise leak. Ported from compress.py.
-const SENSITIVE_BASENAME_RE =
-  /^(\.env(\..+)?|\.netrc|credentials(\..+)?|secrets?(\..+)?|passwords?(\..+)?|id_(rsa|dsa|ecdsa|ed25519)(\.pub)?|authorized_keys|known_hosts|.*\.(pem|key|p12|pfx|crt|cer|jks|keystore|asc|gpg))$/i;
-const SENSITIVE_PATH_COMPONENTS = new Set([".ssh", ".aws", ".gnupg", ".kube", ".docker"]);
-const SENSITIVE_NAME_TOKENS = [
-  "secret",
-  "credential",
-  "password",
-  "passwd",
-  "apikey",
-  "accesskey",
-  "token",
-  "privatekey",
-];
-/** @param {string} p @returns {boolean} */
-function isSensitivePath(p) {
-  const name = basename(p);
-  if (SENSITIVE_BASENAME_RE.test(name)) return true;
-  const parts = p.split(/[/\\]/).map((s) => s.toLowerCase());
-  if (parts.some((x) => SENSITIVE_PATH_COMPONENTS.has(x))) return true;
-  const lower = name.toLowerCase().replace(/[_\-\s.]/g, "");
-  return SENSITIVE_NAME_TOKENS.some((t) => lower.includes(t));
 }
 
 // ---------- preservation gate (port of validate.py) ----------
@@ -253,123 +207,10 @@ function validate(orig, comp) {
   return { valid: errors.length === 0, errors, warnings };
 }
 
-// ---------- file discovery ----------
-
-/** @param {string} dir @returns {string[]} */
-function listMd(dir) {
-  if (!existsSync(dir)) return [];
-  return readdirSync(dir, { withFileTypes: true })
-    .filter((d) => d.isFile() && d.name.endsWith(".md"))
-    .map((d) => join(dir, d.name))
-    .sort();
-}
-
-/** @param {string} dir @returns {string[]} */
-function listMdRecursive(dir) {
-  if (!existsSync(dir)) return [];
-  const out = [];
-  for (const d of readdirSync(dir, { withFileTypes: true })) {
-    const p = join(dir, d.name);
-    if (d.isDirectory()) out.push(...listMdRecursive(p));
-    else if (d.name.endsWith(".md")) out.push(p);
-  }
-  return out.sort();
-}
-
-/** @param {string[]} args @param {string} name @returns {string | null} */
-function flag(args, name) {
-  const i = args.indexOf(name);
-  return i >= 0 && i + 1 < args.length ? args[i + 1] : null;
-}
-
-/** @param {string} msg @returns {never} */
-function fail(msg) {
-  process.stderr.write(`${msg}\n`);
-  process.exit(1);
-}
-
-/** @param {number} n @returns {string} */
-function humanSize(n) {
-  if (n < 1024) return `${n}b`;
-  return `${(n / 1024).toFixed(1)}KB`;
-}
-
-// ---------- enumerate ----------
-
-/** @param {string[]} args */
-function cmdEnumerate(args) {
-  const root = flag(args, "--root") || process.cwd();
-  const claude = join(root, ".claude");
-  const fileArg = flag(args, "--file");
-  const type = flag(args, "--type");
-  const name = flag(args, "--name");
-  const all = args.includes("--all");
-
-  let files = [];
-
-  if (fileArg) {
-    const p = isAbsolute(fileArg) ? fileArg : resolve(root, fileArg);
-    if (!existsSync(p)) fail(`File not found: ${p}`);
-    files = [p];
-  } else if (all) {
-    files = [
-      ...listMd(join(claude, "agents")),
-      ...listMd(join(claude, "commands")),
-      ...listMd(join(claude, "rules")),
-    ];
-  } else if (type === "agents" || type === "commands" || type === "rules") {
-    files = listMd(join(claude, type));
-  } else if (type === "skills") {
-    // Skills: ONE skill per run. --name is the skill directory under .claude/skills.
-    if (!name) fail("--type skills requires --name <skill-dir> (one skill at a time)");
-    const skillDir = join(claude, "skills", name);
-    if (!existsSync(skillDir)) fail(`Skill not found: ${skillDir}`);
-    files = listMdRecursive(skillDir);
-  } else {
-    fail(
-      "enumerate: pass --all | --type <agents|commands|rules|skills> [--name X] | --file <path>",
-    );
-  }
-
-  // Never feed our own backup sidecars back in.
-  files = files.filter((f) => !f.endsWith(".condensed.tmp"));
-
-  // Guardrails (compress.py): refuse sensitive / empty / oversized files.
-  // Excluded here so they are never sent to a subagent — note each on stderr
-  // (not stdout) so the path list the skill consumes stays clean.
-  const rows = [];
-  const skipped = [];
-  for (const f of files) {
-    if (isSensitivePath(f)) {
-      skipped.push([f, "sensitive (secret/PII heuristic)"]);
-      continue;
-    }
-    const size = statSync(f).size;
-    if (size === 0) {
-      skipped.push([f, "empty"]);
-      continue;
-    }
-    if (size > MAX_FILE_SIZE) {
-      skipped.push([f, `too large (${size}b > ${MAX_FILE_SIZE}b)`]);
-      continue;
-    }
-    rows.push({ path: f, size });
-  }
-
-  // Largest first — biggest prompts have the most to gain from condensing.
-  rows.sort((a, b) => b.size - a.size);
-
-  for (const [f, why] of skipped) process.stderr.write(`SKIP ${f} — ${why}\n`);
-
-  // Output: "<bytes>\t<human>\t<path>" per line, already sorted desc.
-  const out = rows.map((r) => `${r.size}\t${humanSize(r.size)}\t${r.path}`).join("\n");
-  process.stdout.write(out + (rows.length ? "\n" : ""));
-}
-
 // ---------- commit ----------
 
 /** @param {string[]} args */
-function cmdCommit(args) {
+export function cmdCommit(args) {
   const files = args.filter((a) => !a.startsWith("--"));
   if (!files.length) fail("commit: pass one or more original file paths");
 
@@ -443,83 +284,3 @@ function cmdCommit(args) {
   // Machine summary (last line, JSON) for the skill to parse if needed.
   process.stdout.write("\nJSON " + JSON.stringify(report) + "\n");
 }
-
-// ---------- frontmatter validate+fix ----------
-
-/** @param {string[]} args */
-async function cmdFrontmatter(args) {
-  const files = args.filter((a) => !a.startsWith("--"));
-  if (!files.length) fail("frontmatter: pass one or more file paths");
-
-  // Import the aia-harness frontmatter validator. Relative path:
-  // skills/condense-harness-prompts/lib/ → 3 levels up → plugin root → lib/validate/.
-  // Works both in development and at installed plugin path (~/.claude/plugins/aia-harness/).
-  const pluginRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
-  const { validateFrontmatter, detectAssetType } = await import(
-    join(pluginRoot, "lib/validate/frontmatter.mjs")
-  );
-
-  const report = [];
-  for (const f of files) {
-    if (!existsSync(f)) {
-      report.push({ file: f, status: "MISSING" });
-      continue;
-    }
-
-    const type = detectAssetType(f);
-    if (!type) {
-      report.push({ file: f, status: "SKIP", reason: "unrecognized artifact type" });
-      continue;
-    }
-
-    const content = readFileSync(f, "utf8");
-    const { valid, errors, warnings, normalized } = validateFrontmatter(content, type);
-
-    if (!valid) {
-      writeFileSync(f, normalized);
-      report.push({ file: f, status: "FIXED", type, errors, warnings });
-    } else if (warnings.length) {
-      report.push({ file: f, status: "OK_WARNINGS", type, errors: [], warnings });
-    } else {
-      report.push({ file: f, status: "OK", type, errors: [], warnings: [] });
-    }
-  }
-
-  // Human report
-  const line = "─".repeat(60);
-  process.stdout.write(`\n${line}\n  frontmatter validation + fix report\n${line}\n`);
-  let fixed = 0;
-  for (const r of report) {
-    if (r.status === "FIXED") {
-      fixed++;
-      process.stdout.write(`🔧 [${r.type}] ${r.file}\n   FIXED: ${r.errors.join("; ")}\n`);
-      if (r.warnings.length) process.stdout.write(`   warn: ${r.warnings.join("; ")}\n`);
-    } else if (r.status === "OK_WARNINGS") {
-      process.stdout.write(`⚠️  [${r.type}] ${r.file}\n   warn: ${r.warnings.join("; ")}\n`);
-    } else if (r.status === "OK") {
-      process.stdout.write(`✅ [${r.type}] ${r.file}\n`);
-    } else {
-      process.stdout.write(`➖ ${r.file}  (${r.status}${r.reason ? ": " + r.reason : ""})\n`);
-    }
-  }
-  const ok = report.filter((r) => r.status === "OK").length;
-  const warnCount = report.filter((r) => r.status === "OK_WARNINGS").length;
-  process.stdout.write(
-    `${line}\n  ${fixed} fixed · ${ok} ok · ${warnCount} with warnings\n${line}\n`,
-  );
-
-  // Machine summary (last line, JSON) for the command to parse if needed.
-  process.stdout.write("\nJSON " + JSON.stringify(report) + "\n");
-}
-
-// ---------- main ----------
-
-const [, , cmd, ...rest] = process.argv;
-if (cmd === "enumerate") cmdEnumerate(rest);
-else if (cmd === "commit") cmdCommit(rest);
-else if (cmd === "frontmatter")
-  cmdFrontmatter(rest).catch((e) => {
-    process.stderr.write(`${e.message}\n`);
-    process.exit(1);
-  });
-else fail("usage: condense.mjs <enumerate|commit|frontmatter> [...args]");

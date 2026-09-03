@@ -1,15 +1,17 @@
 ---
-description: Audit agent frontmatter descriptions in .claude/agents and sync them with CLAUDE.md routing mentions on an existing target project.
+description: Audit an existing harness end to end — every cross-reference between skills, agents, rules, commands, scripts and CLAUDE.md files, plus whether each artifact still fits the project's real stack — then fix what you approve.
 argument-hint: "[path]"
 allowed-tools:
   - Bash
-  - Read
-  - Edit
   - AskUserQuestion
   - Skill
+  - Agent
+  - TodoWrite
+  - Read
+  - Edit
 ---
 
-# Revise agent routing on an existing project
+# Check consistency of an existing harness
 
 Target directory: `$1` if provided, else `$CLAUDE_PROJECT_DIR`.
 
@@ -44,10 +46,11 @@ This check never blocks: it exits 0 even when it cannot reach the registry, and 
 means the answer is unavailable, not that something is wrong.
 <!-- /aia-harness:version-check -->
 
-Invoke the `revise-agent-routing-workflow` skill with that resolved path: use the `Skill` tool
-with `skill: "aia-harness:revise-agent-routing-workflow"` and `args: <resolved path>`.
+Invoke the `check-consistency-workflow` skill with that resolved path: use the `Skill` tool
+with `skill: "aia-harness:check-consistency-workflow"` and `args: <resolved path>`.
 
-Do **not** re-implement the audit here — the skill owns the full Phase 1-4 workflow (audit
-agent frontmatter, map CLAUDE.md coverage, apply fixes with consent, report). This command
-exists only to guarantee the target-dir-resolution boilerplate above runs identically to
-`/aia-harness:doctor` and `/aia-harness:patch` before handing off.
+Do **not** re-implement the audit here — the skill owns the full Phase 1-7 workflow
+(deterministic inventory, parallel auditor wave, consolidation, approval, fix waves,
+re-verification, report). This command exists only to guarantee the target-dir-resolution
+boilerplate above runs identically to `/aia-harness:doctor` and `/aia-harness:patch`
+before handing off.
