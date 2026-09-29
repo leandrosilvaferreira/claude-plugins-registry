@@ -51,6 +51,23 @@ with `skill: "aia-harness:check-consistency-workflow"` and `args: <resolved path
 
 Do **not** re-implement the audit here — the skill owns the full Phase 1-7 workflow
 (deterministic inventory, parallel auditor wave, consolidation, approval, fix waves,
-re-verification, report). This command exists only to guarantee the target-dir-resolution
+re-verification, report). This command exists to guarantee the target-dir-resolution
 boilerplate above runs identically to `/aia-harness:doctor` and `/aia-harness:patch`
-before handing off.
+before handing off, and to offer the prompt audit once the skill has reported.
+
+## Last step — offer the prompt audit
+
+<!-- aia-harness:offer-audit-prompts -->
+When the report above is done, offer the sibling command `/aia-harness:audit-prompts` once. Skip this step unless the command produced its report.
+
+Ask with one `AskUserQuestion` (header `Prompt audit`):
+
+> Run `/aia-harness:audit-prompts` now? It reviews this project's CLAUDE.md files, rules, skills, agents and commands for prompt text written for older Claude models — shouting emphasis, step-by-step scripts, stale examples, instructions that contradict each other — and proposes a diff fitted to the models the project pins. Nothing is written until you approve.
+
+Options:
+
+- **Yes, run it now (Recommended)** — best after moving to newer Claude models and after each new model release, because current models follow instructions more literally and leftover text tuned for older ones steers them wrong. It runs one subagent over every prompt file and can take ten minutes or more, using real tokens.
+- **Not now** — skip it; run `/aia-harness:audit-prompts` later, ideally after each new Claude model release.
+
+On "Yes", call the `Skill` tool with `skill: "aia-harness:audit-prompts"` and `args:` the resolved target directory wrapped in literal double-quote characters (a path with spaces then stays one argument; the quotes are not part of the path), then stop — that command owns the rest. It repeats the plugin version check; if that reports a stale plugin, continue on the current version without asking again. On "Not now", end.
+<!-- /aia-harness:offer-audit-prompts -->

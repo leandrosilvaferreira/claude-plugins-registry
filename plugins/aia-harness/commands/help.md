@@ -50,6 +50,7 @@ means the answer is unavailable, not that something is wrong.
 | Generate or refresh **rich intermediate CLAUDE.md** files for strategic subdirectories | `/aia-harness:revise-claude-md` |
 | **Sync agent routing** — audit `.claude/agents` frontmatter descriptions and fix stale/missing CLAUDE.md mentions | `/aia-harness:revise-agent-routing` |
 | **Check consistency** — every skill/agent/rule/script/CLAUDE.md cross-reference resolves, and each artifact still fits the real stack | `/aia-harness:check-consistency` |
+| **Adapt prompts to newer Claude models** — find instructions written for older models (shouting emphasis, step-by-step scripts, stale examples) and review a proposed diff | `/aia-harness:audit-prompts` |
 | See this help | `/aia-harness:help` |
 
 **Project state → recommended command:**
@@ -224,6 +225,24 @@ content rewrite alike, is shown as a diff before anything is written, then appli
 dispatched subagent after approval. One named exception: the routing-sync sub-step (agent
 descriptions vs. the CLAUDE.md table) edits in this skill's own thread, under its own
 per-finding approval gate, not a dispatched subagent.
+**Parameters:** `path` (optional).
+
+### `/aia-harness:audit-prompts [path]`
+
+**What it does:** runs the `prompt-audit` subcommand of Claude Code's bundled `claude-api`
+skill in a subagent, against the models the project pins in `.claude/settings.json`. It scans
+`CLAUDE.md` files, rules, skills, agents and commands for text written for older Claude
+models — shouting emphasis, step-by-step scripts, scaffolds that an API feature has replaced,
+stale examples, instruction files that contradict each other — and returns a report plus a
+diff. It reads every prompt file, so it can take ten minutes or more and uses real tokens. Vendored
+ECC and ag-kit copies and the graphify skill are skipped. Needs the `claude-api` skill of a
+recent Claude Code; stops cleanly when it is absent.
+**When to use:** after moving a project to newer Claude models, after each new model release,
+or on a harness inherited from an older setup. `/aia-harness:check-consistency`,
+`/aia-harness:condense-harness-prompts` and `/aia-harness:revise-agent-routing` also offer it
+as their last step.
+**Writes files?** Only the hunks you approve, via `Edit` — the report and the diff come first,
+and nothing is written until you approve.
 **Parameters:** `path` (optional).
 
 ---
