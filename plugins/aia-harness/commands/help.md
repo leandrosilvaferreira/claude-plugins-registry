@@ -156,7 +156,7 @@ project-level (vendored into `.claude/`). **graphify** is project-level via CLI.
 Vendoring + wiring of rtk/worktrees is automatic; plugin/binary/package installs
 (caveman, ponytail, rtk, graphify) run only after **one confirmation**.
 **When to use:** you want to reduce token consumption or have a code graph.
-**Writes files?** Yes — only the rtk hook in `.claude/hooks/` and claude-code-worktrees in `.claude/skills/`, wiring in `settings.json`, `.graphifyignore`. Caveman and ponytail install as user-level plugins — do **not** write to `.claude/`.
+**Writes files?** Yes — only the rtk and graphify-orient hooks (+ shared `hook-io.mjs`) in `.claude/hooks/`, the claude-code-worktrees and graphify skills in `.claude/skills/`, wiring in `settings.json`, `.graphifyignore`, graphify's `post-commit`/`post-checkout` git hooks, a graphify section in `CLAUDE.md` and `.claude/CLAUDE.md`, and the `# aia-harness` block in `.gitignore`. Caveman and ponytail install as user-level plugins — do **not** write to `.claude/`.
 **Parameters:** `path` (optional). Scope: `--no-tools`.
 
 ### `/aia-harness:add-obsidian [path]`

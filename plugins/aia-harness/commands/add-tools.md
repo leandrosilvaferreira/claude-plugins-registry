@@ -5,6 +5,7 @@ allowed-tools:
   - Bash
   - Read
   - Edit
+  - Write
   - AskUserQuestion
 ---
 
@@ -46,39 +47,97 @@ means the answer is unavailable, not that something is wrong.
 
 ## 1. Vendor + wire (automatic, offline)
 
-Apply the guarded rtk hook and the claude-code-worktrees skill directly
-into the repo via the engine:
+Apply the guarded rtk hook, the graphify wiring and the claude-code-worktrees skill directly
+into the repo via the engine. The apply is **scoped with `--only=`** to the artifacts those
+tools install: left unscoped, the engine applies every default-selected artifact of the whole
+harness plan — every hook, rule, agent and `CLAUDE.md` file, plus the entire `settings.json` —
+none of which this command was asked to touch. To narrow which tools are wired, add
+`--tools=a,b` (or `--no-tools`) to the `plan` and the `apply` below alike.
+
+**First decide whether `settings` is merged at all.** It is the one scoped artifact that is not
+a tool's own file: the merge adds **every** generated default the existing file lacks, not just
+the tools' hook entries. `Read` `.claude/settings.json` in the target and look for
+`large-file-warning.mjs`:
+
+- Wired under **`Stop`** → mode `block`; under **`PostToolUse`** → `advisory`. Preserve whichever
+  you find and pass it below as `--large-files=<mode>`. `renderSettings` wires the guard under
+  `Stop` **or** `PostToolUse` depending on the mode, and `mergeSettingsJson` only ever adds what
+  is missing — so the mode the target does not use would leave the guard wired under both
+  events, firing it twice on every session.
+- Wired nowhere, or the file is absent → there are no scaffolded harness settings to merge into
+  (the guard is mandatory in a scaffolded one). Merging the generated defaults would wire every
+  harness hook (`guard-main-branch.mjs`, `secret-scan.mjs`, `verify-on-stop.mjs`, …) — scripts
+  this command does not install, so a project without them gets a "cannot find module" error on
+  every future session. Leave `settings` out of `--only` and wire the tools' own entries by hand
+  (below). Setting the guard up is `/aia-harness:init`'s and `/aia-harness:doctor`'s job, not
+  this command's.
+
+**Run the plan** with the flags the apply will carry (`--large-files=<mode>` when a mode was
+preserved) and keep the JSON — it is the `plan … --json` the conflict adjudication below needs:
 
 ```bash
-node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" --yes --json
+node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" plan "${1:-$CLAUDE_PROJECT_DIR}" --large-files=<mode> --json
+```
+
+**Check what else `settings` will add** (skip this when `settings` is left out). A dry run does
+not show which keys the merge adds — it prints only `would update: .claude/settings.json` — so
+compare the plan's `settings` artifact `content` (a JSON string) with the existing
+`.claude/settings.json`: whatever it has and the file lacks is what the merge adds. The tools' own
+entries are the expected part: the `rtk-hook.mjs` hook under `hooks.PreToolUse` (matcher `Bash`)
+and, with graphify, the `graphify-orient.mjs` group (matcher `Bash|Read|Glob`). If the merge would
+add anything else — an `env` key, a `permissions` entry, another hook — look at each extra hook
+first: the plan artifact whose `relPath` is its script (`.claude/hooks/<script>`) carries
+`exists`, and `false` means the script is not on disk. This apply installs no script beyond the
+tools' own, so merging such an entry wires a hook that fails with `MODULE_NOT_FOUND` on every
+prompt or tool call. If any extra hook's script is missing, do not offer the merge: leave
+`settings` out of `--only`, wire the tools' own entries by hand (below) and tell the user to run
+`/aia-harness:doctor` (or `/aia-harness:patch`) to install the missing hooks. Otherwise name the
+extras in one `AskUserQuestion`, calling out `env.ANTHROPIC_DEFAULT_OPUS_MODEL` and
+`env.ANTHROPIC_DEFAULT_SONNET_MODEL` when present: they pin `opus`/`sonnet` to first-party model
+ids, which fail with an unknown-model error on Bedrock, Vertex, Foundry and LLM gateways that need
+their own — a machine on one overrides them with `env` in `.claude/settings.local.json`, which
+takes precedence over `.claude/settings.json`. If the user declines the extras, leave `settings`
+out of `--only`. With nothing else to add, do not ask — this step stays automatic.
+
+Then apply:
+
+```bash
+node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" --yes \
+  --only=hook:rtk-hook.mjs,hook:hook-io.mjs,tool-skill:claude-code-worktrees:claude-code-worktrees,tool-skill:graphify,graphifyignore,graphify-orient-hook,graphify-git-hook:post-commit,graphify-git-hook:post-checkout,claude-md:graphify-skill,claude-md:graphify-root,settings \
+  --large-files=<mode> --json
 ```
 
 This wires the guarded rtk `PreToolUse` hook into `.claude/settings.json`, copies
 the claude-code-worktrees skill into `.claude/skills/`, and writes `.graphifyignore`.
 Caveman and ponytail are global Claude Code plugins installed in Step 3 — not vendored locally.
-To scope which tools: `--no-tools`.
+The other ids are graphify's pieces (skill, orientation hook, git hooks, `CLAUDE.md` sections —
+see the note in Step 3) and `hook-io.mjs`, which the orientation hook imports; an id with nothing
+to install (graphify not selected, a git hook outside a git repo) matches nothing and is skipped.
+Without `settings` in `--only`, drop `--large-files=<mode>` too — it has nothing left to configure.
 
-**Read the JSON — this call is not restricted to the tool artifacts.** It carries no
-`--only`, so it applies the whole default plan, and merging is the default: any artifact
-that already exists and differs is **not** written. It is staged at
-`.claude/.aia-harness-pending/<artifact-id-slug>/<relPath>` and returned in `conflicts[]`.
-On any project that has been through `/aia-harness:init` this is the normal case, not an
-edge one — re-detection alone regenerates some content, so entries appear here even when
-the user has changed nothing.
+**Wire the tools' own entries by hand** — only when `settings` was left out of `--only`. `Edit`
+just those entries (named above) into `.claude/settings.json`, copied verbatim from the plan's
+`settings` `content` and keeping the `${CLAUDE_PROJECT_DIR}` placeholder with its braces. Put each
+into the matching matcher group when the file already has one, and leave everything else in it as
+it is. Skip any entry whose script `.claude/settings.json` already references: the merge
+deduplicates but `Edit` does not, and a re-run of this command (Windows users re-run it after
+installing rtk) would wire it twice. When the file does not exist, `Write` a new one holding only
+those entries;
+`/aia-harness:init` merges the rest in later, additively. Say in one line that nothing else in
+`settings.json` was touched.
+
+**Read the JSON.** Merging is the default: any artifact that already exists and differs is
+**not** written. It is staged at `.claude/.aia-harness-pending/<artifact-id-slug>/<relPath>`
+and returned in `conflicts[]`. With this scope that means a tool file the project already has
+and that differs from what this plugin version generates — a `.git/hooks/post-commit` of the
+user's own, a hand-edited `.graphifyignore`, a vendored hook or skill from an older release.
 
 Adjudicate every `conflicts[]` entry with **`patch.md` section 7 ("Adjudicate each
 conflict")** — `Read` `${CLAUDE_PLUGIN_ROOT}/commands/patch.md` and follow that section as
-written rather than improvising a diff review here. Two of its three preconditions are
-satisfied by this call and the target path resolved above; the third is a `plan … --json`,
-which this command does not otherwise run, so run one first whenever `conflicts[]` is
-non-empty:
-
-```bash
-node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" plan "${1:-$CLAUDE_PROJECT_DIR}" --json
-```
-
-Remove the staging directory as that command's step 8 describes once every conflict has an
-answer — nothing else in this command cleans it up.
+written rather than improvising a diff review here. Its three preconditions are already
+satisfied: this apply, the `plan … --json` above, and the target path resolved at the top of
+this command. Remove the staging directory as that command's step 8 describes once every
+conflict has an answer — nothing else in this command cleans it up.
 
 ## 2. Check system dependencies
 

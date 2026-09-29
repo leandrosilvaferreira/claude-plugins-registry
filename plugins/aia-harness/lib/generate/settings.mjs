@@ -249,6 +249,12 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
       CLAUDE_CODE_EFFORT_LEVEL: "max",
       CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING: "1",
       CAVEMAN_DEFAULT_MODE: "ultra",
+      // Pin what the `opus`/`sonnet` aliases resolve to: `opusplan` runs the
+      // opus pin in Plan Mode and the sonnet pin otherwise. First-party ids:
+      // Bedrock, Vertex, Foundry or a gateway may need their own — override
+      // per machine via `env` in `.claude/settings.local.json`.
+      ANTHROPIC_DEFAULT_OPUS_MODEL: "claude-opus-5-5",
+      ANTHROPIC_DEFAULT_SONNET_MODEL: "claude-sonnet-5-5",
       // Works around a documented, unfixed Claude Code CLI bug: the Bash
       // tool's cwd persists across tool calls within a session, and once an
       // earlier call `cd`s elsewhere, `$CLAUDE_PROJECT_DIR` resolves wrong

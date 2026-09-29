@@ -304,6 +304,22 @@ and refactor now** (new project, start clean), or **suggest and confirm only** (
 project, no auto-block)?"* → `block` / `advisory`. The hook is mandatory; this only
 picks its mode.
 
+**Then check what else `settings` will add.** This call merges the whole generated
+`settings` artifact, so every default `.claude/settings.json` lacks — an `env` key, a
+`permissions` entry, a hook — is added along with the obsidian wiring. A dry run does not
+show which (it prints only `would update: .claude/settings.json`), so run the `plan` above
+again with `--large-files=<mode>` added and compare the `settings` artifact's `content` (a
+JSON string) with the existing file. The four obsidian hook entries (`vault-orient`,
+`vault-guard`, `compile`, `session-log`) are the expected part; if it holds anything else,
+name it in one `AskUserQuestion`, calling out `env.ANTHROPIC_DEFAULT_OPUS_MODEL` and
+`env.ANTHROPIC_DEFAULT_SONNET_MODEL` when present: they pin `opus`/`sonnet` to first-party
+model ids, which fail with an unknown-model error on Bedrock, Vertex, Foundry and LLM
+gateways that need their own — a machine on one overrides them with `env` in
+`.claude/settings.local.json`, which takes precedence over `.claude/settings.json`. If the
+user declines the extras, drop `settings` from the call below (`--only=obsidian:claude-md`)
+and `Edit` just those four hook entries into `.claude/settings.json`, copied from that
+`content`.
+
 ```bash
 node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "$TARGET" --yes --tools=obsidian-mcp --only=obsidian:claude-md,settings --large-files=<mode> --merge --json
 ```

@@ -174,6 +174,36 @@ instead. The `settings` *category* can still appear, via `.claude/settings.local
 (id `settings-local`), which carries no strategy of its own — offering it is safe for the
 same reason, since it is a different artifact from the one that holds the guard wiring.
 
+**`settings` pre-flight.** Each step-3 check that re-applies `settings` (large-file guard,
+graphify orientation hook, Bash cd-carryover) gets consent for ONE fix, but the merge adds
+**every** generated default the existing file lacks — an `env` key, a `permissions` entry, a
+hook — not just that one. A dry run does not show which (it prints only
+`would update: .claude/settings.json`), so first run `plan --json` with the same flags as the
+apply (notably `--large-files=<mode>`) and compare the `settings` artifact's `content` (a JSON
+string) with the existing `.claude/settings.json`: whatever it has and the file lacks is what
+the merge adds. If that is more than the fix, name the rest in the same `AskUserQuestion`,
+calling out `env.ANTHROPIC_DEFAULT_OPUS_MODEL` and `env.ANTHROPIC_DEFAULT_SONNET_MODEL` when
+present: they pin `opus`/`sonnet` to first-party model ids, which fail with an unknown-model
+error on Bedrock, Vertex, Foundry and LLM gateways that need their own — a machine on one
+overrides them with `env` in `.claude/settings.local.json`, which takes precedence over
+`.claude/settings.json`. If the user declines the extras, skip the merge and `Edit` only the
+fix's own entry into `.claude/settings.json` (copy it from that `content`), as **Hook
+placeholder hygiene** does. **Record the declined keys for the rest of this audit:** a later
+check that re-applies `settings` does not re-ask about them — once its own fix is approved it
+takes that same `Edit` path (a merge would re-add them) — and names only an extra not already
+declined.
+
+**A hook entry goes in only with its script.** The merge and an `Edit` both wire an entry and
+install nothing, so an entry whose script is not on disk fails with `MODULE_NOT_FOUND` on every
+prompt or tool call. For each hook entry about to be wired — the fix's own, or an extra the user
+accepted — the plan artifact whose `relPath` is its script (`.claude/hooks/<script>`) carries
+`exists`. Where it is `false`, add that artifact's `id` (`hook:<script>`; `graphify-orient-hook`
+for `graphify-orient.mjs`) to the same `--only`, plus the id of every sibling script it imports
+(`./x.mjs`) or spawns (`worktree-create.mjs` → `worktree-seed.mjs`) — `copyFrom` is its source —
+that is also `exists: false`, such as `hook:hook-io.mjs`, and say in the
+`AskUserQuestion` that accepting installs the script too. On the `Edit` path, install those ids
+with their own `apply --only=<ids>` (no `settings`) instead.
+
 Report the engine's `created` / `updated` / `skipped` / `errors` lists, then work
 through every entry in `conflicts[]` using **`patch.md` section 7 ("Adjudicate each
 conflict")** — `Read` `${CLAUDE_PLUGIN_ROOT}/commands/patch.md` and follow that section
@@ -300,8 +330,10 @@ point them at `/aia-harness:patch` — it runs this same merge-and-adjudicate fl
      **not configured** — surface it and offer to set it up with `AskUserQuestion`:
      ask `block` vs `advisory` — the answer becomes the recorded mode — recommending the scan's `largeFiles.recommended`
      (`block` for a clean repo, `advisory` when there are pre-existing oversized
-     files — `largeFiles.count > 0`). On approval, rewire (merge, settings + the
-     hook file only):
+     files — `largeFiles.count > 0`). Run the **`settings` pre-flight** (step 3a) first, with
+     the recommended mode — the guard's own wiring is the fix, not an extra — and put its
+     extras in that same `AskUserQuestion` call. On approval, rewire (merge; settings, the
+     hook file and any script ids the pre-flight adds, nothing else):
 
      ```bash
      node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
@@ -309,9 +341,15 @@ point them at `/aia-harness:patch` — it runs this same merge-and-adjudicate fl
      ```
 
      `settings.json` merges additively, so this adds the missing wiring for the
-     chosen mode and leaves every permission, env key and other pillar's hook the
-     project already has untouched — which is the whole point here, since this check
+     chosen mode — plus the pre-flight's extras, if the user accepted them — and leaves
+     every permission, env key and other pillar's hook the project already has
+     untouched — which is the whole point here, since this check
      fires precisely when a `settings.json` that predates the guard is otherwise fine.
+     If the extras were declined, `Edit` the wiring in — copied from a plan built with the
+     **chosen** mode, so re-run `plan --json --large-files=<chosen>` first when the pre-flight
+     used the other one (`block` wires `Stop`, `advisory` wires `PostToolUse`) — and run
+     `apply` with `--only=hook:large-file-warning.mjs` (plus any sibling ids the pre-flight names)
+     for the file alone.
      If the hook *file* itself exists and differs it comes back in `conflicts[]`;
      adjudicate it with **`patch.md` section 7** as in step 3a.
 
@@ -419,12 +457,17 @@ point them at `/aia-harness:patch` — it runs this same merge-and-adjudicate fl
      `hooks.PreToolUse` for the marker string `graphify-orient.mjs`. A project init'd
      before this hook existed will have a `settings.json` (so whole-file drift never flags
      it) that is missing the wiring. If the marker is absent, offer to merge it in
-     (non-destructive — the merge adds the hook without touching existing settings):
+     (existing values are never touched, but the merge also adds every other missing
+     default — run the **`settings` pre-flight** (step 3a) first):
 
      ```bash
      node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \
        --yes --only=settings --large-files=<mode>
      ```
+
+     The pre-flight's script ids join this `--only` — above all `graphify-orient-hook`: a project
+     old enough to lack the wiring usually lacks `graphify-orient.mjs` too, and the merge alone
+     would wire it to a missing file.
 
      `--large-files=<mode>` is the mode recorded by the **Large-file guard** check above,
      and it is required here even though this call is only about the graphify hook. This
@@ -446,7 +489,7 @@ point them at `/aia-harness:patch` — it runs this same merge-and-adjudicate fl
      project root after every command instead of letting it persist — any of the project's
      own commands/skills/workflows that rely on a `cd` carrying over between separate Bash
      calls must switch to `cd X && cmd` or `git -C` in one call instead. Offer to merge the
-     key in:
+     key in, after the **`settings` pre-flight** (step 3a) — its script ids, if any, join `--only`:
 
      ```bash
      node "${CLAUDE_PLUGIN_ROOT}/bin/harness.mjs" apply "${1:-$CLAUDE_PROJECT_DIR}" \

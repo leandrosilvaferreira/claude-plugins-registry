@@ -16,6 +16,10 @@ generator made mistakes.
   (Opus for planning, Sonnet for execution). Never report it and never suggest a
   concrete model id (`claude-opus-*`, `claude-sonnet-*`) — that is a regression.
 - `settings.json` `env.CLAUDE_CODE_EFFORT_LEVEL: "max"` is intentional. Leave it.
+- `settings.json` `env.ANTHROPIC_DEFAULT_OPUS_MODEL` / `env.ANTHROPIC_DEFAULT_SONNET_MODEL`
+  are intentional: they pin the concrete models behind the `opus`/`sonnet` aliases
+  (and so behind `opusplan`). They are the one sanctioned place for a concrete
+  model id — the alias rule above is about `model`, not these. Leave them.
 - `settings.json` `permissions.defaultMode: "bypassPermissions"` and
   `skipDangerousModePermissionPrompt: true` are deliberate — they let agentic
   loops run unattended without stalling on prompts. Never flag either as unsafe.

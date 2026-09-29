@@ -124,6 +124,20 @@ Example prompt text for each group: "Which categories do you want to merge in? (
 For each selected category, collect all artifact IDs whose prefix matches, then join them into a
 single comma-separated string for `--only`.
 
+**A hook entry goes in only with its script.** When `settings` is selected, the merge adds every
+generated default the file lacks and installs no script, so a hook entry whose script is not on
+disk fails with `MODULE_NOT_FOUND` on every prompt or tool call. Compare the plan's `settings`
+`content` (a JSON string) with the existing `.claude/settings.json` (all of it is new when the file
+is absent). For each hook entry the file lacks, the plan artifact whose `relPath` is its script
+(`.claude/hooks/<script>`) carries `exists`. Where it is `false` and that artifact is not already
+selected, collect its `id` (`hook:<script>`, `graphify-orient-hook`, `obsidian:hook:<name>` — look
+it up by `relPath`), plus the id of every sibling script it imports (`./x.mjs`) or
+spawns (`worktree-create.mjs` → `worktree-seed.mjs`) — read `copyFrom`, or `content` if
+generated — that is also `exists: false`, such as `hook:hook-io.mjs`. If any were
+collected, name those scripts in one `AskUserQuestion` (single-select): **Install them too** — add
+the ids to `--only` — or **Leave `settings` out** — drop the `settings` id (not `settings-local`)
+so nothing is wired without its script.
+
 ## 3. Show what will be patched
 
 Before running, print a summary:
