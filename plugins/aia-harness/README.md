@@ -38,7 +38,7 @@ $ cd my-project && claude
   📋 Proposed plan — 23 artifacts (≈ 1.2k session-tokens)
   ◻ CLAUDE.md (root + 4 domains)   ◻ rules (ddd, security, react, next, typescript)
   ◻ settings.json (least-privilege) ◻ hooks (format · verify · secret-scan · large-file)
-  ◻ skills (run-tests · lint-fix · pre-commit-verify)  ◻ .mcp.json (github · context7)
+  ◻ skills (run-tests · lint-fix · pre-commit-verify)  ◻ .mcp.json (context7)
   ◻ ECC agents (react-reviewer · build-resolver)  …
 
   ? Select what to apply  ›  [ multi-select ]
@@ -349,7 +349,7 @@ Optional pillars you can layer on — each project-scoped, each one command.
 
 ### 🔗 Strategic MCP servers — `/aia-harness:add-mcp`
 
-A curated catalog (github, context7, playwright, postgres, …) merged into `.mcp.json` with `${ENV}` placeholders. Keeps the set small and the secrets out of git.
+A curated catalog (context7, playwright, postgres, …) merged into `.mcp.json` with `${ENV}` placeholders. Keeps the set small and the secrets out of git.
 
 ### 📦 Recommended plugins — `/aia-harness:add-plugins`
 

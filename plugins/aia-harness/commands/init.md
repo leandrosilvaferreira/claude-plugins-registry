@@ -110,11 +110,12 @@ a harness scaffolds fine without GitHub access:
    marked `selected`; leave `opt-in` items (e.g. `.lsp.json`, the market install
    script) unchecked. Mention the ECC attribution (MIT, Affaan Mustafa).
 
-   The **`.mcp.json` group proposes `context7` + `github`** (github only when the
-   repo is git). On confirmation, apply writes them to
+   The **`.mcp.json` group proposes `context7`** (plus `playwright` when
+   Playwright/Cypress is detected) — key-free, nothing to fill in.
+   On confirmation, apply writes it to
    the target's project-root `.mcp.json` using `${ENV}` placeholders only, and adds
-   the matching env keys (e.g. `GITHUB_PERSONAL_ACCESS_TOKEN`) to
-   `.claude/settings.local.json` for the user to fill. These are suggested
+   env keys to `.claude/settings.local.json` for the user to fill only when a
+   selected server requires one (e.g. `SUPABASE_ACCESS_TOKEN`). This is suggested
    per-target — aia-harness never ships a plugin-level `.mcp.json`.
 
    **Also ask one dedicated single-select question: "Stop verification".** Phrase
@@ -272,7 +273,7 @@ a harness scaffolds fine without GitHub access:
 
    a. **Plugins.** If `scripts/install-plugins.mjs` was written, use `AskUserQuestion`
       to ask whether to install the N suggested plugins now (per-stack LSP,
-      code-review, hookify, context7, github, …). On approval, run it (idempotent,
+      code-review, hookify, context7, …). On approval, run it (idempotent,
       user-level):
 
       ```bash
@@ -297,9 +298,11 @@ a harness scaffolds fine without GitHub access:
       This is the same set `/aia-harness:add-tools` step 3 installs — defer there for
       anything more.
 
-   c. **MCP secrets.** The `.mcp.json` servers are written but inert until their env
-      keys are filled in `.claude/settings.local.json` (gitignored). List exactly
-      which keys to fill (e.g. `GITHUB_PERSONAL_ACCESS_TOKEN`).
+   c. **MCP secrets.** Env values are only needed when a selected server requires
+      one (e.g. `SUPABASE_ACCESS_TOKEN`): that server is written to `.mcp.json` but
+      inert until its key is filled in `.claude/settings.local.json` (gitignored).
+      List exactly which keys to fill — there may be none, since the default
+      `context7` server is key-free.
 
    d. **Restart.** Remind the user to **restart Claude Code** so new hooks, plugins,
       and MCP servers load.

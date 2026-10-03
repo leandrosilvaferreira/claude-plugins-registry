@@ -243,7 +243,7 @@ export function resolveDepsFromProfile(profile, installedTools = []) {
   }
 
   // A GitHub remote implies `gh` even when no tool asked for it — the PM
-  // pillar, the github MCP server and the scope guard all route through it.
+  // pillar and the scope guard all route through it.
   // Two deliberate choices here:
   //   • Appended AFTER the loop, because add() is first-wins: an explicit
   //     --tools=gh (TOOL_DEPS.gh, level "required", as /add-tools passes)

@@ -1,5 +1,5 @@
 ---
-description: Install the suggested Claude Code plugins for this stack (code-review, hookify, feature-dev, frontend-design, context7, github, claude-code-setup + per-language LSP). One confirmation, then auto-installs.
+description: Install the suggested Claude Code plugins for this stack (code-review, hookify, feature-dev, frontend-design, context7, claude-code-setup + per-language LSP). One confirmation, then auto-installs.
 argument-hint: "[path]"
 allowed-tools:
   - Bash

@@ -139,13 +139,6 @@ export const PLUGIN_SUGGESTIONS = [
     purpose: "search",
     description: "Up-to-date library/framework docs (plugin form).",
   },
-  {
-    name: "github",
-    marketplace: OFFICIAL,
-    purpose: "workflow",
-    description: "GitHub issues / PRs / releases integration.",
-    when: (p) => p.vcs.isGit,
-  },
   // Quality.
   {
     name: "hookify",

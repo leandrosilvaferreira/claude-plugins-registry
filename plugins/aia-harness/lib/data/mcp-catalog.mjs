@@ -30,37 +30,13 @@
 export const MCP_CATALOG = [
   {
     name: "context7",
-    description: "Up-to-date, version-accurate documentation for libraries and frameworks.",
+    description:
+      "Up-to-date, version-accurate documentation for libraries and frameworks (key-free).",
     docsUrl: "https://github.com/upstash/context7",
-    server: {
-      type: "http",
-      url: "https://mcp.context7.com/mcp",
-      headers: {
-        CONTEXT7_API_KEY: "${CONTEXT7_API_KEY}",
-        Accept: "application/json, text/event-stream",
-      },
-    },
-    envPlaceholders: ["CONTEXT7_API_KEY"],
+    // No API key needed: the endpoint is open and a key only raises rate limits.
+    // The MCP client sends the required Accept header itself.
+    server: { type: "http", url: "https://mcp.context7.com/mcp" },
     recommended: () => true,
-  },
-  {
-    name: "github",
-    description: "Issues, PRs, releases and code review in the dev loop.",
-    docsUrl: "https://github.com/github/github-mcp-server",
-    server: {
-      type: "http",
-      url: "https://api.githubcopilot.com/mcp/",
-      env: { Authorization: "Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}" },
-    },
-    envPlaceholders: ["GITHUB_PERSONAL_ACCESS_TOKEN"],
-    // The value is the keyring OAuth token, never a PAT hand-made in the
-    // GitHub UI: fine-grained PATs lack `Checks: Read` (breaking `gh pr checks`)
-    // and expose no X-OAuth-Scopes header to diagnose with, and a classic PAT
-    // is one more secret to rotate by hand. This server is HTTP-remote and
-    // resolves the header statically, so the env entry itself cannot go away.
-    prereq:
-      "gh CLI, authenticated with the scopes this project needs. Run `gh auth refresh -h github.com -s admin:public_key,gist,project,read:org,repo,workflow`, then `gh auth token` for the value.",
-    recommended: () => false,
   },
   {
     name: "playwright",

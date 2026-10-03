@@ -60,25 +60,9 @@ means the answer is unavailable, not that something is wrong.
    absent). Use `${ENV_VAR}` placeholders for every secret — never a literal
    token. If `.mcp.json` already exists, show a diff and merge, don't clobber.
 
-4. For each required env var, add an empty entry under `env` in
-   `.claude/settings.local.json` (gitignored) and tell the user to fill it.
-   Surface any prereqs reported in the plan's `.mcp.json` rationale.
-
-   For **github**, if selected, give the user these two commands
-   verbatim and tell them to paste the output of the second one as
-   `GITHUB_PERSONAL_ACCESS_TOKEN`:
-
-   ```bash
-   gh auth refresh -h github.com -s admin:public_key,gist,project,read:org,repo,workflow
-   gh auth token
-   ```
-
-   Do **not** tell the user to create a personal access token at
-   github.com/settings/tokens. A fine-grained PAT lacks `Checks: Read`, so
-   `gh pr checks` fails with "Resource not accessible by personal access token",
-   and it exposes no `X-OAuth-Scopes` header to diagnose with. The keyring OAuth
-   token that `gh auth token` prints already carries the right scopes and is
-   rotated by re-running the refresh.
+4. For each required env var (e.g. `SUPABASE_ACCESS_TOKEN`), add an empty entry
+   under `env` in `.claude/settings.local.json` (gitignored) and tell the user to
+   fill it. Surface any prereqs reported in the plan's `.mcp.json` rationale.
 
 5. Remind the user to restart Claude Code so the servers load, and to keep the
    server count small (high-signal servers only).

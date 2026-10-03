@@ -212,7 +212,7 @@ command -v rtk 2>/dev/null || echo "not-in-path"
 
 If `not-in-path`, inform the user that `~/.local/bin` must be added to PATH in their shell profile (`export PATH="$HOME/.local/bin:$PATH"`), then restart Claude Code.
 
-**gh** (GitHub CLI — required for PR review, issue management, and GitHub MCP):
+**gh** (GitHub CLI — required for PR review and issue management):
 
 Detect platform first:
 

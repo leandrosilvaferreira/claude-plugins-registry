@@ -134,14 +134,14 @@ proposed merge) before anything is written.
 `.mcp.json` (creating it if absent), always with `${ENV_VAR}` placeholders —
 never a literal secret. Adds the empty env keys to
 `.claude/settings.local.json` (gitignored) for you to fill.
-**When to use:** you want to give the agent access to external services (github, context7, etc).
+**When to use:** you want to give the agent access to external services (context7, etc).
 **Writes files?** Yes — `.mcp.json` and `settings.local.json`, with merge (no clobber) and diff.
-**Parameters:** `path` (optional). Default github on git repos.
+**Parameters:** `path` (optional). Default context7, plus playwright when Playwright/Cypress is detected.
 
 ### `/aia-harness:add-plugins [path]`
 
 **What it does:** installs the recommended marketplace plugins for the stack
-(code-review, hookify, feature-dev, frontend-design, context7, github,
+(code-review, hookify, feature-dev, frontend-design, context7,
 claude-code-setup + per-language LSP). Generates the idempotent installer
 `scripts/install-plugins.mjs` and, after **one confirmation**, runs it.
 **When to use:** you want the recommended plugins without installing them manually.

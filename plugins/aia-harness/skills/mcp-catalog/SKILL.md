@@ -14,7 +14,6 @@ emits the recommended subset for the current project.
 | Server | When to add | Secrets |
 |--------|-------------|---------|
 | **context7** | Default. Up-to-date library/framework docs. Marginal for dependency-light repos (e.g. tooling-only); high value for React/DB/large-dep projects. | none |
-| **github** | Issues, PRs, releases, review in the dev loop. Opt-in — not installed by default. Prereq: `gh` CLI authenticated with `admin:public_key,gist,project,read:org,repo,workflow` — `gh auth refresh -h github.com -s <scopes>`, then `gh auth token` for the value. Never a PAT made in the web UI. | `GITHUB_PERSONAL_ACCESS_TOKEN` |
 | **playwright** | Project has Playwright/Cypress. Browser e2e. | none |
 | **postgres** | Project uses PostgreSQL. Schema + read queries. | `DATABASE_URL` |
 | **filesystem** | Needs access outside the project dir. | none |
@@ -38,8 +37,8 @@ emits the recommended subset for the current project.
 ```json
 {
   "mcpServers": {
-    "context7": { "type": "stdio", "command": "npx", "args": ["-y", "@upstash/context7-mcp@latest"] },
-    "github": { "type": "http", "url": "https://api.githubcopilot.com/mcp/", "env": { "Authorization": "Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}" } }
+    "context7": { "type": "http", "url": "https://mcp.context7.com/mcp" },
+    "supabase": { "type": "stdio", "command": "npx", "args": ["-y", "@supabase/mcp-server-supabase@latest"], "env": { "SUPABASE_ACCESS_TOKEN": "${SUPABASE_ACCESS_TOKEN}" } }
   }
 }
 ```
