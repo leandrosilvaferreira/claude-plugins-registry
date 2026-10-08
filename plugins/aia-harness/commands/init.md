@@ -263,8 +263,9 @@ a harness scaffolds fine without GitHub access:
 6. **Review.** Launch the `harness-reviewer` agent to audit the written files for
    secrets, fail-open hooks, and over-broad permissions. Apply its fixes — but
    **never change `settings.json` `model` (`opusplan` is intentional: Opus plan /
-   Sonnet exec), `env.CLAUDE_CODE_EFFORT_LEVEL`, nor the
-   `env.ANTHROPIC_DEFAULT_OPUS_MODEL` / `env.ANTHROPIC_DEFAULT_SONNET_MODEL` pins**.
+   Sonnet exec), the `modelSettings` effort caps, nor the
+   `env.ANTHROPIC_DEFAULT_OPUS_MODEL` / `env.ANTHROPIC_DEFAULT_SONNET_MODEL` /
+   `env.ANTHROPIC_DEFAULT_HAIKU_MODEL` pins**.
    If a finding proposes a concrete model id, discard it.
 
 7. **Wrap up + install dependencies — ask, then run; never leave it as a file to

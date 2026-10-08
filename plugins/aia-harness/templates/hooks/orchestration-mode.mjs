@@ -35,14 +35,16 @@ Delegate exploration and implementation to specialist subagents (Agent tool).
 Work inline only when delegating costs more than the work itself: trivial single-file
 edits, one-line answers, and the final synthesis of subagent reports.
 
-Set \`model\` explicitly on every dispatch. A project agent or generic dispatch without one is
-forced to sonnet by a hook, but a plugin-namespaced agent (\`plugin:name\`) is not rewritten and
-would run on this session's model.
-  haiku  — mechanical and bounded: locate code, grep sweeps, read-only surveys,
-           single-file edits with a complete spec.
-  sonnet — default: multi-file work, integration, review, debugging, judgment.
-  opus   — architectural judgment only; never an implementer.
-Choosing haiku deliberately is the saving; omitting \`model\` on a project agent or generic dispatch only falls back to sonnet.
+Set \`model\` explicitly on every dispatch: it wins over the agent's frontmatter \`model\`,
+and the agent's \`effort:\` frontmatter applies either way. A project agent or generic dispatch
+without a model is forced to sonnet by a hook, but a plugin-namespaced agent (\`plugin:name\`)
+is not rewritten and would run on this session's model.
+  haiku  — closed scope, checkable result: locate code, grep sweeps, read-only surveys,
+           docs, config and mechanical edits with a complete spec, even across files.
+  sonnet — judgment inside the code: domain logic, integration, tests, review, debugging.
+  opus   — planning, cross-domain orchestration, final review of a money, security or
+           irreversible change; never an implementer.
+Start with the cheapest tier that fits. Verify every haiku result on disk before you rely on it.
 This session keeps the model the user selected — never downgrade it.
 
 Dispatch independent subagents in parallel: multiple Agent calls in ONE message.

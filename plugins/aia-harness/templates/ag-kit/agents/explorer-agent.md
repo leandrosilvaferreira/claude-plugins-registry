@@ -5,7 +5,8 @@ description: >
   dependencies, and risk areas — to inform planning and integration
   decisions. Use proactively when onboarding to a new codebase or before
   planning a cross-cutting change.
-model: sonnet
+model: haiku
+effort: low
 ---
 <!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/agent/explorer-agent.md. MIT (c) vudovn. -->
 

@@ -6,6 +6,7 @@ description: >
   before a major release or after architectural changes that touch auth,
   data handling, or trust boundaries.
 model: sonnet
+effort: high
 ---
 <!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/agent/security-auditor.md. MIT (c) vudovn. -->
 

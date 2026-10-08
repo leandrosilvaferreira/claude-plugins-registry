@@ -5,6 +5,7 @@ description: >
   failures, module/version conflicts, and staticcheck violations. Use
   proactively when `go build` or `go test` fails.
 model: sonnet
+effort: medium
 ---
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: agents/go-build-resolver.md. MIT (c) Affaan Mustafa. -->
 

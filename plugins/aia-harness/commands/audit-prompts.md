@@ -52,7 +52,7 @@ The audit itself is the `prompt-audit` subcommand of the `claude-api` skill that
 
 ## 1. Find the target models
 
-Use `Grep` on `.claude/settings.json` in the target directory for the three keys `"model"`, `ANTHROPIC_DEFAULT_OPUS_MODEL` and `ANTHROPIC_DEFAULT_SONNET_MODEL`, and read only the matching lines. Never read `.claude/settings.local.json`: it can hold credentials.
+Use `Grep` on `.claude/settings.json` in the target directory for the four keys `"model"`, `ANTHROPIC_DEFAULT_OPUS_MODEL`, `ANTHROPIC_DEFAULT_SONNET_MODEL` and `ANTHROPIC_DEFAULT_HAIKU_MODEL`, and read only the matching lines. Never read `.claude/settings.local.json`: it can hold credentials.
 
 Every value that is a full model id (it starts with `claude-`) is a target model. Tell the user which ids you found; they go into the audit prompt as `<target models>`. When there is no such id, or no `settings.json`, `<target models>` is the sentence "the newest Opus and Sonnet that the Current Models table of the `claude-api` skill you loaded lists as current", and you tell the user the audit will name those models in its report. If a matching line holds more than one setting (a minified file), ignore it as if no id were found.
 

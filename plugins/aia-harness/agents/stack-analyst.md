@@ -7,6 +7,7 @@ tools:
   - Glob
   - Bash
 model: sonnet
+effort: medium
 ---
 
 You analyze a project's technology stack in depth and return findings, never edits.

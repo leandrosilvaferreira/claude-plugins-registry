@@ -6,6 +6,7 @@ description: >
   instantiation errors, and missing includes. Use proactively when the
   CMake or compiler step fails.
 model: sonnet
+effort: medium
 ---
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: agents/cpp-build-resolver.md. MIT (c) Affaan Mustafa. -->
 

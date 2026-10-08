@@ -7,6 +7,7 @@
 
 import { parseFrontmatter, renderFrontmatter } from "../util/frontmatter-yaml.mjs";
 import { applyCanonicalDescription } from "../validate/agent-description.mjs";
+import { applyAgentModel } from "../validate/agent-model.mjs";
 import { ECC_COMMON, allEccAssets } from "../data/ecc-catalog.mjs";
 
 const FRONTMATTER_RE = /^(---\n[\s\S]*?\n---\n)/;
@@ -62,7 +63,8 @@ function provenanceComment(meta) {
  * drop the `tools` frontmatter field entirely (unrestricted tool/MCP access
  * instead of the vendored allowlist — validateFrontmatter treats a missing
  * `tools:` as a warning, not an error; mirrors ag-kit's cleanAgentMarkdown in
- * lib/agkit/transform.mjs), and stamp provenance.
+ * lib/agkit/transform.mjs), stamp the catalogued `model` + `effort` (an agent
+ * with no catalog entry keeps the model it came with), and stamp provenance.
  * @param {string} content
  * @param {{ sourcePath: string, commit: string }} meta
  * @returns {string}
@@ -72,6 +74,7 @@ export function cleanAgentMarkdown(content, meta) {
   let entries = parseFrontmatter(frontmatter).filter((e) => e.key !== "tools");
   const name = entries.find((e) => e.key === "name")?.value ?? "";
   entries = applyCanonicalDescription(entries, name);
+  entries = applyAgentModel(entries, name);
   const fm = renderFrontmatter(entries, { fold: new Set(["description"]) });
   let cleaned = removeSection(body, /^##\s+Prompt Defense/i);
   cleaned = removeSection(cleaned, /^##\s+Related/i);
@@ -169,7 +172,9 @@ export function withEccAgentAvailabilityNote(body) {
 
 /**
  * Clean an ECC `rules/common/**` file for redistribution: drop the dangling
- * "## Agent Support" section (upstream junk — see below), drop table rows
+ * "## Agent Support" section (upstream junk — see below), drop the era-4.x
+ * "## Model Selection Strategy" and "## Extended Thinking + Plan Mode" sections
+ * (they contradict the model-tier rule and the effort model), drop table rows
  * and genericize inline mentions naming an ECC agent this harness never
  * installs, prepend the stack-gated-agent availability note when relevant,
  * and stamp provenance. Scoped to `rules/common/` (installed unconditionally
@@ -187,6 +192,11 @@ export function cleanCommonRulesMarkdown(content, meta) {
   // a fictional agent (tdd-guide) with no other content — nothing legitimate
   // survives dropping the whole section (no-op on every other common/ file).
   cleaned = removeSection(cleaned, /^##\s+Agent Support/i);
+  // performance.md's "## Model Selection Strategy" and "## Extended Thinking + Plan
+  // Mode" are era-4.x guidance that contradicts the model-tier rule and the effort
+  // model, and the file loads in every target session (no-op on every other common/ file).
+  cleaned = removeSection(cleaned, /^##\s+Model Selection Strategy/i);
+  cleaned = removeSection(cleaned, /^##\s+Extended Thinking \+ Plan Mode/i);
   cleaned = dropFictionalAgentRows(cleaned);
   cleaned = genericizeFictionalAgentMentions(cleaned);
   cleaned = cleaned.replace(/\n{3,}/g, "\n\n").trim();

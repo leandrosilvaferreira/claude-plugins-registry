@@ -8,6 +8,7 @@
 import { stackKeys as baseStackKeys } from "./stack-keys.mjs";
 
 /** @typedef {{ agents: string[], skills: string[], commands: string[], scripts: string[] }} AgkitAssetSet */
+/** @typedef {import("../validate/agent-model.mjs").AgentModelProfile} AgentModelProfile */
 
 /** Workflows that survive the name-collision rule (only `status` collides). */
 const AGKIT_COMMANDS = [
@@ -201,6 +202,35 @@ export const AGKIT_AGENT_WHEN_TO_USE = /** @type {Record<string,string>} */ ({
     "Builds cross-platform mobile features in React Native or Flutter — navigation, offline support, platform APIs, and native conventions. Use proactively when implementing mobile-specific features, screens, or fixing platform-specific issues.",
   "game-developer":
     "Implements game mechanics, physics, AI, and rendering for Unity, Godot, Phaser, or Bevy projects. Use proactively when building game systems, scenes, or solving engine-specific performance and behavior problems.",
+});
+
+/**
+ * Model and reasoning effort per ag-kit agent — one key per `templates/ag-kit/agents/*.md`.
+ * Stamped into the frontmatter by `cleanAgentMarkdown` and `scripts/apply-agent-descriptions.mjs`.
+ * Strategy: `.claude/docs/model-strategy.md`.
+ * @type {Readonly<Record<string, AgentModelProfile>>}
+ */
+export const AGKIT_AGENT_MODEL = Object.freeze({
+  "explorer-agent": { model: "haiku", effort: "low" },
+  "code-archaeologist": { model: "haiku", effort: "low" },
+  "documentation-writer": { model: "haiku", effort: "medium" },
+  "seo-specialist": { model: "haiku", effort: "medium" },
+  "frontend-specialist": { model: "sonnet", effort: "medium" },
+  "test-engineer": { model: "sonnet", effort: "medium" },
+  "devops-engineer": { model: "sonnet", effort: "medium" },
+  "performance-optimizer": { model: "sonnet", effort: "medium" },
+  "qa-automation-engineer": { model: "sonnet", effort: "medium" },
+  "game-developer": { model: "sonnet", effort: "medium" },
+  "mobile-developer": { model: "sonnet", effort: "medium" },
+  "backend-specialist": { model: "sonnet", effort: "high" },
+  "database-architect": { model: "sonnet", effort: "high" },
+  debugger: { model: "sonnet", effort: "high" },
+  "security-auditor": { model: "sonnet", effort: "high" },
+  "penetration-tester": { model: "sonnet", effort: "high" },
+  orchestrator: { model: "opus", effort: "high" },
+  "project-planner": { model: "opus", effort: "high" },
+  "product-owner": { model: "opus", effort: "medium" },
+  "product-manager": { model: "opus", effort: "medium" },
 });
 
 /**

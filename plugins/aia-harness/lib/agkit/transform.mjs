@@ -8,6 +8,7 @@
 import { splitFrontmatter } from "../ecc/transform.mjs";
 import { parseFrontmatter, renderFrontmatter } from "../util/frontmatter-yaml.mjs";
 import { applyCanonicalDescription } from "../validate/agent-description.mjs";
+import { applyAgentModel } from "../validate/agent-model.mjs";
 import { allAgkitAssets } from "../data/agkit-catalog.mjs";
 
 export { parseFrontmatter, renderFrontmatter };
@@ -153,7 +154,9 @@ function unquote(v) {
  * Convert an ag-kit agent markdown for Claude Code: drop `skills:` and
  * `tools:` (unrestricted tool/MCP access instead of the vendored allowlist --
  * validateFrontmatter treats a missing `tools:` as a warning, not an error),
- * force `model: sonnet`, stamp provenance.
+ * stamp the catalogued `model` + `effort` (an agent with no catalog entry gets
+ * `model: sonnet` and no `effort`; upstream `model: inherit` never survives),
+ * stamp provenance.
  * @param {string} content
  * @param {{ sourcePath: string, commit: string }} meta
  * @returns {string}
@@ -165,7 +168,8 @@ export function cleanAgentMarkdown(content, meta) {
   );
   const name = entries.find((e) => e.key === "name")?.value ?? "";
   entries = applyCanonicalDescription(entries, name);
-  entries.push({ key: "model", value: "sonnet" });
+  entries = applyAgentModel(entries, name);
+  if (!entries.some((e) => e.key === "model")) entries.push({ key: "model", value: "sonnet" });
   const fm = renderFrontmatter(entries, { fold: new Set(["description"]) });
   let cleanedBody = stripDeadSkillReferences(body.replace(/^\n+/, ""));
   cleanedBody = swapCodeReviewGraphSetup(cleanedBody);

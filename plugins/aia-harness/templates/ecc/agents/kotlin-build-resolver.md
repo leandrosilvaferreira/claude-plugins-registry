@@ -5,6 +5,7 @@ description: >
   Gradle configuration issues, dependency conflicts, detekt and ktlint
   violations. Use proactively when the Kotlin build fails.
 model: sonnet
+effort: medium
 ---
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: agents/kotlin-build-resolver.md. MIT (c) Affaan Mustafa. -->
 

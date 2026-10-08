@@ -6,6 +6,7 @@ description: >
   clippy violations. Use proactively when `cargo build` or `cargo check`
   fails.
 model: sonnet
+effort: medium
 ---
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: agents/rust-build-resolver.md. MIT (c) Affaan Mustafa. -->
 

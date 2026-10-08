@@ -5,7 +5,8 @@ description: >
   logic, and map hidden dependencies. Use proactively before refactoring
   unfamiliar legacy code or when you need to understand why existing
   behavior exists.
-model: sonnet
+model: haiku
+effort: low
 ---
 <!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/agent/code-archaeologist.md. MIT (c) vudovn. -->
 

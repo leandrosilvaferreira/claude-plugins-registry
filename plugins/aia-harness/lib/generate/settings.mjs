@@ -242,19 +242,26 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
     // Terse by default: lead with the result, skip preamble/narration. See
     // https://code.claude.com/docs/en/output-styles
     outputStyle: "Concise",
-    // Default reasoning effort to MAX. `effortLevel` in settings.json only
-    // persists up to "xhigh"; `max` is session-only, so it's set via the env
-    // var Claude Code reads for the same purpose.
+    // Effort is set per agent (`effort:` frontmatter), never session-wide: the
+    // `CLAUDE_CODE_EFFORT_LEVEL` env var would override every agent's and
+    // skill's `effort:`. Each model starts at its Claude Code default
+    // (`medium` on Opus/Sonnet/Haiku 5.5). These caps hold Sonnet and Haiku at
+    // `high` or below; Opus stays uncapped so a critical review can run at
+    // `max`. See https://code.claude.com/docs/en/model-config#adjust-effort-level
+    modelSettings: {
+      "claude-sonnet-5-5": { maxEffortLevel: "high" },
+      "claude-haiku-5-5": { maxEffortLevel: "high" },
+    },
     env: {
-      CLAUDE_CODE_EFFORT_LEVEL: "max",
-      CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING: "1",
       CAVEMAN_DEFAULT_MODE: "ultra",
-      // Pin what the `opus`/`sonnet` aliases resolve to: `opusplan` runs the
-      // opus pin in Plan Mode and the sonnet pin otherwise. First-party ids:
-      // Bedrock, Vertex, Foundry or a gateway may need their own — override
-      // per machine via `env` in `.claude/settings.local.json`.
+      // Pin what the `opus`/`sonnet`/`haiku` aliases resolve to: `opusplan` runs
+      // the opus pin in Plan Mode and the sonnet pin otherwise; `haiku` backs the
+      // cheap subagent tier. First-party ids: Bedrock, Vertex, Foundry or a
+      // gateway may need their own — override per machine via `env` in
+      // `.claude/settings.local.json`.
       ANTHROPIC_DEFAULT_OPUS_MODEL: "claude-opus-5-5",
       ANTHROPIC_DEFAULT_SONNET_MODEL: "claude-sonnet-5-5",
+      ANTHROPIC_DEFAULT_HAIKU_MODEL: "claude-haiku-5-5",
       // Works around a documented, unfixed Claude Code CLI bug: the Bash
       // tool's cwd persists across tool calls within a session, and once an
       // earlier call `cd`s elsewhere, `$CLAUDE_PROJECT_DIR` resolves wrong

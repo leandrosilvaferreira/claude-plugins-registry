@@ -6,6 +6,7 @@ description: >
   tables, modifying schemas, planning migrations, or diagnosing slow
   queries.
 model: sonnet
+effort: high
 ---
 <!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/agent/database-architect.md. MIT (c) vudovn. -->
 

@@ -12,6 +12,7 @@
 import { stackKeys } from "./stack-keys.mjs";
 
 /** @typedef {{ agents: string[], skills: string[], rules: string[] }} EccAssetSet */
+/** @typedef {import("../validate/agent-model.mjs").AgentModelProfile} AgentModelProfile */
 
 /** Installed for every project. `common` is ECC's always-on rule dir. */
 export const ECC_COMMON = {
@@ -149,6 +150,39 @@ export const ECC_AGENT_WHEN_TO_USE = /** @type {Record<string,string>} */ ({
     "Reviews Flutter and Dart code for widget rebuild issues, state management anti-patterns, performance pitfalls, accessibility, and architecture boundary violations. Use proactively after editing .dart files. MUST BE USED before merging Flutter changes.",
   "dart-build-resolver":
     "Diagnoses and fixes failing Dart/Flutter builds — analyzer errors, null safety violations, pubspec dependency conflicts, build_runner failures, and platform-specific (Android/iOS/web) build errors. Use proactively when `flutter build` or `dart analyze` reports errors.",
+});
+
+/**
+ * Model and reasoning effort per ECC agent — one key per `templates/ecc/agents/*.md`.
+ * Stamped into the frontmatter by `cleanAgentMarkdown` and `scripts/apply-agent-descriptions.mjs`.
+ * Strategy: `.claude/docs/model-strategy.md`.
+ * @type {Readonly<Record<string, AgentModelProfile>>}
+ */
+export const ECC_AGENT_MODEL = Object.freeze({
+  "code-reviewer": { model: "sonnet", effort: "high" },
+  "security-reviewer": { model: "sonnet", effort: "high" },
+  "cpp-reviewer": { model: "sonnet", effort: "high" },
+  "csharp-reviewer": { model: "sonnet", effort: "high" },
+  "django-reviewer": { model: "sonnet", effort: "high" },
+  "fastapi-reviewer": { model: "sonnet", effort: "high" },
+  "flutter-reviewer": { model: "sonnet", effort: "high" },
+  "go-reviewer": { model: "sonnet", effort: "high" },
+  "java-reviewer": { model: "sonnet", effort: "high" },
+  "kotlin-reviewer": { model: "sonnet", effort: "high" },
+  "php-reviewer": { model: "sonnet", effort: "high" },
+  "python-reviewer": { model: "sonnet", effort: "high" },
+  "react-reviewer": { model: "sonnet", effort: "high" },
+  "rust-reviewer": { model: "sonnet", effort: "high" },
+  "typescript-reviewer": { model: "sonnet", effort: "high" },
+  "vue-reviewer": { model: "sonnet", effort: "high" },
+  "cpp-build-resolver": { model: "sonnet", effort: "medium" },
+  "dart-build-resolver": { model: "sonnet", effort: "medium" },
+  "django-build-resolver": { model: "sonnet", effort: "medium" },
+  "go-build-resolver": { model: "sonnet", effort: "medium" },
+  "java-build-resolver": { model: "sonnet", effort: "medium" },
+  "kotlin-build-resolver": { model: "sonnet", effort: "medium" },
+  "react-build-resolver": { model: "sonnet", effort: "medium" },
+  "rust-build-resolver": { model: "sonnet", effort: "medium" },
 });
 
 /**

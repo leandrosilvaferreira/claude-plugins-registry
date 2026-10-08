@@ -92,11 +92,11 @@ tools' own, so merging such an entry wires a hook that fails with `MODULE_NOT_FO
 prompt or tool call. If any extra hook's script is missing, do not offer the merge: leave
 `settings` out of `--only`, wire the tools' own entries by hand (below) and tell the user to run
 `/aia-harness:doctor` (or `/aia-harness:patch`) to install the missing hooks. Otherwise name the
-extras in one `AskUserQuestion`, calling out `env.ANTHROPIC_DEFAULT_OPUS_MODEL` and
-`env.ANTHROPIC_DEFAULT_SONNET_MODEL` when present: they pin `opus`/`sonnet` to first-party model
-ids, which fail with an unknown-model error on Bedrock, Vertex, Foundry and LLM gateways that need
-their own — a machine on one overrides them with `env` in `.claude/settings.local.json`, which
-takes precedence over `.claude/settings.json`. If the user declines the extras, leave `settings`
+extras in one `AskUserQuestion`, calling out `env.ANTHROPIC_DEFAULT_OPUS_MODEL`,
+`env.ANTHROPIC_DEFAULT_SONNET_MODEL` and `env.ANTHROPIC_DEFAULT_HAIKU_MODEL` when present: they
+pin `opus`/`sonnet`/`haiku` to first-party model ids, which fail with an unknown-model error on
+Bedrock, Vertex, Foundry and LLM gateways that need their own — a machine on one overrides them
+with `env` in `.claude/settings.local.json`, which takes precedence over `.claude/settings.json`. If the user declines the extras, leave `settings`
 out of `--only`. With nothing else to add, do not ask — this step stays automatic.
 
 Then apply:

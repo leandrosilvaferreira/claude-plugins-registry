@@ -6,6 +6,7 @@ tools:
   - Grep
   - Glob
 model: sonnet
+effort: medium
 ---
 
 You map a project's architecture into clear, named domains for documentation.

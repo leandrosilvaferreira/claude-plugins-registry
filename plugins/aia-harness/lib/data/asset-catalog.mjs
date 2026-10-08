@@ -28,6 +28,7 @@ export {
   ECC_COMMON,
   ECC_BY_STACK,
   ECC_AGENT_WHEN_TO_USE,
+  ECC_AGENT_MODEL,
   selectEccAssets,
   allEccAssets,
 } from "./ecc-catalog.mjs";
@@ -37,13 +38,14 @@ export {
   AGKIT_COMMON,
   AGKIT_BY_STACK,
   AGKIT_AGENT_WHEN_TO_USE,
+  AGKIT_AGENT_MODEL,
   selectAgkitAssets,
   allAgkitAssets,
 } from "./agkit-catalog.mjs";
 
-import { ECC_AGENT_WHEN_TO_USE } from "./ecc-catalog.mjs";
-import { AGKIT_AGENT_WHEN_TO_USE } from "./agkit-catalog.mjs";
-import { PROJECT_AGENT_WHEN_TO_USE } from "./project-catalog.mjs";
+import { ECC_AGENT_WHEN_TO_USE, ECC_AGENT_MODEL } from "./ecc-catalog.mjs";
+import { AGKIT_AGENT_WHEN_TO_USE, AGKIT_AGENT_MODEL } from "./agkit-catalog.mjs";
+import { PROJECT_AGENT_WHEN_TO_USE, PROJECT_AGENT_MODEL } from "./project-catalog.mjs";
 
 /**
  * Canonical best-practice description for an agent, or null if not catalogued.
@@ -59,6 +61,16 @@ export function resolveCanonicalDescription(name) {
     PROJECT_AGENT_WHEN_TO_USE[name] ??
     null
   );
+}
+
+/**
+ * Model + reasoning effort for an agent, or null if not catalogued. Same provenance
+ * chain as {@link resolveCanonicalDescription}.
+ * @param {string} name
+ * @returns {import("../validate/agent-model.mjs").AgentModelProfile | null}
+ */
+export function resolveAgentModel(name) {
+  return ECC_AGENT_MODEL[name] ?? AGKIT_AGENT_MODEL[name] ?? PROJECT_AGENT_MODEL[name] ?? null;
 }
 
 /**
@@ -78,6 +90,7 @@ export {
   PROJECT_HOOK_FILES,
   PROJECT_HOOK_BY_STACK,
   PROJECT_AGENT_WHEN_TO_USE,
+  PROJECT_AGENT_MODEL,
   selectProjectAssets,
   selectProjectHooks,
   allProjectAssets,

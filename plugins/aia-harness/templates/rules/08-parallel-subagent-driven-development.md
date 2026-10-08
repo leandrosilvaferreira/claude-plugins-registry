@@ -69,9 +69,9 @@ Dispatching a specialist does not replace the skill's contract — they coexist.
 wave implementer with an ad-hoc prompt that drops the skill's contract — that contract is what
 keeps SDD from getting lost.
 
-Pass `model` explicitly on every wave dispatch: `sonnet`, or `haiku` for docs. Never `opus` for
-an implementer, and never leave it to inheritance (plugin-namespaced agents are not rewritten by
-the model guard hook).
+Pass `model` explicitly on every wave dispatch: `sonnet`, or `haiku` for docs, config and
+mechanical edits with a complete spec. Never `opus` for an implementer, and never leave it to
+inheritance (plugin-namespaced agents are not rewritten by the model guard hook).
 
 ## Task tagging
 

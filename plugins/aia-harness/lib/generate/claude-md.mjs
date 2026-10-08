@@ -86,7 +86,7 @@ Applies to every plan (\`superpowers:writing-plans\`, \`/plan\`, planner agents)
 - **Out of the plan:** review tasks, final-gate tasks, criteria-matrix tasks (they are pipeline steps), "validate data" apart from the test, scenario simulation in rounds, repeated dry-runs, waits of hours or days, and manual user actions. Simulate only a critical money or security scenario that no automated test covers: one run, inside the task that implements it.
 - **What only production can confirm** (real data, a window of days, a manual check) is a criterion marked \`(post-deploy)\`. It becomes one "Post-deploy follow-up" item in the PR body. It is not a task. It never blocks the merge or the issue closing: the PR keeps \`Closes #n\`.
 - **Review once per finished issue or sub-issue:** the project's code-review flow (\`/code-review\`, with its own internal rounds) and, on the PR, its normal loop. Never per task, wave or plan phase. No per-task reviewer (not even for money or auth), no fix-and-re-review rounds, and no separate final review from the execution skill. The task gate is its scoped tests passing; if they fail, the same specialist fixes them (2 attempts at most), then escalate. Fix P0/P1 findings directly; minor findings follow the review flow's own severity cut, with no extra round.
-- **Implementers are the project's specialist agents with an explicit \`model\`:** \`sonnet\`, or \`haiku\` for docs. Never \`opus\`.
+- **Implementers are the project's specialist agents with an explicit \`model\`:** \`sonnet\`, or \`haiku\` for docs, config and mechanical edits with a complete spec. Never \`opus\`.
 - **Docs and config have no plan:** dispatch directly to a Haiku or Sonnet agent.
 - **Status to the user:** 1 line per milestone, not task by task.
 `;

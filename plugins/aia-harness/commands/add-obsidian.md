@@ -311,12 +311,12 @@ show which (it prints only `would update: .claude/settings.json`), so run the `p
 again with `--large-files=<mode>` added and compare the `settings` artifact's `content` (a
 JSON string) with the existing file. The four obsidian hook entries (`vault-orient`,
 `vault-guard`, `compile`, `session-log`) are the expected part; if it holds anything else,
-name it in one `AskUserQuestion`, calling out `env.ANTHROPIC_DEFAULT_OPUS_MODEL` and
-`env.ANTHROPIC_DEFAULT_SONNET_MODEL` when present: they pin `opus`/`sonnet` to first-party
-model ids, which fail with an unknown-model error on Bedrock, Vertex, Foundry and LLM
-gateways that need their own — a machine on one overrides them with `env` in
-`.claude/settings.local.json`, which takes precedence over `.claude/settings.json`. If the
-user declines the extras, drop `settings` from the call below (`--only=obsidian:claude-md`)
+name it in one `AskUserQuestion`, calling out `env.ANTHROPIC_DEFAULT_OPUS_MODEL`,
+`env.ANTHROPIC_DEFAULT_SONNET_MODEL` and `env.ANTHROPIC_DEFAULT_HAIKU_MODEL` when present: they
+pin `opus`/`sonnet`/`haiku` to first-party model ids, which fail with an unknown-model error on
+Bedrock, Vertex, Foundry and LLM gateways that need their own — a machine on one overrides them
+with `env` in `.claude/settings.local.json`, which takes precedence over `.claude/settings.json`.
+If the user declines the extras, drop `settings` from the call below (`--only=obsidian:claude-md`)
 and `Edit` just those four hook entries into `.claude/settings.json`, copied from that
 `content`.
 

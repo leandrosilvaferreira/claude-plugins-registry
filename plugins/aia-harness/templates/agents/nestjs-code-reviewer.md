@@ -6,6 +6,8 @@ description: >
   compliance. Use proactively after editing any NestJS HTTP or persistence
   file. MUST BE USED before merging NestJS changes (excluding auth — use
   nestjs-security-reviewer for those).
+model: sonnet
+effort: high
 ---
 
 # NestJS Code Reviewer

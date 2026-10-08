@@ -5,7 +5,8 @@ description: >
   specialized agents. Use proactively when a task spans multiple domains
   or requires parallel subagent execution. MUST BE USED instead of
   dispatching generic agents directly for complex workflows.
-model: sonnet
+model: opus
+effort: high
 ---
 <!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/agent/orchestrator.md. MIT (c) vudovn. -->
 

@@ -6,6 +6,7 @@ description: >
   pollution. Use proactively after editing .ts or .js files with no
   React/JSX involvement.
 model: sonnet
+effort: high
 ---
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: agents/typescript-reviewer.md. MIT (c) Affaan Mustafa. -->
 

@@ -182,9 +182,10 @@ hook — not just that one. A dry run does not show which (it prints only
 apply (notably `--large-files=<mode>`) and compare the `settings` artifact's `content` (a JSON
 string) with the existing `.claude/settings.json`: whatever it has and the file lacks is what
 the merge adds. If that is more than the fix, name the rest in the same `AskUserQuestion`,
-calling out `env.ANTHROPIC_DEFAULT_OPUS_MODEL` and `env.ANTHROPIC_DEFAULT_SONNET_MODEL` when
-present: they pin `opus`/`sonnet` to first-party model ids, which fail with an unknown-model
-error on Bedrock, Vertex, Foundry and LLM gateways that need their own — a machine on one
+calling out `env.ANTHROPIC_DEFAULT_OPUS_MODEL`, `env.ANTHROPIC_DEFAULT_SONNET_MODEL` and
+`env.ANTHROPIC_DEFAULT_HAIKU_MODEL` when present: they pin `opus`/`sonnet`/`haiku` to
+first-party model ids, which fail with an unknown-model error on Bedrock, Vertex, Foundry and
+LLM gateways that need their own — a machine on one
 overrides them with `env` in `.claude/settings.local.json`, which takes precedence over
 `.claude/settings.json`. If the user declines the extras, skip the merge and `Edit` only the
 fix's own entry into `.claude/settings.json` (copy it from that `content`), as **Hook
@@ -500,9 +501,20 @@ point them at `/aia-harness:patch` — it runs this same merge-and-adjudicate fl
      required here for the same reason it is on the graphify hook check just above: this
      call re-applies the whole `settings` artifact, and its `merge-settings` strategy is
      additive-only — generating the other large-file mode would add a second guard wiring
-     rather than replace the first. Nothing already present is modified or removed.
+     rather than replace the first. This merge modifies or removes nothing already present.
+     Only the **Stale effort env keys** check below removes keys, and only with approval.
 
      If the key is already present, say nothing.
+
+- **Stale effort env keys (settings.json):** read `.claude/settings.json`'s `env` block for
+     `CLAUDE_CODE_EFFORT_LEVEL` and `CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING`. aia-harness 0.22 and
+     older wrote both. Explain why each is stale: `CLAUDE_CODE_EFFORT_LEVEL` overrides the
+     `effort:` frontmatter of every agent and skill, so no agent keeps its own effort level;
+     `CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING` has no effect on Opus 5.5, Sonnet 5.5 or Haiku 5.5.
+     For each key that is present, show the diff that removes it (the `env` line as a `-` line).
+     Then ask which keys to remove with `AskUserQuestion` (one option per key; allow several).
+     Remove only the approved keys with `Edit` directly on `.claude/settings.json`, and leave
+     every other `env` entry as it is. If neither key is present, say nothing.
 
 - **Hook placeholder hygiene (settings.json):** Read `hookHygiene.placeholderIssues`
      from the `scan --json` output (step 1). If empty, say nothing. Otherwise, for each

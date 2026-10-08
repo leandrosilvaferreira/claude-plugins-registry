@@ -6,6 +6,7 @@ description: >
   proactively when building or refactoring UI components, design systems,
   or frontend architecture.
 model: sonnet
+effort: medium
 ---
 <!-- Vendored from ag-kit (github.com/vudovn/ag-kit) @ 20a13da6d4414c7c6ae33db050a9c606eaef9f40 :: .agents/agent/frontend-specialist.md. MIT (c) vudovn. -->
 

@@ -20,6 +20,7 @@
 import { stackKeys } from "./stack-keys.mjs";
 
 /** @typedef {{ agents: string[], skills: string[], rules: string[] }} AssetSet */
+/** @typedef {import("../validate/agent-model.mjs").AgentModelProfile} AgentModelProfile */
 
 /** First-party skills shipped to every target project (templates/skills/<name>/). */
 export const PROJECT_COMMON = {
@@ -229,6 +230,17 @@ export const PROJECT_AGENT_WHEN_TO_USE = {
   "nestjs-security-reviewer":
     "Exploitability-focused review of NestJS auth, JWT config, authorization guards, input handling, CORS, and env/secret exposure. Use proactively after any change to auth, users, config/env files, or a new endpoint. MUST BE USED before merging auth or security-sensitive NestJS changes.",
 };
+
+/**
+ * Model and reasoning effort per first-party agent — one key per `templates/agents/*.md`.
+ * Stamped into the frontmatter by `scripts/apply-agent-descriptions.mjs`.
+ * Strategy: `.claude/docs/model-strategy.md`.
+ * @type {Readonly<Record<string, AgentModelProfile>>}
+ */
+export const PROJECT_AGENT_MODEL = Object.freeze({
+  "nestjs-code-reviewer": { model: "sonnet", effort: "high" },
+  "nestjs-security-reviewer": { model: "sonnet", effort: "high" },
+});
 
 /**
  * Union of every first-party catalogued skill — handy for inventory/tests.

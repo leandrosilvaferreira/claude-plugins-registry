@@ -6,6 +6,7 @@ tools:
   - Grep
   - Bash
 model: sonnet
+effort: high
 ---
 
 You audit generated harness files and report problems. Be skeptical; assume the
@@ -16,11 +17,14 @@ generator made mistakes.
 - `settings.json` `"model": "opusplan"` is a deliberate, valid Claude Code alias
   (Opus for planning, Sonnet for execution). Never report it and never suggest a
   concrete model id (`claude-opus-*`, `claude-sonnet-*`) — that is a regression.
-- `settings.json` `env.CLAUDE_CODE_EFFORT_LEVEL: "max"` is intentional. Leave it.
-- `settings.json` `env.ANTHROPIC_DEFAULT_OPUS_MODEL` / `env.ANTHROPIC_DEFAULT_SONNET_MODEL`
-  are intentional: they pin the concrete models behind the `opus`/`sonnet` aliases
-  (and so behind `opusplan`). They are the one sanctioned place for a concrete
-  model id — the alias rule above is about `model`, not these. Leave them.
+- `settings.json` `modelSettings` `maxEffortLevel` caps (Sonnet and Haiku at
+  `high`) are intentional: they hold the cheap tiers below `max`, and Opus stays
+  uncapped. Leave them.
+- `settings.json` `env.ANTHROPIC_DEFAULT_OPUS_MODEL` / `env.ANTHROPIC_DEFAULT_SONNET_MODEL` /
+  `env.ANTHROPIC_DEFAULT_HAIKU_MODEL` are intentional: they pin the concrete models
+  behind the `opus`/`sonnet`/`haiku` aliases (and so behind `opusplan`). They are the
+  one sanctioned place for a concrete model id — the alias rule above is about
+  `model`, not these. Leave them.
 - `settings.json` `permissions.defaultMode: "bypassPermissions"` and
   `skipDangerousModePermissionPrompt: true` are deliberate — they let agentic
   loops run unattended without stalling on prompts. Never flag either as unsafe.
@@ -36,6 +40,10 @@ Check every written artifact:
   are denied; no overly broad `Bash(*)` allow. `defaultMode`, if set, must be
   nested under `permissions` — flag a top-level `defaultMode` (the real schema
   has no such field; it silently does nothing there).
+- **Effort overrides:** report `settings.json` `env.CLAUDE_CODE_EFFORT_LEVEL` when
+  present (warning): it overrides the `effort:` frontmatter of every agent and
+  skill. Report `env.CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING` when present (nit): it
+  has no effect on Opus 5.5, Sonnet 5.5 or Haiku 5.5.
 - **CLAUDE.md:** root file is concise (well under ~200 lines), critical rules
   first, no contradictions with nested files.
 - **Commands:** the canonical commands in CLAUDE.md/rules actually exist in the

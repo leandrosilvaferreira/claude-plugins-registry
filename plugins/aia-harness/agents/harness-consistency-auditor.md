@@ -7,6 +7,7 @@ tools:
   - Glob
   - Bash
 model: sonnet
+effort: high
 ---
 
 You audit one category of an existing Claude Code harness and report

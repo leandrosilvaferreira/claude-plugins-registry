@@ -6,6 +6,7 @@ description: >
   Spring/Quarkus startup problems. Use proactively when `mvn compile` or
   `gradle build` fails.
 model: sonnet
+effort: medium
 ---
 <!-- Vendored from ECC (github.com/affaan-m/ECC) @ ceca28852e5b31edbbf66ebccc8fd163dd14208e :: agents/java-build-resolver.md. MIT (c) Affaan Mustafa. -->
 
