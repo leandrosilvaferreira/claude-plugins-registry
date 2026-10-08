@@ -25,3 +25,7 @@ Closes #
 ## How to test
 
 <!-- Steps to validate this PR -->
+
+## Post-deploy follow-up
+
+<!-- One item per `(post-deploy)` criterion. Leave empty if none. These items never block the merge or the issue closing. -->

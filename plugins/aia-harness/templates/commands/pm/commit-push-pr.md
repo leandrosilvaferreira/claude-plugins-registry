@@ -81,6 +81,9 @@ separate Bash calls, not pasted together).
    `BASE=$(git rev-parse --abbrev-ref HEAD@{upstream} ...)` fallback was worse
    than useless: `@{upstream}` is the current branch's tracking ref, not the
    PR target, and its `sed 's|.*/||'` mangles any branch name containing `/`.)
+   Keep `Closes #N` even when the issue has `(post-deploy)` criteria: list them
+   under "Post-deploy follow-up" in the PR body; never downgrade `Closes` to
+   `Refs`.
 
    ```bash
    gh pr create --title "<title based on commit>" --body "<body with Closes #N>"

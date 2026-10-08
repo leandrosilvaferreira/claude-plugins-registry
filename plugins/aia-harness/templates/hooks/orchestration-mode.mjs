@@ -35,12 +35,14 @@ Delegate exploration and implementation to specialist subagents (Agent tool).
 Work inline only when delegating costs more than the work itself: trivial single-file
 edits, one-line answers, and the final synthesis of subagent reports.
 
-Set \`model\` explicitly on every dispatch. Subagents never inherit this session's model.
+Set \`model\` explicitly on every dispatch. A project agent or generic dispatch without one is
+forced to sonnet by a hook, but a plugin-namespaced agent (\`plugin:name\`) is not rewritten and
+would run on this session's model.
   haiku  — mechanical and bounded: locate code, grep sweeps, read-only surveys,
            single-file edits with a complete spec.
   sonnet — default: multi-file work, integration, review, debugging, judgment.
-  opus   — only when you judge that specific subtask needs it.
-Choosing haiku deliberately is the saving; omitting \`model\` only falls back to sonnet.
+  opus   — architectural judgment only; never an implementer.
+Choosing haiku deliberately is the saving; omitting \`model\` on a project agent or generic dispatch only falls back to sonnet.
 This session keeps the model the user selected — never downgrade it.
 
 Dispatch independent subagents in parallel: multiple Agent calls in ONE message.

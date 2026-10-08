@@ -64,17 +64,10 @@ Examples: `[Feature] Add OAuth authentication`, `[Bug] Crash when saving empty f
 **Body rules:**
 
 - Acceptance criteria always as checkboxes `- [ ]`
+- Mark a criterion that only production can confirm (real data, a window of days, a manual check) with `(post-deploy)`; it never blocks the merge or the issue closing.
 - If the request references a spec / PRD / plan / design document:
   - Include in the body the instruction to **follow the spec in detail**, citing the **real sections** of the document
   - Link the document in a `## References` section
-- Always include at the end:
-
-```markdown
-### Final validation (REQUIRED before closing)
-- [ ] All acceptance criteria above verified
-- [ ] No regression in adjacent functionality
-- [ ] [Adapt with spec-specific steps, if any]
-```
 
 ### 6. Show to user and request confirmation
 

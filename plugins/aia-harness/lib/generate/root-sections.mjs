@@ -7,7 +7,7 @@
  * @module generate/root-sections
  */
 
-import { BEHAVIORAL_MARKER, FIXED_RULES_MARKER } from "./claude-md.mjs";
+import { BEHAVIORAL_MARKER, FIXED_RULES_MARKER, LEAN_DELIVERY_MARKER } from "./claude-md.mjs";
 import { AGENT_ROUTING_MARKER, PARALLEL_SDD_MARKER } from "./claude-md-agents.mjs";
 import { GRAPHIFY_ROOT_MARKER } from "./misc.mjs";
 
@@ -55,6 +55,15 @@ export const ROOT_CLAUDE_MD_SECTIONS = [
     heading: "## Behavioral guidelines",
     marker: BEHAVIORAL_MARKER,
     required: true,
+    source: "render",
+    fix: "force-root",
+  },
+  {
+    id: "lean-delivery",
+    label: "Lean delivery — plan, execution and review",
+    heading: "## Lean delivery — plan, execution and review",
+    marker: LEAN_DELIVERY_MARKER,
+    required: false,
     source: "render",
     fix: "force-root",
   },

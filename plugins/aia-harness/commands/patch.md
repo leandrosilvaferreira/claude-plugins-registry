@@ -286,6 +286,7 @@ user's and **must survive verbatim**.
 
 **Both arrays identify sections by `id`, not by heading text**, and several ids do not map
 mechanically to the heading you have to match (`behavioral` → `## Behavioral guidelines`,
+`lean-delivery` → `## Lean delivery — plan, execution and review`,
 `workflow-agents` → `## Workflow & Agents`, `agent-routing` →
 `### Superpowers → Project Specialists (mandatory bridging)`, `obsidian` → `## obsidian-vault`,
 `memory-imports` → the `@.claude/memory/MEMORY.md` import line rather than a heading). `missing`

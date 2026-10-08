@@ -5,6 +5,7 @@ tools:
   - Read
   - Grep
   - Glob
+model: sonnet
 ---
 
 You map a project's architecture into clear, named domains for documentation.

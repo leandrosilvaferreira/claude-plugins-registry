@@ -5,6 +5,7 @@ tools:
   - Read
   - Grep
   - Bash
+model: sonnet
 ---
 
 You audit generated harness files and report problems. Be skeptical; assume the

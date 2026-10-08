@@ -99,7 +99,7 @@ step-by-step — do not invent an alternative flow.
 
 ## Anti-patterns
 
-- Do not close an issue without validating acceptance criteria in the issue body.
+- Do not close an issue without validating acceptance criteria in the issue body (criteria marked `(post-deploy)` do not block closing).
 - Do not create a worktree from `main` without `-b <branch>`.
 - Do not merge without green CI (scripts/check-pr-status.mjs).
 - Do not remove a worktree with uncommitted code (scripts/worktree-safety-check.mjs).

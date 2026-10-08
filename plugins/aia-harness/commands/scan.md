@@ -106,6 +106,9 @@ If `conflicts[]` is non-empty:
 - Same check for the marker `aia-harness:parallel-sdd` (rendered by the same `## Workflow &
   Agents` block, under the same "agents exist" condition). If absent while agents exist, note:
   `"⚠ Parallel wave execution (aia-harness:parallel-sdd) is missing from CLAUDE.md while agents exist."`
+- Same check for the marker `aia-harness:lean-delivery` (always rendered — no "agents exist"
+  condition). If absent, note:
+  `"⚠ Lean delivery (aia-harness:lean-delivery) is missing from CLAUDE.md."`
 
 A dry run **reports** every conflict and **writes nothing** — no pending file is staged, so
 each entry's `pendingPath` is only where the fresh content *would* go. Do not print it as if
@@ -117,8 +120,8 @@ Then point the user to:
 - `/aia-harness:doctor` for guided fixes of out-of-date artifacts
 - `/aia-harness:patch` to merge specific categories and adjudicate each conflicting file
 
-If `conflicts[]` is empty and both bridge markers are present (or no agents exist), omit this
-section silently.
+If `conflicts[]` is empty and all three markers are present (agent-routing, parallel-sdd,
+lean-delivery — the first two only count when agents exist), omit this section silently.
 
 Do **not** write any files. If the user wants to scaffold the harness, point them to
 `/aia-harness:init`.

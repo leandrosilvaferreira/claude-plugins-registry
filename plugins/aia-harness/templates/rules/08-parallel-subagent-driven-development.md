@@ -12,6 +12,10 @@ default, and its own guidance explicitly warns against running multiple implemen
 parallel (concurrent-edit conflicts). This rule overrides that serial default with
 **parallel waves** of independent tasks, for tasks that satisfy the safety conditions below.
 
+This rule also drops the skill's per-task reviewer, its fix and re-review rounds, and its final
+whole-branch review. Review runs once per finished issue or sub-issue — see **Lean delivery**
+in the root `CLAUDE.md`.
+
 **Precedence:** project rules / CLAUDE.md outrank a skill's internal guidance. This is a
 precedence-based override, not a fork — the `superpowers` plugin itself is never modified,
 edited, or vendored; its skill files are loaded and used exactly as shipped.
@@ -38,9 +42,10 @@ formation below).
 ## What waves change — and what they keep
 
 Waves change **only orchestration**: the skill's serial loop (one implementer at a time)
-becomes parallel waves of independent tasks. **Everything else about the skill stays intact
-and mandatory** — load `superpowers:subagent-driven-development` itself (this rule does not
-replace it) and use its own templates unmodified:
+becomes parallel waves of independent tasks. The implementer contract and the skill's
+task-brief and progress-tracking mechanics stay intact — load
+`superpowers:subagent-driven-development` itself (this rule does not replace it) and use its
+own templates unmodified, with the exceptions named below:
 
 - **The implementer contract** (`implementer-prompt.md`): read the task brief, **ask
   questions before starting**, TDD, self-review, report one of `DONE` / `DONE_WITH_CONCERNS` /
@@ -48,21 +53,25 @@ replace it) and use its own templates unmodified:
   implementer. **The one edit:** its "Commit your work" step becomes "do NOT commit — leave
   changes in the working tree and report the exact `Files changed`" (see the execution loop
   below).
-- **The task-reviewer contract** (`task-reviewer-prompt.md`): two mandatory verdicts (spec
-  compliance + code quality), the skill's review method, YAGNI, test hygiene. Prompt body for
-  every wave reviewer, unmodified.
-- Any other scripts or ledger the skill uses for task briefs, review packaging, and progress
-  tracking — unmodified.
+- **No task reviewer.** Do not use `task-reviewer-prompt.md`, the skill's fix and re-review
+  rounds, or its final whole-branch review. Review runs once per finished issue or sub-issue
+  (see **Lean delivery** in the root `CLAUDE.md`), never per task, wave or plan phase.
+- Any other scripts or ledger the skill uses for task briefs and progress tracking —
+  unmodified.
 
 **Agent TYPE and PROMPT BODY are orthogonal.** The dispatched subagent's *type* is a project
 specialist — look it up in the `## Workflow & Agents` / `Superpowers → Project Specialists`
 table in your root `CLAUDE.md`, matched by the task's file scope — never `general-purpose`
 unless no specialist row covers the task. The *prompt body* is still the skill's own template
-above. Both apply in the same dispatch: the specialist supplies project rules and model tier;
-the template supplies the SDD contract (questions first, TDD, self-review, one of 4 statuses,
-2 verdicts). Dispatching a specialist does not replace the skill's contract — they coexist.
-Never dispatch a wave implementer or reviewer with an ad-hoc prompt that drops the skill's
-contract — that contract is what keeps SDD from getting lost.
+above. Both apply in the same dispatch: the specialist supplies project rules; the template
+supplies the SDD contract (questions first, TDD, self-review, one of 4 statuses).
+Dispatching a specialist does not replace the skill's contract — they coexist. Never dispatch a
+wave implementer with an ad-hoc prompt that drops the skill's contract — that contract is what
+keeps SDD from getting lost.
+
+Pass `model` explicitly on every wave dispatch: `sonnet`, or `haiku` for docs. Never `opus` for
+an implementer, and never leave it to inheritance (plugin-namespaced agents are not rewritten by
+the model guard hook).
 
 ## Task tagging
 
@@ -99,21 +108,17 @@ behavior — **no regression** versus not using this rule at all.
    specialist matching each task's file scope (see previous section).
    - **Mandatory override, in every implementer's prompt:** replace the "Commit your work"
      step with *"do NOT commit — leave changes in the working tree and report the exact
-     `Files changed`."* Everything else is unchanged: implement → test (a focused suite while
-     working, the full suite once before reporting) → self-review → write the report. It just
-     never runs `git commit`.
+     `Files changed`."* Everything else is unchanged: implement → test (the task's scoped
+     tests, green before reporting) → self-review → write the report. It just never runs
+     `git commit`.
 3. **Controller serializes commits after the wave** — if and when committing fits your
    project's workflow (some flows commit right away; others batch, or leave commits to a
-   human). When it does commit, do it **per task, in order**: capture `BASE = current HEAD`,
-   `git add` that task's `Files`, `git commit`. One commit per task, with `BASE` captured
-   fresh immediately before *that* task's own commit — never a hardcoded `HEAD~1`, which
-   becomes wrong as soon as more than one commit has landed in the wave.
-4. **Parallel per-task review, distinct ranges.** Once commits exist, review each task's
-   `BASE..HEAD` range independently; dispatch all of the wave's task reviewers together in one
-   message (prompt body = the skill's `task-reviewer-prompt.md`, unmodified) — safe because
-   review is read-only, so there's no race. Route any findings through a per-task fix loop:
-   the fix subagent also does not self-commit — the controller re-commits after each fix. Both
-   verdicts (spec compliance + code quality) are required per task before it's marked done.
+   human). When it does commit, do it **per task, in order**: `git add` that task's `Files`,
+   then `git commit`. One commit per task.
+4. **Task gate: scoped tests green. No task review.** A task is done when its scoped tests
+   pass. If they fail, the same specialist fixes them (2 attempts at most; the fix does not
+   self-commit either), then escalate to the controller. No per-task or per-wave reviewer, no
+   re-review.
 5. **One controller-owned ledger write per wave.** Record all of the wave's tasks in your
    progress ledger in a single write, rather than one append per task — this avoids a
    blind-append race on a ledger file that may be shared across the whole plan or worktree.
@@ -150,10 +155,10 @@ branched from the expected commit before doing any work in it.
 
 ## Relationship to whole-branch review
 
-Unchanged. Waves scope **only** the implementation phase and per-task review described above.
-Any whole-branch or whole-PR review your project runs afterward — whether that is the skill's
-own `superpowers:requesting-code-review` step or a separate project-level review command — is
-unaffected: run it exactly as you would without this rule.
+Replaced. Waves scope **only** the implementation phase. Review runs **once per finished issue
+or sub-issue** through the project's code-review flow (see **Lean delivery** in the root
+`CLAUDE.md`), never per task, wave or plan phase. That single review also replaces the skill's
+own final whole-branch review (`superpowers:requesting-code-review`): never run both.
 
 ## No numeric concurrency cap
 

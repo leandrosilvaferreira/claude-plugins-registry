@@ -6,6 +6,7 @@ tools:
   - Grep
   - Glob
   - Bash
+model: sonnet
 ---
 
 You analyze a project's technology stack in depth and return findings, never edits.

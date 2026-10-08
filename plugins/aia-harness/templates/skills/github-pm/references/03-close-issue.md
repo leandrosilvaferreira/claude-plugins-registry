@@ -13,7 +13,7 @@
    gh issue view <N> --json body,title --repo <owner>/<repo>
    ```
 
-2. Confirm with the user which criteria were met.
+2. Confirm with the user which criteria were met (skip criteria marked `(post-deploy)`).
 
 3. If all criteria met:
 
@@ -37,4 +37,4 @@
 ## Invariant
 
 - NEVER close without validating acceptance criteria. If criteria were not defined in the issue,
-  define them together with the user before closing.
+  define them together with the user before closing. Criteria marked `(post-deploy)` never block closing.

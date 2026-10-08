@@ -168,9 +168,10 @@ superseded here because its two premises are removed: disjoint file ownership pe
 controller-serialized commits instead of implementer self-commits. During planning, tag each task
 \`Files:\` / \`Depends-on:\`; batch tasks with disjoint \`Files\` and no mutual dependency into one wave,
 and dispatch their implementers in a single message using the specialist types from the table above.
-Keep the skill's implementer/reviewer prompt contracts intact — the only change is implementers do
-NOT self-commit. Untagged or uncertain tasks run serial (no regression). Full protocol:
-\`.claude/rules/08-parallel-subagent-driven-development.md\`.
+Keep the skill's implementer prompt contract intact — the only change is implementers do
+NOT self-commit. Drop the skill's per-task reviewer, fix and re-review rounds, and final review:
+review runs once per finished issue (see "Lean delivery"). Untagged or uncertain tasks run serial
+(no regression). Full protocol: \`.claude/rules/08-parallel-subagent-driven-development.md\`.
 `
     : "";
 
@@ -184,6 +185,8 @@ Invoke \`superpowers:subagent-driven-development\` for **non-trivial** implement
 - has **unclear scope or root cause** and needs exploration before coding
 
 Skip it — implement inline — for typo/copy fixes, single-function edits, config tweaks, or one-file bugs with an obvious cause.
+
+Plans and review cadence follow **Lean delivery** (above): the plan specifies, the task gate is its scoped tests, and review runs once per finished issue.
 
 When dispatching subagents, you MUST use the matching specialist agent from the table below — never the generic agent when a specialist is listed. Cross-reference the task type with the "When to use" column and pass the exact name as \`subagent_type\`.
 

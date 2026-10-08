@@ -55,6 +55,40 @@ ${BEHAVIORAL_MARKER}
 3. **Surgical changes** — touch only what the request requires; match existing style; don't refactor, reformat, or "improve" adjacent code. Remove orphans *your* change created; leave pre-existing dead code alone (mention it, don't delete it). Every changed line should trace directly to the user's request.
 4. **Goal-driven execution** — turn tasks into verifiable goals ("fix the bug" → "write a test that reproduces it, then make it pass"). For multi-step work, state a brief plan with a verify check per step, then loop until verified.
 5. **Main session = orchestrator — it does not implement.** Plan, decide, coordinate; ALL delegable implementation and analysis goes to a specialist subagent via \`Agent\`, parallel when scopes don't conflict.
+6. **Write to ASD-STE100.** Put every text you produce — reply, subagent prompt, commit, PR, doc, memory — in Simplified Technical English, and apply the same rules to Portuguese. Lead with the result. Use one term per concept and one meaning per term. Keep an instruction to 20 words and a description to 25. Keep a paragraph to 6 sentences. Write one instruction per sentence, in the imperative, in the active voice and in a simple tense. Put the action in the verb, not in a noun ("validate", not "do the validation"). Give the command before the risk in a warning. Break complex text into a vertical list. Cut preamble, flourish, repetition and recap — but never to the point where a sentence gains a second reading.
+`;
+
+/**
+ * Sentinel comment marking the lean-delivery section. Like BEHAVIORAL_MARKER,
+ * it is not an AI-ENRICH comment so enrichment leaves it intact. `doctor` greps
+ * for `aia-harness:lean-delivery` to confirm the block survived a prior
+ * enrichment pass.
+ */
+export const LEAN_DELIVERY_MARKER =
+  "<!-- aia-harness:lean-delivery — non-negotiable; do not edit, reorder, or remove during enrichment -->";
+
+/**
+ * Lean-delivery rule shipped in every generated root CLAUDE.md: plans specify
+ * instead of implementing, the task gate is its scoped tests, and review runs
+ * once per finished issue instead of per task. Lives in its own
+ * `## Lean delivery — plan, execution and review` section (guarded by
+ * LEAN_DELIVERY_MARKER) right after the behavioral guidelines, before
+ * `## Stack`. Rendered unconditionally — it governs plans and execution
+ * whether or not specialist agents are installed.
+ */
+export const LEAN_DELIVERY_BLOCK = `## Lean delivery — plan, execution and review
+${LEAN_DELIVERY_MARKER}
+
+Applies to every plan (\`superpowers:writing-plans\`, \`/plan\`, planner agents) and every execution (\`superpowers:subagent-driven-development\` in waves, \`/orchestrate\`). On conflict with a skill, rule or agent description, this section wins.
+
+- **A plan specifies; it does not implement.** Per task: \`Files:\` and \`Depends-on:\` (parallel waves), the contract or signature, the rules and business rules that apply (by name), and the test cases. Write code only where the exact form is the requirement: money math, API contract, migration, locking query.
+- **A task is a cohesive slice for one specialist, with its own tests** (schema + migration; service + tests; route + contract + tests). No micro-tasks; aim for at most 8. An acceptance criterion is not a task: point to the test that proves it.
+- **Out of the plan:** review tasks, final-gate tasks, criteria-matrix tasks (they are pipeline steps), "validate data" apart from the test, scenario simulation in rounds, repeated dry-runs, waits of hours or days, and manual user actions. Simulate only a critical money or security scenario that no automated test covers: one run, inside the task that implements it.
+- **What only production can confirm** (real data, a window of days, a manual check) is a criterion marked \`(post-deploy)\`. It becomes one "Post-deploy follow-up" item in the PR body. It is not a task. It never blocks the merge or the issue closing: the PR keeps \`Closes #n\`.
+- **Review once per finished issue or sub-issue:** the project's code-review flow (\`/code-review\`, with its own internal rounds) and, on the PR, its normal loop. Never per task, wave or plan phase. No per-task reviewer (not even for money or auth), no fix-and-re-review rounds, and no separate final review from the execution skill. The task gate is its scoped tests passing; if they fail, the same specialist fixes them (2 attempts at most), then escalate. Fix P0/P1 findings directly; minor findings follow the review flow's own severity cut, with no extra round.
+- **Implementers are the project's specialist agents with an explicit \`model\`:** \`sonnet\`, or \`haiku\` for docs. Never \`opus\`.
+- **Docs and config have no plan:** dispatch directly to a Haiku or Sonnet agent.
+- **Status to the user:** 1 line per milestone, not task by task.
 `;
 
 /**
@@ -203,6 +237,7 @@ export function renderRootClaudeMd(profile, agents = []) {
 > bloated memory gets ignored. Put hard guarantees in hooks, not prose.
 
 ${BEHAVIORAL_GUIDELINES_BLOCK}
+${LEAN_DELIVERY_BLOCK}
 ## Stack
 ${stackLine(profile)}
 
@@ -223,7 +258,7 @@ Domain-specific guidance lives in nested CLAUDE.md files (loaded on demand):
 ${domainMap}
 
 ## Conventions
-<!-- AI-ENRICH: detect project-specific patterns from source files; replace the placeholder below with 4-7 concrete, project-specific conventions. Keep each convention to 1-2 lines; if one needs more detail, move the detail to a path-scoped rule in .claude/rules/ (paths: frontmatter) and keep a one-line pointer here — CLAUDE.md loads every session, rules load lazily. Leave the "## Behavioral guidelines" and "## Engineering rules" sections untouched — those are fixed and must survive enrichment. -->
+<!-- AI-ENRICH: detect project-specific patterns from source files; replace the placeholder below with 4-7 concrete, project-specific conventions. Keep each convention to 1-2 lines; if one needs more detail, move the detail to a path-scoped rule in .claude/rules/ (paths: frontmatter) and keep a one-line pointer here — CLAUDE.md loads every session, rules load lazily. Leave the "## Behavioral guidelines", "## Lean delivery" and "## Engineering rules" sections untouched — those are fixed and must survive enrichment. -->
 
 - _Project-specific conventions are added here during \`/aia-harness:init\` enrichment._
 

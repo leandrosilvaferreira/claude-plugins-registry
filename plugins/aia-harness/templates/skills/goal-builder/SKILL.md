@@ -34,7 +34,7 @@ Generates an optimized `/goal` for autonomous execution, with a 5-phase superpow
 
 ```
 PHASE 1  superpowers:brainstorming               — design + spec (review if spec already exists)
-PHASE 2  superpowers:writing-plans               — detailed implementation plan
+PHASE 2  superpowers:writing-plans               — lean plan (see Lean delivery in CLAUDE.md)
 PHASE 3  superpowers:executing-plans             — execute plan task-by-task with checkpoints
 PHASE 4  superpowers:verification-before-completion — verify everything before finishing
 PHASE 5  superpowers:finishing-a-development-branch — integrate: merge, PR or cleanup
@@ -104,7 +104,7 @@ Mandatory checklist:
 
 Execute the 5-phase superpowers pipeline in exact order, WITHOUT skipping any:
 PHASE 1 superpowers:brainstorming — understand requirements, design and spec; print "PHASE 1 OK".
-PHASE 2 superpowers:writing-plans — create detailed implementation plan; print "PHASE 2 OK".
+PHASE 2 superpowers:writing-plans — create a lean plan (specify, do not implement); print "PHASE 2 OK".
 PHASE 3 superpowers:executing-plans — execute plan task-by-task with checkpoints; print "PHASE 3 OK".
 PHASE 4 superpowers:verification-before-completion — verify everything before finishing; print "PHASE 4 OK".
 PHASE 5 superpowers:finishing-a-development-branch — integrate (merge/PR/cleanup); print "PHASE 5 OK".
@@ -138,6 +138,8 @@ Do not ask questions, decide independently. Stop after <N> turns.
 <final state + all checks green + cap>
 ```
 
+A criterion marked `(post-deploy)` has no proof command: leave it out of the end state and carry it to the PR's "Post-deploy follow-up".
+
 `/goal` line:
 
 ```text
@@ -145,7 +147,7 @@ Do not ask questions, decide independently. Stop after <N> turns.
 
 Execute the 5-phase superpowers pipeline in exact order, WITHOUT skipping any:
 PHASE 1 superpowers:brainstorming — review spec at docs/specs/<slug>.md (DO NOT recreate); print "PHASE 1 OK".
-PHASE 2 superpowers:writing-plans — create/validate plan based on spec; print "PHASE 2 OK".
+PHASE 2 superpowers:writing-plans — create/validate a lean plan based on spec (specify, do not implement); print "PHASE 2 OK".
 PHASE 3 superpowers:executing-plans — execute plan task-by-task; print "PHASE 3 OK".
 PHASE 4 superpowers:verification-before-completion — run <gate command>; verify coverage; print "PHASE 4 OK".
 PHASE 5 superpowers:finishing-a-development-branch — integrate; print "PHASE 5 OK".

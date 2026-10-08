@@ -30,8 +30,10 @@ Labels: <labels>
 Body:
 <body>
 
-Goal: generate a detailed implementation plan with technical approach,
-architecture, files to create/modify, edge cases, and execution order.
+Goal: generate a lean plan that specifies, not implements (see **Lean
+delivery** in the root `CLAUDE.md`): per task `Files:` and `Depends-on:`, the
+contract or signature, the rules that apply and the test cases — at most 8
+tasks, no review or gate tasks.
 ```
 
 The skill will produce a structured plan. Present the plan to the user and ask
