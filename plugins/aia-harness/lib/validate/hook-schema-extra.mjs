@@ -211,6 +211,37 @@ export function validatePermissionDeniedOutput(stdout, exitCode) {
   return { valid: errors.length === 0, errors };
 }
 
+/**
+ * Validates PreModelSwitch hook output. Fires before a model switch; a hook
+ * may allow (skip the cache-miss confirm), deny (cancel) or ask.
+ * hookSpecificOutput: { hookEventName: "PreModelSwitch",
+ *   permissionDecision?: "allow"|"deny"|"ask", permissionDecisionReason?: string }
+ * @param {string} stdout @param {number} exitCode @returns {ValidationResult}
+ */
+export function validatePreModelSwitchOutput(stdout, exitCode) {
+  const r = parseStdout(stdout, exitCode);
+  if (!r.ok) return r.result;
+  const { obj } = r;
+  /** @type {string[]} */
+  const errors = [];
+  if ("hookSpecificOutput" in obj) {
+    const hso = obj.hookSpecificOutput;
+    errors.push(...checkHookSpecificOutput(hso, "PreModelSwitch", ["permissionDecisionReason"]));
+    if (typeof hso === "object" && !Array.isArray(hso) && hso !== null) {
+      errors.push(...checkEnumField(hso, "permissionDecision", new Set(["allow", "deny", "ask"])));
+    }
+  }
+  errors.push(...validateCommonFields(obj));
+  return { valid: errors.length === 0, errors };
+}
+
+/**
+ * Validates PostModelSwitch hook output. Fires after a model switch;
+ * additionalContext reaches the model with the next request.
+ * @param {string} stdout @param {number} exitCode @returns {ValidationResult}
+ */
+export const validatePostModelSwitchOutput = makeContextValidator("PostModelSwitch");
+
 // ---------------------------------------------------------------------------
 // Standard-output-only event types (no hookSpecificOutput in the SDK schema)
 // ---------------------------------------------------------------------------
@@ -278,5 +309,13 @@ export function validateWorktreeRemoveOutput(stdout, exitCode) {
  * @param {string} stdout @param {number} exitCode @returns {ValidationResult}
  */
 export function validateInstructionsLoadedOutput(stdout, exitCode) {
+  return validateStandardOutput(stdout, exitCode);
+}
+
+/**
+ * Validates DirectoryAdded hook output. Fires when a working-directory root is added.
+ * @param {string} stdout @param {number} exitCode @returns {ValidationResult}
+ */
+export function validateDirectoryAddedOutput(stdout, exitCode) {
   return validateStandardOutput(stdout, exitCode);
 }

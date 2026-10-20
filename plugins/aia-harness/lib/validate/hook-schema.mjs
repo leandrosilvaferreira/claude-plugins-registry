@@ -1,5 +1,5 @@
 /**
- * Schema validators for ALL Claude Code hook output types — the full 30
+ * Schema validators for ALL Claude Code hook output types — the full 33
  * event types enumerated by the official SDK's HOOK_EVENTS constant
  * (@anthropic-ai/claude-agent-sdk), not just the ~14 this harness currently
  * ships hooks for. Unused-today event types are validated too, so a future
@@ -12,7 +12,7 @@
  * TypeScript declarations (sdk.d.ts: SyncHookJSONOutput, HookInput,
  * per-event *HookSpecificOutput types) — see hook-schema-sdk-typecheck.mjs
  * for the compile-time tripwires that keep this file honest, and CLAUDE.md's
- * "Hook output schema compliance" section for the full 30-event reference
+ * "Hook output schema compliance" section for the full 33-event reference
  * table (event name -> SDK HookInput / HookSpecificOutput type names).
  * Also derived from:
  *   https://code.claude.com/docs/en/hooks
@@ -66,4 +66,7 @@ export {
   validateConfigChangeOutput,
   validateWorktreeRemoveOutput,
   validateInstructionsLoadedOutput,
+  validatePreModelSwitchOutput,
+  validatePostModelSwitchOutput,
+  validateDirectoryAddedOutput,
 } from "./hook-schema-extra.mjs";

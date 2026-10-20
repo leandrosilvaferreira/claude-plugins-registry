@@ -187,3 +187,16 @@ export const PERMISSION_DENIED_SHAPE = {
   hookEventName: "PermissionDenied",
   retry: true,
 };
+
+/** @type {Extract<HookSpecificOutput, { hookEventName: "PreModelSwitch" }>} */
+export const PRE_MODEL_SWITCH_SHAPE = {
+  hookEventName: "PreModelSwitch",
+  permissionDecision: "allow",
+  permissionDecisionReason: "",
+};
+
+/** @type {Extract<HookSpecificOutput, { hookEventName: "PostModelSwitch" }>} */
+export const POST_MODEL_SWITCH_SHAPE = {
+  hookEventName: "PostModelSwitch",
+  additionalContext: "",
+};

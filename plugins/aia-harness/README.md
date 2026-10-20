@@ -59,6 +59,7 @@ $ cd my-project && claude
 - [🎁 What Gets Scaffolded](#-what-gets-scaffolded)
 - [🧠 Stack Awareness](#-stack-awareness)
 - [🔌 Power-Ups](#-power-ups)
+- [🧭 Status band (mod)](#-status-band-mod)
 - [🌳 Parallel & Autonomous Workflows](#-parallel--autonomous-workflows)
 - [🔒 Safety & Trust](#-safety--trust)
 - [🔧 The Engine (CLI)](#-the-engine-cli)
@@ -380,6 +381,29 @@ Bolts a complete **issue → Project status → branch → PR → merge → auto
 - **Four GitHub Actions** that keep Projects v2 in sync (issue → triage, commit → in-progress, PR → in-review, merge → done).
 
 > Enable it on a GitHub repo with `/aia-harness:add-github-pm`, then run `/pm:setup-project` once to wire your Project IDs and the `PROJECTS_PAT` secret. *(Only applies when the remote is `github.com`.)*
+
+## 🧭 Status band (mod)
+
+A discreet band above the prompt of each Claude Code session. It shows the session's worktree, branch and open PR, and offers PM shortcut buttons.
+
+- **Info line:** `🌳` worktree, `⎇` branch, `#482 ↗` open PR. Clicking the PR number opens it in the browser. An item that does not apply is hidden.
+- **Button line:** shown only when the project has `.claude/commands/pm/`. Left to right: `Issue work loop` (or `Issue work` when the loop command is absent), `Commit+PR`, `Merge PR`, `Remove worktree`. `Merge PR` appears only when the branch has an open PR. `Remove worktree` appears only inside a worktree.
+- **Harness projects only:** the band appears where `.claude/settings.json` enables an `aia-harness@…` plugin. In any other project it draws nothing and runs no `git` or `gh`.
+- **Confirmation:** `Merge PR` and `Remove worktree` need two clicks. The first click changes the label to `Merge PR #482?` or `Remove worktree?`. A second click within 5 seconds runs the command. While any button command runs, other clicks do nothing.
+- **Hide and show:** `✕` hides the band in every project. `/aia-bar` toggles it. `/aia-bar on` or `/aia-bar off` sets it.
+
+Resource rules:
+
+- No background process and no recurring timer (one cancellable 5-second timer reverts the confirm label). The band refreshes at session start, after each turn, and after entering or leaving a worktree.
+- A PR opened outside Claude appears only after the next session event.
+- `git` and `gh` run without a shell and with a 5-second timeout.
+- The PR lookup is cached for 60 seconds per branch. After a `gh` failure, the next try waits 5 minutes. The band never shows the error.
+
+A session started in a project subdirectory does not find `.claude/settings.json`: start Claude Code at the project root (the band does not walk up to ancestors, to avoid reaching the home directory). The home directory (`HOME`, `USERPROFILE`, `HOMEDRIVE`+`HOMEPATH`, on Linux, macOS, Windows and Git Bash paths) is never read as a project.
+
+Requirements: Claude Code 2.1.287 or later. `git` supplies the branch. `gh` is optional: without it, the PR item stays hidden.
+
+Status: automated tests cover the band's behaviour. A live check in the VS Code extension and in the terminal is pending.
 
 ---
 

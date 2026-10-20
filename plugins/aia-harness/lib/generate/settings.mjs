@@ -305,6 +305,7 @@ export function renderSettings(profile, extraHooks = {}, opts = {}) {
       "caveman@caveman": true,
       "ponytail@ponytail": true,
       "superpowers@claude-plugins-official": true,
+      "context7@claude-plugins-official": true,
       "aia-harness@leandro-plugins-registry": true,
     },
     extraKnownMarketplaces: {
