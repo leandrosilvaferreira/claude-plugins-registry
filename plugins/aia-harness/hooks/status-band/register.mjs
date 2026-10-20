@@ -99,8 +99,11 @@ const prValue = (pr) => (pr ? { number: pr.number, url: pr.url } : null);
 // stops holding, key it by `$.session.id()`.
 /** @type {Map<string, { mtime: number, enabled: boolean, pmFiles: string[] }>} */
 const markers = new Map();
-/** True only after an interactive `session.start`: headless sessions never refresh. */
-let active = false;
+/** True once a refresh got past the drawing gate for this session; a first render asks for one until then. */
+let refreshed = false;
+/** The one-shot timer that runs the first refresh outside the render hook. */
+/** @type {{ cancel: () => void } | undefined} */
+let firstTimer;
 /** True while any button press runs: taken synchronously at the top of `press`. */
 let busy = false;
 /** The `/aia-bar` command is registered once, after the first refresh that finds the mark. */
@@ -121,6 +124,24 @@ const gitSource = createGitSource({
   run: (argv, opts) => /** @type {NonNullable<typeof io>} */ (io).run(argv, opts),
   now: () => lastNow,
 });
+
+/**
+ * True while any surface draws. The SDK (VS Code extension) starts with none and gets one later;
+ * a headless -p run never has one. Never rejects.
+ * @param {any} $
+ */
+async function drawing($) {
+  try {
+    return (await $.session.surfaces()).length > 0;
+  } catch {
+    return false;
+  }
+}
+
+function cancelFirstTimer() {
+  firstTimer?.cancel();
+  firstTimer = undefined;
+}
 
 function cancelConfirmTimer() {
   confirmTimer?.cancel();
@@ -181,7 +202,9 @@ async function marker($, root) {
  * @param {any} $ @param {string} [dir]
  */
 async function refresh($, dir) {
-  if (!active) return;
+  if (!(await drawing($))) return;
+  refreshed = true;
+  cancelFirstTimer();
   io = { run: (argv, opts) => $.process.run(argv, { ...opts, cwd }), now: () => $.clock.now() };
   lastNow = await $.clock.now();
   cwd = dir || cwd || (await $.session.cwd());
@@ -244,8 +267,8 @@ async function refreshSafe($, dir) {
 
 /** @type {import("claude-code").Register} */
 export const register = (on) => {
-  on("session.start", { isInteractive: true }, async ($, e, next) => {
-    active = true;
+  // No matcher: the extension starts with isInteractive false and no surface. Nothing runs until one draws.
+  on("session.start", async ($, e, next) => {
     await refreshSafe($, e.cwd);
     return next(e);
   }).catch(($, e, next) => next(e));
@@ -287,6 +310,8 @@ export const register = (on) => {
   on("session.end", { reason: ["clear", "resume"] }, async ($, e, next) => {
     gitSource.reset();
     cancelConfirmTimer();
+    cancelFirstTimer();
+    refreshed = false;
     await update($, band, (s) => ({ ...EMPTY, ...s, confirm: null })).catch(() => {});
     return next(e);
   }).catch(($, e, next) => next(e));
@@ -307,6 +332,17 @@ export const register = (on) => {
   }).catch(($, e, next) => next(e));
 
   on("ui.render", { component: "AbovePrompt" }, async ($, e, next) => {
+    // A render hook may not write state: the first render only schedules the refresh, once.
+    if (!refreshed && !firstTimer) {
+      try {
+        firstTimer = $.clock.after(0, () => {
+          firstTimer = undefined;
+          refreshSafe($).catch(() => {});
+        });
+      } catch {
+        // The band is a convenience.
+      }
+    }
     if (e.props.hasSurvey) return next(e);
     let s;
     try {

@@ -9,16 +9,17 @@ const ROOT = '/repo/shop'
 const MARK = JSON.stringify({ enabledPlugins: { 'aia-harness@leandro-plugins-registry': true } })
 const prJson = (n: number) => JSON.stringify({ number: n, url: `https://github.com/o/r/pull/${n}`, state: 'OPEN' })
 
-type Setup = { marked?: boolean; pm?: string[]; pr?: boolean; cwd?: string; home?: string; base?: boolean; failRuns?: number; env?: Record<string, string> }
+type Setup = { marked?: boolean; pm?: string[]; pr?: boolean; cwd?: string; home?: string; base?: boolean; failRuns?: number; env?: Record<string, string>; surfaces?: string[] }
 
 // Fakes the world under the plugin; returns what the plugin asked of it.
-function world(on: any, { marked = true, pm = [], pr = true, cwd = ROOT, home = '/home/u', base = true, failRuns = 0, env = {} }: Setup = {}) {
+function world(on: any, { marked = true, pm = [], pr = true, cwd = ROOT, home = '/home/u', base = true, failRuns = 0, env = {}, surfaces = ['terminal'] }: Setup = {}) {
   const clock = mock.clock(on, { now: 1000 })
   const mem = new Map<string, unknown>()
   on('store.get', ($: any, e: any) => ({ value: mem.get(e.key) }))
   on('store.set', ($: any, e: any) => (mem.set(e.key, e.value), { value: undefined }) as never)
   if (base) on('ui.render', ($: any, e: any) => $.ui.resolve(e).Text({ children: 'base slot' }))
-  on('env.get', ($: any, e: any) => ({ value: e.name === 'HOME' ? home : env[e.name] }) as never)
+  on('env.get', ($: any, e: any) => (e.name === 'HOME' && homeReads++, { value: e.name === 'HOME' ? home : env[e.name] }) as never)
+  let homeReads = 0
   let prNumber = 482
   let registered = 0
   let reads = 0
@@ -32,6 +33,7 @@ function world(on: any, { marked = true, pm = [], pr = true, cwd = ROOT, home = 
   on('session.end', ($: any, e: any) => ({ sessionId: e.sessionId ?? 's1' }) as never)
   on('command.register', ($: any, e: any) => (registered++, { value: { command: e.name } }) as never)
   on('session.cwd', () => ({ value: cwd }))
+  on('session.surfaces', () => ({ value: surfaces as never }))
   const isSettings = (p: string) => p.endsWith('/.claude/settings.json')
   on('fs.stat', ($: any, e: any) => (marked && isSettings(e.path) ? { value: { kind: 'file', size: 1, mtimeMs: 5, isLink: false } } : { deny: 'missing' }))
   on('fs.read', ($: any, e: any) => (isSettings(e.path) ? (reads++, marked ? { value: MARK } : { deny: 'missing' }) : { deny: 'missing' }))
@@ -52,12 +54,13 @@ function world(on: any, { marked = true, pm = [], pr = true, cwd = ROOT, home = 
   })
   on('tool.call', ($: any, e: any) => ({ result: toolResults[e.tool] }) as never)
   return {
-    mem, clock, ran, cwds, commands, cwd,
+    mem, clock, surfaces, ran, cwds, commands, cwd,
     gh: () => ran.filter((a) => a[0] === 'gh').length,
     setPr: (n: number) => { prNumber = n },
     hold: () => { let open = () => {}; gate = new Promise<void>((r) => { open = r }); return () => { gate = undefined; open() } },
     registered: () => registered,
     reads: () => reads,
+    refreshes: () => homeReads,
     stateWrites: () => stateWrites,
   }
 }
@@ -367,16 +370,51 @@ test('ui.render with no other hook below still draws the band', async ($, on) =>
   await ui.unmount()
 })
 
-test('a subagent turn and a headless session spawn nothing', async ($, on) => {
-  const w = world(on)
+test('a headless run (no surface, never rendered) never runs git or gh and registers nothing', async ($, on) => {
+  const w = world(on, { surfaces: [] })
   await $.session.start({ cwd: ROOT, surface: null, isInteractive: false } as never)
   await $.turn.complete({ answer: '', durationMs: 1 } as never)
+  await w.clock.advance(61_000)
   expect(w.ran.length).toBe(0)
+  expect(w.registered()).toBe(0)
+  expect(w.stateWrites()).toBe(0)
+})
+
+test('a subagent turn spawns nothing', async ($, on) => {
+  const w = world(on)
   await start($)
   const n = w.ran.length
   await w.clock.advance(61_000)
   await $.turn.complete({ answer: '', durationMs: 1, agentId: 'sub-1' } as never)
   expect(w.ran.length).toBe(n)
+})
+
+test('the extension case: session.start with no surface and isInteractive false draws nothing and runs nothing, then the first AbovePrompt render triggers one refresh that draws the band and registers /aia-bar', async ($, on) => {
+  const w = world(on, { surfaces: [] })
+  await $.session.start({ cwd: ROOT, surface: null, isInteractive: false } as never)
+  expect(w.ran.length).toBe(0)
+  expect(w.registered()).toBe(0)
+  w.surfaces.push('vscode')
+  const ui = await $.ui.mount({ plugin: PLUGIN, surface: 'vscode', component: 'AbovePrompt', props: BAND.props })
+  expect(await ui.find({ key: 'close' })).toBeUndefined()
+  await w.clock.advance(1)
+  expect(w.registered()).toBe(1)
+  expect(w.gh()).toBe(1)
+  expect(await ui.find({ key: 'close' })).toBeDefined()
+  await ui.unmount()
+})
+
+test('the first render schedules one refresh only', async ($, on) => {
+  const w = world(on, { surfaces: [] })
+  await $.session.start({ cwd: ROOT, surface: null, isInteractive: false } as never)
+  w.surfaces.push('vscode')
+  const a = await $.ui.mount({ plugin: PLUGIN, surface: 'vscode', component: 'AbovePrompt', props: BAND.props })
+  const b = await $.ui.mount({ plugin: PLUGIN, surface: 'vscode', component: 'AbovePrompt', props: { ...BAND.props, bodyColumns: 90 } })
+  await w.clock.advance(1)
+  // One HOME read per refresh: two timers would read it twice.
+  expect(w.refreshes()).toBe(1)
+  await a.unmount()
+  await b.unmount()
 })
 
 test('/aia-bar registers once, after the mark is found, and an unmarked project writes no state', async ($, on) => {
