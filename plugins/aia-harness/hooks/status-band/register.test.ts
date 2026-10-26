@@ -9,10 +9,10 @@ const ROOT = '/repo/shop'
 const MARK = JSON.stringify({ enabledPlugins: { 'aia-harness@leandro-plugins-registry': true } })
 const prJson = (n: number) => JSON.stringify({ number: n, url: `https://github.com/o/r/pull/${n}`, state: 'OPEN' })
 
-type Setup = { marked?: boolean; pm?: string[]; pr?: boolean; cwd?: string; home?: string; base?: boolean; failRuns?: number; env?: Record<string, string>; surfaces?: string[] }
+type Setup = { marked?: boolean; pm?: string[]; pr?: boolean; cwd?: string; home?: string; base?: boolean; failRuns?: number; env?: Record<string, string>; surfaces?: string[]; branch?: string }
 
 // Fakes the world under the plugin; returns what the plugin asked of it.
-function world(on: any, { marked = true, pm = [], pr = true, cwd = ROOT, home = '/home/u', base = true, failRuns = 0, env = {}, surfaces = ['terminal'] }: Setup = {}) {
+function world(on: any, { marked = true, pm = [], pr = true, cwd = ROOT, home = '/home/u', base = true, failRuns = 0, env = {}, surfaces = ['terminal'], branch = 'feat/x' }: Setup = {}) {
   const clock = mock.clock(on, { now: 1000 })
   const mem = new Map<string, unknown>()
   on('store.get', ($: any, e: any) => ({ value: mem.get(e.key) }))
@@ -42,7 +42,7 @@ function world(on: any, { marked = true, pm = [], pr = true, cwd = ROOT, home = 
   on('process.run', ($: any, e: any) => {
     ran.push(e.argv)
     cwds.push(e.init?.cwd)
-    if (e.argv[0] === 'git') return { value: { exitCode: 0, stdout: 'feat/x\n', stderr: '' } }
+    if (e.argv[0] === 'git') return { value: { exitCode: 0, stdout: `${branch}\n`, stderr: '' } }
     return pr ? { value: { exitCode: 0, stdout: prJson(prNumber), stderr: '' } } : { value: { exitCode: 1, stdout: '', stderr: 'none' } }
   })
   let gate: Promise<void> | undefined
@@ -89,6 +89,23 @@ test('a mark without pm commands shows only the info line, run in the project cw
   expect(await ui.find({ type: 'Text', text: /feat\/x/ })).toBeDefined()
   expect(await ui.find({ key: 'btn-commit-pr' })).toBeUndefined()
   expect(w.cwds.every((c) => c === ROOT)).toBe(true)
+  await ui.unmount()
+})
+
+test('a narrow band keeps the worktree, branch, PR and buttons', async ($, on) => {
+  const wt = '/repo/shop/.claude/worktrees/feat-epic-27-feature-epico-adapter-brasil'
+  const w = world(on, { cwd: wt, branch: 'feat/31-feature-brasil-cash-4-9-pix-cash-out', pm: ['issue-work-in-loop.md', 'commit-push-pr.md', 'pr-merge.md', 'worktree-remove.md'] })
+  w.setPr(62)
+  await start($, wt)
+  const ui = await mount($, { ...BAND.props, bodyColumns: 40 })
+  expect(await ui.find({ type: 'Text', text: /epic-27/ })).toBeDefined()
+  expect(await ui.find({ type: 'Text', text: /feat\/31-/ })).toBeDefined()
+  expect(await ui.find({ type: 'Text', text: /#62/ })).toBeDefined()
+  expect(await ui.find({ key: 'btn-issue-work-loop' })).toBeDefined()
+  expect(await ui.find({ key: 'btn-commit-pr' })).toBeDefined()
+  expect(await ui.find({ key: 'btn-merge-pr' })).toBeDefined()
+  expect(await ui.find({ key: 'btn-remove-worktree' })).toBeDefined()
+  expect(await ui.find({ key: 'close' })).toBeDefined()
   await ui.unmount()
 })
 

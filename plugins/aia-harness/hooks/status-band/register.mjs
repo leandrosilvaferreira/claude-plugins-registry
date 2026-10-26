@@ -425,46 +425,52 @@ export const register = (on) => {
         await update($, band, (x) => ({ ...EMPTY, ...x, rev: x.rev + 1 }));
       };
 
-      const rows = [];
-      if (model.buttons.length) {
-        rows.push(
-          Box({
-            flexDirection: "row",
-            gap: 1,
-            children: model.buttons.map((id, idx) =>
-              Button({
-                key: `btn-${id}`,
-                plain: true,
-                label: model.labels[idx],
-                onPress: () => press(id),
-              }),
-            ),
-          }),
-        );
-      }
-      const items = model.info.map((i) => {
-        if (i.kind === "pr") {
-          return s.pr && safeHref(s.pr.url)
-            ? Link({ href: s.pr.url, children: [Text({ children: i.text })] })
-            : Text({ children: i.text });
-        }
-        return Text({
-          dimColor: true,
-          children: `${i.kind === "worktree" ? "\u{1F333}" : "⎇"} ${i.text}`,
-        });
-      });
-      rows.push(
+      const rows = model.buttonRows.map((row, r) =>
         Box({
+          key: `btn-row-${r}`,
           flexDirection: "row",
-          gap: 2,
-          width: e.props.bodyColumns,
-          children: [
-            ...items,
-            Box({ flexGrow: 1 }),
-            Button({ key: "close", plain: true, label: "✕", onPress: close }),
-          ],
+          gap: 1,
+          children: row.map((b) =>
+            Button({
+              key: `btn-${b.id}`,
+              plain: true,
+              label: b.label,
+              onPress: () => press(b.id),
+            }),
+          ),
         }),
       );
+      const lastInfo = model.infoRows.length - 1;
+      model.infoRows.forEach((row, r) => {
+        const items = row.map((i) => {
+          if (i.kind === "pr") {
+            return s.pr && safeHref(s.pr.url)
+              ? Link({ href: s.pr.url, children: [Text({ children: i.text })] })
+              : Text({ children: i.text });
+          }
+          return Text({
+            dimColor: true,
+            children: `${i.kind === "worktree" ? "\u{1F333}" : "⎇"} ${i.text}`,
+          });
+        });
+        rows.push(
+          Box({
+            key: `info-row-${r}`,
+            flexDirection: "row",
+            gap: 2,
+            width: e.props.bodyColumns,
+            // The close button stays on the last info row, right-aligned.
+            children:
+              r === lastInfo
+                ? [
+                    ...items,
+                    Box({ flexGrow: 1 }),
+                    Button({ key: "close", plain: true, label: "✕", onPress: close }),
+                  ]
+                : items,
+          }),
+        );
+      });
       const mine = Box({ flexDirection: "column", children: rows });
       return below ? Box({ flexDirection: "column", children: [mine, below] }) : mine;
     } catch {
