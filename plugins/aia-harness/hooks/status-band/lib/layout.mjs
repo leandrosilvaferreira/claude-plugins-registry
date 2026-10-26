@@ -1,7 +1,7 @@
 /** @typedef {'issue-work-loop' | 'issue-work' | 'commit-pr' | 'merge-pr' | 'remove-worktree'} ButtonId */
 /** @typedef {{ kind: 'worktree' | 'branch' | 'pr', text: string }} Item */
 /** @typedef {{ id: ButtonId, label: string }} DrawnButton `label` is the drawn (possibly truncated) text. */
-/** @typedef {{ buttonRows: DrawnButton[][], infoRows: Item[][] }} BandModel The close button belongs to the last info row, which may be empty. */
+/** @typedef {{ buttonRows: DrawnButton[][], infoRows: Item[][] }} BandModel The close button leads the first row: the first button row, or the first info row when there are no buttons. */
 
 /** Button label per id; the rendered form is `[label]`. */
 export const BUTTON_LABELS = {
@@ -16,7 +16,9 @@ export const BUTTON_LABELS = {
 /** @type {Record<string, number>} */
 const ICON_WIDTH = { worktree: 3, branch: 2 };
 const GAP = 2;
-const CLOSE_WIDTH = 2; // the "✕" at the end of the last info row, plus one space
+const CLOSE_WIDTH = 2; // the "✕" that leads the first row, plus one space
+// On an info row the ✕ is followed by the row gap (2), not one space.
+const CLOSE_INFO_WIDTH = 1 + GAP;
 const MAX_ROWS = 4;
 
 /**
@@ -87,9 +89,10 @@ function itemWidth(item) {
  * @param {number[]} widths
  * @param {number} gap
  * @param {number} columns
+ * @param {number} lead Cells already taken at the start of the first row.
  * @returns {number[][]} Item indexes per row.
  */
-function pack(widths, gap, columns) {
+function pack(widths, gap, columns, lead) {
   /** @type {number[][]} */
   const rows = [];
   let used = 0;
@@ -100,7 +103,7 @@ function pack(widths, gap, columns) {
       used += gap + w;
     } else {
       rows.push([i]);
-      used = w;
+      used = (rows.length === 1 ? lead : 0) + w;
     }
   });
   return rows;
@@ -108,20 +111,22 @@ function pack(widths, gap, columns) {
 
 /**
  * @param {BandModel} model
- * @returns {{ buttonRows: number[], infoRows: number[] }} Width of each row; the close button counts on the last info row.
+ * @returns {{ buttonRows: number[], infoRows: number[] }} Width of each row; the close button counts on the first row.
  */
 export function bandWidths(model) {
   const sum = (/** @type {number[]} */ ws, /** @type {number} */ gap) =>
     ws.reduce((n, w) => n + w, 0) + gap * Math.max(0, ws.length - 1);
+  const closeOnButtons = model.buttonRows.length > 0;
   return {
-    buttonRows: model.buttonRows.map((r) =>
-      sum(
-        r.map((b) => [...b.label].length),
-        1,
-      ),
+    buttonRows: model.buttonRows.map(
+      (r, i) =>
+        sum(
+          r.map((b) => [...b.label].length),
+          1,
+        ) + (closeOnButtons && i === 0 ? CLOSE_WIDTH : 0),
     ),
     infoRows: model.infoRows.map(
-      (r, i) => sum(r.map(itemWidth), GAP) + (i === model.infoRows.length - 1 ? CLOSE_WIDTH : 0),
+      (r, i) => sum(r.map(itemWidth), GAP) + (!closeOnButtons && i === 0 ? CLOSE_INFO_WIDTH : 0),
     ),
   };
 }
@@ -141,9 +146,15 @@ export function buildModel({ worktree, branch, pr, buttons, columns, armed }) {
   if (pr) info.push({ kind: "pr", text: `#${pr.number} ↗` });
   const labels = buttons.map((b) => buttonLabel(b, b === armed, pr?.number));
 
-  // Room for an item beside the close button (an item never exceeds a full row).
-  const infoCaps = info.map((i) => Math.max(1, columns - (ICON_WIDTH[i.kind] ?? 0) - CLOSE_WIDTH));
-  const buttonCaps = labels.map(() => Math.max(1, columns));
+  // The close button leads the first row, so that row's first item gets less room.
+  const closeOnButtons = buttons.length > 0;
+  const infoCaps = info.map((i, n) =>
+    Math.max(
+      1,
+      columns - (ICON_WIDTH[i.kind] ?? 0) - (!closeOnButtons && n === 0 ? CLOSE_INFO_WIDTH : 0),
+    ),
+  );
+  const buttonCaps = labels.map((_, n) => Math.max(1, columns - (n === 0 ? CLOSE_WIDTH : 0)));
 
   const build = () => {
     const shownInfo = info.map((i, n) => ({ ...i, text: truncate(i.text, infoCaps[n]) }));
@@ -155,14 +166,16 @@ export function buildModel({ worktree, branch, pr, buttons, columns, armed }) {
       shownButtons.map((b) => [...b.label].length),
       1,
       columns,
+      CLOSE_WIDTH,
     ).map((r) => r.map((n) => shownButtons[n]));
-    const infoRows = pack(shownInfo.map(itemWidth), GAP, columns).map((r) =>
-      r.map((n) => shownInfo[n]),
-    );
-    const last = infoRows[infoRows.length - 1] ?? [];
-    const lastWidth =
-      last.reduce((n, i) => n + itemWidth(i), 0) + GAP * Math.max(0, last.length - 1);
-    if (!infoRows.length || lastWidth + CLOSE_WIDTH > columns) infoRows.push([]);
+    const infoRows = pack(
+      shownInfo.map(itemWidth),
+      GAP,
+      columns,
+      closeOnButtons ? 0 : CLOSE_INFO_WIDTH,
+    ).map((r) => r.map((n) => shownInfo[n]));
+    // Nothing to show: an empty row still hosts the lone close button.
+    if (!buttonRows.length && !infoRows.length) infoRows.push([]);
     return { buttonRows, infoRows, shownInfo, shownButtons };
   };
 

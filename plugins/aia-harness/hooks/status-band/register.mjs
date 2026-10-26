@@ -425,22 +425,26 @@ export const register = (on) => {
         await update($, band, (x) => ({ ...EMPTY, ...x, rev: x.rev + 1 }));
       };
 
+      // The close button leads the first row: the first button row, else the first info row.
+      const closeButton = () => Button({ key: "close", plain: true, label: "✕", onPress: close });
       const rows = model.buttonRows.map((row, r) =>
         Box({
           key: `btn-row-${r}`,
           flexDirection: "row",
           gap: 1,
-          children: row.map((b) =>
-            Button({
-              key: `btn-${b.id}`,
-              plain: true,
-              label: b.label,
-              onPress: () => press(b.id),
-            }),
-          ),
+          children: [
+            ...(r === 0 ? [closeButton()] : []),
+            ...row.map((b) =>
+              Button({
+                key: `btn-${b.id}`,
+                plain: true,
+                label: b.label,
+                onPress: () => press(b.id),
+              }),
+            ),
+          ],
         }),
       );
-      const lastInfo = model.infoRows.length - 1;
       model.infoRows.forEach((row, r) => {
         const items = row.map((i) => {
           if (i.kind === "pr") {
@@ -459,15 +463,7 @@ export const register = (on) => {
             flexDirection: "row",
             gap: 2,
             width: e.props.bodyColumns,
-            // The close button stays on the last info row, right-aligned.
-            children:
-              r === lastInfo
-                ? [
-                    ...items,
-                    Box({ flexGrow: 1 }),
-                    Button({ key: "close", plain: true, label: "✕", onPress: close }),
-                  ]
-                : items,
+            children: r === 0 && !model.buttonRows.length ? [closeButton(), ...items] : items,
           }),
         );
       });

@@ -386,8 +386,8 @@ Bolts a complete **issue → Project status → branch → PR → merge → auto
 
 A discreet band above the prompt of each Claude Code session. It shows the session's worktree, branch and open PR, and offers PM shortcut buttons.
 
-- **Info line:** `🌳` worktree, `⎇` branch, `#482 ↗` open PR. Clicking the PR number opens it in the browser. An item that does not apply is hidden.
-- **Button line:** shown only when the project has `.claude/commands/pm/`. Left to right: `Issue work loop` (or `Issue work` when the loop command is absent), `Commit+PR`, `Merge PR`, `Remove worktree`. `Merge PR` appears only when the branch has an open PR. `Remove worktree` appears only inside a worktree.
+- **Info line:** `🌳` worktree, `⎇` branch, `#482 ↗` open PR. Clicking the PR number opens it in the browser. An item that does not apply is hidden. Without buttons, `✕` leads the info line.
+- **Button line:** shown only when the project has `.claude/commands/pm/`. Left to right: `✕` (hide), `Issue work loop` (or `Issue work` when the loop command is absent), `Commit+PR`, `Merge PR`, `Remove worktree`. `Merge PR` appears only when the branch has an open PR. `Remove worktree` appears only inside a worktree.
 - **Harness projects only:** the band appears where `.claude/settings.json` enables an `aia-harness@…` plugin. In any other project it draws nothing and runs no `git` or `gh`.
 - **Confirmation:** `Merge PR` and `Remove worktree` need two clicks. The first click changes the label to `Merge PR #482?` or `Remove worktree?`. A second click within 5 seconds runs the command. While any button command runs, other clicks do nothing.
 - **Hide and show:** `✕` hides the band in every project. `/aia-bar` toggles it. `/aia-bar on` or `/aia-bar off` sets it.

@@ -491,3 +491,22 @@ test('a root equal to the home directory via USERPROFILE only is refused', async
   expect(await ui.find({ key: 'close' })).toBeUndefined()
   await ui.unmount()
 })
+
+test('the close button is drawn first, before the buttons', async ($, on) => {
+  world(on, { pm: ['issue-work-in-loop.md', 'commit-push-pr.md'] })
+  await start($)
+  const ui = await mount($)
+  const keys = (await ui.find({ key: 'btn-row-0' })).children.map((c: any) => c.props.key)
+  expect(keys).toEqual(['close', 'btn-issue-work-loop', 'btn-commit-pr'])
+  expect(await ui.findAll({ key: 'close' })).toHaveLength(1)
+  await ui.unmount()
+})
+
+test('without buttons the close button leads the first info row', async ($, on) => {
+  world(on)
+  await start($)
+  const ui = await mount($)
+  expect((await ui.find({ key: 'info-row-0' })).children[0].props.key).toBe('close')
+  expect(await ui.findAll({ key: 'close' })).toHaveLength(1)
+  await ui.unmount()
+})
